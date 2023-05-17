@@ -1,17 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
-
+import { BrowserRouter } from 'react-router-dom';
+import Router from './routes';
 function App() {
+
   return (
-    <div className="flex flex-wrap text-center">
-      <header className="text-red-700">
-        
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-          Learn React
-      </header>
-    </div>
+    <BrowserRouter>
+      <Router></Router>
+    </BrowserRouter>
   );
 }
 
