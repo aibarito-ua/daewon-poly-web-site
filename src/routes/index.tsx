@@ -5,6 +5,7 @@ import { Login } from '../pages/Login';
 import { EssayWriting } from '../pages/Student/EssayWriting';
 import { MyPage } from '../pages/Student/MyPage';
 import { Portfolio } from '../pages/Student/Portfolio';
+import WebViewWrap from '../pages/WebViewWrap';
 
 export default function Roter() {
 
@@ -18,6 +19,9 @@ export default function Roter() {
                 <Route path='/MyPage' element={<MyPage />}></Route>
                 <Route path='/Portfolio' element={<Portfolio />}></Route>
                 {/* <Route path='' element={ }></Route> */}
+
+                {/* webview 전용 page */}
+                <Route path='/webTest' element={<WebViewWrap />}></Route>
             </Routes>
         </div>
 

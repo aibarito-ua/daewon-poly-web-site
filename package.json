@@ -19,6 +19,7 @@
     "zustand": "^4.3.8"
   },
   "scripts": {
+    "dev": "HOST=0.0.0.0 && PORT=25252 react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
