@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react';
 import useLoginStore from '../store/useLoginStore';
 
 export const Login = () => {
-
     const { setUserInfo, setIsOpen } = useLoginStore();
-
-    const closeModal = () => {
-        setIsOpen(false)
-    }
+    const closeModal = () => { setIsOpen(false); }
     return (
         <>
             <div className="fixed z-10 inset-0 overflow-y-auto">

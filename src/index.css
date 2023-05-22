@@ -14,3 +14,13 @@ code {
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+/* Section */
+.section-common-layout {
+  @apply flex
+  min-h-screen
+  flex-col
+  items-center
+  justify-start 
+  text-gray-600
+}
