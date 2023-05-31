@@ -18,9 +18,54 @@ code {
 /* Section */
 .section-common-layout {
   @apply flex
+  flex-1
   min-h-screen
   flex-col
+  justify-center 
   items-center
-  justify-start 
   text-gray-600
+  h-screen
+  mt-[10vh]
+}
+
+/* Writing Center */
+/* 1. Select */
+.select-writing-item-button {
+  @apply flex-col
+  flex-1
+  text-black
+  bg-gray-300
+  shadow-xl
+  sm:w-2/5
+  max-sm:w-11/12
+  max-sm:mx-4
+  max-sm:mt-4
+  h-1/3
+  rounded-3xl
+  outline-none
+  text-3xl
+  font-bold
+  sm:m-auto
+  p-10
+  hover:ring-8
+  hover:ring-yellow-400
+  focus:ring-8
+  focus:ring-yellow-400
+  /* dark:border-yellow-300 
+  dark:text-yellow-300 
+  dark:hover:text-white 
+  dark:hover:bg-yellow-400 
+  dark:focus:ring-yellow-900 */
+}
+/* 1.1. topic select button */
+.select-writing-topic-item-button {
+  @apply 
+  text-black
+  w-full
+  h-[20vh]
+  font-bold
+  shadow-md
+  rounded-2xl
+  outline-none
+  
 }

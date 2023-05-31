@@ -1,8 +1,9 @@
+import React from 'react';
 import { Navigate, Outlet } from "react-router-dom";
 import useLoginStore from "../store/useLoginStore";
-import { ReactElement } from "react";
+
 interface IPrivateRouteProps {
-    children?: ReactElement;
+    children?: React.ReactElement;
     authenticated: boolean;
     pageAuth?: TRole
 }

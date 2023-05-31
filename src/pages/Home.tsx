@@ -2,8 +2,8 @@ import React from 'react';
 
 export const Home = () => {
     return (
-        <div className="container mx-auto px-4 py-8">
+        <section className="section-common-layout">
                 POLY Main Page
-        </div>
+        </section>
     )
 }

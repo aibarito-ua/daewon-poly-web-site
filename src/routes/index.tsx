@@ -11,21 +11,41 @@ import PrivateRoute from './PrivateRoute';
 import { Admin } from '../pages/Admin';
 import { Student } from '../pages/Student/Student';
 import { Teacher } from '../pages/Teacher';
+import {routeValues} from './routeValues';
+import SelectEssayWriting from '../pages/Student/SelectEssayWriting';
+import EssayWritingSelectTopic from '../pages/Student/EssayWritingSelectTopic';
 
 export default function Roter() {
-    const { role } = useLoginStore();
+    const { role, isOpen } = useLoginStore();
+    const publicRoutes = () => {
+        const routeValue = routeValues.publicRoutes;
+        const mainPage = role === 'logout' ? <Home /> : (
+            role === 'admin' ? <Admin /> : (
+                role === 'teacher' ? <Teacher /> : <Student />
+            )
+        );
+        return (
+            <Route element={<PrivateRoute authenticated={false} />}>
+                {routeValue.map((publicRoute, publicIndex) => {
+                    if (publicRoute.path === '/') {
+                        return <Route key={publicIndex} path={publicRoute.path} element={mainPage}/>
+                    } else {
+                        return <Route key={publicIndex} path={publicRoute.path} element={publicRoute.element}/>
+                    }
+                })}
+            </Route>
+        )
+    }
+    // const privateRoutes = () => {
+    //     const routeValue = routeValues.privateRoutes;
+
+    // }
     return (
         <div className="mx-auto items-center text-center ">
+            {isOpen && <Login />}
             <Routes>
                 {/* No Login Pages */}
-                <Route element={<PrivateRoute authenticated={false}/>} >
-                    <Route path='/' element={ role === 'logout' ? <Home /> : (
-                        role === 'admin' ? <Admin /> : (
-                            role === 'teacher' ? <Teacher /> : <Student />
-                        )
-                    )}></Route>
-                    <Route path='/Login' element={<Login />}></Route>
-                </Route>
+                {publicRoutes()}
                 {/* Admin 전용 페이지 */}
                 <Route element={<PrivateRoute authenticated={true} pageAuth='admin' />} >
                     
@@ -36,9 +56,11 @@ export default function Roter() {
                 </Route>
                 {/* 학생 페이지 */}
                 <Route element={<PrivateRoute authenticated={true} pageAuth='student' />} >
-                    <Route path='/EssayWriting' element={ <EssayWriting />}></Route>
-                    <Route path='/MyPage' element={<MyPage />}></Route>
-                    <Route path='/Portfolio' element={<Portfolio />}></Route>
+                    <Route path='/student/SelectEssayWriting' element={<SelectEssayWriting />}></Route>
+                    <Route path='/student/EssayWriting' element={ <EssayWriting />}></Route>
+                    <Route path='/student/EssayWritingSelectTopic' element={ <EssayWritingSelectTopic />}></Route>
+                    <Route path='/student/MyPage' element={<MyPage />}></Route>
+                    <Route path='/student/Portfolio' element={<Portfolio />}></Route>
 
                 </Route>
                 {/* <Route path='' element={ }></Route> */}
