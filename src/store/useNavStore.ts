@@ -7,6 +7,11 @@ const useNavStore = create<INavItem>((set) => ({
     topNavHiddenFlagged: false,
     subNavTitleString: "",
     subRightNavTitleString: "",
+    // unit info
+    selectUnitInfo: {
+        main: '',
+        sub: ''
+    },
     setSelectMenu: (selectdMenuStr: string, selectedMenuTitle: string) => {
         console.log("selectNumber :::", selectdMenuStr)
         set(()=>({selectedMenu:selectdMenuStr, selectedMenuTitle}))
@@ -20,8 +25,14 @@ const useNavStore = create<INavItem>((set) => ({
     setSubNavTitleString: (subNavTitleString: string) => {
         set(()=>({subNavTitleString}))
     },
-    setSubRightNavTitleString: (subRightNavTitleString: string)=>{
+    setSubRightNavTitleString: (subRightNavTitleString: string|JSX.Element)=>{
         set(()=>({subRightNavTitleString}))
+    },
+    setSelectUnitInfo: (unitMainTitle: string, unitSubTitle: string)=>{
+        const unitInfo: TUnitTitleItem = {
+            main: unitMainTitle, sub: unitSubTitle
+        };
+        set(()=>({selectUnitInfo: unitInfo}))
     }
 }))
 

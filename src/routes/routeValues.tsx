@@ -5,8 +5,8 @@ import { EssayWriting } from "../pages/Student/EssayWriting";
 import { MyPage } from "../pages/Student/MyPage";
 import { Portfolio } from "../pages/Student/Portfolio";
 import WebViewWrap from "../pages/WebViewWrap";
-import SelectEssayWriting from '../pages/Student/SelectEssayWriting';
-import EssayWritingSelectTopic from '../pages/Student/EssayWritingSelectTopic';
+import SelectEssayWriting from '../pages/Student/SelectWritingClinic';
+import EssayWritingSelectTopic from '../pages/Student/SelectUnit';
 
 export const routeValues = {
     // authenticated true

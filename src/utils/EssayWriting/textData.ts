@@ -26,21 +26,22 @@ export const EssayWritingDatas = {
         }
     ],
     selectBoxTopics: [
-        [
-            {title: 'Topic 1', topic: 'How to write essays well.', topicIndex: 1},
-            {title: 'Topic 2', topic: 'How to write essays well.', topicIndex: 2},
-            {title: 'Topic 3', topic: 'How to write essays well.', topicIndex: 3},
-            {title: 'Topic 4', topic: 'How to write essays well.', topicIndex: 4},
-        ],[
-            {title: 'Topic 5', topic: 'How to write essays well.', topicIndex: 5},
-            {title: 'Topic 6', topic: 'How to write essays well.', topicIndex: 6},
-            {title: 'Topic 7', topic: 'How to write essays well.', topicIndex: 7},
-            {title: 'Topic 8', topic: 'How to write essays well.', topicIndex: 8},
-        ],[
-            {title: 'Topic 9', topic: 'How to write essays well.', topicIndex: 9},
-            {title: 'Topic 10', topic: 'How to write essays well.', topicIndex: 10},
-            {title: 'Topic 11', topic: 'How to write essays well.', topicIndex: 11},
-            {title: 'Topic 12', topic: 'How to write essays well.', topicIndex: 12},
-        ]
+        // [
+            {title: {main: 'Unit 1', sub: 'Descriptive Essays'}, topic: 'How to write essays well.', topicIndex: 1},
+            {title: {main: 'Unit 2', sub: 'Informative Essays'}, topic: 'How to write essays well.', topicIndex: 1},
+            {title: {main: 'Unit 3', sub: 'Personal Narratives'}, topic: 'How to write essays well.', topicIndex: 1},
+            {title: {main: 'Unit 4', sub: 'Science Fiction Short Stories'}, topic: 'How to write essays well.', topicIndex: 1},
+            {title: {main: 'Unit 5', sub: 'Persuasive Essays'}, topic: 'How to write essays well.', topicIndex: 1},
+        // ]
+        // ,[
+        //     {title: 'Topic 6', topic: 'How to write essays well.', topicIndex: 6},
+        //     {title: 'Topic 7', topic: 'How to write essays well.', topicIndex: 7},
+        //     {title: 'Topic 8', topic: 'How to write essays well.', topicIndex: 8},
+        // ],[
+        //     {title: 'Topic 9', topic: 'How to write essays well.', topicIndex: 9},
+        //     {title: 'Topic 10', topic: 'How to write essays well.', topicIndex: 10},
+        //     {title: 'Topic 11', topic: 'How to write essays well.', topicIndex: 11},
+        //     {title: 'Topic 12', topic: 'How to write essays well.', topicIndex: 12},
+        // ]
     ]
 }

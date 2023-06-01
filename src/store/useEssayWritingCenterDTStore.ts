@@ -35,25 +35,39 @@ const useEssayWritingCenterDTStore = create<IEssayWritingCenterDT>((set, get)=>(
     },
     // topic check
     proceedingTopicIndex: 0,
-    completeTopicIndex: Array.from({length: 12}, (v, i)=>{
-        if (i===0) return 0
-        else return 2
+    completeTopicIndex: Array.from({length: 5}, (v, i)=>{
+        // if (i===0) return 0
+        // else return 3
+        return {firstDraft: 1, secondDraft: 5, firstFeedback: false, secondFeedback: false };
     }),
-    setProceedingTopicIndex: (proceedingTopicIndex:number)=>{
+    setProceedingTopicIndex: (proceedingTopicIndex:number,)=>{
         set(()=>({proceedingTopicIndex}))
     },
-    setCompleteTopicIndex: (proceedingTopicIndex:number) => {
-        let currentStateCompleteTopicIndex = get().completeTopicIndex;
-        currentStateCompleteTopicIndex = currentStateCompleteTopicIndex.map((value, index)=>{
+    setCompleteTopicIndex: (proceedingTopicIndex:number, roundDraft: number, feedback?: boolean ) => {
+        const currentStateCompleteTopicIndex = get().completeTopicIndex;
+        const SetCompleteTopicIndexValue:TProgressUnitInfo[] = currentStateCompleteTopicIndex.map((value:TProgressUnitInfo, index:number)=>{
             if (index === proceedingTopicIndex) {
-                return 0
-            } else if (index > proceedingTopicIndex) {
-                return value
+                if (roundDraft === 1) {
+                    const returnValue:TProgressUnitInfo = {
+                        firstDraft: proceedingTopicIndex,
+                        secondDraft: value.secondDraft,
+                        firstFeedback: feedback? feedback:value.firstFeedback,
+                        secondFeedback: value.secondFeedback}
+                    return returnValue;
+                } else {
+                    const returnValue:TProgressUnitInfo = {
+                        firstDraft: value.firstDraft,
+                        secondDraft: proceedingTopicIndex,
+                        firstFeedback: value.firstFeedback,
+                        secondFeedback: feedback? feedback:value.secondFeedback
+                    }
+                    return returnValue;
+                }
             } else {
-                return 1
+                return value
             }
         })
-        set(()=>({completeTopicIndex: currentStateCompleteTopicIndex}))
+        set(()=>({completeTopicIndex: SetCompleteTopicIndexValue}))
     }
 }))
 

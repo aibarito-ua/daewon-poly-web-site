@@ -20,9 +20,10 @@ export const navItems:INavItems = {
     },
     student: {
         selectedMenu: [
-            {path: "MyPage", label: 'My Page'},
-            {path: "SelectEssayWriting", label: 'Essay Writing'},
-            {path: "Portfolio", label: 'Portfolio'},
+            {path: "WritingClinic", label: 'Writing Clinic'},
+            {path: "StudentProgress", label: 'My Progress'},
+            {path: "StudentReport", label: 'My Report'},
+            {path: "StudentPortfolio", label: 'My Portfolio'},
             {path: "StudentHome", label: ''}
         ]
     },
@@ -86,7 +87,7 @@ export const Nav = () => {
         <nav className={`fixed top-0 z-50 w-full max-h-[10vh] bg-gray-200 border-b border-gray-200 ${topNavHiddenFlagged ? '': 'hidden'}`}>
             <div className='flex flex-row px-[1vw]'>
             <div className='flex flex-1 gap-4 p-4 content-center items-center'>
-                <div onClick={()=>CommonFunctions.goLink('SelectEssayWriting',navigate, role)}>{svgHome}</div>
+                <div onClick={()=>CommonFunctions.goLink('WritingClinic',navigate, role)}>{svgHome}</div>
                 <div className='font-bold text-2xl p-2'>{subNavTitleString}</div>
             </div>
             {subRightNavTitleString !== '' && 

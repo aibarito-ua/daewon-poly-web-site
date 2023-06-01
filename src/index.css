@@ -62,7 +62,8 @@ code {
   @apply 
   text-black
   w-full
-  h-[20vh]
+  md:h-full
+  max-md:h-[10vh]
   font-bold
   shadow-md
   rounded-2xl

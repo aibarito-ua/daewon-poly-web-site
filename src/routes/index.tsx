@@ -12,8 +12,8 @@ import { Admin } from '../pages/Admin';
 import { Student } from '../pages/Student/Student';
 import { Teacher } from '../pages/Teacher';
 import {routeValues} from './routeValues';
-import SelectEssayWriting from '../pages/Student/SelectEssayWriting';
-import EssayWritingSelectTopic from '../pages/Student/EssayWritingSelectTopic';
+import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
+import SelectUnit from '../pages/Student/SelectUnit';
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
@@ -56,11 +56,11 @@ export default function Roter() {
                 </Route>
                 {/* 학생 페이지 */}
                 <Route element={<PrivateRoute authenticated={true} pageAuth='student' />} >
-                    <Route path='/student/SelectEssayWriting' element={<SelectEssayWriting />}></Route>
-                    <Route path='/student/EssayWriting' element={ <EssayWriting />}></Route>
-                    <Route path='/student/EssayWritingSelectTopic' element={ <EssayWritingSelectTopic />}></Route>
-                    <Route path='/student/MyPage' element={<MyPage />}></Route>
-                    <Route path='/student/Portfolio' element={<Portfolio />}></Route>
+                    <Route path='/student/WritingClinic' element={<SelectWritingClinic />}></Route>
+                    <Route path='/student/WritingClinic/SparkWriting/:unit/:draft' element={ <EssayWriting />}></Route>
+                    <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
+                    <Route path='/student/MyProgress' element={<MyPage />}></Route>
+                    <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
 
                 </Route>
                 {/* <Route path='' element={ }></Route> */}

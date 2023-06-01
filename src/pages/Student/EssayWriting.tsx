@@ -4,6 +4,8 @@ import useNavStore from '../../store/useNavStore';
 import useEssayWritingCenterDTStore from '../../store/useEssayWritingCenterDTStore';
 import { SvgChevronRight } from '../../util/svgs/svgChevronRight';
 import { EssayWritingSelectTopicAPI, EssayWritingSelectTopicfor2ndAPI } from './api/EssayWritingSelectTopic.api';
+import { SvgRefreshIcon } from '../../util/svgs/svgRefresh';
+import { useParams } from 'react-router-dom';
 
 export const EssayWriting = () => {
     // outliner select ui event flag
@@ -17,13 +19,29 @@ export const EssayWriting = () => {
     // is can edit
     const [isCanUseEdit, setIsCanUseEdit] = React.useState<boolean>(false);
 
-    const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, subRightNavTitleString} = useNavStore();
+    // Nav Store
+    const { 
+        setTopNavHiddenFlagged,
+        setSubNavTitleString,
+        setSubRightNavTitleString,
+        subRightNavTitleString,
+        
+        selectUnitInfo
+    } = useNavStore();
+    // WritingCenter Store
     const {essayWritingDatasStore, setUseAI1, setUseAI2, } = useEssayWritingCenterDTStore();
+    const params = useParams();
     React.useEffect(()=>{
         setTopNavHiddenFlagged(true);
-        setSubNavTitleString('Essay Writing');
-        // console.log('title ===',subRightNavTitleString)
-        
+        setSubNavTitleString(`${selectUnitInfo.main} ${selectUnitInfo.sub}`);
+        console.log('url param ==',params.unit,'\n',params.draft)
+        if (params.draft === '1') {
+            const rightTitle = <span><span className='ordinal'>{'1st'}</span>{' Draft'}</span>
+            setSubRightNavTitleString(rightTitle)
+        } else {
+            const rightTitle = <span><span className='ordinal'>{'2nd'}</span>{' Draft'}</span>
+            setSubRightNavTitleString(rightTitle)
+        }
         if (essayTopicInput === undefined || essayTopicInput === '') {
             setEssayTopicInput(essayWritingDatasStore[0].topic);
         }
@@ -106,6 +124,7 @@ export const EssayWriting = () => {
                 
                     {essayWritingDatasStore.map((textItem, textItemIndex)=>{
                         return (
+                            <div className='relative flex flex-1 h-full' key={'text-item-'+textItemIndex}>
                             <div key={'text-item-'+textItemIndex}
                             className={
                                 `relative flex flex-col flex-1 h-full bg-white border-gray-200 border-2 z-40 w-full md:w-4/12 max-md:mb-4 overflow-y-auto p-2 ${(selectOutliner !== 0 && selectOutliner === (textItemIndex+1)) ? 'ring-8 ring-yellow-400' : '' } ${textItemIndex === 2 ? `justify-center text-center`: `justify-start text-start`}`
@@ -117,7 +136,7 @@ export const EssayWriting = () => {
                                     setSelectOutliner(textItemIndex+1);
                                 }
                             }}>
-                                <span className='absolute'>Edit</span>
+                                
                                 {(selectOutliner !== 0 && selectOutliner === (textItemIndex+1)) 
                                 ? <div className='absolute top-[35%] right-0 md:hidden'>{SvgChevronRight}</div>
                                 : ''
@@ -132,6 +151,13 @@ export const EssayWriting = () => {
                                     : <div>Loading....</div>
                                 )}
                                 {textItemIndex===2 && textItem.text.split('\n').map((v,i)=>outlineDivMap(v,i))}
+                            </div>
+                            <div className='w-fit absolute z-50 -bottom-9 right-0 px-3 py-1'>
+                                <div className='flex flex-1 flex-row content-center items-center w-full'>
+                                    <div className='w-fit bg-slate-600 text-white px-2 py-1 h-8 rounded-md'>Edit</div>
+                                    <div className='w-fit bg-slate-600 text-white px-2 py-1 h-8 rounded-md'>{SvgRefreshIcon}</div>
+                                </div>
+                            </div>
                             </div>
                         )
                     })}
