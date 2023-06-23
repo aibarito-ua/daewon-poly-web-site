@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import { Home } from '../pages/Home';
 import { Login } from '../pages/Login';
-import { EssayWriting } from '../pages/Student/EssayWriting';
+import EssayWriting from '../pages/Student/EssayWriting';
 import { MyPage } from '../pages/Student/MyPage';
 import { Portfolio } from '../pages/Student/Portfolio';
 import WebViewWrap from '../pages/WebViewWrap';
@@ -14,14 +14,16 @@ import { Teacher } from '../pages/Teacher';
 import {routeValues} from './routeValues';
 import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
 import SelectUnit from '../pages/Student/SelectUnit';
+import PreviewSparkWriting from '../pages/Student/PreviewSparkWriting';
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
     const publicRoutes = () => {
         const routeValue = routeValues.publicRoutes;
+        // 각 권한별 기본 페이지
         const mainPage = role === 'logout' ? <Home /> : (
             role === 'admin' ? <Admin /> : (
-                role === 'teacher' ? <Teacher /> : <Student />
+                role === 'teacher' ? <Teacher /> : <SelectWritingClinic />
             )
         );
         return (
@@ -41,7 +43,7 @@ export default function Roter() {
 
     // }
     return (
-        <div className="mx-auto items-center text-center ">
+        <div className="max-display-screen">
             {isOpen && <Login />}
             <Routes>
                 {/* No Login Pages */}
@@ -61,6 +63,7 @@ export default function Roter() {
                     <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
                     <Route path='/student/MyProgress' element={<MyPage />}></Route>
                     <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
+                    <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
 
                 </Route>
                 {/* <Route path='' element={ }></Route> */}

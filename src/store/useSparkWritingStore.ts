@@ -1,48 +1,34 @@
-export const EssayWritingDatas = {
-    HeadTexts: [
-        'Essay Outliner will generate an outline for a topic.',
-        'Enter Essay Title in the below black.'
-    ],
-    mainTitleNumbering : /^(i.|ii.|iii.|iv.|v.|vi.|vii.|viii.|ix.|x.)/gi,
-    subTitleNumbering: /^(a.|b.|c.|d.|e.|f.|g.|h.)/gi,
-    inputButtonTexts: [
-        'ASK'
-    ],
-    editButtonTexts: [
-        'Edit'
-    ],
-    displayEssayOutliners: [
-        {
-            Topic: 'How to write essays well.',
-            Text: `I. Introduction:\nA. Hook: Have you ever had to write an essay and didn't know where to start?\nB. Thesis Statement: Writing essays can be tough, but with a few tips and tricks, you can become a pro!\n\nII. Body Paragraph 1:\nA. Topic Sentence: The first step to writing a great essay is to pick a topic that you're interested in.\nB. Supporting Evidence: Think about what you're passionate about or what you want to learn more about.\nC. Explanation: When you're interested in the topic, it's easier to write and you'll be more motivated to do a good job.\n\nIII. Body Paragraph 2:\nA. Topic Sentence: Once you have your topic, it's important to do some research.\nB. Supporting Evidence: Look for information in books, articles, and online sources.\nC. Explanation: The more you know about your topic, the better your essay will be.\n\nIV. Body Paragraph 3:\nA. Topic Sentence: When you start writing, make sure to have a clear structure.\nB. Supporting Evidence: Use an outline or graphic organizer to organize your thoughts.\nC. Explanation: This will help you stay on track and make sure your essay flows well.\n\nV. Conclusion:\nA. Summary of Main Points: To write a great essay, pick a topic you're interested in, do some research, and have a clear structure.\nB. Final Statement: With these tips, you'll be writing amazing essays in no time!`
-        },
-        {
-            Topic: 'How to write essays well.2',
-            Text: `I. Introduction:\nA. Hook: Have you ever had to write an essay and didn't know where to start?\nB. Thesis Statement: Writing essays can be tough, but with a few tips and tricks, you can become a pro!\n\nII. Body Paragraph 1:\nA. Topic Sentence: The first step to writing a great essay is to pick a topic that you're interested in.\nB. Supporting Evidence: Think about what you're passionate about or what you want to learn more about.\nC. Explanation: When you're interested in the topic, it's easier to write and you'll be more motivated to do a good job.\n\nIII. Body Paragraph 2:\nA. Topic Sentence: Once you have your topic, it's important to do some research.\nB. Supporting Evidence: Look for information in books, articles, and online sources.\nC. Explanation: The more you know about your topic, the better your essay will be.\n\nIV. Body Paragraph 3:\nA. Topic Sentence: When you start writing, make sure to have a clear structure.\nB. Supporting Evidence: Use an outline or graphic organizer to organize your thoughts.\nC. Explanation: This will help you stay on track and make sure your essay flows well.\n\nV. Conclusion:\nA. Summary of Main Points: To write a great essay, pick a topic you're interested in, do some research, and have a clear structure.\nB. Final Statement: With these tips, you'll be writing amazing essays in no time!`
-        },
-        {
-            Topic: '',
-            Text: 'I will make my own outliner.'
-        }
-    ],
-    selectBoxTopics: [
-        
-        {
-            title: {main: 'Unit 1', sub: 'Descriptive Essays'}, 
-            topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1], 
-        },
-        {title: {main: 'Unit 2', sub: 'Informative Essays'}, topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1]},
-        {title: {main: 'Unit 3', sub: 'Personal Narratives'}, topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1]},
-        {title: {main: 'Unit 4', sub: 'Science Fiction Short Stories'}, topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1]},
-        {title: {main: 'Unit 5', sub: 'Persuasive Essays'}, topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1]},
-        
-    ],
-    // name: 'Unit_1_1',
-    // class: 'GT4',
-    // semester: '2',
-    // topic: 'Descriptive Essay',
-    // format_type: 'OL01',
-    outlineData: [
+import {create} from 'zustand'
+const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
+    selectBoxUnit: 
+[
+    {
+        title: {main: 'Unit 1', sub: 'Descriptive Essays'}, 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1], 
+        countofUseAIProofreading: 0
+    },
+    {
+        title: {main: 'Unit 2', sub: 'Informative Essays'}, 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1],
+        countofUseAIProofreading: 0
+    },
+    {
+        title: {main: 'Unit 3', sub: 'Personal Narratives'}, 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1],
+        countofUseAIProofreading: 0
+    },
+    {
+        title: {main: 'Unit 4', sub: 'Science Fiction Short Stories'}, 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1],
+        countofUseAIProofreading: 0
+    },
+    {
+        title: {main: 'Unit 5', sub: 'Persuasive Essays'}, 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1],
+        countofUseAIProofreading: 0
+    },
+],
+    outlineItems: [
         {
             "name": "Unit_1_1",
             "class": ["GT4"],
@@ -303,14 +289,63 @@ export const EssayWritingDatas = {
             ]
         },
     ],
-}
+    checkWritingValues: {
 
+    },
+    setOutlineInputText: (inputText: string, unitIndex:string, draftIndex:string, inputKey:string, inputIndex:number, mainIndex:number, subIndex?:number)=>{
+        console.log('setOutlineInputText ====\n===input text =',inputText,'\nunit index: ',unitIndex, '\ninputKey: ', inputKey, '\nmainIndex: ',mainIndex, '\nsubIndex:',subIndex)
+        const UnitIndex = parseInt(unitIndex);
+        // const DraftIndex = parseInt(draftIndex);
+        let dumyOutlineItems = get().outlineItems;
+        let dumyKeyItems = dumyOutlineItems[UnitIndex-1];
+        if (dumyKeyItems !== undefined) {
+            let dumyTextinOutlineItems = dumyKeyItems[`${inputKey}`];
+            if (typeof(dumyTextinOutlineItems) !== 'string' && dumyTextinOutlineItems !== undefined) {
+                let dumyTextinOutlineItem = dumyTextinOutlineItems[mainIndex];
+                let max_input_length = parseInt(dumyOutlineItems[UnitIndex-1].CheckWriting);
+                
+                let dumyKeyName = `Unit_${unitIndex}_${draftIndex}`;
+                let dumyCheckWritingValues = get().checkWritingValues;
+                let dumyCheckWritingValue = dumyCheckWritingValues[dumyKeyName];
+                if (dumyCheckWritingValue === undefined) {
+                    dumyCheckWritingValues[dumyKeyName] = Array.from({length:max_input_length}, ()=>'');
+                }
+                if (subIndex !== undefined) {
+                    
+                    if (Array.isArray(dumyTextinOutlineItem)) {
+                        // 하위 text 입력
+                        let dumySubTextinOutlineItem = dumyTextinOutlineItem[subIndex];
+                        if (typeof(dumySubTextinOutlineItem) !== 'string') {
+                            dumySubTextinOutlineItem.text = inputText;
 
-// `
-// My hand were shaking as I walk out of my house the last Monday. It wasn’t just a regurar Monday, but it was my first Monday at a new school.\n
-// I had no friend, and I didn’t even know who the my teacher was. All I was hope for was for the day to go by quick so I could return to my cozy ed.\n\n
-// The school bus pulled up to the bus stop and I took a deep breathing as I stepped on the bus. The kids were yell and play, but they all stopped and stared at me. I slid into the first empty seat I could find. After the bus pulled up to school, all the kids want to their classroom. I didn’t know where to go.\n
-// The bus driver honked the hon and pointed the school, but it was raining too hard for me to hear what he was saying. I stood in the rain and stared at the enomous building. Then I felt a warm hands on my arm. It was a girl.\n
-// She sai that her name was sally. She was in the 4th grade, and it was her first day, too! Since we are both feeling nervous, we decided to stick together and help each other. Sally and I walked into the school together as brave as two 4th grade kids can be.\n\n
-// Although my first day was still scared, Sally made it easier. When I realized I had forgot to bring a drink for lunch, Sally shared hers with me. When Sally couldn’t figure a math problem, I showed her how to find the answer. I learned that if
-// `
+                            dumyCheckWritingValues[dumyKeyName][inputIndex] = inputText;
+                            set(()=>({
+                                outlineItems: dumyOutlineItems,
+                                checkWritingValues: dumyCheckWritingValues
+                            }))
+                        }
+
+                    }
+                } else {
+                    if ( !Array.isArray(dumyTextinOutlineItem) && typeof(dumyTextinOutlineItem) !== 'string') {
+                        // input text
+                        dumyTextinOutlineItem.text=inputText;
+                        dumyCheckWritingValues[dumyKeyName][inputIndex] = inputText;
+                        set(()=>({
+                            outlineItems: dumyOutlineItems,
+                            checkWritingValues: dumyCheckWritingValues
+                        }))
+                    }
+                }
+            }
+        }
+    },
+    setSelectBoxUnit: (unitIndex:number, count: number) => {
+        let dumySelectBox = get().selectBoxUnit;
+        dumySelectBox[unitIndex].countofUseAIProofreading = count
+        set(()=>({selectBoxUnit: dumySelectBox}))
+    }
+
+}))
+
+export default useSparkWritingStore;

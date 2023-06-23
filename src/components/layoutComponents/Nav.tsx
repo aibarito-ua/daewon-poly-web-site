@@ -24,7 +24,7 @@ export const navItems:INavItems = {
             {path: "StudentProgress", label: 'My Progress'},
             {path: "StudentReport", label: 'My Report'},
             {path: "StudentPortfolio", label: 'My Portfolio'},
-            {path: "StudentHome", label: ''}
+            // {path: "StudentHome", label: ''}
         ]
     },
     teacher: {
@@ -49,8 +49,11 @@ export const Nav = () => {
     )
     
     return (
-    <div className=''>
-        <nav className={`fixed top-0 z-50 w-full max-h-[10vh] bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${topNavHiddenFlagged ? 'hidden': ''}`}>
+    <nav id='navMain' className=''>
+        <div className={`absolute top-0 left-0 z-50 max-w-[1280px] w-full max-h-20 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${
+            // topNavHiddenFlagged ? 'hidden': ''
+            'hidden'
+            }`}>
             <div className="px-[1vw] py-[2vh]">
                 <div className="flex items-center justify-between">
                 <div className="flex items-center justify-start">
@@ -83,11 +86,11 @@ export const Nav = () => {
                     </div>
                 </div>
             </div>
-        </nav>
-        <nav className={`fixed top-0 z-50 w-full max-h-[10vh] bg-gray-200 border-b border-gray-200 ${topNavHiddenFlagged ? '': 'hidden'}`}>
+        </div>
+        <div className={`absolute top-0 z-50 w-full h-full max-h-20 bg-white ${topNavHiddenFlagged ? '': 'hidden'}`}>
             <div className='flex flex-row px-[1vw]'>
             <div className='flex flex-1 gap-4 p-4 content-center items-center'>
-                <div onClick={()=>CommonFunctions.goLink('WritingClinic',navigate, role)}>{svgHome}</div>
+                <div onClick={()=>CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)}>{svgHome}</div>
                 <div className='font-bold text-2xl p-2'>{subNavTitleString}</div>
             </div>
             {subRightNavTitleString !== '' && 
@@ -96,7 +99,7 @@ export const Nav = () => {
                 </div>
             }
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
     )
 }

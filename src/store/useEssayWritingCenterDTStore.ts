@@ -1,38 +1,7 @@
 import { create } from "zustand";
 const useEssayWritingCenterDTStore = create<IEssayWritingCenterDT>((set, get)=>({
-    // writing 
-    essayWritingDatasStore: [
-        {
-            topic: '',
-            text: ''
-        },
-        {
-            topic: '',
-            text: ''
-        },
-        {
-            topic: '',
-            text: 'I will make my own outliner.'
-        },
-    ],
-    setUseAI1: (topic: string, text:string) => {
-        const useAI1State = { topic, text };
-        let essayWritingDatasStore = get().essayWritingDatasStore;
-        essayWritingDatasStore[0] = useAI1State;
-        set(()=>({essayWritingDatasStore}))
-    },
-    setUseAI2: (topic: string, text:string) => {
-        const useAI1State = { topic, text };
-        let essayWritingDatasStore = get().essayWritingDatasStore;
-        essayWritingDatasStore[1] = useAI1State;
-        set(()=>({essayWritingDatasStore}))
-    },
-    setUseUser: (topic: string, text?:string) => {
-        const useAI1State = { topic, text: text ? text : get().essayWritingDatasStore[2].text };
-        let essayWritingDatasStore = get().essayWritingDatasStore;
-        essayWritingDatasStore[2] = useAI1State;
-        set(()=>({essayWritingDatasStore}))
-    },
+    // writing input values
+    essayWritingInputItems: [],
     // topic check
     proceedingTopicIndex: 0,
     completeTopicIndex: Array.from({length: 5}, (v, i)=>{
@@ -40,6 +9,28 @@ const useEssayWritingCenterDTStore = create<IEssayWritingCenterDT>((set, get)=>(
         // else return 3
         return {firstDraft: 1, secondDraft: 5, firstFeedback: false, secondFeedback: false };
     }),
+    setInitCompleteTopicIndex: (unitValue: TSelectBoxUnitValue, unitIndex: number ) => {
+        let currentCompleteTopicProcessAll:TProgressUnitInfo[] = JSON.parse(JSON.stringify(get().completeTopicIndex));
+        let currentCompleteTopicProcess = currentCompleteTopicProcessAll[unitIndex];
+        const draft1_progress = unitValue.progress[0]
+        const draft2_progress = unitValue.progress[1]
+        currentCompleteTopicProcess.firstDraft = draft1_progress;
+        currentCompleteTopicProcess.secondDraft = draft2_progress;
+        if (draft1_progress === 4) {
+            currentCompleteTopicProcess.firstFeedback = true;
+        } else {
+            currentCompleteTopicProcess.firstFeedback = false;
+        }
+        if (draft2_progress === 4) {
+            currentCompleteTopicProcess.secondFeedback = true;
+        } else {
+            currentCompleteTopicProcess.secondFeedback = false;
+        }
+        set(()=>({
+            completeTopicIndex: currentCompleteTopicProcessAll
+        }))
+
+    },
     setProceedingTopicIndex: (proceedingTopicIndex:number,)=>{
         set(()=>({proceedingTopicIndex}))
     },

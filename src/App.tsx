@@ -6,10 +6,12 @@ import NavAside from './components/layoutComponents/Navs/NavAside';
 function App() {
   return (
     <BrowserRouter>
+      <main className='wrapper'>
+        <div className='container-wrapper relative'>
       <Nav />
       <NavAside />
-      <main className={`bg-gray-200 min-h-screen -mt-[10vh]`}>
         <Router />
+        </div>
       </main>
     </BrowserRouter>
   );

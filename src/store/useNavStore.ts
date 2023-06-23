@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 const useNavStore = create<INavItem>((set) => ({
+    secondGenerationOpen: false,
     selectedMenu: "",
     selectedMenuTitle: "",
     sidebarFlagged: false,

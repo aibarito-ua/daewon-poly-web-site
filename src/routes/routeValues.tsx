@@ -1,12 +1,13 @@
 import React from 'react';
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
-import { EssayWriting } from "../pages/Student/EssayWriting";
+import EssayWriting from "../pages/Student/EssayWriting";
 import { MyPage } from "../pages/Student/MyPage";
 import { Portfolio } from "../pages/Student/Portfolio";
 import WebViewWrap from "../pages/WebViewWrap";
 import SelectEssayWriting from '../pages/Student/SelectWritingClinic';
 import EssayWritingSelectTopic from '../pages/Student/SelectUnit';
+
 
 export const routeValues = {
     // authenticated true

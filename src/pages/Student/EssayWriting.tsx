@@ -1,170 +1,330 @@
 import React from 'react';
-import { EssayWritingDatas } from '../../utils/EssayWriting/textData';
 import useNavStore from '../../store/useNavStore';
 import useEssayWritingCenterDTStore from '../../store/useEssayWritingCenterDTStore';
-import { SvgChevronRight } from '../../util/svgs/svgChevronRight';
-import { EssayWritingSelectTopicAPI, EssayWritingSelectTopicfor2ndAPI } from './api/EssayWritingSelectTopic.api';
-import { SvgRefreshIcon } from '../../util/svgs/svgRefresh';
-import { useParams } from 'react-router-dom';
+import useSparkWritingStore from '../../store/useSparkWritingStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import textBoxImg from '../../util/png/textKeyBox.png'
+import textSubBoxImg from '../../util/png/outlinTextSubBox.png'
+import {PopupModalComponent} from '../../components/toggleModalComponents/popupModalComponent'
+import useLoginStore from '../../store/useLoginStore';
+import { CommonFunctions } from '../../util/common/commonFunctions';
+import FormDialog from '../../components/toggleModalComponents/ChatbotModalComponent';
+interface IDUMPOutlineItem {
+    name:string;
+    CheckWriting: string;
+    [key:string]: any[]|any;
+}
 
-export const EssayWriting = () => {
-    // outliner select ui event flag
-    const [selectOutliner, setSelectOutliner] = React.useState<number>(0);
+const EssayWriting = () => {
+    
     // input text
     const [essayTopicInput, setEssayTopicInput] = React.useState<string>('');
-    // call api proceeding
-    const [proceedingAPI, setProceedingAPI] = React.useState<boolean>(false);
-    // called api index
-    const [inProgress, setInProgress] = React.useState<number>(0);
-    // is can edit
-    const [isCanUseEdit, setIsCanUseEdit] = React.useState<boolean>(false);
+    
+    // fold flag
+    const [foldFlag, setFoldFlag] = React.useState<boolean[]>([]);
+    const [updateFoldIndex, setUpdateFoldIndex] = React.useState<number>();
+
+    // check open  Buttons
+    const [isSaveButtonOpen, setIsSaveButtonOpen] = React.useState<boolean>(false);
+    const [isPreviewButtonOpen, setIsPreviewButtonOpen] = React.useState<boolean>(false);
+
+    // unit/draft index params: unit start to 0, draft use 1 or 2
+    const [paramValues, setParamValues] = React.useState<{unitIndex:number, draft:number}>({unitIndex:0, draft: 0});
+
+    // Save modal
+    const [showSaveModal, setShowSaveModal] = React.useState<boolean>(false);
+    // Preview modal
+    const [showPreviewModal, setShowPreviewModal] = React.useState<boolean>(false);
+
+    // Chatbot open
+    const [showChatbotModal, setShowChatbotModal] = React.useState<boolean>(false);
+    // Modal State
+    const [input, setInput] = React.useState<string>('');
 
     // Nav Store
     const { 
         setTopNavHiddenFlagged,
         setSubNavTitleString,
         setSubRightNavTitleString,
-        subRightNavTitleString,
-        
         selectUnitInfo
     } = useNavStore();
     // WritingCenter Store
-    const {essayWritingDatasStore, setUseAI1, setUseAI2, } = useEssayWritingCenterDTStore();
+    const {essayWritingInputItems, } = useEssayWritingCenterDTStore();
+    // Spark Store
+    const {selectBoxUnit, outlineItems, setOutlineInputText, checkWritingValues} = useSparkWritingStore();
     const params = useParams();
+    const UnitIndex:string = params.unit!==undefined? params.unit: '0';
+    const DraftIndex:string = params.draft!==undefined? params.draft: '0';
+    // Navigate hook
+    const navigate = useNavigate();
+    // current role
+    const {role} = useLoginStore()
+
     React.useEffect(()=>{
         setTopNavHiddenFlagged(true);
         setSubNavTitleString(`${selectUnitInfo.main} ${selectUnitInfo.sub}`);
-        console.log('url param ==',params.unit,'\n',params.draft)
+        // path param to number
+        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        const draftIndex:number = parseInt(params.draft !== undefined ? params.draft: '1');
+        if(paramValues === undefined) {
+            setParamValues({unitIndex:unitIndex, draft:draftIndex})
+        }
+        
+        // fold
+        if (foldFlag.length === 0) {
+            const data = outlineItems[unitIndex];
+            console.log('fold 0', data)
+            const keys = Object.keys(data).splice(6);
+            const leng = keys.length
+            const foldInit = Array.from({length: leng}, ()=>false)
+            
+            setFoldFlag(foldInit)
+        } else {
+            if (updateFoldIndex !== undefined) {
+                const target = document.getElementById(`fold-div-${updateFoldIndex}`)
+                target?.scrollIntoView({behavior: 'auto', block: 'end'})
+            }
+        }
+
         if (params.draft === '1') {
-            const rightTitle = <span><span className='ordinal'>{'1st'}</span>{' Draft'}</span>
+            const rightTitle = <span>{'Step 1'}<span className='ordinal pl-4 pr-1'>{'1st'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         } else {
-            const rightTitle = <span><span className='ordinal'>{'2nd'}</span>{' Draft'}</span>
+            const rightTitle = <span>{'Step 2'}<span className='ordinal pl-4 pr-1'>{'2nd'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         }
         if (essayTopicInput === undefined || essayTopicInput === '') {
-            setEssayTopicInput(essayWritingDatasStore[0].topic);
+            
+            // nav header setting
+            setEssayTopicInput(selectBoxUnit[unitIndex].topic);
         }
+        callbackCheckValues();
         return () => {
             // console.log('did unmount in Essay Writing Page')
+            
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
+            setSubRightNavTitleString('')
+            setIsPreviewButtonOpen(false);
+            setIsSaveButtonOpen(false);
         }
-    },[setTopNavHiddenFlagged, essayTopicInput, essayWritingDatasStore, setSubNavTitleString, setSubRightNavTitleString])
+    },[
+        // page state
+        params,
+        foldFlag,
+        essayTopicInput,
+        paramValues,
+        // nav store
+        setTopNavHiddenFlagged, 
+        setSubNavTitleString,
+        setSubRightNavTitleString,
+        selectUnitInfo,
+        // WritingCenter Store
+        essayWritingInputItems,
+        selectBoxUnit,
+        // Spark Store
+        outlineItems,
+    ])
 
-    const onAskEvent = async () => {
-        if (essayTopicInput.trim() === '') {
-            // toast message
-            console.log('please check your input.')
-            setEssayTopicInput('');
-        } else {
-            if (!proceedingAPI) {
-                setUseAI1(essayTopicInput, '');
-                setUseAI2(essayTopicInput, '');
-                setProceedingAPI(true);
-                setInProgress(1);
-                // api setting
-                const textFromAPI1 = await EssayWritingSelectTopicfor2ndAPI(essayTopicInput).then((result)=>{
-                    setUseAI1(essayTopicInput, result.text);
-                    setInProgress(2);
-                    return result;
-                });
-                const textFromAPI2 = await EssayWritingSelectTopicAPI(essayTopicInput).then((result)=>{
-                    setUseAI2(essayTopicInput, result.text);
-                    setInProgress(0);
-                    return result;
-                })
-                if (textFromAPI1.status !== 201 || textFromAPI2.status !== 201) {
-                    // server error
+    const callbackCheckValues = React.useCallback( ()=>{
+        if (checkWritingValues[`Unit_${params.unit}_${params.draft}`] !== undefined) {
+            console.log('callback check')
+            const checking:string[] = checkWritingValues[`Unit_${UnitIndex}_${DraftIndex}`];
+            const unitIndex:number = parseInt(UnitIndex);
+            const max_leng = parseInt(outlineItems[unitIndex-1].CheckWriting);
+            let targetFlags = Array.from({length:max_leng},()=>1)
+            targetFlags = checking.map((v:string, i:number)=>{
+                const target_leng = v.replaceAll(' ','').length;
+                if(target_leng >= 10) {
+                    // console.log(`${i}번째 총 ${target_leng}`)
+                    // 10자 이상
+                    return 0
                 } else {
-                    setProceedingAPI(false)
+                    // 미만
+                    return 1
                 }
+            })
+            const sum = targetFlags.reduce((a,b) => (a+b));
+            // sum === 0 => Preview && save 활성화
+            // sum >0, sum < targetFlags.length; -> save 활성화
+            // else -> 모든 버튼 비활성화
+            if (sum === 0) {
+                setIsSaveButtonOpen(true)
+                setIsPreviewButtonOpen(true);
+            } else if (sum > 0 && sum < targetFlags.length) {
+                setIsSaveButtonOpen(true)
+            } else {
+                setIsPreviewButtonOpen(false);
+                setIsSaveButtonOpen(false)
             }
         }
+    },[])
+
+    
+    const foldFlagFunction = (i:number) => {
+        console.log('fold settings ==',foldFlag)
+        const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
+            if (foldIndex === i) {
+                return !foldItem
+            } else return foldItem;
+        })
+        setFoldFlag(dumpFlags)
+        setUpdateFoldIndex(i);
     }
-    const outlineDivMap = (v:string, i: number) => {
-        const mainCheck = v.match(EssayWritingDatas.mainTitleNumbering);
-        const subCheck = v.match(EssayWritingDatas.subTitleNumbering);
-        return <p className={
-            ` ${mainCheck!==null ? ''
-            : (subCheck !== null ? 'ml-5': 'ml-8')}`
-        } key={'text-test-'+i}>{v}</p>
-    }
-    return (
-        <section className={`section-common-layout z-0`}>
-            <div className='flex flex-1 justify-center w-screen pt-[10vh] px-[4vw] max-h-[90vh] z-10'>
-            {/* select and next button */}
-            {selectOutliner !== 0 && (
-                <div className='absolute top-[50vh] right-0 max-md:hidden'>{SvgChevronRight}</div>
-            )}
-            <div className='relative flex-col flex-1 bg-gray-300 max-md:w-full md:w-11/12 md:h-[78vh] max-md:px-4 md:px-[3vw] max-md:py-4 md:py-[5vh] rounded-xl z-10'>
-                {/* Title */}
-                <div className='flex-col flex-1 justify-start text-start font-bold text-lg md:text-2xl sm:text-xl md:pl-4 h-[8vh]'>
-                {EssayWritingDatas.HeadTexts.map((v,i) => {
-                    return <p key={'essay-writing-texts'+i.toString()} className='flex-col flex-1'>{v}</p>
-                })}
-                </div>
-                {/* Input && Button */}
-                <div className='flex flex-1 max-md:flex-col justify-start text-start mt-4 pt-4 pb-4 md:pl-4 max-md:h-[15vh] md:h-[7vh]'>
-                    <input className='md:w-10/12 w-full max-md:h-10 md:h-[5vh] rounded-md px-4'
-                    onChange={(e)=>setEssayTopicInput(e.currentTarget.value)}
-                    readOnly={proceedingAPI? true: false}
-                    value={essayTopicInput}/>
-                    <button className={`disabled:border-opacity-25 disabled:text-opacity-25 text-black md:w-1/12 w-full max-md:h-10 md:h-[5vh] md:mx-4 max-md:mt-4 md:mt-0 bg-white border-4 border-black rounded-3xl font-bold text-lg`}
-                    disabled={proceedingAPI? true:false}
-                    onClick={async(e)=>{
-                        e.preventDefault();
-                        await onAskEvent();
-                    }}
-                    >{EssayWritingDatas.inputButtonTexts[0]}</button>
-                </div>
+    const outlineBody = (outlineItem: IDUMPOutlineItem ) => {
+        const manufactureItem = {...outlineItem};
+        const keys = Object.keys(manufactureItem).splice(6)
+        const items = Object.values(manufactureItem).splice(6);
+        
+         return keys.map((v, i)=>{
+            return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} key={i} id={'ptitle'+i}>
+                <div className='outline-accordion-div-wrap'>
+                    <button type="button" 
+                        className="outline-accordion-button"
+                        onClick={()=>foldFlagFunction(i)}
+                    >
+                    <span className="outline-accordion-button-inner">{v}</span>
+                    </button>
                 
-                {/* Outliners */}
-                <div className='flex md:flex-wrap flex-row relative mt-4 max-md:flex-col gap-4 max-md:h-4/5 h-[50vh] max-md:pb-4 z-30'>
-                
-                    {essayWritingDatasStore.map((textItem, textItemIndex)=>{
-                        return (
-                            <div className='relative flex flex-1 h-full' key={'text-item-'+textItemIndex}>
-                            <div key={'text-item-'+textItemIndex}
-                            className={
-                                `relative flex flex-col flex-1 h-full bg-white border-gray-200 border-2 z-40 w-full md:w-4/12 max-md:mb-4 overflow-y-auto p-2 ${(selectOutliner !== 0 && selectOutliner === (textItemIndex+1)) ? 'ring-8 ring-yellow-400' : '' } ${textItemIndex === 2 ? `justify-center text-center`: `justify-start text-start`}`
-                            }
-                            onClick={()=>{
-                                if (selectOutliner === (textItemIndex+1)) {
-                                    setSelectOutliner(0);
+                        <div className="px-4 pb-4 text-left">
+                    <div className={`${foldFlag[i]? '': 'hidden'}`} id={`fold-div-${i}`}>
+                        {  Array.from(items[i]).map((item:any, itemIndex:number)=>{
+                            if (typeof(item) === 'string') {
+                                if (item !== '') {
+                                    return <div 
+                                        className='outline-content-box-item'
+                                        key={itemIndex}><span className='pl-2'></span>{item}</div>
                                 } else {
-                                    setSelectOutliner(textItemIndex+1);
+                                    return <div 
+                                        className='outline-content-box-item'
+                                        key={itemIndex}>{''}</div>
                                 }
-                            }}>
-                                
-                                {(selectOutliner !== 0 && selectOutliner === (textItemIndex+1)) 
-                                ? <div className='absolute top-[35%] right-0 md:hidden'>{SvgChevronRight}</div>
-                                : ''
+                            } else {
+                                const flagText = Object.keys(item).includes('text')
+                                if (flagText) {
+                                    return <div 
+                                        className='outline-content-box-item'
+                                        key={itemIndex}>
+                                            
+                                            <textarea rows={1} style={{'resize':'none'}} 
+                                            className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
+                                            placeholder={item.placeholder}
+                                            onChange={(e)=>{
+                                                e.currentTarget.style.height = 'auto';
+                                                e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                setOutlineInputText(e.currentTarget.value, UnitIndex, DraftIndex, v, item.inputIndex, itemIndex)
+                                                callbackCheckValues()
+                                            }}
+                                            value={item.text}
+                                            ></textarea>
+                                        </div>
+                                } else {
+                                    return item.map((subItem:string|TOutlineValues, subItemIndex:number)=>{
+                                        if (typeof(subItem) === 'string') {
+                                            return <div 
+                                            key={itemIndex+':'+subItemIndex} 
+                                            className='outline-content-box-sub-item'>{subItem}</div>
+                                        } else {
+                                            return <div 
+                                            className='outline-content-box-item'
+                                            key={itemIndex+':'+subItemIndex}>
+                                                <textarea rows={1} style={{'resize':'none'}} 
+                                                className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
+                                                placeholder={subItem.placeholder}
+                                                onChange={(e)=>{
+                                                    e.currentTarget.style.height = 'auto';
+                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    setOutlineInputText(e.currentTarget.value, UnitIndex, DraftIndex, v, subItem.inputIndex, itemIndex, subItemIndex)
+                                                    callbackCheckValues()
+                                                }}
+                                                value={subItem.text}
+                                                ></textarea>
+                                            </div>
+                                        }
+                                    })
                                 }
-                                
-                                {textItemIndex===0 && (inProgress!==1 
-                                    ? textItem.text.split('\n').map((v, i)=>outlineDivMap(v,i))
-                                    : <div>Loading....</div>
-                                )}
-                                {textItemIndex===1 && (inProgress===0 
-                                    ? textItem.text.split('\n').map((v, i)=>outlineDivMap(v,i))
-                                    : <div>Loading....</div>
-                                )}
-                                {textItemIndex===2 && textItem.text.split('\n').map((v,i)=>outlineDivMap(v,i))}
-                            </div>
-                            <div className='w-fit absolute z-50 -bottom-9 right-0 px-3 py-1'>
-                                <div className='flex flex-1 flex-row content-center items-center w-full'>
-                                    <div className='w-fit bg-slate-600 text-white px-2 py-1 h-8 rounded-md'>Edit</div>
-                                    <div className='w-fit bg-slate-600 text-white px-2 py-1 h-8 rounded-md'>{SvgRefreshIcon}</div>
-                                </div>
-                            </div>
-                            </div>
-                        )
-                    })}
-                    
+                            }
+                        })}
+                        </div>
+                    </div>
                 </div>
             </div>
+        }
+        )
+    }
+
+    return (
+        <section className={`section-common-layout z-0 use-nav-top`}>
+            <div className='flex flex-1 flex-col w-full h-full px-12 pb-4 z-0'>
+                {/* guide text */}
+                <div className='flex flex-row font-bold w-full justify-stretch py-4 text-black h-1/12 z-0'>
+                    <p className='flex flex-1 justify-start'>* Fill out the following outline.</p>
+                    <div className='flex flex-1 justify-end'>
+                        <FormDialog />
+                    </div>
+                </div>
+                {/* content */}
+                <div className='flex flex-col bg-gray-200 w-full h-full overflow-y-auto gap-4 p-4 z-0'>
+                    {outlineBody(outlineItems[parseInt(UnitIndex)-1])}
+                </div>
             </div>
+
+            <div className={`buttons-div ${(isPreviewButtonOpen||isSaveButtonOpen)? '': 'hidden'}`}>
+                <div className={`save-button div-to-button-hover-effect ${isSaveButtonOpen?'':'hidden'}`} onClick={()=>{
+                    setShowSaveModal(true)
+                    callbackCheckValues()
+                }}>Save</div>
+                <div className={`save-button div-to-button-hover-effect ${isPreviewButtonOpen?'':'hidden'}`} onClick={()=>{
+                    callbackCheckValues()
+                    setShowPreviewModal(true)
+                }}>Preview</div>
+            </div>
+            
+            {/* Save Modal */}
+            <PopupModalComponent 
+                Message={[
+                    'Do you want to save?'
+                ]}
+                YesMessage={`Yes, I'm sure.`}
+                NoMessage={`No, Cancel.`}
+                closeFlag={false}
+                positionTop='10'
+                positionLeft='50'
+                onClickYes={()=>{
+
+                    callbackCheckValues()
+                    setShowSaveModal(false)
+                }}
+                onClose={()=>{
+                    callbackCheckValues()
+                    setShowSaveModal(false)
+                }}
+                showFlag={showSaveModal}
+            />
+            {/* Preview Modal */}
+            <PopupModalComponent 
+                Message={[
+                    'Do you want to Preview?'
+                ]}
+                YesMessage={`Yes, I'm sure.`}
+                NoMessage={`No, Cancel.`}
+                closeFlag={false}
+                positionTop='10'
+                positionLeft='50'
+                onClickYes={()=>{
+                    
+                    callbackCheckValues()
+                    setShowPreviewModal(false)
+                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                }}
+                onClose={()=>{
+                    callbackCheckValues()
+                    setShowPreviewModal(false)
+                }}
+                showFlag={showPreviewModal}
+            />
         </section>
     )
 }
+
+export default EssayWriting;

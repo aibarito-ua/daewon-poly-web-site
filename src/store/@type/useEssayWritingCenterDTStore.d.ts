@@ -1,10 +1,8 @@
 interface IEssayWritingCenterDT {
-    essayWritingDatasStore: TUseItem[];
-    setUseAI1: (topic: string, text: string)=>void;
-    setUseAI2: (topic: string, text: string)=>void;
-    setUseUser: (topic: string, text?: string)=>void;
+    essayWritingInputItems: TUseItem[];
     proceedingTopicIndex: number;
     completeTopicIndex: TProgressUnitInfo[];
+    setInitCompleteTopicIndex: (unitValue:TSelectBoxUnitValue, unitIndex: number) => void;
     setProceedingTopicIndex: (proceedingTopicIndex:number) => void;
     setCompleteTopicIndex: (proceedingTopicIndex: number, roundDraft: number, feedback?: boolean) => void;
 }
@@ -15,8 +13,7 @@ type TUnitTitleItem = {
 }
 
 type TUseItem = {
-    topic: string,
-    text: string
+    [key:string]: TOutlineItem
 }
 
 type TProgressUnitInfo = {
