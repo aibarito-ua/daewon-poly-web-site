@@ -17,16 +17,24 @@ const contentComponent = ( outlineItem: IDUMPOutlineItem ) => {
         return (<div className='flex flex-1 w-full mb-4 h-fit max-h-[10vh] justify-center z-0' key={keyVal}>
             <div className='flex flex-row w-11/12 h-fit max-h-full gap-2 text-start'>
                 <div className='flex w-1/12 text-xl font-bold text-black p-3'>{`${titleKey}:`}</div>
-                <div className='flow-root bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'><span className='pl-4'/>{titleText}</div>
+                <div className='flow-root bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'>
+                    <span><span className='pl-4'/>
+                        <pre className='font-sans inline-block'>{titleText}</pre>
+                    </span>
+                </div>
             </div>
         </div>)
     }
     // Body
     const contentBodyComponent = (itemIndex:number, text:string) => {
-        return (<div className='' key={itemIndex}><span className='pl-4'></span>{text}</div>)
+        return (<span className='flex' key={itemIndex}><span className='pl-4'></span>
+            <pre className='font-sans inline-block'>{text}</pre>
+        </span>)
     }
     const contentSubBodyComponent = (subItemIndex:string, text:string) => {
-        return (<div className='' key={subItemIndex}><span className='pl-4'></span>{text}</div>)
+        return (<span className='flex' key={subItemIndex}><span className='pl-4'></span>
+            <pre className='font-sans inline-block'>{text}</pre>
+        </span>)
     }
 
     return (

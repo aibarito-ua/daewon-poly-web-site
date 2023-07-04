@@ -236,7 +236,7 @@ const PreviewSparkWriting = (props:any) => {
                 setIsUndoBody(false);
             }
         }
-        
+        console.log('test outline items =',outlineItems[unitIndex])
         return ()=>{
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
@@ -269,7 +269,7 @@ const PreviewSparkWriting = (props:any) => {
                     <div className='flex w-full mb-4 h-fit max-h-[10vh] justify-center z-0'>
                         <div className='flex flex-row w-11/12 h-fit max-h-full gap-2 text-start'>
                             <div className='flex w-1/12 text-lg font-bold text-black p-3'>{`Title:`}</div>
-                            <div className='flow-root bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'>
+                            <div className='flow-root whitespace-pre-line bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'>
                                 {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
                             </div>
                         </div>
@@ -281,10 +281,10 @@ const PreviewSparkWriting = (props:any) => {
                 )}
                 {guideFlag===1 && 
                 <div className='flex flex-1 flex-col w-full h-full pb-4 z-0 overflow-y-auto'>
-                    <div className='flex flex-col bg-[#f3f3f3] text-start w-full h-full max-h-full overflow-y-auto rounded-2xl px-4 z-0'>
-                        <span className='flex flex-col gap-4 py-4'>
+                    <div className='flex flex-col bg-[#f3f3f3] text-start w-full h-full max-h-full overflow-y-auto rounded-2xl px-4 z-0 gap-4 py-4'>
+                        <div className='flex flex-col gap-4 py-4 whitespace-pre-line'>
                             {bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && bodyHistory.body.present.map((v, i)=> GrammarContentComponent.bodyCompareDif1(v, i, clickTooltip) )}
-                        </span>
+                        </div>
                     </div>
                 </div>
                 }

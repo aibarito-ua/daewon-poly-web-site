@@ -93,11 +93,12 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         click
     ]);
     return (
-        <span key={mainTagkey}>
+        <span key={mainTagkey} 
+        className={`font-sans inline-block whitespace-pre-line hover:cursor-pointer ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#14b690]':'text-[#ffc4cc]'}`}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
-            className={`hover:cursor-pointer ${tagType==='add'? 'text-[#14b690]':'text-[#ffc4cc]'}`}
-            ><pre className={tagType==='delete'? 'font-sans inline-block line-through': 'font-sans inline-block'}>{compareResultText}</pre>
+            >{compareResultText}
+                {/* <span className={`font-sans inline-block whitespace-pre-line ${tagType==='delete'? 'line-through': ''}`}>{compareResultText}</span> */}
             </span>
             <FloatingPortal>
                 {isOpen && (

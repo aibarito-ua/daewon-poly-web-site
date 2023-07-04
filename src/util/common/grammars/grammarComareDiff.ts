@@ -35,6 +35,7 @@ export class CompareDiff {
 
     // tokenize re function
     static tokenize_new(text:string, callback: (word:string)=>void): void {
+        
         let wordStart = 0;
         let wordEnd = -1;
         while (wordEnd < text.length - 1) {

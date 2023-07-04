@@ -126,7 +126,9 @@ const GrammarContentComponent = {
     ) => {
         return <span key={`paragragh-${paragraphIndex}`}>{paragragh.map((sentence:Diff[][], sentenceIndex:number)=>{
             const sentenceKey = `paragragh-${paragraphIndex}-sentence-${sentenceIndex}`;
-            return  <span className='' key={sentenceKey}><span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>{sentence.map((word:Diff[], wordIndex:number) => {
+            return  <span className='flow-root' key={sentenceKey}>
+                <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
+                {sentence.map((word:Diff[], wordIndex:number) => {
                 let returnValue:any = '';
                 if (word.length === 1) {
                     const compareWordFlag = word[0][0];

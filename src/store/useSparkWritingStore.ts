@@ -4,7 +4,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
 [
     {
         title: {main: 'Unit 1', sub: 'Descriptive Essays'}, 
-        topic: 'How to write essays well.', topicIndex: 1, progress: [0,-1], 
+        topic: 'How to write essays well.', topicIndex: 1, progress: [3,-1], 
         countofUseAIProofreading: 0
     },
     {
