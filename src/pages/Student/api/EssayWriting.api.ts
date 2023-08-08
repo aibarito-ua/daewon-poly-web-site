@@ -27,3 +27,56 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
         return {text: '잠시 후 다시 시도해주세요.', status, statusText};
     });
 }
+
+export async function callUnitInfobyStudent (
+    studentCode: string,
+    courseName: string,
+):Promise<{
+    book_name: string,
+    units: TSparkWritingDatas,
+}> {
+    // {STUDENT_CODE}/{COURSE_NAME}
+    const replaceUrl = CONFIG.DRAFT.GET.UNIT_INFO.replace(/{STUDENT_CODE}/gmi, studentCode).replace(/{COURSE_NAME}/gmi, courseName);
+    return await axios.get(
+        replaceUrl,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            }
+        }
+    ).then((response) => {
+        const res = response.data.data;
+        console.log('in api res =',res)
+        return {
+            book_name: res.book_name,
+            units: res.units
+        };
+    }).catch((reject) => {
+        console.log('Server Rejected: ',reject)
+        return {
+            book_name: '',
+            units: []
+        }
+    })
+}
+
+export async function draftSaveTemporary(
+    data:TSparkWritingTemporarySaveData,
+):Promise<boolean> {
+    return await axios.post(
+        CONFIG.DRAFT.POST.SAVE_TEMPORARY,
+        data,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            }
+        }
+    ).then((response) => {
+        return response.data.data;
+    }).catch((reject) => {
+        console.log('Server Rejected: ',reject)
+        return false;
+    })
+}

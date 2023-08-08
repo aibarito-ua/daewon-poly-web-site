@@ -4,11 +4,57 @@ interface ISparkWritingStore {
     
 
     outlineItems: TOutlineItem[];
-    setOutlineInputText: (inputText: string, unitIndex:string, draftIndex:string, inputKey:string, inputIndex:number, mainIndex:number, subIndex?:number)=>void;
+    setOutlineInputText: (inputText: string, unitId:number, unitIndex:number, orderIndex:number,draft:number)=>void;
 
     // check writing value(strings)
     checkWritingValues:any;
+
+    sparkWritingData: TSparkWritingDatas;
+    setSparkWritingDataFromAPI: (data:TSparkWritingDatas)=>void;
+
+    // save draft temporary data form
+    sparkWritingTemporarySaveData: TSparkWritingTemporarySaveData;
+    setSparkWritingTemporarySaveData: (data: TSparkWritingTemporarySaveData) => void;
 }
+type TSparkWritingDatas = TSparkWritingData[]
+type TSparkWritingData = {
+    unit_id: number;
+    unit_index: number;
+    topic: string;
+    proofreading_count:number;
+    draft_1_status: TDraftStatus;
+    draft_2_status: TDraftStatus;
+    draft_1_outline: TSparkWritingDataOutline[];
+    draft_2_outline: TSparkWritingDataOutline[];
+}
+type TDraftStatus = {
+    status: number;
+    reason: string;
+}
+type TSparkWritingDataOutline = {
+    heading_content: string;
+    input_content:string;
+    name: string;
+    order_index: number;
+}
+
+// save draft temporary 
+// draft 1
+type TSparkWritingTemporarySaveData = {
+    student_code: string;
+    student_name_en: string;
+    student_name_kr: string;
+    unit_id: number;
+    draft_index: number;
+    proofreading_count: number;
+    contents: TSparkWritingSaveTemporaryContent[];
+}
+type TSparkWritingSaveTemporaryContent = {
+    input_content: string;
+    heading_name: string;
+    order_index: number;
+}
+
 
 type TSelectBoxUnit = {
     title: {

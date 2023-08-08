@@ -3,15 +3,16 @@ import useLoginStore from "../../../store/useLoginStore";
 import useNavStore from "../../../store/useNavStore";
 import { useNavigate } from "react-router-dom";
 import { navItems } from "../Nav";
+import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
 
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
-    const { companyName, name, role, setIsOpen, setUserInfo } = useLoginStore();
+    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser } = useLoginStore();
     // const [menuLocateValue, setMenuLocateValue] = useState("");
     const navigate = useNavigate();
     const handleMenuClick = async (role:TRole, menuTitle: string) => {
         if (selectedMenu === menuTitle) {
-            await setSelectMenu(null);
+            // await setSelectMenu(null);
         } else {
             await setSelectMenu(menuTitle,);
             setSidebarFlagged(!sidebarFlagged);
@@ -27,46 +28,48 @@ const NavAside = () => {
 
     return (
         <nav id={'navAside'} className=''>
-        <div className={`absolute left-0 top-0 z-50 w-64 h-full max-h-[800px] transition-transform ${
+        <div className={`absolute left-0 top-0 z-50 w-[190px] h-full max-h-[800px] transition-transform ${
             // !sidebarFlagged ? '-translate-x-full':'translate-x-0'
             ''
             // 'translate-x-0'
         } ${
             topNavHiddenFlagged ? '-translate-x-full hidden': 'translate-x-0'
-        } bg-gray-200 border-r border-gray-200`}
+        }`}
         // aria-label="Sidebar"
         >
-            <div className="h-full px-3 pb-4 overflow-y-auto bg-gray-200">
-                <div className='flex flex-col font-bold text-3xl py-8 px-4'>
-                    <p className='flex flex-1'>{'Writing'}</p>
-                    <p className='flex flex-1'>{'Hub'}</p>
-                </div>
-                <ul className="space-y-2 font-medium">
+            <div className="h-full  pb-4 overflow-y-auto bg-[#3c2481]">
+            <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center' />
+                <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`
                         return (
                             <li key={key} 
-                            className='div-to-button-hover-effect'
+                            className={`div-to-button-hover-effect w-[172px] h-[74px] ${
+                                selectedMenu===v.path 
+                                ? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]' :''
+                            }`}
                             onClick={()=>handleMenuClick(role, v.path)}>
-                                <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                                    img
-                                </span>
-                                <span className="flex-1 ml-3 whitespace-nowrap">{v.label}</span>
+                                <div className="flex flex-row items-center p-2 w-full h-full gap-[10px]">
+                                <div className='w-[45px] h-[45px]'>
+                                {selectedMenu===v.path ? v.onMenuIcon : v.offMenuIcon}
+                                </div>
+                                <span className={selectedMenu===v.path? 'nav-menu-on':'nav-menu-off'}>{v.label}</span>
                                 </div>
                             </li>
                         )
                     })}
-                    {role==='logout' && (
-                        <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-xl" onClick={()=>setIsOpen(true)} >Login</button>
-                    )}
-                    {role !== 'logout' && (
-                        <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-xl" onClick={()=>setUserInfo({companyName:'', email: '', class:'',subClass:'', name: '', role: 'logout'})}>Logout</button>
-                    )}
+                    
                 </ul>
+                {role !== 'logout' && (
+                    // <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-xl" 
+                    // onClick={()=>setLogoutUser()}>Logout</button>
+                    
+                    <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' />
+                    
+                )}
             </div>
         </div>
-        <div className={`absolute top-0 left-0 z-[49] w-full h-20 pl-64 transition-transform ${
+        {/* <div className={`absolute top-0 left-0 z-[49] w-full h-20 pl-64 transition-transform ${
             // !sidebarFlagged ? '-translate-x-full':'translate-x-0'
             topNavHiddenFlagged ? '-translate-x-full hidden': 'translate-x-0'
             // 'translate-x-0'
@@ -90,7 +93,7 @@ const NavAside = () => {
                 </div>
             
             </div>
-        </div>
+        </div> */}
 
         </nav>
     )

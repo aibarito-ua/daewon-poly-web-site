@@ -2,7 +2,7 @@ interface IEssayWritingCenterDT {
     essayWritingInputItems: TUseItem[];
     proceedingTopicIndex: number;
     completeTopicIndex: TProgressUnitInfo[];
-    setInitCompleteTopicIndex: (unitValue:TSelectBoxUnitValue, unitIndex: number) => void;
+    setInitCompleteTopicIndex: (unitValue:TSparkWritingData, unitIndex: number) => void;
     setProceedingTopicIndex: (proceedingTopicIndex:number) => void;
     setCompleteTopicIndex: (proceedingTopicIndex: number, roundDraft: number, feedback?: boolean) => void;
 }

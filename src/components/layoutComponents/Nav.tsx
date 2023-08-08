@@ -3,16 +3,17 @@ import useNavStore from "../../store/useNavStore";
 import useLoginStore from '../../store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
 import { CommonFunctions } from '../../util/common/commonFunctions';
+import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 
 type INavItems = {
     [key in TRole]: {
-        selectedMenu: {path:string, label: string}[]
+        selectedMenu: {path:string, label: string, onMenuIcon: JSX.Element, offMenuIcon: JSX.Element }[]
     };
 };
 export const navItems:INavItems = {
     admin: {
         selectedMenu: [
-            {path: '', label: ''}
+            // {path: '', label: ''}
         ]
     },
     logout: {
@@ -20,10 +21,30 @@ export const navItems:INavItems = {
     },
     student: {
         selectedMenu: [
-            {path: "WritingClinic", label: 'Writing Clinic'},
-            {path: "StudentProgress", label: 'My Progress'},
-            {path: "StudentReport", label: 'My Report'},
-            {path: "StudentPortfolio", label: 'My Portfolio'},
+            {
+                path: "WritingClinic", 
+                label: 'Writing Activity', 
+                onMenuIcon: <commonIconSvgs.NavWritingActivityActiveOnIcon className='w-[45px] h-[45px]'/>,
+                offMenuIcon: <commonIconSvgs.NavWritingActivityActiveOffIcon className='w-[45px] h-[45px]'/>
+            },
+            {
+                path: "StudentProgress",
+                label: 'Progress',
+                onMenuIcon: <commonIconSvgs.NavProgressActiveOnIcon className='w-[45px] h-[45px]'/>,
+                offMenuIcon: <commonIconSvgs.NavProgressActiveOffIcon className='w-[45px] h-[45px]'/>
+            },
+            {
+                path: "StudentReport",
+                label: 'Report',
+                onMenuIcon: <commonIconSvgs.NavReportActiveOnIcon className='w-[45px] h-[45px]'/>,
+                offMenuIcon: <commonIconSvgs.NavReportActiveOffIcon className='w-[45px] h-[45px]'/>
+            },
+            {
+                path: "StudentPortfolio",
+                label: 'Portfolio',
+                onMenuIcon: <commonIconSvgs.NavPortfolioActiveOnIcon className='w-[45px] h-[45px]'/>,
+                offMenuIcon: <commonIconSvgs.NavPortfolioActiveOffIcon className='w-[45px] h-[45px]'/>
+            },
             // {path: "StudentHome", label: ''}
         ]
     },
@@ -33,6 +54,7 @@ export const navItems:INavItems = {
         ]
     }
 }
+
 export const Nav = () => {
     const {role } = useLoginStore()
     const navigate = useNavigate();
@@ -41,12 +63,7 @@ export const Nav = () => {
         e.preventDefault();
         setSidebarFlagged(!sidebarFlagged)
     }
-    const svgHome =(
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-        strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-        </svg>
-    )
+    console.log('nav stores =',subNavTitleString, subRightNavTitleString)
     
     return (
     <nav id='navMain' className=''>
@@ -87,17 +104,19 @@ export const Nav = () => {
                 </div>
             </div>
         </div>
-        <div className={`absolute top-0 z-50 w-full h-full max-h-20 bg-white ${topNavHiddenFlagged ? '': 'hidden'}`}>
-            <div className='flex flex-row px-[1vw]'>
-            <div className='flex flex-1 gap-4 p-4 content-center items-center'>
-                <div onClick={()=>CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)}>{svgHome}</div>
-                <div className='font-bold text-2xl p-2'>{subNavTitleString}</div>
-            </div>
-            {subRightNavTitleString !== '' && 
-                <div className='flex flex-1 flex-row-reverse gap-4 px-4 content-center items-center'>
-                    <p className='font-bold text-xl'>{subRightNavTitleString}</p>
+        <div className={`absolute top-0 z-50 w-full h-[111px] ${topNavHiddenFlagged ? '': 'hidden'}`}>
+            <div className='btn-go-back-from-draft'
+            onClick={()=>CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)}></div>
+
+            <div className='flex flex-1 flex-row justify-center mt-[48px]'>
+                <div className='flex flex-col gap-[6px] justify-center items-center'>
+                    <div className='draft-unit-title-head-text'>{subNavTitleString}</div>
+                    {subRightNavTitleString !== '' && 
+                        <div className='flex flex-1 flex-row-reverse gap-4 px-4 content-center items-center'>
+                            <p className='draft-unit-sub-title-head-text'>{subRightNavTitleString}</p>
+                        </div>
+                    }
                 </div>
-            }
             </div>
         </div>
     </nav>

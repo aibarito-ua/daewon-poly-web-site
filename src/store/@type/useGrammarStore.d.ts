@@ -14,6 +14,14 @@ interface IUseGrammarStore {
     };
     setGrammarResultInit: ()=>void;
 
+    grammarOrigin: TGrammarData[];
+    setGrammarOrigin: (data:any) => {
+        grammarOrigin: TGrammarData[],
+        resultTitle: Diff[][][][],
+        resultBody: Diff[][][][]
+    }
+    
+
     // bodyTags: Diff[][][][];
     // resetBodyTagsInit: any;
     // setBodyTags: (bodyTags:any)=>void;
@@ -24,3 +32,4 @@ interface IUseGrammarStore {
         origin_text_array:string[]
     }[]
 }
+type TGrammarData = Diff[][][][];

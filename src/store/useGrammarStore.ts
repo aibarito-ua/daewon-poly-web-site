@@ -70,6 +70,45 @@ const useGrammarStore = create<IUseGrammarStore>((set, get)=>({
             resultBody: []
         }))
     },
+    grammarOrigin: [],
+    setGrammarOrigin: (data) => {
+        const originData = JSON.parse(JSON.stringify(data));
+        const target = JSON.parse(JSON.stringify(data));
+        const title = target.splice(0, 1);
+        const body = target;
+        const compareDiffs = (data:any) => {
+            let compareResults = [];
+            for (const paragraghIdx in data) {
+                let paragraghResult = [];
+                const origin_array = data[paragraghIdx].origin_text_array;
+                const change_array = data[paragraghIdx].change_text_array;
+                for (const spliteSentenceIndex in origin_array) {
+                    const origin = origin_array[spliteSentenceIndex];
+                    const change = change_array[spliteSentenceIndex];
+                    const compareResult = GrammarCF.compareText(origin, change);
+                    paragraghResult.push(compareResult);
+                }
+                compareResults.push(paragraghResult);
+            }
+            return compareResults;
+        };
+        const titleCompare = compareDiffs(title);
+        const bodyCompare = compareDiffs(body);
+        console.log('===setGrammarOrigin ===')
+        console.log('origin data =',originData)
+        console.log('result title =',titleCompare)
+        console.log('result body =',bodyCompare)
+        set(()=>({
+            resultTitle: titleCompare,
+            resultBody: bodyCompare,
+            grammarOrigin: originData
+        }))
+        return {
+            grammarOrigin: originData,
+            resultTitle: titleCompare,
+            resultBody: bodyCompare
+        }
+    },
 
     // text data
     returnData: [

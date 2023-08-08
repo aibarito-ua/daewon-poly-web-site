@@ -9,6 +9,10 @@ import {PopupModalComponent} from '../../components/toggleModalComponents/popupM
 import useLoginStore from '../../store/useLoginStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
 import FormDialog from '../../components/toggleModalComponents/ChatbotModalComponent';
+import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
+import useControlAlertStore from '../../store/useControlAlertStore';
+import { useComponentWillMount } from '../../hooks/useEffectOnce';
+import { draftSaveTemporary } from './api/EssayWriting.api';
 interface IDUMPOutlineItem {
     name:string;
     CheckWriting: string;
@@ -31,16 +35,10 @@ const EssayWriting = () => {
     // unit/draft index params: unit start to 0, draft use 1 or 2
     const [paramValues, setParamValues] = React.useState<{unitIndex:number, draft:number}>({unitIndex:0, draft: 0});
 
-    // Save modal
-    const [showSaveModal, setShowSaveModal] = React.useState<boolean>(false);
-    // Preview modal
-    const [showPreviewModal, setShowPreviewModal] = React.useState<boolean>(false);
-
-    // Chatbot open
-    const [showChatbotModal, setShowChatbotModal] = React.useState<boolean>(false);
-    // Modal State
-    const [input, setInput] = React.useState<string>('');
-
+    // user info
+    const {
+        userInfo
+    } = useLoginStore();
     // Nav Store
     const { 
         setTopNavHiddenFlagged,
@@ -51,14 +49,20 @@ const EssayWriting = () => {
     // WritingCenter Store
     const {essayWritingInputItems, } = useEssayWritingCenterDTStore();
     // Spark Store
-    const {selectBoxUnit, outlineItems, setOutlineInputText, checkWritingValues} = useSparkWritingStore();
+    const { setOutlineInputText, sparkWritingData} = useSparkWritingStore();
     const params = useParams();
+    // console.log('params : unit =',params.unit,': draft =',params.draft)
     const UnitIndex:string = params.unit!==undefined? params.unit: '0';
     const DraftIndex:string = params.draft!==undefined? params.draft: '0';
     // Navigate hook
     const navigate = useNavigate();
     // current role
-    const {role} = useLoginStore()
+    const {role} = useLoginStore();
+    const {commonAlertOpen} = useControlAlertStore();
+
+    useComponentWillMount(()=>{
+        // console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
+    })
 
     React.useEffect(()=>{
         setTopNavHiddenFlagged(true);
@@ -72,12 +76,10 @@ const EssayWriting = () => {
         
         // fold
         if (foldFlag.length === 0) {
-            const data = outlineItems[unitIndex];
-            console.log('fold 0', data)
-            const keys = Object.keys(data).splice(6);
-            const leng = keys.length
+            const data = sparkWritingData[unitIndex];
+            // console.log('fold 0', data)
+            const leng = data.draft_1_outline.length;
             const foldInit = Array.from({length: leng}, ()=>false)
-            
             setFoldFlag(foldInit)
         } else {
             if (updateFoldIndex !== undefined) {
@@ -96,7 +98,7 @@ const EssayWriting = () => {
         if (essayTopicInput === undefined || essayTopicInput === '') {
             
             // nav header setting
-            setEssayTopicInput(selectBoxUnit[unitIndex].topic);
+            setEssayTopicInput(sparkWritingData[unitIndex].topic);
         }
         callbackCheckValues();
         return () => {
@@ -121,48 +123,83 @@ const EssayWriting = () => {
         selectUnitInfo,
         // WritingCenter Store
         essayWritingInputItems,
-        selectBoxUnit,
+        sparkWritingData
         // Spark Store
-        outlineItems,
     ])
 
     const callbackCheckValues = React.useCallback( ()=>{
-        if (checkWritingValues[`Unit_${params.unit}_${params.draft}`] !== undefined) {
-            console.log('callback check')
-            const checking:string[] = checkWritingValues[`Unit_${UnitIndex}_${DraftIndex}`];
-            const unitIndex:number = parseInt(UnitIndex);
-            const max_leng = parseInt(outlineItems[unitIndex-1].CheckWriting);
-            let targetFlags = Array.from({length:max_leng},()=>1)
-            targetFlags = checking.map((v:string, i:number)=>{
-                const target_leng = v.replaceAll(' ','').length;
-                if(target_leng >= 10) {
-                    // console.log(`${i}번째 총 ${target_leng}`)
-                    // 10자 이상
-                    return 0
+        if (sparkWritingData !== undefined) {
+            if (DraftIndex==='1') {
+                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+                const max_leng = targetDataOutline.length;
+                let targetFlags = Array.from({length:max_leng},()=>1)
+                targetFlags = targetDataOutline.map((v,i) => {
+                    const target_leng = v.input_content.replaceAll(' ','').length;
+                    if (target_leng >= 10) {
+                        // 10자 이상
+                        return 0;
+                    } else {
+                        // 10자 미만
+                        return 1;
+                    }
+                })
+                const sum = targetFlags.reduce((a,b) => (a+b));
+                // sum === 0 => Preview && save 활성화
+                // sum >0, sum < targetFlags.length; -> save 활성화
+                // else -> 모든 버튼 비활성화
+                if (sum === 0) {
+                    setIsSaveButtonOpen(true)
+                    setIsPreviewButtonOpen(true);
+                } else if (sum > 0 && sum < targetFlags.length) {
+                    setIsSaveButtonOpen(true)
                 } else {
-                    // 미만
-                    return 1
+                    setIsPreviewButtonOpen(false);
+                    setIsSaveButtonOpen(false)
                 }
-            })
-            const sum = targetFlags.reduce((a,b) => (a+b));
-            // sum === 0 => Preview && save 활성화
-            // sum >0, sum < targetFlags.length; -> save 활성화
-            // else -> 모든 버튼 비활성화
-            if (sum === 0) {
-                setIsSaveButtonOpen(true)
-                setIsPreviewButtonOpen(true);
-            } else if (sum > 0 && sum < targetFlags.length) {
-                setIsSaveButtonOpen(true)
-            } else {
-                setIsPreviewButtonOpen(false);
-                setIsSaveButtonOpen(false)
             }
         }
     },[])
 
+    const temporarySaveFunction = async () => {
+        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
+        const draftIndex = parseInt(DraftIndex);
+        const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+            return {
+                heading_name: item.name,
+                input_content: item.input_content,
+                order_index: item.order_index,
+            }
+        })
+        // console.log('content =',contensData)
+        const data:TSparkWritingTemporarySaveData = {
+            student_code: userInfo.userCode,
+            student_name_en: userInfo.memberNameEn,
+            student_name_kr: userInfo.memberNameKr,
+            unit_id: targetData.unit_id,
+            draft_index: draftIndex,
+            proofreading_count: targetData.proofreading_count,
+            contents: contensData
+        }
+        // console.log('data ==',data)
+        const isSaveTemporary = await draftSaveTemporary(data);
+        if (isSaveTemporary) {
+            commonAlertOpen({
+                useOneButton: true,
+                yesButtonLabel: 'OK',
+                messages: ['Temporary saving is complete.']
+            })
+        } else {
+            commonAlertOpen({
+                messages: ['Are you sure you want to try again?'],
+                yesButtonLabel: 'Yes',
+                noButtonLabel: 'Cancel',
+                yesEvent: async ()=> await temporarySaveFunction(),
+            })
+        }
+    }
     
     const foldFlagFunction = (i:number) => {
-        console.log('fold settings ==',foldFlag)
+        // console.log('fold settings ==',foldFlag)
         const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
             if (foldIndex === i) {
                 return !foldItem
@@ -171,158 +208,110 @@ const EssayWriting = () => {
         setFoldFlag(dumpFlags)
         setUpdateFoldIndex(i);
     }
-    const outlineBody = (outlineItem: IDUMPOutlineItem ) => {
-        const manufactureItem = {...outlineItem};
-        const keys = Object.keys(manufactureItem).splice(6)
-        const items = Object.values(manufactureItem).splice(6);
-        
-         return keys.map((v, i)=>{
-            return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} key={i} id={'ptitle'+i}>
+    const outlineBody = (outlineItem: TSparkWritingData ) => {
+        let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
+        const targetMaxLength = outlineOrigin.length;
+        // title 정리
+        let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
+        // console.log('targets =',allNames)
+        // 데이터 폼 만들기
+        let manufactureItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(allNames, outlineOrigin);
+        // console.log('data =',manufactureItem)
+        return allNames.map((title, i) => {
+            
+            return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} 
+            key={i} id={title+i}>
                 <div className='outline-accordion-div-wrap'>
                     <button type="button" 
                         className="outline-accordion-button"
                         onClick={()=>foldFlagFunction(i)}
                     >
-                    <span className="outline-accordion-button-inner">{v}</span>
+                        <span className='outline-accordion-button-inner'>
+                            <span className='outline-accordion-button-inner-text'>{title}</span>
+                            <span className={foldFlag[i] ? 'hidden':'outline-accordion-button-inner-arrow'}><commonIconSvgs.DownArrowIcon/></span>
+                        </span>
                     </button>
-                
-                        <div className="px-4 pb-4 text-left">
-                    <div className={`${foldFlag[i]? '': 'hidden'}`} id={`fold-div-${i}`}>
-                        {  Array.from(items[i]).map((item:any, itemIndex:number)=>{
-                            if (typeof(item) === 'string') {
-                                if (item !== '') {
-                                    return <div 
-                                        className='outline-content-box-item'
-                                        key={itemIndex}><span className='pl-2'></span>{item}</div>
-                                } else {
-                                    return <div 
-                                        className='outline-content-box-item'
-                                        key={itemIndex}>{''}</div>
-                                }
-                            } else {
-                                const flagText = Object.keys(item).includes('text')
-                                if (flagText) {
-                                    return <div 
-                                        className='outline-content-box-item'
-                                        key={itemIndex}>
+                    <div className="text-left">
+                        <div className={`${foldFlag[i]? 'pt-[5px] pb-[20px]': 'hidden'}`} id={`fold-div-${i}`}>
+                            { manufactureItem[i].map((item, itemIndex) => {
+                                // console.log('manufacture item [',itemIndex,'] =',item, )
+                                
+                                return <div>
+                                    <div className='outline-content-box-item'
+                                    key={i+'-'+itemIndex+'-body-'+item.order_index}><span className=''></span>{item.heading_content}</div>
+                                    <div 
+                                        className='outline-content-box-item'>
                                             
                                             <textarea rows={1} style={{'resize':'none'}} 
+                                            id={item.name+item.order_index}
                                             className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
-                                            placeholder={item.placeholder}
+                                            placeholder={`Start typing in your ${item.name}...`}
                                             onChange={(e)=>{
                                                 e.currentTarget.style.height = 'auto';
                                                 e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                setOutlineInputText(e.currentTarget.value, UnitIndex, DraftIndex, v, item.inputIndex, itemIndex)
+                                                const unitId = outlineItem.unit_id
+                                                const unitIndex = outlineItem.unit_index
+                                                const orderIndex = item.order_index
+                                                
+                                                setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
                                                 callbackCheckValues()
                                             }}
-                                            value={item.text}
+                                            
+                                            value={item.input_content}
                                             ></textarea>
                                         </div>
-                                } else {
-                                    return item.map((subItem:string|TOutlineValues, subItemIndex:number)=>{
-                                        if (typeof(subItem) === 'string') {
-                                            return <div 
-                                            key={itemIndex+':'+subItemIndex} 
-                                            className='outline-content-box-sub-item'>{subItem}</div>
-                                        } else {
-                                            return <div 
-                                            className='outline-content-box-item'
-                                            key={itemIndex+':'+subItemIndex}>
-                                                <textarea rows={1} style={{'resize':'none'}} 
-                                                className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
-                                                placeholder={subItem.placeholder}
-                                                onChange={(e)=>{
-                                                    e.currentTarget.style.height = 'auto';
-                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    setOutlineInputText(e.currentTarget.value, UnitIndex, DraftIndex, v, subItem.inputIndex, itemIndex, subItemIndex)
-                                                    callbackCheckValues()
-                                                }}
-                                                value={subItem.text}
-                                                ></textarea>
-                                            </div>
-                                        }
-                                    })
-                                }
-                            }
-                        })}
+                                    </div>
+                            })}
                         </div>
                     </div>
                 </div>
             </div>
-        }
-        )
+        })
     }
-
     return (
-        <section className={`section-common-layout z-0 use-nav-top`}>
-            <div className='flex flex-1 flex-col w-full h-full px-12 pb-4 z-0'>
+        <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
+            <div className='absolute w-fit h-fit top-[15px] right-[20px]'>
+                <FormDialog />
+            </div>
+            <div className='wrap-contain-spark-writing'>
                 {/* guide text */}
-                <div className='flex flex-row font-bold w-full justify-stretch py-4 text-black h-1/12 z-0'>
-                    <p className='flex flex-1 justify-start'>* Fill out the following outline.</p>
-                    <div className='flex flex-1 justify-end'>
-                        <FormDialog />
-                    </div>
+                <div className='wrap-guide-text-spark-writing'>
+                    {'* Fill out the following outline.'}
                 </div>
                 {/* content */}
-                <div className='flex flex-col bg-gray-200 w-full h-full overflow-y-auto gap-4 p-4 z-0'>
-                    {outlineBody(outlineItems[parseInt(UnitIndex)-1])}
+                <div className='wrap-content-spark-writing'>
+                    {outlineBody(sparkWritingData[parseInt(UnitIndex)-1])}
+                </div>
+                <div className={`buttons-div ${(isPreviewButtonOpen||isSaveButtonOpen)? '': ''}`}>
+                    <div className={`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
+                        if (isSaveButtonOpen) {
+                            // setShowSaveModal(true)
+                            callbackCheckValues()
+                            commonAlertOpen({
+                                messages: ['Do you want to save?'],
+                                yesButtonLabel: `Yes, I'm sure.`,
+                                noButtonLabel: `No, Cancel.`,
+                                yesEvent: async ()=> await temporarySaveFunction()
+
+                            })
+                        }
+                    }}>Save</div>
+                    <div className={`${isPreviewButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
+                        if (isPreviewButtonOpen) {
+                            callbackCheckValues()
+                            // setShowPreviewModal(true)
+                            commonAlertOpen({
+                                messages:['Do you want to Preview?'],
+                                yesButtonLabel: `Yes, I'm sure.`,
+                                noButtonLabel: `No, Cancel.`,
+                                yesEvent: ()=>{
+                                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                }
+                            })
+                        }
+                    }}>Preview</div>
                 </div>
             </div>
-
-            <div className={`buttons-div ${(isPreviewButtonOpen||isSaveButtonOpen)? '': 'hidden'}`}>
-                <div className={`save-button div-to-button-hover-effect ${isSaveButtonOpen?'':'hidden'}`} onClick={()=>{
-                    setShowSaveModal(true)
-                    callbackCheckValues()
-                }}>Save</div>
-                <div className={`save-button div-to-button-hover-effect ${isPreviewButtonOpen?'':'hidden'}`} onClick={()=>{
-                    callbackCheckValues()
-                    setShowPreviewModal(true)
-                }}>Preview</div>
-            </div>
-            
-            {/* Save Modal */}
-            <PopupModalComponent 
-                Message={[
-                    'Do you want to save?'
-                ]}
-                YesMessage={`Yes, I'm sure.`}
-                NoMessage={`No, Cancel.`}
-                closeFlag={false}
-                positionTop='10'
-                positionLeft='50'
-                onClickYes={()=>{
-
-                    callbackCheckValues()
-                    setShowSaveModal(false)
-                }}
-                onClose={()=>{
-                    callbackCheckValues()
-                    setShowSaveModal(false)
-                }}
-                showFlag={showSaveModal}
-            />
-            {/* Preview Modal */}
-            <PopupModalComponent 
-                Message={[
-                    'Do you want to Preview?'
-                ]}
-                YesMessage={`Yes, I'm sure.`}
-                NoMessage={`No, Cancel.`}
-                closeFlag={false}
-                positionTop='10'
-                positionLeft='50'
-                onClickYes={()=>{
-                    
-                    callbackCheckValues()
-                    setShowPreviewModal(false)
-                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                }}
-                onClose={()=>{
-                    callbackCheckValues()
-                    setShowPreviewModal(false)
-                }}
-                showFlag={showPreviewModal}
-            />
         </section>
     )
 }

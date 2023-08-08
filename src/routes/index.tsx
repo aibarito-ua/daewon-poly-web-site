@@ -15,17 +15,23 @@ import {routeValues} from './routeValues';
 import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
 import SelectUnit from '../pages/Student/SelectUnit';
 import PreviewSparkWriting from '../pages/Student/PreviewSparkWriting';
+import { Nav } from '../components/layoutComponents/Nav';
+import NavAside from '../components/layoutComponents/Navs/NavAside';
+import CommonAlertModalComponent from '../components/toggleModalComponents/CommonAlertModalComponent';
+import StandbyScreen from '../components/commonComponents/standby/StandbyScreen';
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
     const publicRoutes = () => {
         const routeValue = routeValues.publicRoutes;
         // 각 권한별 기본 페이지
-        const mainPage = role === 'logout' ? <Home /> : (
-            role === 'admin' ? <Admin /> : (
-                role === 'teacher' ? <Teacher /> : <SelectWritingClinic />
-            )
-        );
+        // const mainPage = role === 'logout' ? <Login /> : (
+        //     role === 'admin' ? <Admin /> : (
+        //         role === 'teacher' ? <Teacher /> : <SelectWritingClinic />
+        //     )
+        // );
+        const mainPage = role === 'logout' ? <Login /> : <SelectWritingClinic />;
+        // const mainPage = <Home />
         return (
             <Route element={<PrivateRoute authenticated={false} />}>
                 {routeValue.map((publicRoute, publicIndex) => {
@@ -43,34 +49,41 @@ export default function Roter() {
 
     // }
     return (
-        <div className="max-display-screen">
-            {isOpen && <Login />}
-            <Routes>
-                {/* No Login Pages */}
-                {publicRoutes()}
-                {/* Admin 전용 페이지 */}
-                <Route element={<PrivateRoute authenticated={true} pageAuth='admin' />} >
-                    
-                </Route>
-                {/* Teacher 전용 페이지 */}
-                <Route element={<PrivateRoute authenticated={true} pageAuth='teacher' />} >
+        <div className='container-wrapper relative'>
+            {role!=='logout' && <Nav />}
+            {role!=='logout' && <NavAside />}
+            <div className="max-display-screen">
+                {isOpen && <Login />}
+                <Routes>
+                    {/* No Login Pages */}
+                    {publicRoutes()}
+                    {/* Admin 전용 페이지 */}
+                    <Route element={<PrivateRoute authenticated={true} pageAuth='admin' />} >
+                        
+                    </Route>
+                    {/* Teacher 전용 페이지 */}
+                    <Route element={<PrivateRoute authenticated={true} pageAuth='teacher' />} >
 
-                </Route>
-                {/* 학생 페이지 */}
-                <Route element={<PrivateRoute authenticated={true} pageAuth='student' />} >
-                    <Route path='/student/WritingClinic' element={<SelectWritingClinic />}></Route>
-                    <Route path='/student/WritingClinic/SparkWriting/:unit/:draft' element={ <EssayWriting />}></Route>
-                    <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
-                    <Route path='/student/MyProgress' element={<MyPage />}></Route>
-                    <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
-                    <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
+                    </Route>
+                    {/* 학생 페이지 */}
+                    <Route element={<PrivateRoute authenticated={true} pageAuth='student' />} >
+                        <Route path='/student/WritingClinic' element={<SelectWritingClinic />}></Route>
+                        <Route path='/student/WritingClinic/SparkWriting/:unit/:draft' element={ <EssayWriting />}></Route>
+                        <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
+                        <Route path='/student/MyProgress' element={<MyPage />}></Route>
+                        <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
+                        <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
 
-                </Route>
-                {/* <Route path='' element={ }></Route> */}
+                    </Route>
+                    {/* <Route path='' element={ }></Route> */}
 
-                {/* webview 전용 page */}
-                <Route path='/webTest' element={<WebViewWrap />}></Route>
-            </Routes>
+                    {/* webview 전용 page */}
+                    <Route path='/webTest' element={<WebViewWrap />}></Route>
+                </Routes>
+                <CommonAlertModalComponent />
+                <StandbyScreen />
+            </div>
+          
         </div>
 
     )

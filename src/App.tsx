@@ -7,11 +7,11 @@ function App() {
   return (
     <BrowserRouter>
       <main className='wrapper'>
-        <div className='container-wrapper relative'>
-      <Nav />
-      <NavAside />
-        <Router />
-        </div>
+        {/* <div className='container-wrapper relative'>
+          <Nav />
+          <NavAside /> */}
+          <Router />
+        {/* </div> */}
       </main>
     </BrowserRouter>
   );

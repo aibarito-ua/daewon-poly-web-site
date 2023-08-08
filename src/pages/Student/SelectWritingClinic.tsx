@@ -4,20 +4,44 @@ import useLoginStore from "../../store/useLoginStore";
 import {Button} from 'flowbite-react'
 import { CommonFunctions } from "../../util/common/commonFunctions";
 import useNavStore from '../../store/useNavStore';
+import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
+import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
+import { callUnitInfobyStudent } from './api/EssayWriting.api';
+import useSparkWritingStore from '../../store/useSparkWritingStore';
+import { useComponentWillMount } from '../../hooks/useEffectOnce';
 
 const SelectWritingClinic = () => {
-    const {role} = useLoginStore();
-    const {secondGenerationOpen} = useNavStore()
+    const [buttonActive, setButtonActive] = React.useState<boolean>(false);
+    const {role, userInfo} = useLoginStore();
+    const {secondGenerationOpen} = useNavStore();
+    const {
+        setSparkWritingDataFromAPI
+    } = useSparkWritingStore()
     const navigate = useNavigate();
-
+    const beforeRenderedFn = async () => {
+        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+            if (response.book_name!=='') {
+                setButtonActive(true)
+            }
+            setSparkWritingDataFromAPI(response.units)
+            return response;
+        });
+    }
+    useComponentWillMount(()=>{
+        beforeRenderedFn();
+    })
+    
     return (
         <section className="section-common-layout use-nav-aside" >
-            <div className='flex-1 flex-row justify-center content-center h-max'>
-                <p className='text-3xl font-bold text-black pb-4'>{'Writing Clinic'}</p>
-            </div>
-            <div className='flex flex-1 flex-col justify-center w-full h-2/3 pt-12 px-[4vw]'>
+            <SmallHead mainTitle='Writing Activity'/>
+            <div className='flex flex-1 flex-col justify-center w-full h-2/3 pt-[141px] px-[4vw]'>
                 <div className="flex flex-1 pr-[2rem] gap-[5%] w-full justify-center">
-                    <Button className="select-writing-item-button" onClick={()=>CommonFunctions.goLink( 'WritingClinic/SparkWriting', navigate, role)}><span className="text-xl">{'Spark Writing'}</span></Button>
+                    <commonIconSvgs.SparkWritingEnterButton className={buttonActive? 'select-writing-item-button': 'hidden'} onClick={()=>{
+                        if (buttonActive) {
+                            CommonFunctions.goLink( 'WritingClinic/SparkWriting', navigate, role)}
+                        }
+                    }
+                    ><span className="text-xl">{'Spark Writing'}</span></commonIconSvgs.SparkWritingEnterButton>
                     <Button className={`select-writing-item-button ${secondGenerationOpen? '':'hidden'}`}><span className="text-xl">{'Free Writing'}</span></Button>
                 </div>
             </div>

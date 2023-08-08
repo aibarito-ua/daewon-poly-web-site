@@ -1,6 +1,6 @@
 import React from 'react';
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
-import {CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, INGCompleteCircleIcon, ReLearningCircleIcon} from '../../../util/svgs/heroIcons/CircleIcon'
+import {CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon} from '../../../util/svgs/heroIcons/CircleIcon'
 interface ISelectUnitBoxProps {
     // items: TSelectBoxUnit[];
     completeTopicIndex:TProgressUnitInfo[];

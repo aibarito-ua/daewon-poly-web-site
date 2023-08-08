@@ -1,78 +1,48 @@
 import React from 'react';
-interface IDUMPOutlineItem {
-    name:string;
-    CheckWriting: string;
-    [key:string]: any[]|any;
-}
+import { CommonFunctions } from '../../../util/common/commonFunctions';
 
-const contentComponent = ( outlineItem: IDUMPOutlineItem ) => {
-    const manufactureItem = {...outlineItem};
-    const titleKeys = Object.keys(manufactureItem).splice(6,1);
-    const titleItems = Object.values(manufactureItem).splice(6,1);
-    const keys = Object.keys(manufactureItem).splice(7);
-    const items = Object.values(manufactureItem).splice(7);
-    // console.log('item =',titleKeys)
+const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string ) => {
+    const manufactureItem:TSparkWritingDataOutline[] = draftStatus==='1'
+        ? JSON.parse(JSON.stringify(outlineItem.draft_1_outline))
+        :JSON.parse(JSON.stringify(outlineItem.draft_2_outline));
+    const titleItem = manufactureItem.splice(0, 1);
+    const bodyItemDump = manufactureItem.splice(0);
+    const bodyItemNames = CommonFunctions.outlineNameLists(bodyItemDump)
+    const bodyItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(bodyItemNames, bodyItemDump);
+    // console.log('bodyItemNames =',bodyItem)
+    
     // Title
-    const contentTitleComponent = (titleKey:string, titleText:string, keyVal:any) => {
-        return (<div className='flex flex-1 w-full mb-4 h-fit max-h-[10vh] justify-center z-0' key={keyVal}>
-            <div className='flex flex-row w-11/12 h-fit max-h-full gap-2 text-start'>
-                <div className='flex w-1/12 text-xl font-bold text-black p-3'>{`${titleKey}:`}</div>
-                <div className='flow-root bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'>
-                    <span><span className='pl-4'/>
-                        <pre className='font-sans inline-block'>{titleText}</pre>
+    const contentTitleComponent = (titleText:string, keyVal:any) => {
+        return (<div className='flex flex-1 w-full h-fit justify-center z-0' key={keyVal}>
+            <div className='flex flex-row w-full h-fit max-h-full text-start'>
+                <div className='flow-root w-full overflow-y-auto'>
+                    <span>
+                        <pre className='preview-text-pre'>{titleText}</pre>
                     </span>
                 </div>
             </div>
         </div>)
     }
     // Body
-    const contentBodyComponent = (itemIndex:number, text:string) => {
-        return (<span className='flex' key={itemIndex}><span className='pl-4'></span>
-            <pre className='font-sans inline-block'>{text}</pre>
+    const contentBodyComponent = (itemIndex:number, text:string, paddingStr:string) => {
+        return (<span className={`flex indent-[15px] ${paddingStr}`} key={itemIndex}><span className=''></span>
+            <pre className='preview-body-text-pre'>{text}</pre>
         </span>)
     }
-    const contentSubBodyComponent = (subItemIndex:string, text:string) => {
-        return (<span className='flex' key={subItemIndex}><span className='pl-4'></span>
-            <pre className='font-sans inline-block'>{text}</pre>
-        </span>)
-    }
-
     return (
-        <div className='flex flex-1 flex-col w-full h-full pb-4 z-0 overflow-y-auto'>
-            {titleKeys.map((keyItem:string, keyIndex:number)=>{
-                if (keyItem === 'Title') {
-                    return titleItems[keyIndex].map((item:any, itemIndex:number) => {
-                        if (typeof(item) !== 'string') {
-                            const keyValue = keyIndex+'-'+itemIndex
-                            return contentTitleComponent(keyItem, item.text, keyValue)
-                        }
-                    })
-                }
-            })}
-
-            <div className='flex flex-col bg-gray-200 text-start w-full h-full max-h-full overflow-y-auto rounded-2xl px-4 z-0'>
-            {keys.map((keyItem:string, keyIndex:number)=>{
-                return (
-                    <div key={keyIndex} className='my-4'>
-                    { Array.isArray(items[keyIndex]) && items[keyIndex].map((item:any, itemIndex:number)=>{
-                        // console.log(itemIndex / 2)
-                        if (typeof(item) !== 'string') {
-                            const flagText = Object.keys(item).includes('text')
-                            if (flagText) {
-                                return contentBodyComponent(itemIndex, item.text)
-                            } else {
-                                return item.map((subItem:string|TOutlineValues, subItemIndex:number)=>{
-                                    if (typeof(subItem) !== 'string') {
-                                        const subContentKey = itemIndex+':'+subItemIndex;
-                                        return contentSubBodyComponent(subContentKey, subItem.text)
-                                    }
-                                })
-                            }   
-                        }  
-                    })}
-                    </div>
-                )
-            })}
+        <div className='flex flex-1 flex-col w-full h-full pt-[24px] px-[12px] z-0 overflow-y-auto'>
+            
+            {titleItem[0].name.toLocaleLowerCase()==='title' && contentTitleComponent(titleItem[0].input_content, titleItem[0].name+titleItem[0].order_index)}
+            <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
+                {bodyItem.map((item, itemIndex) => {
+                    return (
+                        <div key={itemIndex} className='pb-[20px]'>
+                            {item.map((innerItem, innerItemIndex)=>{
+                                return contentBodyComponent(innerItemIndex, innerItem.input_content, '')
+                            })}
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

@@ -9,23 +9,25 @@ const useEssayWritingCenterDTStore = create<IEssayWritingCenterDT>((set, get)=>(
         // else return 3
         return {firstDraft: 1, secondDraft: 5, firstFeedback: false, secondFeedback: false };
     }),
-    setInitCompleteTopicIndex: (unitValue: TSelectBoxUnitValue, unitIndex: number ) => {
+    setInitCompleteTopicIndex: (unitValue: TSparkWritingData, unitIndex: number ) => {
         let currentCompleteTopicProcessAll:TProgressUnitInfo[] = JSON.parse(JSON.stringify(get().completeTopicIndex));
         let currentCompleteTopicProcess = currentCompleteTopicProcessAll[unitIndex];
-        const draft1_progress = unitValue.progress[0]
-        const draft2_progress = unitValue.progress[1]
+        const draft1_progress = unitValue.draft_1_status.status;
+        const draft2_progress = unitValue.draft_2_status.status;
         currentCompleteTopicProcess.firstDraft = draft1_progress;
         currentCompleteTopicProcess.secondDraft = draft2_progress;
-        if (draft1_progress === 4) {
+        if (draft1_progress===4) {
+            if (draft2_progress===4) {
+                currentCompleteTopicProcess.secondFeedback = true;
+            } else {
+                currentCompleteTopicProcess.secondFeedback = false;
+            }
             currentCompleteTopicProcess.firstFeedback = true;
         } else {
             currentCompleteTopicProcess.firstFeedback = false;
-        }
-        if (draft2_progress === 4) {
-            currentCompleteTopicProcess.secondFeedback = true;
-        } else {
             currentCompleteTopicProcess.secondFeedback = false;
         }
+        
         set(()=>({
             completeTopicIndex: currentCompleteTopicProcessAll
         }))

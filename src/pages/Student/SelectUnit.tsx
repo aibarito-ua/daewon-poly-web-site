@@ -6,27 +6,25 @@ import {CommonFunctions} from '../../util/common/commonFunctions'
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/useLoginStore';
 import { SvgIconCheck } from '../../util/svgs/svgCheck';
-import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, INGCompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
+import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
 import SelectUnitBox from '../../components/pageComponents/selectUnitPage/SelectUnitBox';
 import ReportModalComponent from '../../components/toggleModalComponents/ReportModalComponent';
+import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
+import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
+import { useComponentWillMount } from '../../hooks/useEffectOnce';
+import { callUnitInfobyStudent } from './api/EssayWriting.api';
 
 export default function SelectUnit () {
     const navigate = useNavigate();
     const {role} = useLoginStore();
     const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen} = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
-    const {selectBoxUnit} = useSparkWritingStore();
+    const {sparkWritingData} = useSparkWritingStore();
 
     React.useEffect(()=>{
         setSubNavTitleString('Spark Writing')
         setSubRightNavTitleString('');
         setCompleteTopicIndex(proceedingTopicIndex,1)
-        for (const idx in selectBoxUnit) {
-            const unitValues = selectBoxUnit[idx];
-            const numberIdx = parseInt(idx);
-            console.log('Effect: ',unitValues)
-            setInitCompleteTopicIndex(unitValues, numberIdx);
-        }
         return () => {
             setSubNavTitleString('');
         }
@@ -36,141 +34,175 @@ export default function SelectUnit () {
         setSubRightNavTitleString,
         proceedingTopicIndex,
         setCompleteTopicIndex,
-        selectBoxUnit
+        sparkWritingData
     ])
 
     
     
-    const SelectBoxUnitMapLoop = (props: {items:TSelectBoxUnit}) => {
+    const SelectBoxUnitMapLoop = (props: {items:TSparkWritingDatas}) => {
+
         const selectWritingTopic = async (unitNum:string, unitTitle:string, draftNum: string ) => {
-            setSelectUnitInfo(`Unit ${unitNum}`,unitTitle)
+            console.log('unitNum: ',unitTitle)
+            setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
             CommonFunctions.goLink(path, navigate, role);
         }
-        const draftIcons = (progress:number) => {
+        const draftIcons = (firstProgress:number, secondProgress:number, currentStep:number) => {
+            const currentlyInProgress = currentStep===1 ? (
+                secondProgress===0 ? (
+                    firstProgress!==4 ? true : false
+                ):false
+            ):(
+                firstProgress===4 ? (
+                    secondProgress===4 ? false:true
+                ): false
+            )
+            const progress = currentStep===1? firstProgress: (
+                firstProgress===4 ? secondProgress : -1
+            )
+
             if (progress === 0) {
-                return <CircleIcon className='w-5 h-5' />
+                return  <CircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
             } else if (progress === 1) {
-                return <SavedCircleIcon className='w-5 h-5' />
-            } else if (progress === 2) {
-                return <INGCompleteCircleIcon className='w-5 h-5' />
-            } else if (progress === 3) {
-                return <ReLearningCircleIcon className='w-5 h-5' />
-            } else if (progress === 4) {
-                return <CompleteCircleIcon className='w-5 h-5' />
+                return <SavedCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+            } else if (progress >1 && progress < 5) {
+                //  2, 3, 4
+                return <CompleteCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+            } else if (progress === 5) {
+                return <ReLearningCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
             } else {
                 // -1
-                return <NoEntryCircleIcon className='w-5 h-5' />
+                return <NoEntryCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
             }
         }
         
         return (
-            <div className="flex max-md:flex-col md:flex-row px-12 max-md:mt-[10vhd] md:pt-4 gap-8 w-full justify-center text-center align-middle">
-
-                {props.items.map((item:TSelectBoxUnitValue, topicsIndex:number)=>{
+            <div className="flex flex-col bg-[#fff] h-[445px] max-w-[1010px] px-[25px] pb-[35px] pt-[23px] rounded-[24px]">
+                <div className='select-a-unit-to-begin'>{'* Select a unit to begin.'}</div>
+                <div className='select-unit-div'>
+                {props.items.map((item:TSparkWritingData, topicsIndex:number)=>{
                                 
                     // 각 회차별 
-                    // 0: 진입 가능, 1: 임시 저장, 2: 완료, 3: 재학습 필요, -1: 진입 불가
+                    // 0: 진입 가능&진입불가, 
+                    // 1: 임시 저장, 
+                    // 2: 완료(admin draft 입수/진행중)
+                    // 3: 완료(admin draft 진행중/임시저장)
+                    // 4: 완료(admin feedback 완료)
+                    // 5: 재학습 필요
                     // 1: 1st 시작, 2nd는 1st의 피드백이 있을때
-                    // const checkProceeding = completeTopicIndex[item.topicIndex]
-                    const selectUnitIndex = (topicsIndex+1).toString();
-                    // console.log('checkProceeding ==',checkProceeding)
-                    // console.log('selectUnitIndex ===',selectUnitIndex)
+                    const selectUnitIndex = item.unit_index.toString();
+                    const selectUnitMainTitle = `Unit ${item.unit_index}`
+                    const selectUnitSubTitle = item.topic;
                     
-                    const firstDraft = item.progress[0]
-                    const secondDraft = item.progress[1]
-                    const firstFeedback = firstDraft===3 ? true : false;
-                    const secondFeedback = secondDraft===3 ? true : false;
-                    return (<div key={topicsIndex} 
-                    className={`flex flex-row content-between md:pb-1 md:pt-6 md:px-1 select-writing-topic-item-button bg-gray-300 hover:ring-8 hover:ring-yellow-400 focus:ring-8 focus:ring-yellow-400 relative`}
-                    // disabled={checkProceeding.secondDraft === 2 ? true : false}
+                    const firstDraft = item.draft_1_status.status
+                    const secondDraft = item.draft_2_status.status
+                    const firstFeedback = firstDraft===4 ? true : false;
+                    const secondFeedback = secondDraft===4 ? true : false;
+                    
+                    return (
+                        
+                    <div key={topicsIndex} 
+                    className={`select-writing-topic-item-button group/unit`}
                     onClick={async ()=>{
                         
                         if ( !firstFeedback && !secondFeedback ) {
                             // 1차 진입 가능
                             if (firstDraft === 0) {
-                                
                                 // 1차 진행 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, item.title.sub, '1');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
-                            } else if (firstDraft === 2) {
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                            } else if (firstDraft > 1 && firstDraft < 5) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
-                            } else if (firstDraft === 3) {
+                            } else if (firstDraft === 5) {
                                 // 1차 재학습 -> 편집 가능
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
                             } else {
-                                // 1차 완료 -> 2차 진입 가능
+                                // 2차 진입 가능
                             }
     
-                        } else if (firstDraft && !secondFeedback) {
+                        } else if (firstFeedback && !secondFeedback) {
                             // 2차 진입 가능
                             if (secondDraft === 0) {
-                                // 2차 진행
+                                // 2차 진행 -> 편집 가능
                             } else if (secondDraft === 1) {
                                 // 2차 임시저장 -> 편집 가능
-                            } else if (secondDraft === 2) {
+                            } else if (secondDraft > 1 && secondDraft < 5) {
                                 // 2차 완료(submit) -> 편집 x, 뷰잉만
-                            } else if (secondDraft === 3) {
+                            } else if (secondDraft === 5) {
                                 // 2차 재학습 -> 편집 가능
                             } else {
-                                // 1차 진행중
+                                // -> final
                             }
-                        } else if (firstDraft && secondFeedback) {
+                        } else if (firstFeedback && secondFeedback) {
                             // 100% -> final feedback
                         }
                     }}
-                    ><div className='flex flex-1 flex-col h-full justify-stretch md:gap-4 md:py-4 max-md:py-1 max-md:gap-1 px-2'>
-                            <div className='flex flex-col h-fit'>
-                                {item.title.main}
+                    >
+                        <div className='unit-select-button-item'>
+                            <div className='unit-select-button-item-unit group-hover/unit:bg-[#21c39a]'>
+                                {selectUnitMainTitle}
                             </div>
-                            <div className='flex flex-1 justify-center'>{item.title.sub}</div>
+                            <div className='unit-select-button-item-title group-hover/unit:text-[#21c39a]'>{selectUnitSubTitle}</div>
                         
-                            {(item.progress[0] !== 4 || item.progress[1] !== 4) && (
-                                <div className='flex flex-initial md:flex-col max-md:flex-row max-md:justify-around max-md:py-1 h-12 bg-slate-400 rounded-lg'>
-                                        <div className='flex flex-row justify-center items-center'><span>{
-                                            draftIcons(item.progress[0])
-                                        }</span><span className='ordinal'>{'1st'}</span>{' Draft'}</div>
-                                        <div className='flex flex-row justify-center items-center'><span>{
-                                            draftIcons(item.progress[1])
-                                        }</span><span className='ordinal'>{'2nd'}</span>{' Draft'}</div>
+                            {(firstDraft !== 4 || secondDraft !== 4) && (
+                                <div className='unit-select-button-item-drafts z-0 mt-[36px]'>
+                                    <div className='flex unit-select-button-item-dotted z-0'></div>
+                                    <div className='flex flex-row z-10 relative items-center'><span>{
+                                        draftIcons(firstDraft, secondDraft, 1)
+                                    }</span><span className='ordinal pl-[6px]'>{'1st'}</span>{' Draft'}</div>
+                                    <div className='flex flex-row z-10 relative mt-[22px] items-center'><span>{
+                                        draftIcons(firstDraft, secondDraft, 2)
+                                    }</span><span className='ordinal pl-[6px]'>{'2nd'}</span>{' Draft'}</div>
                                 </div>
                             )}
-                            {(item.progress[0] === 4 && item.progress[1] === 4) && (
-                                <div className='flex flex-initial md:flex-col max-md:flex-row max-md:justify-around max-md:py-1 h-12 bg-slate-400 rounded-lg'>
-                                    <ReportModalComponent />
+                            {(firstDraft === 4 && secondDraft === 4) && (
+                                <div className='unit-select-button-item-drafts z-0 mt-[36px] relative'>
+                                    <div className='flex unit-select-button-item-dotted z-0'></div>
+                                    <div className='flex flex-row z-10 relative items-center'><span>{
+                                        draftIcons(firstDraft, secondDraft, 1)
+                                    }</span><span className='ordinal pl-[6px]'>{'1st'}</span>{' Draft'}</div>
+                                    <div className='flex flex-row z-10 relative mt-[22px] items-center'><span>{
+                                        draftIcons(firstDraft, secondDraft, 2)
+                                    }</span><span className='ordinal pl-[6px]'>{'2nd'}</span>{' Draft'}</div>
+                                    <div className='absolute w-[150px] h-[140px] top-0 left-0 rounded-[22px] bg-[#000] opacity-[0.7] z-20'>
+                                    </div>
+                                    <div className='unit-complete-report-icon'></div>
                                 </div>
                             )}
+                        {(firstDraft === 4 && secondDraft === 4) && (
+                            <div className='unit-complete-flower-icon'></div>
+                        )}
+                        </div>
+                        <span className='absolute top-0 right-0'>{(firstDraft && secondFeedback) ? SvgIconCheck: ''}</span>
                     </div>
-                    <span className='absolute top-0 right-0'>{(firstDraft && secondFeedback) ? SvgIconCheck: ''}</span></div>)
+                    )
                     
                 })}
+                </div>
             </div>
         )
     }
     
     return (
         <section className='section-common-layout use-nav-aside'>
-            <div className='flex flex-1 flex-col w-full h-full'>
-            <div className='flex-none flex-row justify-center content-center'>
-                <p className='text-3xl font-bold text-black pb-4'>{'Writing Clinic'}</p>
-            </div>
-                {/* page inline header */}
-                <div className='flex flex-row font-bold w-full justify-stretch items-center px-8 text-black border-b-4 border-b-[#d9e2f3]'>
-                    <div className='flex flex-1 pt-4 justify-start'>
-                        <p>{`Spark Writing`}</p>
-                    </div>
-                    <div className='flex flex-1 flex-row-reverse pl-4 py-4'>
-                        <button className={`bg-gray-300 px-4 rounded-lg shadow-[5px_10px_10px_rgba(0,0,0,0.25)] ${secondGenerationOpen? '':'hidden'}`}>{'Free Writing'}</button>
-                    </div>
-                </div>
+            {/* page inline header */}
+            <SmallHead mainTitle='Writing Activity' subTitle='Spark Writing'/>
+            <div className='flex flex-1 flex-col w-full h-full px-[25px] pb-[25px]'>
+            
                 {/* page titles */}
-                <div className='flex flex-col font-bold w-full justify-start px-8 pt-4 text-black h-1/5'>
-                    <p className='flex flex-1 pl-4'>SPARK Writing B-1</p>
-                    <p className='flex flex-1 pl-8'>* Please select one unit.</p>
+                <div className='flex flex-col font-bold w-full justify-start pt-[93.4px] text-black h-1/5'>
+                    <div className='writing-activity-page-title-div'>
+                        <div className='writing-activity-page-title-icon'>
+                            <commonIconSvgs.SparkWritingTitleBookIcon/>
+                        </div>
+                        <span className='writing-activity-page-title-text' >SPARK Writing B-1</span>
+                    </div>
                 </div>
                 {/* buttons */}
                 {/* <div className="flex max-md:flex-col md:flex-row px-12 max-md:mt-[10vhd] md:pt-4 gap-8 w-full justify-center text-center align-middle"> */}
-                    <SelectBoxUnitMapLoop items={selectBoxUnit} />
+                    <SelectBoxUnitMapLoop items={sparkWritingData} />
                 {/* </div> */}
             </div>
         </section>

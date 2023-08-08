@@ -8,7 +8,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
-import buttonImage from './img/buttonEllaImg.png'
+// import buttonImage from './img/buttonEllaImg.png'
+import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
 
 export default function FormDialog() {
     
@@ -20,7 +21,8 @@ export default function FormDialog() {
     name
   } = useLoginStore();
   const ai_name = 'Ella';
-  const user_name = name;
+  // const user_name = name;
+  const user_name = 'UaTester';
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -101,26 +103,39 @@ export default function FormDialog() {
     <div className='flex'>
     <button 
         className={`chatbot-modal-button`}
+        // className='relative z-50'
         onClick={handleClickOpen}
-    ><img className='w-10 h-10' src={buttonImage}/></button>
+    ></button>
       <Dialog className=''
+      sx={{ '.MuiDialog-container':{ backgroundColor: 'rgba(0,0,0,0.5)'},
+        '.MuiDialog-paper': { 
+          width: '700px',
+          minHeight: '390px',
+          padding: '32px 0 0',
+          borderRadius: '20px',
+          backgroundColor: '#fff',
+          marginTop: '-200px',
+        }
+      }}
       open={open} onClose={handleClose}>
-        <DialogTitle>Chatbot</DialogTitle>
+        {/* <DialogTitle>Chatbot</DialogTitle> */}
         <DialogContent 
-            className='flex flex-1 flex-col min-w-[500px] bg-[#f3f3f3] h-[500px]'
+            className='flex flex-1 flex-col min-w-[500px] h-[390px]'
+            sx={{padding: '0 20px'}}
         >
-        <div className='flex flex-1 h-[400px]'>
+        <div className='flex flex-1 h-[290px]'>
 
         <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto'>
         {chatHistory.slice(0).reverse().map((hist, idx)=>{
             const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
-            const chatItem = hist[0]=== ai_name ? 'chat-ai-div-child' : 'chat-user-div-child'
+            const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
+            const chatItem = hist[0]=== ai_name ? 'chat-ai-div-child' : 'chat-user-div-child';
             let nameDiv:any = <div>{hist[0]===ai_name?ai_name: user_name}</div>;
             
             
             return <div key={'chatmodal-ai-chat-hist-'+idx.toString()} className={chatDiv}>
-                <div>
-                    {nameDiv}
+                <div className={chatItemPosition}>
+                    <div className={`chat-user-name-div ${chatItemPosition}`}>{nameDiv}</div>
                     {Array.isArray(hist[1]) && <div className='flex flex-col'>{hist[1].map((v, i)=>{
                         return <div key={i} className={chatItem}>{v}</div>
                     })}</div>
@@ -130,24 +145,25 @@ export default function FormDialog() {
                 </div>
         })}
         </div>
-        
         </div>
+        </DialogContent>
+        <DialogActions sx={{
+          borderTop: 'solid 1px #d9dde1',
+          padding: '19px 20px',
+          minHeight: '94px'
+        }}>
           <textarea 
             id='chatbot-modal-input-textarea'
-            className='flex w-full rounded-xl border-0'
+            className='chatbot-chat-textarea'
             style={{resize:'none'}}
             autoFocus
             rows={1}
-            placeholder='Type here.'
+            placeholder='Type your question here.'
             onChange={(e)=>onChangeValue(e)}
             onKeyUp={async (e)=>await onKeyUpEvent(e)}
             value={inputText}
           />
-        </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions> */}
+        </DialogActions>
       </Dialog>
     </div>
   );

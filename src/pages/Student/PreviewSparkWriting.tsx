@@ -10,22 +10,28 @@ import { grammarCheck, previewTest } from './api/GrammarApi';
 import useGrammarStore from '../../store/useGrammarStore';
 import GrammarContentComponent from '../../components/pageComponents/previewSparkWriting/grammarContentComponent';
 import { isEqual } from 'lodash';
+import useControlAlertStore from '../../store/useControlAlertStore';
+import { CommonFunctions } from '../../util/common/commonFunctions';
 
 const PreviewSparkWriting = (props:any) => {
     // stores
     // Spark Store
-    const {outlineItems, checkWritingValues, selectBoxUnit, setSelectBoxUnit} = useSparkWritingStore();
+    const {sparkWritingData, setSelectBoxUnit} = useSparkWritingStore();
     // Nav Store
     const {setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString} = useNavStore();
+    
     // WritingCenter Store
     const {} = useEssayWritingCenterDTStore();
     // current role
     const {} = useLoginStore();
     const {setGrammarBody, setGrammarTitle, setGrammarAll, grammarTitle, grammarBody, grammarAll,
         resultTitle,resultBody, setGrammarResult,
-        returnData, 
+        returnData, setGrammarOrigin,
         setGrammarResultInit
     } = useGrammarStore();
+    const {
+        commonAlertOpen, setCommonStandbyScreen
+    } = useControlAlertStore();
 
     // page States
     const [bodyHistory, setBodyHistory] = React.useState<TBodyHistorys>(
@@ -35,6 +41,7 @@ const PreviewSparkWriting = (props:any) => {
         }
     );
     const [isUndoBody, setIsUndoBody] = React.useState<boolean>(false);
+    const [remakeBodyItem, setRemakeBodyItem] = React.useState<number[][]>([]);
 
 
     const setInitHistorys = (hist:{title:TbodyHistory, body:TbodyHistory}) => {
@@ -99,61 +106,54 @@ const PreviewSparkWriting = (props:any) => {
     const AIProofreadingYesOnClick = async () => {
         // count plus
         if (countofUseAIProofreading < 2) {
+            setCommonStandbyScreen({openFlag:true})
             let checkResultData: any[] = []
             for await (const idx of grammarAll) {
                 
                 const res = await grammarCheck(idx)
                 checkResultData.push(res)
             }
-            // setGrammarResult(checkResultData)
-            // checkResultData = [...returnData]
-            const grammarResults = setGrammarResult(checkResultData);
+            const grammarResults = setGrammarOrigin(checkResultData);
 
-            const consoleText = JSON.stringify(grammarResults)
-            console.log(consoleText)
-
+            // const consoleText = JSON.stringify(grammarResults)
+            // console.log('origin =',)
+            setCommonStandbyScreen({openFlag:false})
             setInitHistorys({
                 title: grammarResults.resultTitle,
                 body: grammarResults.resultBody
             })
             setGuideFlag(1)
-            AIProofreadingClose()
-            // 각 문단별로 split된 결과를 배열로 받음 원본&수정본
-            // console.log('responses = ',rsps)
-            // 배열간에 두 데이터를 비교해주는 컴포넌트 생성할것!
-
-            // const countPlus = countofUseAIProofreading+1
-            // setCountofUseAIProofreading(countPlus);
         } else {
 
         }
         
     }
     const previewTextforGrammarCheck = () => {
-        type outlineData = {
-            name:string;
-            CheckWriting: string;
-            [key:string]: any[]|any;
-        }
-        const outlineData:outlineData = outlineItems[unitIndex];
-        let makeGrammarItems:any[] = [];
-        const items = Object.values(outlineData).splice(6);
-        const keys = Object.keys(outlineData).splice(6);
-        keys.map((_keyItem, keyIndex)=>{
-            items[keyIndex].map((bodyItem:any, _bodyItemIndex:number)=>{
-                if (typeof(bodyItem) !== 'string') {
-                    const flagText = Object.keys(bodyItem).includes('text')
-                    if (flagText) {
-                        makeGrammarItems.push(bodyItem.text.trim())
-                    } else {
-                        return bodyItem.map((subItem:string|TOutlineValues, subItemIndex:number)=>{
-                            if (typeof(subItem) !== 'string') {
-                                makeGrammarItems.push(subItem.text.trim())
-                            }
-                        })
-                    }
+        const outlineData:TSparkWritingData = sparkWritingData[unitIndex];
+        // margin index setting
+        const bodyItemDump:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineData.draft_1_outline));
+        const bodyOutlineItems = bodyItemDump.splice(1);
+        const bodyItemNames = CommonFunctions.outlineNameLists(bodyOutlineItems);
+        const bodyItemRemake:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(bodyItemNames, bodyOutlineItems);
+        const remakeItem:number[][] = [];
+        let remakeNumber = -1;
+        for (let i = 0; i < bodyItemRemake.length; i++) {
+            const itemInBodyItemRemake = bodyItemRemake[i];
+            remakeItem.push([]);
+            for (let j = 0; j < itemInBodyItemRemake.length; j++) {
+                if (remakeItem[i].length===0) {
+                    remakeNumber+=1;
+                    remakeItem[i].push(remakeNumber)
+                } else {
+                    remakeNumber+=1;
+                    remakeItem[i].push(remakeNumber)
                 }
-            })
+            }
+        }
+        setRemakeBodyItem(remakeItem);
+        let makeGrammarItems:any[] = [];
+        outlineData.draft_1_outline.map((item, itemIndex) => {
+            makeGrammarItems.push(item.input_content.trim())
         })
         setGrammarAll(makeGrammarItems)
     }
@@ -172,10 +172,37 @@ const PreviewSparkWriting = (props:any) => {
             setTitleValue(dumybodyHistory);
         }
     }
+    const onSubmitEvent = () => {
+        if (!openSubmitButton) {
+            return;
+        } else {
+            let draftText = '';
+            const unitTitle_1 = selectUnitInfo.main.replace(/\.$/gi,'');
+            if (params.draft === '1') {
+                draftText='1st draft'
+            } else { draftText='2nd draft'}
+            const yesMessage = <p className='ordinal'>{`Your ${unitTitle_1} ${selectUnitInfo.sub}'s ${draftText} has been submitted.`}</p>
+            
+            commonAlertOpen({
+                head: `${unitTitle_1}: ${selectUnitInfo.sub}`,
+                alertType: 'continue',
+                messages: ['Are you ready to submit?'],
+                yesButtonLabel: 'Yes',
+                noButtonLabel: 'No',
+                yesEvent: () => {
+                    commonAlertOpen({
+                        useOneButton: true,
+                        messages: [yesMessage],
+                        yesButtonLabel: 'OK',
+                    })
+                }
+            })
+        }
+    }
 
     React.useMemo(()=>{
         previewTextforGrammarCheck()
-    }, [outlineItems])
+    }, [sparkWritingData])
     
     React.useMemo(()=>{
         if (guideFlag===undefined) {
@@ -205,7 +232,7 @@ const PreviewSparkWriting = (props:any) => {
         }
         // count AI Proofreading
         if (countofUseAIProofreading === undefined || countofUseAIProofreading === -1) {
-            const countCheck = selectBoxUnit[unitIndex].countofUseAIProofreading;
+            const countCheck = sparkWritingData[unitIndex].proofreading_count;
             setCountofUseAIProofreading(countCheck)
         } else {
             if (countofUseAIProofreading < 2) {
@@ -236,7 +263,7 @@ const PreviewSparkWriting = (props:any) => {
                 setIsUndoBody(false);
             }
         }
-        console.log('test outline items =',outlineItems[unitIndex])
+        // console.log('test outline items =',sparkWritingData[unitIndex])
         return ()=>{
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
@@ -249,89 +276,84 @@ const PreviewSparkWriting = (props:any) => {
         // Nav store
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString,
         // Spark store
-        outlineItems
+        
     ])
+    
 
     // Render Page
     return (
-        <section className={`section-common-layout z-0`}>
-            <div className='flex flex-1 flex-col w-full pt-[10vh] h-full px-14 pb-4 z-0'>
+        <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
+            <div className='wrap-contain-spark-writing'>
                 {/* guide text */}
-                <div className='flex flex-col font-bold w-full justify-start py-4 text-black h-1/12 z-0'>
-                    {guideText.map((text:string, textIdx:number)=>{
-                        return <p className='flex flex-1' key={'guide-text-'+textIdx}>{text}</p>
+                <div className='wrap-guide-text-spark-writing relative'>
+                    <p className='flex flex-1 justify-center'>
+                    {guideText.map((text:string)=>{
+                        return text
                     })}
-                </div>
-                {/* content */}
-                {guideFlag===0 && contentComponent(outlineItems[unitIndex])}
-                
-                {(guideFlag===1 && bodyHistory.title) && (
-                    <div className='flex w-full mb-4 h-fit max-h-[10vh] justify-center z-0'>
-                        <div className='flex flex-row w-11/12 h-fit max-h-full gap-2 text-start'>
-                            <div className='flex w-1/12 text-lg font-bold text-black p-3'>{`Title:`}</div>
-                            <div className='flow-root whitespace-pre-line bg-gray-200 w-full text-xl overflow-y-auto text-black rounded-xl px-4 py-3'>
-                                {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
-                            </div>
-                        </div>
-                        <button className={`flex w-fit h-full items-center ${isUndoBody ? ' cursor-pointer':' cursor-default'}`}
+                    </p>
+                    {(guideFlag===1 && bodyHistory.title) && (
+                        <button className={`absolute top-[8px] right-[15px] items-center ${isUndoBody ? ' cursor-pointer':' cursor-default'}`}
                         disabled={!isUndoBody}
                         onClick={()=>undoValue()}
-                        ><GrammarContentComponent.resetButtonIcon /></button>
-                    </div>
-                )}
-                {guideFlag===1 && 
-                <div className='flex flex-1 flex-col w-full h-full pb-4 z-0 overflow-y-auto'>
-                    <div className='flex flex-col bg-[#f3f3f3] text-start w-full h-full max-h-full overflow-y-auto rounded-2xl px-4 z-0 gap-4 py-4'>
-                        <div className='flex flex-col gap-4 py-4 whitespace-pre-line'>
-                            {bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && bodyHistory.body.present.map((v, i)=> GrammarContentComponent.bodyCompareDif1(v, i, clickTooltip) )}
-                        </div>
-                    </div>
+                        ><GrammarContentComponent.resetButtonIcon className='w-[34px] h-[34px]' /></button>
+                    )}
                 </div>
-                }
+                {/* content */}
+                <div className='wrap-content-spark-writing'>
+                    {guideFlag===0 && contentComponent(sparkWritingData[unitIndex], params.draft!==undefined?params.draft:'')}
+                    {guideFlag===1 && (
+                        <div className='flex flex-1 flex-col w-full h-full pt-[24px] px-[12px] z-0 overflow-y-auto'>
+                            {bodyHistory.title && (
+                                <div className='flex flex-1 w-full h-fit justify-center z-0'>
+                                    <div className='flex flex-row w-full h-fit max-h-full text-start'>
+                                        <div className='flow-root w-full overflow-y-auto'>
+                                        {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
+                            {bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
+                                return <span className='pb-[20px]' key={bodyRemakeStructIndex}>
+                                    {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
+                                        const v = bodyHistory.body.present[bodyRemakeNumber];
+                                        return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip)
+                                    })}
+                                </span>
+                            } )}
+                            </div>
+                        </div>
+                    )}
+                </div>
                 
+                <div className={`buttons-div`}>
+                    <button className={`save-button-active`} onClick={()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to save?'],
+                            yesButtonLabel: "Yes",
+                            yesEvent: ()=>{
+                                navigate(-1);
+                            },
+                            noButtonLabel: "No"
+                        })
+                    }}>Edit</button>
+                    <button className={`${countofUseAIProofreading<2?'save-button-active div-to-button-hover-effect':'save-button'}`} 
+                    onClick={()=>{
+                        commonAlertOpen({
+                            messages: countofUseAIProofreading===2 ? ['You have already used AI proofreading twice.']: [
+                                'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
+                                `${countofUseAIProofreading}/2`
+                            ],
+                            yesButtonLabel: 'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => await AIProofreadingYesOnClick()
+                        })
+                    }}>AI Proofreading</button>
+                    <button className={`${openSubmitButton?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
+                        onSubmitEvent()
+                    }}>Submit</button>
+                </div>
             </div>
-            <div className={`buttons-div`}>
-                <button className={`save-button`} onClick={()=>{
-                    // alert('Edit')
-                    setGuideFlag(1)
-                    navigate(-1);
-                    // setShowSaveModal(true)
-                    // callbackCheckValues()
-                }}>Edit</button>
-
-                <button className={`${openAIProofreadingButton?'disabled-button':'not-disabled-button'}`} 
-                // disabled={openAIProofreadingButton}
-                onClick={()=>AIProofreadingOnClickEvent()}>AI Proofreading</button>
-
-                <button className={`save-button ${openSubmitButton?'':'hidden'}`} onClick={()=>{
-                    alert('Submit')
-                    // callbackCheckValues()
-                    // setShowPreviewModal(true)
-                }}>Submit</button>
-            </div>
-            {/* AI Proofreading modal popup */}
-            <PopupModalComponent 
-                Message={countofUseAIProofreading===2 ? ['You have already used AI proofreading twice.']: [
-                    'You can only use AI proofreading twice. Are you sure you want to proceed now?',
-                    <p className='' key="show-count-p-tag">{`${countofUseAIProofreading}/2`}</p>
-                ]}
-                NoMessage={countofUseAIProofreading===2 ? '':'Not Yet'}
-                YesMessage={countofUseAIProofreading===2 ? 'OK':'Yes'}
-                onClickYes={countofUseAIProofreading===2 ? AIProofreadingClose: async ()=> await AIProofreadingYesOnClick()}
-                onClose={AIProofreadingClose}
-                showFlag={showAIProofreadingModal}
-            />
-            {/* Submit modal popup */}
-            <PopupModalComponent 
-                Message={[
-                    ''
-                ]}
-                NoMessage=''
-                YesMessage=''
-                onClickYes={()=>{}}
-                onClose={()=>{}}
-                showFlag={false}
-            />
         </section>
     )
 }

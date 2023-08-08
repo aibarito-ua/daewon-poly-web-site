@@ -41,5 +41,32 @@ export const CommonFunctions={
         } else {
 
         }
+    },
+    outlineNameLists: (outlineOriginData: TSparkWritingDataOutline[]) => {
+        const targetMaxLength = outlineOriginData.length;
+        // title 정리
+        let allNames:string[] = [];
+        for (let multiIdx = 0; multiIdx < targetMaxLength; multiIdx++) {
+            const multiTargetCheck = outlineOriginData[multiIdx].name.split('_');
+            if (!allNames.includes(multiTargetCheck[0])) {
+                allNames.push(multiTargetCheck[0]);
+            }
+        }
+        return allNames
+    },
+    outlineDataFormRemake: (allNames:string[], outlineOriginData: TSparkWritingDataOutline[]) => {
+        const targetMaxLength = outlineOriginData.length;
+        return Array.from({length: allNames.length}, (v, k) => {
+            let returns:TSparkWritingDataOutline[] = [];
+            const title = allNames[k];
+            for (let olIdx =0; olIdx < targetMaxLength; olIdx++) {
+                const targetTitle = outlineOriginData[olIdx].name.split('_')[0];
+                if (targetTitle === title) {
+                    returns.push(outlineOriginData[olIdx])
+                }
+            }
+            return returns;
+        });
     }
+
 }

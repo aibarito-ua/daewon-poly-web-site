@@ -63,7 +63,15 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             setPlacement('bottom-start')
         }
     })
-
+    const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
+        return (
+            <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="arrow">
+            <path id="Vector 70" d="M13 19L16.2929 15.7071C16.6834 15.3166 16.6834 14.6834 16.2929 14.2929L13 11" stroke="#EB3A3A" strokeWidth="2" strokeLinecap="round"/>
+            </g>
+            </svg>
+        )
+    }
     const {refs, floatingStyles, context} = useFloating({
         open: isOpen,
         onOpenChange: setIsOpen,
@@ -94,7 +102,7 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     ]);
     return (
         <span key={mainTagkey} 
-        className={`font-sans inline-block whitespace-pre-line hover:cursor-pointer ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#14b690]':'text-[#ffc4cc]'}`}>
+        className={`whitespace-pre-line hover:cursor-pointer ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#14b690]':'text-[#ffc4cc]'}`}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
             >{compareResultText}
@@ -108,8 +116,11 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
                         style={floatingStyles}
                         {...getFloatingProps}
                     >
-                        <span className='flex w-full text-xs text-black'>{tooltipText[0]}</span>
-                        <span className='flex w-full justify-center py-2 px-4'>{tooltipText[1]}</span>
+                        <span className='grammar-tooltip-custom-title'>{tooltipText[0]}</span>
+                        {typeof(tooltipText[1])==='string'? (
+                            <span className='flex w-full justify-center'>{tooltipText[1]}</span>
+                        ): tooltipText[1]}
+                        
                         {tagType==='add' && (
                             <span className='grammar-tooltip-custom-popup'>
                                 <button className='grammar-tooltip-custom-popup-accept' onClick={()=>{

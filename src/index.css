@@ -15,12 +15,271 @@ code {
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+/* Font : Noto Sans CJK KR */
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-style: lighter;
+  font-weight: 100;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-weight: 200;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-DemiLight.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-DemiLight.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-DemiLight.otf') format('truetype');
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-weight: 300;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Light.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Light.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Light.otf') format('truetype');
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-style: normal;
+  font-weight: 400;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Regular.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Regular.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Regular.otf') format('truetype');
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-style: medium;
+  font-weight: 500;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('truetype');
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-style: bold;
+  font-weight: 700;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Bold.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Bold.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Bold.otf') format('truetype');
+}
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  font-style: black;
+  font-weight: 900;
+  src: local("NotoSansCJKKR"),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Black.otf') format('woff2'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Black.otf') format('woff'),
+      url('./font/NotoSansCJKkr/NotoSansCJKkr-Black.otf') format('truetype');
+}
+/* Font : GothamRounded */
+@font-face {
+  font-family: "GothamRounded";
+  font-style: light;
+  font-weight: 100;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-Light.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-Light.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-Light.otf') format('truetype');
+}
+@font-face {
+  font-family: "GothamRounded";
+  font-style: lightItalic;
+  font-weight: 100;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-LightIta.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-LightIta.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-LightIta.otf') format('truetype');
+}
+@font-face {
+  font-family: "GothamRounded";
+  font-style: book;
+  font-weight: 300;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-Book.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-Book.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-Book.otf') format('truetype');
+}
+/* @font-face {
+  font-family: "GothamRounded";
+  font-style: bookItalic;
+  font-weight: 300;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-BookIta.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-BookIta.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-BookIta.otf') format('truetype');
+} */
+@font-face {
+  font-family: "GothamRounded";
+  font-style: medium;
+  font-weight: 500;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-Medium.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-Medium.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-Medium.otf') format('truetype');
+}
+/* @font-face {
+  font-family: "GothamRounded";
+  font-style: mediumItalic;
+  font-weight: 500;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-MedIta.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-MedIta.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-MedIta.otf') format('truetype');
+} */
+@font-face {
+  font-family: "GothamRounded";
+  font-style: bold;
+  font-weight: 700;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-Bold.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-Bold.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-Bold.otf') format('truetype');
+}
+@font-face {
+  font-family: "GothamRounded";
+  font-style:Italic;
+  font-weight: 700;
+  src: local("GothamRounded"),
+      url('./font/GothamRnd/GothamRnd-BoldIta.otf') format('woff2'),
+      url('./font/GothamRnd/GothamRnd-BoldIta.otf') format('woff'),
+      url('./font/GothamRnd/GothamRnd-BoldIta.otf') format('truetype');
+}
+/* Font : Roboto */
+@font-face {
+  font-family: "Roboto";
+  font-style: lighter;
+  font-weight: 100;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Thin.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Thin.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Thin.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: lighterItalic;
+  font-weight: 100;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-ThinItalic.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-ThinItalic.ttf') format('woff'),
+      url('./font/Roboto/Roboto-ThinItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: light;
+  font-weight: 300;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Light.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Light.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: lightItalic;
+  font-weight: 300;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-LightItalic.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-LightItalic.ttf') format('woff'),
+      url('./font/Roboto/Roboto-LightItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Regular.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Regular.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: medium;
+  font-weight: 500;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Medium.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Medium.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Medium.ttf') format('truetype');
+}
+/* @font-face {
+  font-family: "Roboto";
+  font-style: mediumItalic;
+  font-weight: 500;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-MediumItalic.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-MediumItalic.ttf') format('woff'),
+      url('./font/Roboto/Roboto-MediumItalic.ttf') format('truetype');
+} */
+@font-face {
+  font-family: "Roboto";
+  font-style: bold;
+  font-weight: 700;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Bold.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Bold.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Bold.ttf') format('truetype');
+}
+/* @font-face {
+  font-family: "Roboto";
+  font-style: boldItalic;
+  font-weight: 700;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-BoldItalic.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-BoldItalic.ttf') format('woff'),
+      url('./font/Roboto/Roboto-BoldItalic.ttf') format('truetype');
+} */
+@font-face {
+  font-family: "Roboto";
+  font-style: black;
+  font-weight: 900;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-Black.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-Black.ttf') format('woff'),
+      url('./font/Roboto/Roboto-Black.ttf') format('truetype');
+}
+/* @font-face {
+  font-family: "Roboto";
+  font-style: blackItalic;
+  font-weight: 900;
+  src: local("Roboto"),
+      url('./font/Roboto/Roboto-BlackItalic.ttf') format('woff2'),
+      url('./font/Roboto/Roboto-BlackItalic.ttf') format('woff'),
+      url('./font/Roboto/Roboto-BlackItalic.ttf') format('truetype');
+} */
+@font-face {
+  font-family: "Pathfinder";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto"),
+      url('./font/Pathfinder/Pathfinder-R.otf') format('woff2'),
+      url('./font/Pathfinder/Pathfinder-R.otf') format('woff'),
+      url('./font/Pathfinder/Pathfinder-R.otf') format('truetype');
+}
+@font-face {
+  font-family: "Pathfinder";
+  font-style: bold;
+  font-weight: 700;
+  src: local("Roboto"),
+      url('./font/Pathfinder/Pathfinder-B.otf') format('woff2'),
+      url('./font/Pathfinder/Pathfinder-B.otf') format('woff'),
+      url('./font/Pathfinder/Pathfinder-B.otf') format('truetype');
+}
+
 #root {
+  font-family: "Noto Sans CJK KR";
   @apply
   max-h-[800px]
   max-w-[1280px]
   w-full
   h-full
+  min-h-fit
+  min-w-fit
 }
 body {
   /* width: 100vw;
@@ -34,6 +293,11 @@ body {
   items-center
   justify-center
   
+}
+
+.login-section {
+  @apply
+  bg-[url('./util/svgs/svgLoginBackgroundImage.svg')]
 }
 
 .wrapper {
@@ -54,7 +318,7 @@ body {
   max-w-[1280px]
   h-full
   w-full
-  bg-white
+  bg-[#3c2481]
 }
 /* Route Screen */
 .max-display-screen {
@@ -64,24 +328,143 @@ body {
   text-center
   w-full
   h-full
+  
 }
 .use-nav-aside {
   @apply
-  pt-20
-  
-  pl-64
+  ml-[190px]
+  !w-[calc(100%-220px)]
 }
 .use-nav-top {
   @apply
-  pt-20
+  pt-[111px]
 }
-
+.nav-menu-off {
+  color: #fff;
+  opacity: 0.5;
+  font-family: 'Pathfinder';
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: normal;
+}
+.nav-menu-on {
+  color: #563ca0;
+  font-family: 'Pathfinder';
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: normal;
+}
+.top-right-user-info {
+  @apply
+  flex
+  absolute
+  top-[20px]
+  right-[-12px]
+}
+.top-right-user-info-text {
+  @apply
+  flex
+  flex-col
+  absolute
+  top-[33px]
+  right-[77px]
+  w-[235px]
+  text-right
+}
+.top-right-user-info-text-en-name {
+  font-family: 'Pathfinder';
+  font-weight: 700;
+  color: #fff;
+  line-height: 22.3px;
+  font-size: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+.top-right-user-info-text-class {
+  font-family: 'Roboto';
+  font-weight: 400;
+  color: #fff;
+  line-height: 20.2px;
+  font-size: 16px;
+}
+.top-right-user-info-img {
+  box-shadow: 0px 1px 4px 0px rgb(0, 0, 0, 0.25);
+  @apply
+  w-[50px]
+  h-[50px]
+  rounded-[50%]
+  absolute
+  top-[30px]
+  right-[15px]
+  
+  border-[2px]
+  border-[#fff]
+}
 /* Section */
 .section-common-layout {
+  backdrop-filter: blur(195px);
+  background-color: rgba(225,225,225, 0.5);
+  -webkit-backdrop-filter: blur(190px);
+  object-fit: contain;
   @apply
-  
+  w-[calc(100%-30px)]
+  h-[calc(100%-60px)]
+  /* bg-white */
+  bg-menu-inner-img
+  mt-[30px]
+  rounded-[18px]
+}
+.section-spark-writing {
+  @apply
+  w-[calc(100%)]
+  h-[calc(100%)]
+  rounded-[18px]
+}
+.wrap-contain-spark-writing {
+  @apply
+  w-[calc(100%)]
+  h-[calc(100%)]
+  flex flex-1
+  flex-col
+  z-0
+  pt-[20px]
+  px-[20px]
+  pb-[30px]
+}
+.wrap-guide-text-spark-writing {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  line-height: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  text-align: center;
+  @apply
+  flex flex-row
+  justify-center
+  items-center
+  rounded-t-[20px]
+  w-full
+  min-h-[50px]
+  h-[50px]
+  z-0
+  bg-[#7861bb]
+}
+.wrap-content-spark-writing {
+  @apply
+  flex flex-col 
+  bg-white
   w-full
   h-full
+  overflow-y-auto
+  z-0
+  gap-[40px]
+  p-[20px]
 }
 
 /* Modal */
@@ -129,11 +512,14 @@ body {
 /* chatbot modal */
 .chatbot-modal-button {
   @apply
-  flex
-  flex-1
-  w-fit
-  h-fit
-  /* bg-no-repeat */
+  block
+  w-[90px]
+  h-[90px]
+  bg-chatbot-ella-button-icon
+  bg-no-repeat
+  object-contain
+  relative
+  z-[1301]
   /* bg-[url('./components/toggleModalComponents/img/buttonEllaImg.png')]; */
   /* background: url('./components/toggleModalComponents/img/buttonEllaImg.png'); */
 }
@@ -181,93 +567,261 @@ body {
   font-normal
   text-black
 }
+.chat-user-name-div {
+  font-family: 'Roboto';
+  font-size: 22px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+  
+}
 .chat-ai-div {
   @apply
   flex
   row-auto
 }
 .chat-ai-div-child {
-  @apply bg-[#ffda66]
-    mb-2
-    ml-1
-    text-black
-    max-w-fit
-    h-min
-    inline-block
-    p-2
-    rounded-tr-lg
-    /* rounded-tl-lg */
-    rounded-br-lg
-    rounded-bl-lg
-    text-base
-    shadow-sm
-
-    /* dark:bg-blue-500 */
+  font-family: 'Roboto';
+  font-size: 19px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: normal;
+  @apply
+bg-[#fff]
+  border-[1px]
+  border-[#e1e1e8]
+  text-black
+  max-w-fit
+  min-h-[50px]
+  inline-block
+  mt-[16px]
+  px-[20px]
+  py-[13.5px]
+  shadow-sm
+  rounded-t-[15px]
+  rounded-br-[15px]
 }
 .chat-user-div {
   @apply flex
   justify-end
   row-auto
 }
+.chat-user-div-position {
+  @apply
+  text-right
+}
 .chat-user-div-child {
-  @apply bg-[#06b0f0]
-  border
-  mb-2
-  mr-1
-  text-white
+  font-family: 'Roboto';
+  font-size: 19px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: normal;
+  @apply
+bg-[#ffea2c]
+  text-black
   max-w-fit
-  h-min
+  min-h-[50px]
   inline-block
-  p-2
-  rounded-tr-lg
-  rounded-tl-lg
-  /* rounded-br-lg */
-  rounded-bl-lg
-  text-base
+  mt-[16px]
+  px-[20px]
+  py-[13.5px]
   shadow-sm
-
-  /* dark:bg-slate-50 */
+  rounded-t-[15px]
+  rounded-bl-[15px]
+}
+.chatbot-chat-textarea {
+  font-family: 'GothamRounded';
+  font-size: '18px';
+  font-weight:500;
+  line-height: 'normal';
+  letter-spacing: 'normal';
+  @apply
+  flex
+  w-full
+  min-h-[55px]
+  rounded-[15px]
+  border-[#dde1e8]
+  border-[1px]
+  px-[20px]
+  pt-[13px]
+  bg-[#f4f5f9]
+  placeholder:text-[#d9d9d9]
 }
 
 /* Writing Center */
 /* 1. Select */
 .select-writing-item-button {
-  @apply flex-col
-  flex-1
-  text-black
-  bg-[#f2f2f2]
-  shadow-[5px_10px_10px_rgba(0,0,0,0.25)]
-  sm:w-2/5
-  max-sm:w-11/12
-  max-sm:mx-4
-  max-sm:mt-4
-  h-2/3
-  rounded-3xl
-  outline-none
-  sm:m-auto
-  p-10
-  hover:ring-8
-  hover:ring-yellow-400
-  focus:ring-8
-  focus:ring-yellow-400
-  /* dark:border-yellow-300 
-  dark:text-yellow-300 
-  dark:hover:text-white 
-  dark:hover:bg-yellow-400 
-  dark:focus:ring-yellow-900 */
+  @apply 
+  w-[320px]
+  h-[322px]
+  hover:cursor-pointer
+  
+}
+.left-top-text-title {
+  font-family: 'Pathfinder';
+  font-weight: 700;
+  font-size: 34px;
+  text-align: left;
+  color: #222;
+  width: 440px;
+  height: 49px;
+}
+.left-top-text-sub-title {
+  font-family: 'GothamRounded';
+  font-weight: 300;
+  font-size: 20px;
+  align-items: start;
+  text-align: left;
+  color: #666;
+  width: 222.5px;
+  height: 33px;
+  @apply
+  flex
+  flex-row
+  pl-[44px]
+  pt-0
+  mt-0
+}
+.writing-activity-page-title-div {
+  @apply
+  flex
+  flex-row
+  h-fit
+  items-center
+  
+}
+.writing-activity-page-title-icon {
+  @apply
+  w-[42px]
+  h-[35px]
+}
+.writing-activity-page-title-text {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-style: bold;
+  color: #3e61aa;
+  @apply
+  ml-[9.5px]
+}
+.select-a-unit-to-begin {
+  font-family: Roboto;
+  font-size: 16px;
+  color: #888;
+  font-weight: 400;
+  font-style: normal;
+  @apply
+  flex-grow-0
+  text-left
 }
 /* 1.1. topic select button */
 .select-writing-topic-item-button {
+  object-fit: contain;
+  background-size: contain;
+  background-repeat: no-repeat;
   @apply 
   text-black
-  w-full
-  md:h-full
-  max-md:h-fit
-  font-bold
-  shadow-[5px_10px_10px_rgba(0,0,0,0.25)]
-  rounded-2xl
-  outline-none
-  
+  w-[191px]
+  h-[349.9px]
+  bg-unit-book-icon
+  hover:bg-unit-select-book-icon
+}
+.unit-select-button-item {
+  @apply
+  pt-[20.3px] pl-[31px] text-start
+  relative
+}
+.unit-select-button-item-unit {
+  font-family: 'GothamRounded';
+  font-size: 14px;
+  font-weight: 700;
+  @apply
+  flex
+  bg-[#b4b9cc]
+  /* hover:bg-[#21c39a] */
+  w-[58px]
+  h-[26px]
+  text-[#fff]
+  rounded-[13px]
+  justify-center
+  items-center
+}
+.unit-select-button-item-title {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.22;
+  @apply
+  max-w-[130px]
+  mt-[10.5px]
+  text-[#3e61aa]
+  /* hover:text-[#21c39a] */
+}
+.unit-select-button-item-drafts {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+  text-align: left;
+  @apply
+  bg-[#fff]
+  rounded-[22px]
+  w-[150px]
+  h-[140px]
+  pl-[15px]
+  py-[15px]
+}
+.draft-icon-not-progress {
+  @apply
+  w-[45px] h-[44px]
+  z-10
+}
+.draft-icon-in-progress {
+  box-shadow: 0 0 6px 0 #9a76ff;
+  @apply
+  w-[45px] h-[44px]
+  border-[3px]
+  rounded-[25px]
+  border-[#9a76ff]
+  z-10
+}
+.unit-select-button-item-dotted {
+  border-left: 2px dotted #ccc;
+  @apply
+  absolute
+  mt-[24px]
+  ml-[22px]
+  w-[2px]
+  h-[71px] 
+}
+.unit-complete-report-icon {
+  @apply
+  absolute
+  bg-unit-complete-report-icon
+  w-[80px]
+  h-[100px]
+  z-30
+  top-[20px]
+  left-[35px]
+}
+.unit-complete-flower-icon {
+  @apply
+  absolute
+  bg-unit-complete-flower-icon
+  w-[52.4px]
+  h-[61.7px]
+  z-30
+  top-[-20px]
+  right-[-9.4px]
+}
+.select-unit-div {
+  @apply
+  flex flex-row
+  pt-[22.9px]
+  gap-[5px]
 }
 
 /*  */
@@ -301,34 +855,64 @@ body {
 }
 .outline-content-box-item {
   @apply
-  p-2
+  px-[15px]
+  mt-[15px]
 }
 
 .outline-content-box-sub-item {
   @apply
-  pl-4
+  px-[15px]
+  mt-[15px]
 }
 
 .buttons-div {
   @apply
-  absolute
-  bottom-10
-  right-10
+  bg-white
+  w-full
+  h-[74px]
+  rounded-b-[20px]
   flex
   flex-row
-  gap-4
+  justify-end
+  gap-[10px]
+  pt-[10px]
+  pr-[20px]
+  pb-[20px]
 }
 .save-button {
+  font-family: GothamRounded;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 5px 0 0 #888;
+  line-height: normal;
+  letter-spacing: normal;
   @apply
-  border-black
-  border
-  rounded-md
-  px-5
-  py-1
-  text-[#0070c0]
-  font-bold
-  shadow-[5px_5px_5px_rgba(0,0,0,0.25)]
-  bg-white
+  flex
+  justify-center
+  items-center
+  rounded-[24px]
+  w-[140px]
+  h-[44px]
+  text-white
+  bg-[#aaa]
+  cursor-default
+}
+.save-button-active {
+  font-family: GothamRounded;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 5px 0 0 #1a9fa6;
+  line-height: normal;
+  letter-spacing: normal;
+  @apply
+  flex
+  justify-center
+  items-center
+  rounded-[24px]
+  w-[140px]
+  h-[44px]
+  text-white
+  bg-[#21c4cc]
 }
 
 /* Preview Page */
@@ -411,98 +995,249 @@ body {
 
 /* Custom Grammar Tooltip by floating-react */
 .grammar-tooltip-custom {
-  /* width: max-content; */
-  min-width: 220px;
-  background-color: #dae3f3;
-  color: #0070c0;
-  font-size: 90%;
-  padding: 8px 8px;
-  border-radius: 10%;
-  border: 1px solid #32538f;
+  padding: 5px 0 10px;
+  @apply
+  min-w-[320px]
+  min-h-[160px]
+  w-fit
+  h-fit
+  border-[2px]
+  border-[#ccc]
+  bg-white
+  rounded-[20px]
+}
+.grammar-tooltip-custom-title {
+  font-family: 'Roboto';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+  text-align: center;
+  @apply
+  text-[#555]
+  flex w-full
+  border-b-[1px]
+  border-b-[#ccc]
+  pl-[15px]
 }
 .grammar-tooltip-custom-popup {
   @apply
   flex
-  flex-1
   flex-row
-  gap-4
   justify-end
-  
+  absolute
+  left-[12px]
+  bottom-[10px]
+  gap-[6px]
 }
 .grammar-tooltip-custom-popup-accept {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 14px;
+  line-height: normal;
   @apply
   flex
-  bg-white
-  text-black
-  border
-  border-solid
-  border-black
-  rounded-md
-  px-1
-  shadow-[2px_2px_2px_rgba(0,0,0,0.25)]
+  justify-center
+  items-center
+  min-w-[145px]
+  h-[40px]
+  bg-[#42278f]
+  text-white
+  rounded-[10px]
 }
 .grammar-tooltip-custom-popup-ignore {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 14px;
+  line-height: normal;
   @apply
   flex
-  bg-white
-  text-black
-  border
-  border-solid
-  border-black
-  rounded-md
-  px-1
-  shadow-[2px_2px_2px_rgba(0,0,0,0.25)]
+  justify-center
+  items-center
+  min-w-[145px]
+  h-[40px]
+  bg-[#dcdadf]
+  text-[#959aaa]
+  rounded-[10px]
+}
+.grammar-tooltip-custom-content-wrap {
+  @apply
+  flex
+  flex-row
+  pt-[22px]
+  justify-center
+}
+.grammar-tooltip-custom-content-delete-text {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: center;
+  @apply
+  px-[4px]
+  py-[1px]
+  rounded-[5px]
+  text-[#eb3a3a]
+  line-through
+  bg-[#ffe8e8]
+}
+.grammar-tooltip-custom-content-add-text {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: center;
+  @apply
+  px-[4px]
+  py-[1px]
+  rounded-[5px]
+  text-[#00be91]
+  bg-[#def4e7]
 }
 
 /* Outlint Format Button Custom */
 .outline-accordion-div-wrap {
+  box-shadow: 0 5px 0 0 #e3e6ed;
   @apply
   flex
   flex-col
   w-full
   h-full
   relative
-  max-h-[]
+  border-[1px]
+  border-[#A9BDE9]
+  rounded-[15px]
+  p-[10px]
 }
 .outline-accordion-button {
   @apply
   flex
   flex-1
   items-center
-  justify-center
-  h-full
+  h-[54px]
   w-full
   relative
+  bg-white
+  text-[#fff]
   
-  pb-5
-  font-medium 
-  text-center
-  text-white
-  bg-white 
-  border-[#a5a5a5] 
-  border-b-0 
-  focus:ring-4 
-  focus:ring-gray-200;
-  clip-path: polygon(0 0, 100% 0%, 100% 60%, 50% 100%, 0% 60%);
 }
 .outline-accordion-button-inner {
   @apply
   flex
   flex-1
   items-center
-  justify-center
   h-full
   w-full
   relative
-  p-4 
-  font-medium 
-  text-center
+  rounded-[10px]
+  bg-[#3E61AA]
+  text-[#fff]
+}
+.outline-accordion-button-inner-text {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  text-align: left;
+  @apply
   text-white
-  bg-[#a5a5a5] 
-  border-[#a5a5a5] 
-  border-b-0 
-  focus:ring-4 
-  focus:ring-gray-200;
-  clip-path: polygon(0 0, 100% 0%, 100% 50%, 50% 100%, 0% 50%);
+  mt-[12px]
+  ml-[15px]
+  mb-[13px]
+}
+.outline-accordion-button-inner-arrow {
+  @apply
+  absolute
+  top-[9px]
+  right-[10px]
 }
 
+.login_foot_style {
+  color: #444;
+  text-align: center;
+  font-family: Noto Sans CJK KR;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.pie-button-effect-none *{
+  border: none;
+  outline: none;
+}
+.legend-ul-custom {
+  @apply
+  flex
+  flex-row
+  justify-center
+  gap-4
+}
+
+.btn-go-back-from-draft {
+  @apply
+  absolute
+  bg-center
+  bg-no-repeat
+  bg-contain
+  bg-back-in-draft-icon
+  w-[90px]
+  h-[90px]
+  top-[15px]
+  left-[20px]
+}
+.draft-unit-title-head-text {
+  font-family: 'Roboto';
+  font-size: 18px;
+  text-align: center;
+  color: #8d76cf;
+  @apply
+  flex
+}
+.draft-unit-sub-title-head-text {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+  color: #7861bb;
+}
+.preview-text-pre {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.44;
+  letter-spacing: normal;
+  @apply
+  overflow-hidden
+  inline-block
+  text-[#333]
+  text-center
+  overflow-ellipsis
+  whitespace-nowrap
+}
+.preview-body-text-pre {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  letter-spacing: normal;
+  @apply
+  text-[#333]
+  text-left
+  inline-block
+  flex-auto
+  whitespace-normal
+}
+.preview-sub-body-text-pre {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  letter-spacing: normal;
+  @apply
+  text-[#333]
+  text-left
+  inline-block
+  flex-auto
+  whitespace-normal
+}
