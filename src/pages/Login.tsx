@@ -6,6 +6,7 @@ import { CONFIG } from '../config';
 import { svgIcons } from '../util/svgs/loginSvgs';
 import { forcedLoginAPI, loginAPI } from './Student/api/Login.api';
 import useControlAlertStore from '../store/useControlAlertStore';
+import { RN } from '../util/RN/commonPostMessage';
 
 export const Login = () => {
     const { userInfo, setUserInfo, setIsOpen, } = useLoginStore();
@@ -36,8 +37,13 @@ export const Login = () => {
     const forceLogin = async () => {
         const response = await forcedLoginAPI(loginValues.username, loginValues.password);
         console.log('response =',response)
+        const rnData = {userInfo:response}
+        
+        const varUserAgent = navigator.userAgent.toLowerCase();
+        if (RN.RNWebView.checkMobiles(varUserAgent)) {
+            sendMessage(rnData);
+        }
         setUserInfo(response)
-        sendMessage({userInfo:response})
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -138,7 +144,7 @@ export const Login = () => {
         })
     }
 
-    // Webview test code
+    // Webview Connect code
     const sendMessage = (data:any) => {
         console.log('Send message data =',data)
         const messageData = JSON.stringify(data);
@@ -151,11 +157,12 @@ export const Login = () => {
     React.useEffect(()=>{
         const varUserAgent = navigator.userAgent.toLowerCase();
         const sendData = {"userInfo":userInfo}
-        if (varUserAgent.indexOf('android') > -1) {
+
+        if (RN.RNWebView.checkAdroid(varUserAgent)) {
             // android
             document.addEventListener('message', receiveMessage);
             sendMessage(sendData)
-        } else if (varUserAgent.indexOf('iphone') > -1 || varUserAgent.indexOf('ipad') > -1 || varUserAgent.indexOf('ipod') > -1) {
+        } else if (RN.RNWebView.checkiOS(varUserAgent)) {
             // iOS
             window.addEventListener('message', receiveMessage);
             sendMessage(sendData)
