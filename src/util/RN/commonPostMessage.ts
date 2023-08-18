@@ -31,5 +31,9 @@ export const RN = {
             const {data} = JSON.parse(rn_data);
             return data;
         }
+    },
+    // React Native
+    RNWebView: {
+        
     }
 }
