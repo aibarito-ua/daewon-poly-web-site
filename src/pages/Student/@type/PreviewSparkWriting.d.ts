@@ -1,10 +1,11 @@
 // body grammar value states
-type TbodyHistory = Diff[][][][];
+type TbodyHistory = TGrammarResponseResult[];
+type TTitleHistory = TGrammarResDiff[][][][];
 type TBodyHistorys = {
     title: {
-        past: TbodyHistory[],
-        present: TbodyHistory,
-        future: TbodyHistory[]
+        past: TTitleHistory[],
+        present: TTitleHistory,
+        future: TTitleHistory[]
     },
     body: {
         past: TbodyHistory[],

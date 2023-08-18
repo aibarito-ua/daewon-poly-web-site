@@ -1,14 +1,17 @@
 import React from 'react';
+import {useLocation} from 'react-router-dom';
 import useLoginStore from "../../../store/useLoginStore";
 import useNavStore from "../../../store/useNavStore";
 import { useNavigate } from "react-router-dom";
 import { navItems } from "../Nav";
 import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
 
+
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
     const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser } = useLoginStore();
     // const [menuLocateValue, setMenuLocateValue] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
     const handleMenuClick = async (role:TRole, menuTitle: string) => {
         if (selectedMenu === menuTitle) {
@@ -25,6 +28,22 @@ const NavAside = () => {
         const rolePath = role==='logout'? '': (role==='admin'? 'admin': (role==='teacher'?'teacher':'student'))
         navigate(`/${rolePath}/${link}`);
     }
+    React.useEffect(()=>{
+        console.log('test effect selectedMenu= ',selectedMenu)
+        if (selectedMenu==='') {
+            const menuTitle = navItems[role].selectedMenu[0].path;
+            setSelectMenu(menuTitle)
+        }
+    },[selectedMenu])
+    React.useEffect(()=>{
+        const checkTargetPath = location.pathname.split('/')[2];
+        const selectedTargetPath = navItems[role].selectedMenu[0].path;
+        console.log('navigate =',checkTargetPath)
+        console.log('nav =',navItems[role].selectedMenu[0].path)
+        if (checkTargetPath!==selectedTargetPath) {
+            setSelectMenu(checkTargetPath)
+        }
+    },[location])
 
     return (
         <nav id={'navAside'} className=''>

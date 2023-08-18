@@ -15,10 +15,13 @@ import {routeValues} from './routeValues';
 import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
 import SelectUnit from '../pages/Student/SelectUnit';
 import PreviewSparkWriting from '../pages/Student/PreviewSparkWriting';
+import Report from '../pages/Student/Report';
 import { Nav } from '../components/layoutComponents/Nav';
 import NavAside from '../components/layoutComponents/Navs/NavAside';
 import CommonAlertModalComponent from '../components/toggleModalComponents/CommonAlertModalComponent';
 import StandbyScreen from '../components/commonComponents/standby/StandbyScreen';
+import Progress from '../pages/Student/Progress';
+import UnitReportModalComponent from '../components/toggleModalComponents/UnitReportModalComponent';
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
@@ -70,7 +73,8 @@ export default function Roter() {
                         <Route path='/student/WritingClinic' element={<SelectWritingClinic />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft' element={ <EssayWriting />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
-                        <Route path='/student/MyProgress' element={<MyPage />}></Route>
+                        <Route path='/student/Progress' element={<Progress />}></Route>
+                        <Route path='/student/Report' element={<Report />}></Route>
                         <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
 
@@ -82,6 +86,7 @@ export default function Roter() {
                 </Routes>
                 <CommonAlertModalComponent />
                 <StandbyScreen />
+                <UnitReportModalComponent />
             </div>
           
         </div>

@@ -336,51 +336,6 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             sparkWritingData: dumyUnitData
         }))
         
-        // const UnitIndex = parseInt(unitIndex);
-        // // const DraftIndex = parseInt(draftIndex);
-        // let dumyOutlineItems = get().outlineItems;
-        // let dumyKeyItems = dumyOutlineItems[UnitIndex-1];
-        // if (dumyKeyItems !== undefined) {
-        //     let dumyTextinOutlineItems = dumyKeyItems[`${inputKey}`];
-        //     if (typeof(dumyTextinOutlineItems) !== 'string' && dumyTextinOutlineItems !== undefined) {
-        //         let dumyTextinOutlineItem = dumyTextinOutlineItems[mainIndex];
-        //         let max_input_length = parseInt(dumyOutlineItems[UnitIndex-1].CheckWriting);
-                
-        //         let dumyKeyName = `Unit_${unitIndex}_${draftIndex}`;
-        //         let dumyCheckWritingValues = get().checkWritingValues;
-        //         let dumyCheckWritingValue = dumyCheckWritingValues[dumyKeyName];
-        //         if (dumyCheckWritingValue === undefined) {
-        //             dumyCheckWritingValues[dumyKeyName] = Array.from({length:max_input_length}, ()=>'');
-        //         }
-        //         if (subIndex !== undefined) {
-                    
-        //             if (Array.isArray(dumyTextinOutlineItem)) {
-        //                 // 하위 text 입력
-        //                 let dumySubTextinOutlineItem = dumyTextinOutlineItem[subIndex];
-        //                 if (typeof(dumySubTextinOutlineItem) !== 'string') {
-        //                     dumySubTextinOutlineItem.text = inputText;
-
-        //                     dumyCheckWritingValues[dumyKeyName][inputIndex] = inputText;
-        //                     set(()=>({
-        //                         outlineItems: dumyOutlineItems,
-        //                         checkWritingValues: dumyCheckWritingValues
-        //                     }))
-        //                 }
-
-        //             }
-        //         } else {
-        //             if ( !Array.isArray(dumyTextinOutlineItem) && typeof(dumyTextinOutlineItem) !== 'string') {
-        //                 // input text
-        //                 dumyTextinOutlineItem.text=inputText;
-        //                 dumyCheckWritingValues[dumyKeyName][inputIndex] = inputText;
-        //                 set(()=>({
-        //                     outlineItems: dumyOutlineItems,
-        //                     checkWritingValues: dumyCheckWritingValues
-        //                 }))
-        //             }
-        //         }
-        //     }
-        // }
     },
     setSelectBoxUnit: (unitIndex:number, count: number) => {
         let dumySelectBox = get().selectBoxUnit;
@@ -398,8 +353,11 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             sparkWritingTemporarySaveData:data
         }))
     },
-    setSparkWritingDataFromAPI: (data:TSparkWritingDatas)=>{
+    sparkWritingBookName: '',
+    setSparkWritingDataFromAPI: (data:TSparkWritingDatas, bookName?:string)=>{
+
         set(()=>({
+            sparkWritingBookName:bookName? bookName:get().sparkWritingBookName,
             sparkWritingData:data
         }))
     },
@@ -433,6 +391,31 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     //   "reason": "submitted, review return"
     //     //(writing hub 재학습 필요) \ (Admin Draft Feedback 거절)
     // }
+    /*
+    request :
+    data = {
+        {
+            "name": string,
+            "order_index": number,
+            "input_content": string
+        },
+        2,3,4
+        ...
+    }
+    response:
+    data = {
+        "origin_data": grammarData,
+        "result_title": [],
+        "result_body": [
+            {
+                "name": string,
+                "order_index": number,
+                "data": TParagragh[]
+            }
+        ]
+    }
+    */
+//    temp_save_date > submit_date > review_reject_date > review_complete_date
     sparkWritingData: [
         {
             "unit_id": 25,
@@ -440,11 +423,19 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             "topic": "Descriptive Essays",
             "draft_1_status": {
                 "status": 1,
-                "reason": "writing in progress"
+                "reason": "writing in progress",
+                "submit_date": null,
+                "temp_save_date": "2023-08-17T05:19:59.000Z",
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_2_status": {
-                "status": 1,
-                "reason": "writing in progress"
+                "status": 2,
+                "reason": "submitted, review not started",
+                "submit_date": "2023-08-17T01:21:58.000Z",
+                "temp_save_date": null,
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_1_outline": [
                 {
@@ -499,12 +490,20 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             "unit_index": 2,
             "topic": "Informative Essays",
             "draft_1_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 1,
+                "reason": "writing in progress",
+                "submit_date": null,
+                "temp_save_date": "2023-08-17T05:19:59.000Z",
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_2_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 2,
+                "reason": "submitted, review not started",
+                "submit_date": "2023-08-17T01:21:58.000Z",
+                "temp_save_date": null,
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_1_outline": [
                 {
@@ -559,12 +558,20 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             "unit_index": 3,
             "topic": "Personal Narratives",
             "draft_1_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 1,
+                "reason": "writing in progress",
+                "submit_date": null,
+                "temp_save_date": "2023-08-17T05:19:59.000Z",
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_2_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 2,
+                "reason": "submitted, review not started",
+                "submit_date": "2023-08-17T01:21:58.000Z",
+                "temp_save_date": null,
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_1_outline": [
                 {
@@ -625,12 +632,20 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             "unit_index": 4,
             "topic": "Science Fiction Short Stories",
             "draft_1_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 1,
+                "reason": "writing in progress",
+                "submit_date": null,
+                "temp_save_date": "2023-08-17T05:19:59.000Z",
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_2_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 2,
+                "reason": "submitted, review not started",
+                "submit_date": "2023-08-17T01:21:58.000Z",
+                "temp_save_date": null,
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_1_outline": [
                 {
@@ -697,12 +712,20 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             "unit_index": 5,
             "topic": "Persuasive Essays",
             "draft_1_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 1,
+                "reason": "writing in progress",
+                "submit_date": null,
+                "temp_save_date": "2023-08-17T05:19:59.000Z",
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_2_status": {
-                "status": 0,
-                "reason": "not started"
+                "status": 2,
+                "reason": "submitted, review not started",
+                "submit_date": "2023-08-17T01:21:58.000Z",
+                "temp_save_date": null,
+                "review_reject_date": null,
+                "review_complete_date": null
             },
             "draft_1_outline": [
                 {

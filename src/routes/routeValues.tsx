@@ -7,7 +7,8 @@ import { Portfolio } from "../pages/Student/Portfolio";
 import WebViewWrap from "../pages/WebViewWrap";
 import SelectEssayWriting from '../pages/Student/SelectWritingClinic';
 import EssayWritingSelectTopic from '../pages/Student/SelectUnit';
-
+import Progress from '../pages/Student/Progress';
+import Report from '../pages/Student/Report';
 
 export const routeValues = {
     // authenticated true
@@ -21,6 +22,8 @@ export const routeValues = {
             {path: '/student/EssayWritingSelectTopic', element: <EssayWritingSelectTopic />},
             {path: '/student/MyPage', element: <MyPage />},
             {path: '/student/Portfolio', element: <Portfolio />},
+            {path: '/student/Progress', element: <Progress />},
+            {path: '/student/Report', element: <Report />},
         ]
     },
     // authenticated false

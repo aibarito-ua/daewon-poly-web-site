@@ -8,7 +8,7 @@ import { forcedLoginAPI, loginAPI } from './Student/api/Login.api';
 import useControlAlertStore from '../store/useControlAlertStore';
 
 export const Login = () => {
-    const { setUserInfo, setIsOpen, } = useLoginStore();
+    const { userInfo, setUserInfo, setIsOpen, } = useLoginStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
@@ -35,8 +35,9 @@ export const Login = () => {
     }
     const forceLogin = async () => {
         const response = await forcedLoginAPI(loginValues.username, loginValues.password);
-        // console.log('response =',response)
+        console.log('response =',response)
         setUserInfo(response)
+        sendMessage({userInfo:response})
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -136,29 +137,42 @@ export const Login = () => {
             [e.target.name]: e.target.value
         })
     }
+
+    // Webview test code
+    const sendMessage = (data:any) => {
+        console.log('Send message data =',data)
+        const messageData = JSON.stringify(data);
+
+        window.ReactNativeWebView.postMessage(messageData);
+    };
+    const receiveMessage = (event:any) => {
+        console.log('Receive message data =',event.data);
+    };
+    React.useEffect(()=>{
+        const varUserAgent = navigator.userAgent.toLowerCase();
+        const sendData = {"userInfo":userInfo}
+        if (varUserAgent.indexOf('android') > -1) {
+            // android
+            document.addEventListener('message', receiveMessage);
+            sendMessage(sendData)
+        } else if (varUserAgent.indexOf('iphone') > -1 || varUserAgent.indexOf('ipad') > -1 || varUserAgent.indexOf('ipod') > -1) {
+            // iOS
+            window.addEventListener('message', receiveMessage);
+            sendMessage(sendData)
+        }
+
+        return () => {
+            document.removeEventListener('message', receiveMessage);
+            window.removeEventListener('message', receiveMessage)
+        }
+    }, [userInfo])
+
+
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right justify-center items-center bg-login-img'>
             <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>
-                        {/* <button onClick={() => {
-
-                            setUserInfo({name: 'Henry', companyName: 'Poly',class: 'TESTCLASS', subClass: 'SUBTEST-CLASS', email: 'TEST@una.co.kr', role: "student"})
-                            closeModal()
-                        }} className="m-4 p-4 w-1/3 mx-auto bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">student</button>
-                        <button onClick={() => {
-                            setUserInfo({name: 'teacher', companyName: 'Poly',class: 'TESTCLASS', subClass: 'SUBTEST-CLASS', email: 'TEST@una.co.kr', role: "teacher"})
-                            closeModal()
-                        }} className="m-4 p-4 w-1/3 mx-auto bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">teacher</button>
-                        <button onClick={() => {
-                            setUserInfo({name: 'admin', companyName: 'Poly',class: 'TESTCLASS', subClass: 'SUBTEST-CLASS', email: 'TEST@una.co.kr', role: "admin"})
-                            closeModal()
-                        }} className="m-4 p-4 w-1/3 mx-auto bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">admin</button> */}
-                        {/* <button onClick={() => {
-                            setUserInfo("logout")
-                            closeModal()
-                        }} className="m-4 p-4 w-1/4 mx-auto bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Logout</button> */}
-                        
                         {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
                         <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center'></div>
                         

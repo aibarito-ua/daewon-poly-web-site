@@ -28,19 +28,19 @@ export const navItems:INavItems = {
                 offMenuIcon: <commonIconSvgs.NavWritingActivityActiveOffIcon className='w-[45px] h-[45px]'/>
             },
             {
-                path: "StudentProgress",
+                path: "Progress",
                 label: 'Progress',
                 onMenuIcon: <commonIconSvgs.NavProgressActiveOnIcon className='w-[45px] h-[45px]'/>,
                 offMenuIcon: <commonIconSvgs.NavProgressActiveOffIcon className='w-[45px] h-[45px]'/>
             },
             {
-                path: "StudentReport",
+                path: "Report",
                 label: 'Report',
                 onMenuIcon: <commonIconSvgs.NavReportActiveOnIcon className='w-[45px] h-[45px]'/>,
                 offMenuIcon: <commonIconSvgs.NavReportActiveOffIcon className='w-[45px] h-[45px]'/>
             },
             {
-                path: "StudentPortfolio",
+                path: "Portfolio",
                 label: 'Portfolio',
                 onMenuIcon: <commonIconSvgs.NavPortfolioActiveOnIcon className='w-[45px] h-[45px]'/>,
                 offMenuIcon: <commonIconSvgs.NavPortfolioActiveOffIcon className='w-[45px] h-[45px]'/>

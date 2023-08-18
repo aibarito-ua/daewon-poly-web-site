@@ -23,7 +23,7 @@ const SelectWritingClinic = () => {
             if (response.book_name!=='') {
                 setButtonActive(true)
             }
-            setSparkWritingDataFromAPI(response.units)
+            setSparkWritingDataFromAPI(response.units, response.book_name)
             return response;
         });
     }

@@ -32,6 +32,14 @@ module.exports = {
         'back-in-draft-icon': "url('/src/util/svgs/btn-back-page-icon.svg')",
         'draft-background-image': "url('/src/util/svgs/draft-background-image.svg')",
         'chatbot-ella-button-icon': "url('/src/util/svgs/btn-chatbot-ella.svg')",
+        'report-rechart-custom-tooltip-box-organization': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipOrganization.svg')",
+        'report-rechart-custom-tooltip-box-voice': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipVoice.svg')",
+        'report-rechart-custom-tooltip-box-sentencefluency': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipSentenceFluency.svg')",
+        'report-rechart-custom-tooltip-box-wordchoice': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipWordChoice.svg')",
+        'report-rechart-custom-tooltip-box-ideas': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipIdeas.svg')",
+        'report-rechart-custom-tooltip-box-conventions': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipConventions.svg')",
+        'unit-report-modal-active-manu': "url('/src/components/toggleModalComponents/img/reportActiveMenu.svg')",
+        'print-writing-hub-memo-icon': "url('/src/components/toggleModalComponents/img/printReportMemoIcon.svg')",
       }
     },
     borderWidth: {

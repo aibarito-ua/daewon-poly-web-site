@@ -43,16 +43,17 @@ const PreviewSparkWriting = (props:any) => {
     const [isUndoBody, setIsUndoBody] = React.useState<boolean>(false);
     const [remakeBodyItem, setRemakeBodyItem] = React.useState<number[][]>([]);
 
-
-    const setInitHistorys = (hist:{title:TbodyHistory, body:TbodyHistory}) => {
+    // undo history init
+    const setInitHistorys = (hist:{title:TTitleHistory, body:TGrammarResponseResult[]}) => {
         const stateValue = GrammarContentComponent.setTInitHistorys(hist, bodyHistory);
+        console.log('stateValue 49row==',stateValue)
         if (stateValue!==undefined) setBodyHistory(stateValue);
     }
-    const setTitleValue = (hist:TbodyHistory) => {
+    const setTitleValue = (hist:TTitleHistory) => {
         const stateValue = GrammarContentComponent.setTTitleHistorys(bodyHistory.title, hist);
         const past = stateValue?.past ? stateValue.past: [];
         const present = stateValue?.present ? stateValue?.present : [];
-        const future: TbodyHistory[] = [];
+        const future: TTitleHistory[] = [];
         const currentHist = bodyHistory.body;
         setBodyHistory({
             title: {past, present, future},
@@ -107,24 +108,18 @@ const PreviewSparkWriting = (props:any) => {
         // count plus
         if (countofUseAIProofreading < 2) {
             setCommonStandbyScreen({openFlag:true})
-            let checkResultData: any[] = []
-            for await (const idx of grammarAll) {
-                
-                const res = await grammarCheck(idx)
-                checkResultData.push(res)
-            }
-            const grammarResults = setGrammarOrigin(checkResultData);
-
-            // const consoleText = JSON.stringify(grammarResults)
-            // console.log('origin =',)
+            // use grammar API
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline)
+            
+            // console.log('preview res ===',res)
             setCommonStandbyScreen({openFlag:false})
             setInitHistorys({
-                title: grammarResults.resultTitle,
-                body: grammarResults.resultBody
+                title: res.result_title,
+                body: res.result_body
             })
             setGuideFlag(1)
         } else {
-
+            // submit
         }
         
     }
@@ -158,18 +153,53 @@ const PreviewSparkWriting = (props:any) => {
         setGrammarAll(makeGrammarItems)
     }
 
-    const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
+    const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
         
         if (mainDiv === 'Body') {
             let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
             let dumybodyHistory = dumyBodyHist.body.present;
-            dumybodyHistory[paragraphIndex][sentenceIndex][wordIndex] = [[0, willChangeValue]]
-            setBodyValue(dumybodyHistory);
+            let checkIsSelected = false;
+            const wordInnerLength = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].length;
+            for (let checkIdx = 0; checkIdx< wordInnerLength; checkIdx++) {
+                const targetData = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex][checkIdx];
+                const targetCheck = targetData.type;
+                if (targetCheck > 1) {
+                    checkIsSelected=true;
+                    break;
+                }
+            }
+            if (!checkIsSelected) {
+                const userSelectData:TGrammarResDiff = {
+                    key: `${wordIndex}-${wordInnerLength}`,
+                    type: 2,
+                    word: willChangeValue,
+                    correction_reason: []
+                }
+                dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
+                setBodyValue(dumybodyHistory);
+            }
         } else if (mainDiv==='Title') {
             let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
-            let dumybodyHistory = dumyBodyHist.title.present;
-            dumybodyHistory[paragraphIndex][sentenceIndex][wordIndex] = [[0, willChangeValue]]
-            setTitleValue(dumybodyHistory);
+            let dumyTitleHistory = dumyBodyHist.title.present;
+            let checkIsSelected =false;
+            const wordInnerLength = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].length;
+            for (let checkIdx = 0; checkIdx < wordInnerLength; checkIdx++) {
+                const targetCheck = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex][checkIdx].type;
+                if (targetCheck > 1) {
+                    checkIsSelected=true;
+                    break;
+                }
+            }
+            if (!checkIsSelected) {
+                const userSelectData:TGrammarResDiff = {
+                    key: `${wordIndex}-${wordInnerLength}`,
+                    type: 2,
+                    word: willChangeValue,
+                    correction_reason: []
+                }
+                dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
+                setTitleValue(dumyTitleHistory);
+            }
         }
     }
     const onSubmitEvent = () => {
@@ -318,6 +348,7 @@ const PreviewSparkWriting = (props:any) => {
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
                                         return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip)
+                                        // return <></>
                                     })}
                                 </span>
                             } )}
@@ -350,7 +381,8 @@ const PreviewSparkWriting = (props:any) => {
                         })
                     }}>AI Proofreading</button>
                     <button className={`${openSubmitButton?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
-                        onSubmitEvent()
+                        console.log('bodyHistory =',bodyHistory)
+                        // onSubmitEvent()
                     }}>Submit</button>
                 </div>
             </div>

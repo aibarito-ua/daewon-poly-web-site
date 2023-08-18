@@ -9,8 +9,9 @@ interface ISparkWritingStore {
     // check writing value(strings)
     checkWritingValues:any;
 
+    sparkWritingBookName: string;
     sparkWritingData: TSparkWritingDatas;
-    setSparkWritingDataFromAPI: (data:TSparkWritingDatas)=>void;
+    setSparkWritingDataFromAPI: (data:TSparkWritingDatas,bookName?:string)=>void;
 
     // save draft temporary data form
     sparkWritingTemporarySaveData: TSparkWritingTemporarySaveData;
@@ -30,6 +31,10 @@ type TSparkWritingData = {
 type TDraftStatus = {
     status: number;
     reason: string;
+    submit_date: string|null;
+    temp_save_date: string|null;
+    review_reject_date: string|null;
+    review_complete_date: string|null;
 }
 type TSparkWritingDataOutline = {
     heading_content: string;

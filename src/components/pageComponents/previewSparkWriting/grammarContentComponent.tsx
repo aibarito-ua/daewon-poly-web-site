@@ -24,9 +24,9 @@ const GrammarContentComponent = {
     }
     ,
     titleCompareDif1: (
-        paragragh:Diff[][][], 
+        paragragh:TGrammarResDiff[][][],
         paragraphIndex:number, 
-        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
+        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
     ) => {
         const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
             return (
@@ -37,36 +37,42 @@ const GrammarContentComponent = {
                 </svg>
             )
         }
-        return paragragh.map((sentence: Diff[][], sentenceIndex:number) => {
+        return paragragh.map((sentence: TGrammarResDiff[][], sentenceIndex:number) => {
             const sentenceKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}`;
                 const sentence_max_index = sentence.length;
                 const isSentenceEnd = sentenceIndex === sentence_max_index
             return <span className='' key={sentenceKey}>
                 <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
-                {sentence.map((word:Diff[], wordIndex:number) => {
+                {sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
                     let returnValue:any = '';
-                    if (word.length === 1) {
-                        const compareWordFlag = word[0][0];
+                    const wordElementsLength = word.length;
+                    // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
+                    if (wordElementsLength === 1) {
+                        
+                        const compareWordFlag = word[0].type;
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
-                        const currentWord = word[0][1];
+                        const dataKey = word[0].key;
+                        const currentWord = word[0].word;
+                        const reasons = word[0].correction_reason;
+
                         if (compareWordFlag === 1) {
                             // only add
                             const textTagId = 'title-'+mainTagKey+'-add'
                             const describeText = [
-                                'Spelling',
+                                reasons,
                                 <span className='grammar-tooltip-custom-content-wrap'>
                                     <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
                                 </span>
                             ]
                             returnValue = (
                                 <GrammarTooltipCustom 
-                                    mainTagkey={mainTagKey} 
+                                    mainTagkey={mainTagKey}
                                     textTagid={textTagId} 
                                     tagType={'add'} 
                                     compareResultText={currentWord}
                                     tooltipText={describeText} 
-                                    acceptEventFunction={()=>clickTooltip(currentWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip('', 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
+                                    acceptEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                    ignoreEventFunction={()=>clickTooltip('', 'Title', 0,paragraphIndex, sentenceIndex, wordIndex)} 
                                     thisIndex={[]}       
                                 />
                             )
@@ -74,7 +80,7 @@ const GrammarContentComponent = {
                             // only delete
                             const textTagId = 'title-'+mainTagKey+'-del'
                             const describeText = [
-                                'Grammar',
+                                reasons,
                                 <span className='grammar-tooltip-custom-content-wrap'>
                                 <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
                                 </span>
@@ -86,8 +92,8 @@ const GrammarContentComponent = {
                                     tagType={'delete'} 
                                     compareResultText={currentWord}
                                     tooltipText={describeText} 
-                                    acceptEventFunction={()=>clickTooltip('', 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip(currentWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)}
+                                    acceptEventFunction={()=>clickTooltip('', 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                    ignoreEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)}
                                     thisIndex={[]}
                                 />
                             )
@@ -97,43 +103,82 @@ const GrammarContentComponent = {
                             returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
                         }
                     } else {
+                        
                         // delete + add set
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
+                        let addKey = '';
+                        let addWord = '';
+                        let deleteKey = '';
+                        let deleteWord = '';
+                        let reason:any = '';
+                        let checkSelected = false;
+                        let selectedWord = '';
+                        let emptyKey = '';
+                        let emptyWord = '';
                         
-                        const DeleteWord = word[0][1];
-                        const AddWord = word[1][1];
-                        // RedArrow
-                        const jsxText = <span className='grammar-tooltip-custom-content-wrap'>
-                            <span className='grammar-tooltip-custom-content-delete-text'>{DeleteWord}</span>
+                        for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
+                            const targetInnerWord = word[innerWordIdx];
+                            if (targetInnerWord.type===1) {
+                                // add
+                                addKey = targetInnerWord.key;
+                                addWord = targetInnerWord.word;
+                                reason = targetInnerWord.correction_reason
+                            } else if (targetInnerWord.type===-1) {
+                                // delete
+                                deleteKey = targetInnerWord.key;
+                                deleteWord = targetInnerWord.word;
+                                reason = targetInnerWord.correction_reason
+                            } else if (targetInnerWord.type === 2) {
+                                // check selected
+                                selectedWord=targetInnerWord.word;
+                                checkSelected=true;
+                            } else {
+                                // empty space
+                                emptyKey=targetInnerWord.key;
+                                emptyWord=targetInnerWord.word
+                            }
+                        }
+                        
+                        // // delete + add set
+                        const JsxText = <span className='grammar-tooltip-custom-content-wrap'>
+                            <span className='grammar-tooltip-custom-content-delete-text'>{deleteWord}</span>
                             <RedArrow/>
-                            <span className='grammar-tooltip-custom-content-add-text'>{AddWord}</span>
+                            <span className='grammar-tooltip-custom-content-add-text'>{addWord}</span>
                         </span>
-                        const describeText = ['Spelling', jsxText ]
-                        
-                        returnValue = (
-                            <span key={mainTagKey+'-both'}>
-                                <GrammarTooltipCustom 
-                                    mainTagkey={mainTagKey} 
-                                    textTagid={'title-'+mainTagKey+'-del'} 
-                                    tagType={'delete'} 
-                                    compareResultText={DeleteWord}
-                                    tooltipText={describeText} 
-                                    acceptEventFunction={()=>clickTooltip(AddWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip(DeleteWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    thisIndex={[]}                                    
-                                />
-                                <GrammarTooltipCustom 
-                                    mainTagkey={mainTagKey} 
-                                    textTagid={'title-'+mainTagKey+'-add'} 
-                                    tagType={'add'} 
-                                    compareResultText={AddWord}
-                                    tooltipText={describeText} 
-                                    acceptEventFunction={()=>clickTooltip(AddWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip(DeleteWord, 'Title', paragraphIndex, sentenceIndex, wordIndex)} 
-                                    thisIndex={[]}                                    
-                                />
-                            </span>
-                        )
+                        const describeText = [
+                            reason,
+                            JsxText 
+                        ]
+                        if (checkSelected) {
+                            const textTagId = 'title-'+mainTagKey + '-ori'
+                            returnValue = <span key={mainTagKey}><span id={textTagId}>{selectedWord}</span></span>
+                        } else {
+                            returnValue = (
+                                <span key={mainTagKey+'-both'}>
+                                    <GrammarTooltipCustom 
+                                        mainTagkey={deleteKey} 
+                                        textTagid={'title-'+mainTagKey+'-del'} 
+                                        tagType={'delete'} 
+                                        compareResultText={deleteWord}
+                                        tooltipText={describeText} 
+                                        acceptEventFunction={()=>clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={()=>clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        thisIndex={[]}                                    
+                                    />
+                                    <span key={emptyKey}><span id={'title-'+mainTagKey + '-ori'}>{emptyWord}</span></span>
+                                    <GrammarTooltipCustom 
+                                        mainTagkey={addKey} 
+                                        textTagid={'title-'+mainTagKey+'-add'} 
+                                        tagType={'add'} 
+                                        compareResultText={addWord}
+                                        tooltipText={describeText} 
+                                        acceptEventFunction={()=>clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={()=>clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        thisIndex={[]}                                    
+                                    />
+                                </span>
+                            )
+                        }
                     }
                     return returnValue;
                 }
@@ -143,9 +188,9 @@ const GrammarContentComponent = {
         })
     },
     bodyCompareDif1: (
-        paragragh:Diff[][][], 
+        paragragh:TGrammarResponseResult, 
         paragraphIndex:number, 
-        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
+        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
     ) => {
         const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
             return (
@@ -156,107 +201,162 @@ const GrammarContentComponent = {
                 </svg>
             )
         }
-        return <span key={`paragragh-${paragraphIndex}`}>{paragragh.map((sentence:Diff[][], sentenceIndex:number)=>{
-            const sentenceKey = `paragragh-${paragraphIndex}-sentence-${sentenceIndex}`;
+
+        // select paragragh
+        return <span key={`paragragh-${paragraphIndex}`}>{paragragh.data.map((paragraghData:TGrammarResDiff[][][], paragraghDataIndex:number)=>{
+            const sentenceKey = `paragragh-${paragraphIndex}-sentence-${paragraghDataIndex}`;
+            // paraghragh mapping
             return  <span className='flow-root' key={sentenceKey}>
-                <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
-                {sentence.map((word:Diff[], wordIndex:number) => {
-                let returnValue:any = '';
-                if (word.length === 1) {
-                    const compareWordFlag = word[0][0];
-                    const mainTagKey = `paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
-                    const currentWord = word[0][1];
-                    if (compareWordFlag === 1) {
-                        // only add
-                        const textTagId = mainTagKey+'-add'
-                        const jsxText = <span className='grammar-tooltip-custom-content-wrap'>
-                            <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
-                        </span>
-                        const describeText = ['Spelling',jsxText ]
-                        returnValue = (
-                            <GrammarTooltipCustom 
-                                mainTagkey={mainTagKey} 
-                                textTagid={textTagId} 
-                                tagType={'add'} 
-                                compareResultText={currentWord}
-                                tooltipText={describeText} 
-                                acceptEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                ignoreEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                thisIndex={[]}       
-                            />
-                        )
-                    } else if (compareWordFlag === -1) {
-                        // only delete
-                        const textTagId = mainTagKey+'-del'
-                        const jsxText = <span className='grammar-tooltip-custom-content-wrap'>
-                        <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
-                        </span>
-                        const describeText = [
-                            'Grammar',
-                            jsxText
-                        ];
-                        returnValue = (
-                            <GrammarTooltipCustom 
-                                mainTagkey={mainTagKey} 
-                                textTagid={textTagId} 
-                                tagType={'delete'} 
-                                compareResultText={currentWord}
-                                tooltipText={describeText} 
-                                acceptEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                ignoreEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)}
-                                thisIndex={[]}
-                            />
-                        )
-                    } else {
-                        // original
-                        const textTagId = mainTagKey + '-ori'
-                        returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
-                    }
-                } else {
-                    // delete + add set
-                    const mainTagKey = `paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
-                    
-                    const DeleteWord = word[0][1];
-                    const AddWord = word[1][1];
-                    // RedArrow
-                    const jsxText = <span className='grammar-tooltip-custom-content-wrap'>
-                    <span className='grammar-tooltip-custom-content-delete-text'>{DeleteWord}</span>
-                        <RedArrow/>
-                    <span className='grammar-tooltip-custom-content-add-text'>{AddWord}</span>
-                    </span>
-                    const describeText = ['Spelling', jsxText]
-                    
-                    returnValue = (
-                        <span key={mainTagKey+'-both'}>
-                            <GrammarTooltipCustom 
-                                mainTagkey={mainTagKey} 
-                                textTagid={mainTagKey+'-del'} 
-                                tagType={'delete'} 
-                                compareResultText={DeleteWord}
-                                tooltipText={describeText} 
-                                acceptEventFunction={()=>clickTooltip(AddWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                ignoreEventFunction={()=>clickTooltip(DeleteWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                thisIndex={[]}                                    
-                            />
-                            <GrammarTooltipCustom 
-                                mainTagkey={mainTagKey} 
-                                textTagid={mainTagKey+'-add'} 
-                                tagType={'add'} 
-                                compareResultText={AddWord}
-                                tooltipText={describeText} 
-                                acceptEventFunction={()=>clickTooltip(AddWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                ignoreEventFunction={()=>clickTooltip(DeleteWord, 'Body', paragraphIndex, sentenceIndex, wordIndex)} 
-                                thisIndex={[]}                                    
-                            />
-                        </span>
-                    )
-                }
-                return returnValue;
+                <span className={paragraghDataIndex===0?'pl-4': 'pl-1'}></span>
+                {paragraghData.map((sentence:TGrammarResDiff[][], sentenceIndex:number) => {
+                    // sentence map
+                    return sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
+                        // word start
+                        let returnValue:any = '';
+                        // console.log('word ==',word)
+                        // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',word.length)
+                        const wordElementsLength = word.length;
+                        // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
+                        if (wordElementsLength === 1) {
+                            
+                            const compareWordFlag = word[0].type;
+                            const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
+                            const dataKey = word[0].key;
+                            const currentWord = word[0].word;
+                            const reasons = word[0].correction_reason;
+
+                            if (compareWordFlag === 1) {
+                                // only add
+                                const textTagId = 'title-'+mainTagKey+'-add'
+                                const describeText = [
+                                    reasons,
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                        <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
+                                    </span>
+                                ]
+                                returnValue = (
+                                    <GrammarTooltipCustom 
+                                        mainTagkey={mainTagKey}
+                                        textTagid={textTagId} 
+                                        tagType={'add'} 
+                                        compareResultText={currentWord}
+                                        tooltipText={describeText} 
+                                        acceptEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        thisIndex={[]}       
+                                    />
+                                )
+                            } else if (compareWordFlag === -1) {
+                                // only delete
+                                const textTagId = 'title-'+mainTagKey+'-del'
+                                const describeText = [
+                                    reasons,
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                    <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                    </span>
+                                ];
+                                returnValue = (
+                                    <GrammarTooltipCustom 
+                                        mainTagkey={mainTagKey} 
+                                        textTagid={textTagId} 
+                                        tagType={'delete'} 
+                                        compareResultText={currentWord}
+                                        tooltipText={describeText} 
+                                        acceptEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)}
+                                        thisIndex={[]}
+                                    />
+                                )
+                            } else {
+                                // original
+                                const textTagId = 'title-'+mainTagKey + '-ori'
+                                returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
+                            }
+                        } else {
+                            
+                            // delete + add set
+                            const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
+                            let addKey = '';
+                            let addWord = '';
+                            let deleteKey = '';
+                            let deleteWord = '';
+                            let reason:any = '';
+                            let checkSelected = false;
+                            let selectedWord = '';
+                            let emptyKey = '';
+                            let emptyWord = '';
+                            
+                            for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
+                                const targetInnerWord = word[innerWordIdx];
+                                if (targetInnerWord.type===1) {
+                                    // add
+                                    addKey = targetInnerWord.key;
+                                    addWord = targetInnerWord.word;
+                                    reason = targetInnerWord.correction_reason
+                                } else if (targetInnerWord.type===-1) {
+                                    // delete
+                                    deleteKey = targetInnerWord.key;
+                                    deleteWord = targetInnerWord.word;
+                                    reason = targetInnerWord.correction_reason
+                                } else if (targetInnerWord.type === 2) {
+                                    // check selected
+                                    selectedWord=targetInnerWord.word;
+                                    checkSelected=true;
+                                } else {
+                                    // empty space
+                                    emptyKey=targetInnerWord.key;
+                                    emptyWord=targetInnerWord.word
+                                }
+                            }
+                            
+                            // // delete + add set
+                            const JsxText = <span className='grammar-tooltip-custom-content-wrap'>
+                                <span className='grammar-tooltip-custom-content-delete-text'>{deleteWord}</span>
+                                <RedArrow/>
+                                <span className='grammar-tooltip-custom-content-add-text'>{addWord}</span>
+                            </span>
+                            const describeText = [
+                                reason,
+                                JsxText 
+                            ]
+                            if (checkSelected) {
+                                const textTagId = 'title-'+mainTagKey + '-ori'
+                                returnValue = <span key={mainTagKey}><span id={textTagId}>{selectedWord}</span></span>
+                            } else {
+                                returnValue = (
+                                    <span key={mainTagKey+'-both'}>
+                                        <GrammarTooltipCustom 
+                                            mainTagkey={deleteKey} 
+                                            textTagid={'title-'+mainTagKey+'-del'} 
+                                            tagType={'delete'} 
+                                            compareResultText={deleteWord}
+                                            tooltipText={describeText} 
+                                            acceptEventFunction={()=>clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            ignoreEventFunction={()=>clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            thisIndex={[]}                                    
+                                        />
+                                        <span key={emptyKey}><span id={'title-'+mainTagKey + '-ori'}>{emptyWord}</span></span>
+                                        <GrammarTooltipCustom 
+                                            mainTagkey={addKey} 
+                                            textTagid={'title-'+mainTagKey+'-add'} 
+                                            tagType={'add'} 
+                                            compareResultText={addWord}
+                                            tooltipText={describeText} 
+                                            acceptEventFunction={()=>clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            ignoreEventFunction={()=>clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            thisIndex={[]}                                    
+                                        />
+                                    </span>
+                                )
+                            }
+                        }
+                        return returnValue;
+                    })
             })}</span>;
         })}</span>;
     },
     // history tool
-    undoRedoReset: (currentState: TBodyHistorys, actionType: 'UNDO'|'REDO'|'RESET') => {
+    undoRedoReset: (currentState: TBodyHistorys, actionType: 'UNDO'|'REDO'|'RESET'): TBodyHistorys => {
         const origin:TBodyHistorys = JSON.parse(JSON.stringify(currentState))
         const isCheckTitle = origin.title.present && origin.title.present.length > 0
         switch (actionType) {
@@ -302,9 +402,9 @@ const GrammarContentComponent = {
                 const reset_present = origin.body.past.length>0 ? origin.body.past[0] : origin.body.present
                 const reset_future: TbodyHistory[] =[];
                 if (isCheckTitle) {
-                    const reset_past_title: TbodyHistory[] =[];
+                    const reset_past_title: TTitleHistory[] =[];
                     const reset_present_title = origin.title.past.length>0 ? origin.title.past[0] : origin.title.present
-                    const reset_future_title: TbodyHistory[] =[];
+                    const reset_future_title: TTitleHistory[] =[];
                     return {
                         title: {past: reset_past_title, present: reset_present_title, future: reset_future_title},
                         body: {past:reset_past, present: reset_present, future: reset_future}
@@ -317,16 +417,19 @@ const GrammarContentComponent = {
 
                 }
             default:
+                const default_title_past: TTitleHistory[] =[];
+                const default_title_present: TTitleHistory = [];
+                const default_title_future: TTitleHistory[] =[];
                 const default_past: TbodyHistory[] =[];
                 const default_present: TbodyHistory = [];
                 const default_future: TbodyHistory[] =[];
                 return {
-                    title: {past: default_past, present: default_present, future: default_future},
+                    title: {past: default_title_past, present: default_title_present, future: default_title_future},
                     body: {past: default_past, present: default_present, future: default_future}
                 }
         }
     },
-    setTbodyHistorys: (currentState: TBodyHistorys['body'], hist: TbodyHistory):{past:TbodyHistory[], present: TbodyHistory[]}|undefined => {
+    setTbodyHistorys: (currentState: TBodyHistorys['body'], hist: TbodyHistory):{past:TbodyHistory[], present: TbodyHistory}|undefined => {
         if (isEquel(currentState.present, hist)) return;
         const origin:TBodyHistorys['body'] = JSON.parse(JSON.stringify(currentState))
         let past:TbodyHistory[] = []
@@ -354,11 +457,11 @@ const GrammarContentComponent = {
         };
         return {past, present};
     },
-    setTTitleHistorys: (currentState: TBodyHistorys['title'], hist: TbodyHistory):{past:TbodyHistory[], present: TbodyHistory[]}|undefined => {
+    setTTitleHistorys: (currentState: TBodyHistorys['title'], hist: TTitleHistory):{past:TTitleHistory[], present: TTitleHistory}|undefined => {
         if (isEquel(currentState.present, hist)) return;
         const origin:TBodyHistorys['title'] = JSON.parse(JSON.stringify(currentState))
-        let past:TbodyHistory[] = []
-        let present:TbodyHistory = [];
+        let past:TTitleHistory[] = []
+        let present:TTitleHistory = [];
         if (origin.past.length === 0) {
             if (origin.present.length > 0) {
                 // console.log('past not, present !!')
@@ -383,13 +486,13 @@ const GrammarContentComponent = {
         return {past, present};
     },
     setTInitHistorys: (
-        hist:{title:TbodyHistory, body:TbodyHistory}, bodyHistory: TBodyHistorys
+        hist:{title:TTitleHistory, body:TGrammarResponseResult[]}, bodyHistory: TBodyHistorys
     ):TBodyHistorys|undefined => {
         const origin:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
         if (isEqual(origin.body, hist.body) && isEqual(origin.title, hist.title)) return;
         
-        let titlePast:TbodyHistory[]=[];
-        let titlePresent:TbodyHistory=[];
+        let titlePast:TTitleHistory[]=[];
+        let titlePresent:TTitleHistory=[];
         let past:TbodyHistory[] = []
         let present:TbodyHistory = [];
         if (origin.body.past.length === 0) {
@@ -433,9 +536,10 @@ const GrammarContentComponent = {
                 titlePast = []
             }
         };
+        const title_future: TTitleHistory[] =[]
         const future: TbodyHistory[] = []
         return {
-            title: { past: titlePast, present: titlePresent, future: future},
+            title: { past: titlePast, present: titlePresent, future: title_future},
             body: {past, present, future}
         }
     }

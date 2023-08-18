@@ -6,19 +6,19 @@ interface IUseGrammarStore {
     setGrammarBody: (body:any) => void;
     setGrammarAll: (data:any) => void;
 
-    resultTitle: Diff[][][][];
-    resultBody: Diff[][][][];
+    resultTitle: TGrammarResDiff[][][][];
+    resultBody: TGrammarResponseResult[];
     setGrammarResult: (data:any) =>{
-        resultTitle: Diff[][][][],
-        resultBody: Diff[][][][]
+        resultTitle: TGrammarResDiff[][][][],
+        resultBody: TGrammarResponseResult[]
     };
     setGrammarResultInit: ()=>void;
 
-    grammarOrigin: TGrammarData[];
+    grammarOrigin: TGrammarResponse[];
     setGrammarOrigin: (data:any) => {
-        grammarOrigin: TGrammarData[],
-        resultTitle: Diff[][][][],
-        resultBody: Diff[][][][]
+        grammarOrigin: TGrammarResponse,
+        resultTitle: TGrammarResDiff[][][][],
+        resultBody: TGrammarResponseResult[]
     }
     
 
@@ -33,3 +33,31 @@ interface IUseGrammarStore {
     }[]
 }
 type TGrammarData = Diff[][][][];
+
+type TGrammarResponse = {
+    // default compareData
+    origin_data: TGrammarResOriginData[];
+    // after compared data
+    result_body: TGrammarResponseResult[];
+    result_title: TGrammarResDiff[][][][];
+}
+type TGrammarResOriginData = {
+    name:string,
+    origin_text: string,
+    change_text: string
+}
+type TGrammarResponseResult = {
+    name:string,
+    order_index:number,
+    data: TGrammarResDiff[][][][]
+}
+type TGrammarResDiff = {
+    // type은 default-> -1,0,1, stu 선택 후, 2를 push.
+    type: number,
+    // target word
+    word: string,
+    // punctuation, spelling, grammar
+    correction_reason: string[],
+    // client for map ->xml tag key
+    key: string
+}

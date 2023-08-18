@@ -1,14 +1,11 @@
 import React from 'react';
 import { CONFIG } from '../../../config';
 import axios from 'axios';
-type TGrammarCheckResponse = {
-    origin_text_array: string[];
-    change_text_array: string[];
-}
-export async function grammarCheck(targetText:string):Promise<any>{
+
+export async function grammarCheck(grammarData:TSparkWritingDataOutline[]):Promise<TGrammarResponse>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
-        text: targetText
+        data: grammarData
     }
     return await axios.post(reqUrl,data, {
         headers: {
@@ -16,12 +13,13 @@ export async function grammarCheck(targetText:string):Promise<any>{
             'Content-Type': 'application/json'
         },
     }).then((result)=>{
-        console.log('result: ',result)
-        let resultDump = result;
-        if (resultDump.data.change_text_array[0] === "There is no error in this sentence.") {
-            resultDump.data.change_text_array = resultDump.data.origin_text_array
-        }
-        return resultDump.data;
+        console.log('result: ',result.data.data)
+        const responseData = result.data.data;
+        return {
+            origin_data: responseData.origin_data,
+            result_body: responseData.result_body,
+            result_title: responseData.result_title
+        };
     }).catch((reject)=>{
         throw new Error("API Server Error: ",reject)
     })

@@ -19,7 +19,7 @@ export default function SelectUnit () {
     const {role} = useLoginStore();
     const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen} = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
-    const {sparkWritingData} = useSparkWritingStore();
+    const {sparkWritingData, sparkWritingBookName} = useSparkWritingStore();
 
     React.useEffect(()=>{
         setSubNavTitleString('Spark Writing')
@@ -197,7 +197,7 @@ export default function SelectUnit () {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >SPARK Writing B-1</span>
+                        <span className='writing-activity-page-title-text' >{sparkWritingBookName}</span>
                     </div>
                 </div>
                 {/* buttons */}
@@ -205,6 +205,7 @@ export default function SelectUnit () {
                     <SelectBoxUnitMapLoop items={sparkWritingData} />
                 {/* </div> */}
             </div>
+
         </section>
     )
 }

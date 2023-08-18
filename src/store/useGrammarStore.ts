@@ -55,14 +55,19 @@ const useGrammarStore = create<IUseGrammarStore>((set, get)=>({
         const titleCompare = compareDiffs(title);
         const bodyCompare = compareDiffs(body);
 
-        set(()=>({
-            resultTitle: titleCompare,
-            resultBody: bodyCompare
-        }))
+        // set(()=>({
+        //     resultTitle: titleCompare,
+        //     resultBody: bodyCompare
+        // }))
+        // return {
+        //     resultTitle: titleCompare,
+        //     resultBody: bodyCompare
+        // }
         return {
-            resultTitle: titleCompare,
-            resultBody: bodyCompare
+            resultTitle: [],
+            resultBody: []
         }
+
     },
     setGrammarResultInit: ()=>{
         set(()=>({
@@ -98,15 +103,20 @@ const useGrammarStore = create<IUseGrammarStore>((set, get)=>({
         console.log('origin data =',originData)
         console.log('result title =',titleCompare)
         console.log('result body =',bodyCompare)
-        set(()=>({
-            resultTitle: titleCompare,
-            resultBody: bodyCompare,
-            grammarOrigin: originData
-        }))
+        // set(()=>({
+        //     resultTitle: titleCompare,
+        //     resultBody: bodyCompare,
+        //     grammarOrigin: originData
+        // }))
+        // return {
+        //     grammarOrigin: originData,
+        //     resultTitle: titleCompare,
+        //     resultBody: bodyCompare
+        // }
         return {
-            grammarOrigin: originData,
-            resultTitle: titleCompare,
-            resultBody: bodyCompare
+            grammarOrigin: {origin_data:[],result_body: [], result_title: []},
+            resultTitle: [],
+            resultBody: []
         }
     },
 

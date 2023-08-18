@@ -23,7 +23,7 @@ const DRAFT_SUBMIT:string = process.env.REACT_APP_DRAFT_SUBMIT?process.env.REACT
 
 export const CONFIG = {
     GRAMMAR: {
-        CHECK:GRAMMAR_CHECK,
+        CHECK:BACK_HOST+GRAMMAR_CHECK,
         COMPARE:GRAMMAR_COMPARE
     },
     CHATBOT: {
