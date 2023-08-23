@@ -80,3 +80,19 @@ export async function draftSaveTemporary(
         return false;
     })
 }
+
+export async function draft1stSubmit (data:TSubmit1stDraftRequestData):Promise<boolean>{
+    const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
+    return await axios.post(reqUrl, data, {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        }
+    }).then((response)=>{
+        const rsp:TProofReadingCountUpdateResponse = response.data;
+        return rsp.data;
+    }).catch((reject) => {
+        const rsp:TProofReadingCountUpdateReject = reject;
+        return false;
+    })
+}

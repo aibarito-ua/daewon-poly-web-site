@@ -300,6 +300,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
         draft:number
     )=>{
         console.log('setOutlineInputText ====\n===input text =',inputText)
+        inputText = inputText.replace(/\s{2,}/g, ' ');
         let dumyUnitData = get().sparkWritingData.map((unitItem) => {
             if (unitItem.unit_id !== unitId) {
                 return unitItem;
@@ -331,7 +332,9 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                 }
             }
         });
-        
+        if (orderIndex===0) {
+            console.log('title ===',dumyUnitData)
+        }
         set(()=>({
             sparkWritingData: dumyUnitData
         }))
@@ -360,6 +363,24 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             sparkWritingBookName:bookName? bookName:get().sparkWritingBookName,
             sparkWritingData:data
         }))
+    },
+    setProofreadingCount: (unitId:number) => {
+        let isAvailable = true;
+        const getCurrentData = get().sparkWritingData.map((item) => {
+            if (item.unit_id === unitId) {
+                const currentProofReadingCount = item.proofreading_count;
+                if (currentProofReadingCount < 2) {
+                    item.proofreading_count +=1
+                } else {
+                    isAvailable=false;
+                }
+            }
+            return item;
+        });
+        if (isAvailable) {
+            set(()=>({sparkWritingData:getCurrentData}))
+        }
+        return isAvailable;
     },
     // {
     //     "status": 0,
@@ -442,31 +463,36 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     "name": "Title",
                     "order_index": 1,
                     "heading_content": "Here goes your title",
-                    "input_content": "This is the title of my essay"
+                    "input_content": "This is the title of my essay",
+                    "grammar_correction_content": ''
                 },
                 {
                     "name": "Introduction",
                     "order_index": 2,
                     "heading_content": "Here goes your into",
-                    "input_content": "This is the intro of my essay"
+                    "input_content": "This is the intro of my essay",
+                    "grammar_correction_content": ''
                 },
                 {
                     "name": "Body_1",
                     "order_index": 3,
                     "heading_content": "Some body 1",
-                    "input_content": "Some body 1"
+                    "input_content": "Some body 1",
+                    "grammar_correction_content": ''
                 },
                 {
                     "name": "Body_2",
                     "order_index": 4,
                     "heading_content": "Some body 2",
-                    "input_content": "This is the body of my essay"
+                    "input_content": "This is the body of my essay",
+                    "grammar_correction_content": ''
                 },
                 {
                     "name": "Conclusion",
                     "order_index": 5,
                     "heading_content": "The end",
-                    "input_content": ""
+                    "input_content": "",
+                    "grammar_correction_content": ''
                 }
             ],
             "draft_2_outline": [
@@ -474,313 +500,19 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     "name": "Title",
                     "order_index": 1,
                     "heading_content": "",
-                    "input_content": "This is the title of my essay"
+                    "input_content": "This is the title of my essay",
+                    "grammar_correction_content": ''
                 },
                 {
                     "name": "Body",
                     "order_index": 2,
                     "heading_content": "",
-                    "input_content": "This is the intro of my essay"
+                    "input_content": "This is the intro of my essay",
+                    "grammar_correction_content": ''
                 }
             ],
             "proofreading_count": 0
         },
-        {
-            "unit_id": 26,
-            "unit_index": 2,
-            "topic": "Informative Essays",
-            "draft_1_status": {
-                "status": 1,
-                "reason": "writing in progress",
-                "submit_date": null,
-                "temp_save_date": "2023-08-17T05:19:59.000Z",
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_2_status": {
-                "status": 2,
-                "reason": "submitted, review not started",
-                "submit_date": "2023-08-17T01:21:58.000Z",
-                "temp_save_date": null,
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_1_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Introduction",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body_1",
-                    "order_index": 3,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body_2",
-                    "order_index": 4,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Conclusion",
-                    "order_index": 5,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "draft_2_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "proofreading_count": 0
-        },
-        {
-            "unit_id": 27,
-            "unit_index": 3,
-            "topic": "Personal Narratives",
-            "draft_1_status": {
-                "status": 1,
-                "reason": "writing in progress",
-                "submit_date": null,
-                "temp_save_date": "2023-08-17T05:19:59.000Z",
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_2_status": {
-                "status": 2,
-                "reason": "submitted, review not started",
-                "submit_date": "2023-08-17T01:21:58.000Z",
-                "temp_save_date": null,
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_1_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Beginning",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_1",
-                    "order_index": 3,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_2",
-                    "order_index": 4,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_3",
-                    "order_index": 5,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "End",
-                    "order_index": 6,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "draft_2_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "proofreading_count": 0
-        },
-        {
-            "unit_id": 28,
-            "unit_index": 4,
-            "topic": "Science Fiction Short Stories",
-            "draft_1_status": {
-                "status": 1,
-                "reason": "writing in progress",
-                "submit_date": null,
-                "temp_save_date": "2023-08-17T05:19:59.000Z",
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_2_status": {
-                "status": 2,
-                "reason": "submitted, review not started",
-                "submit_date": "2023-08-17T01:21:58.000Z",
-                "temp_save_date": null,
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_1_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Beginning_1",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Beginning_2",
-                    "order_index": 3,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_1",
-                    "order_index": 4,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_2",
-                    "order_index": 5,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Middle_3",
-                    "order_index": 6,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "End",
-                    "order_index": 7,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "draft_2_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "proofreading_count": 0
-        },
-        {
-            "unit_id": 29,
-            "unit_index": 5,
-            "topic": "Persuasive Essays",
-            "draft_1_status": {
-                "status": 1,
-                "reason": "writing in progress",
-                "submit_date": null,
-                "temp_save_date": "2023-08-17T05:19:59.000Z",
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_2_status": {
-                "status": 2,
-                "reason": "submitted, review not started",
-                "submit_date": "2023-08-17T01:21:58.000Z",
-                "temp_save_date": null,
-                "review_reject_date": null,
-                "review_complete_date": null
-            },
-            "draft_1_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Introduction",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body_1",
-                    "order_index": 3,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body_2",
-                    "order_index": 4,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body_3",
-                    "order_index": 5,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Conclusion",
-                    "order_index": 6,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "draft_2_outline": [
-                {
-                    "name": "Title",
-                    "order_index": 1,
-                    "heading_content": "",
-                    "input_content": ""
-                },
-                {
-                    "name": "Body",
-                    "order_index": 2,
-                    "heading_content": "",
-                    "input_content": ""
-                }
-            ],
-            "proofreading_count": 0
-        }
     ],
 }))
 

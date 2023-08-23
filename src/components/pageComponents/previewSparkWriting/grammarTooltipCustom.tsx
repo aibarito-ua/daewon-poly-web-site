@@ -102,7 +102,7 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     ]);
     return (
         <span key={mainTagkey} 
-        className={`whitespace-pre-line hover:cursor-pointer ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#14b690]':'text-[#ffc4cc]'}`}>
+        className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}`}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
             >{compareResultText}

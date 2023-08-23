@@ -16,6 +16,9 @@ interface ISparkWritingStore {
     // save draft temporary data form
     sparkWritingTemporarySaveData: TSparkWritingTemporarySaveData;
     setSparkWritingTemporarySaveData: (data: TSparkWritingTemporarySaveData) => void;
+
+    // proof reading count update => boolean
+    setProofreadingCount: (unitId: number) => boolean;
 }
 type TSparkWritingDatas = TSparkWritingData[]
 type TSparkWritingData = {
@@ -41,6 +44,7 @@ type TSparkWritingDataOutline = {
     input_content:string;
     name: string;
     order_index: number;
+    grammar_correction_content: string;
 }
 
 // save draft temporary 
@@ -57,6 +61,7 @@ type TSparkWritingTemporarySaveData = {
 type TSparkWritingSaveTemporaryContent = {
     input_content: string;
     heading_name: string;
+    grammar_correction_content: string;
     order_index: number;
 }
 
@@ -112,4 +117,22 @@ type TOutlineValues = {
 // check writing value(string)
 type TCheckWritingValue = {
     [key:string]: any;
+}
+
+
+// submit api types
+type TSubmit1stDraftRequestData = {
+    student_code: string;
+    student_name_en: string;
+    student_name_kr: string;
+    unit_id: number;
+    draft_index: number;
+    contents: TSubmit1stDraftReqDataContent[];
+    proofreading_count: number;
+}
+type TSubmit1stDraftReqDataContent = {
+    input_content:string;
+    grammar_correction_content:string;
+    heading_name: string;
+    order_index: number;
 }

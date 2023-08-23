@@ -164,9 +164,11 @@ const EssayWriting = () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
         const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+            const input_content = item.input_content.replace(/\s{2,}/g, ' ');
             return {
                 heading_name: item.name,
-                input_content: item.input_content,
+                input_content,
+                grammar_correction_content: '',
                 order_index: item.order_index,
             }
         })

@@ -6,31 +6,38 @@ import useSparkWritingStore from "../../store/useSparkWritingStore";
 import { useNavigate, useParams } from 'react-router-dom';
 import { PopupModalComponent } from '../../components/toggleModalComponents/popupModalComponent';
 import contentComponent from '../../components/pageComponents/previewSparkWriting/contentComponent';
-import { grammarCheck, previewTest } from './api/GrammarApi';
+import { grammarCheck, previewTest, proofReadingCountUpdate } from './api/GrammarApi';
 import useGrammarStore from '../../store/useGrammarStore';
 import GrammarContentComponent from '../../components/pageComponents/previewSparkWriting/grammarContentComponent';
 import { isEqual } from 'lodash';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
+import { draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
+import { useComponentWillMount } from '../../hooks/useEffectOnce';
 
 const PreviewSparkWriting = (props:any) => {
     // stores
     // Spark Store
-    const {sparkWritingData, setSelectBoxUnit} = useSparkWritingStore();
+    const {
+        sparkWritingData,
+        setSelectBoxUnit,
+        setProofreadingCount,
+        setOutlineInputText
+    } = useSparkWritingStore();
     // Nav Store
     const {setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString} = useNavStore();
     
     // WritingCenter Store
     const {} = useEssayWritingCenterDTStore();
     // current role
-    const {} = useLoginStore();
+    const {userInfo, role} = useLoginStore();
     const {setGrammarBody, setGrammarTitle, setGrammarAll, grammarTitle, grammarBody, grammarAll,
         resultTitle,resultBody, setGrammarResult,
         returnData, setGrammarOrigin,
         setGrammarResultInit
     } = useGrammarStore();
     const {
-        commonAlertOpen, setCommonStandbyScreen
+        commonAlertOpen, setCommonStandbyScreen, commonAlertClose,
     } = useControlAlertStore();
 
     // page States
@@ -42,6 +49,8 @@ const PreviewSparkWriting = (props:any) => {
     );
     const [isUndoBody, setIsUndoBody] = React.useState<boolean>(false);
     const [remakeBodyItem, setRemakeBodyItem] = React.useState<number[][]>([]);
+    // save button flag
+    const [isSaveButtonOpen, setIsSaveButtonOpen] = React.useState<boolean>(false);
 
     // undo history init
     const setInitHistorys = (hist:{title:TTitleHistory, body:TGrammarResponseResult[]}) => {
@@ -93,6 +102,10 @@ const PreviewSparkWriting = (props:any) => {
     const [openSubmitButton, setOpenSubmitButton] = React.useState<boolean>(false);
     // AI Proofreading count
     const [countofUseAIProofreading, setCountofUseAIProofreading] = React.useState<number>(-1);
+    // Grammar tool Start/Proceed false: 시작 전, true: 진행중
+    const [isGrammarProceed, setIsGrammarProceed] = React.useState<boolean>(false);
+    // submit check flag
+    const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     
     // param hook
     const params = useParams();
@@ -101,28 +114,180 @@ const PreviewSparkWriting = (props:any) => {
     // Navigate hook
     const navigate = useNavigate();
 
+     // will mount grammar data check
+     const beforeRenderedFn = async () => {
+        const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
+        // check submit?
+        const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.submit_date;
+        if (checkSubmitted!==null) {
+            setIsSubmitted(true);
+        } else {
+            let titleGrammarData:TTitleHistory = [];
+            let bodyGrammarData:TbodyHistory = [];
+            for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
+                const targetValue = checkTarget[unitsIdx];
+                if (targetValue.grammar_correction_content&&targetValue.grammar_correction_content!=='') {
+                    if (targetValue.name==='Title') {
+                        titleGrammarData = JSON.parse(targetValue.grammar_correction_content);
+                    } else {
+                        const targetDataParsing = JSON.parse(targetValue.grammar_correction_content)
+                        bodyGrammarData.push(targetDataParsing)
+                    }
+                }
+            }
+            if (bodyGrammarData.length > 0) {
+    
+                setBodyHistory({
+                    title: {past: [], future: [], present: titleGrammarData},
+                    body: {past:[], future: [], present: bodyGrammarData}
+                })
+                setIsGrammarProceed(true);
+                setGuideFlag(1)
+            }
+        }
+    }
+    useComponentWillMount(()=>{
+        beforeRenderedFn();
+    })
+
     // AI Proofreading Events
     const AIProofreadingOnClickEvent = () => setShowAIProofreadingModal(true);
     const AIProofreadingClose = () => setShowAIProofreadingModal(false);
     const AIProofreadingYesOnClick = async () => {
+        // 추가 로직
+        // grammar 시작 후
+        // select 완료 여부
+        // grammar 시작 전
+
         // count plus
-        if (countofUseAIProofreading < 2) {
+        // const unitId = sparkWritingData[unitIndex].unit_id
+        // const checkProofCount = setProofreadingCount(unitId)
+        const ProofReadingCountValue = sparkWritingData[unitIndex].proofreading_count;
+        // if (countofUseAIProofreading < 2) {
+        if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline)
-            
-            // console.log('preview res ===',res)
-            setCommonStandbyScreen({openFlag:false})
-            setInitHistorys({
-                title: res.result_title,
-                body: res.result_body
-            })
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline);
+            if (res.result_body.length>0) {
+                const unitId = sparkWritingData[unitIndex].unit_id
+                const proofReadingCountUpdateValue = ProofReadingCountValue+1;
+                // const proofReadingCountUpdateValue = 1;
+                const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue);
+                if (updateCountAPI.statusCode === 200) {
+                    setProofreadingCount(unitId)
+                    setCommonStandbyScreen({openFlag:false})
+                    setIsGrammarProceed(true);
+                    setInitHistorys({
+                        title: res.result_title,
+                        body: res.result_body
+                    })
+                }
+            }
             setGuideFlag(1)
+            // console.log('preview res ===',res)
         } else {
             // submit
         }
         
     }
+    // check select grammars
+    const checkSelectedGrammarModals = () => {
+        const checkTitle = checkSelectedTitleGrammarModals();
+        const checkBody = checkSelectedBodyGrammarModals();
+        console.log('check title =',checkTitle,' body =',checkBody)
+        return checkTitle? true: (checkBody?true:false);
+    }
+    // check title select grammars
+    const checkSelectedTitleGrammarModals = () => {
+        
+        for (const presentTitle of bodyHistory.title.present) {
+            for (const iPresentTitleValue of presentTitle) {
+                let checkType0 = false;
+                let checkType1 = false;
+                let checkTypeMinus1 = false;
+                let checkType2 = false;
+    
+                for (const wordTitleValue of iPresentTitleValue) {
+                    for (const checkTitleTarget of wordTitleValue) {
+                        switch (checkTitleTarget.type) {
+                            case 0:
+                                checkType0 = true;
+                                continue;
+                            case 1:
+                                checkType1 = true;
+                                continue;
+                            case -1:
+                                checkTypeMinus1 = true;
+                                continue;
+                            case 2:
+                                checkType2 = true;
+                                break;
+                        }
+                    }
+    
+                    if ((checkType1 || checkTypeMinus1) && !checkType2) {
+                        return true; // 조건 충족 시 함수 종료
+                    } else {
+                        checkType0 = false;
+                        checkType1 = false;
+                        checkTypeMinus1 = false;
+                        checkType2 = false;
+                    }
+                }
+            }
+        }
+    
+        return false; // 모든 반복이 끝나도 조건 미충족 시 false 반환
+    };
+    // check body select grammars
+    const checkSelectedBodyGrammarModals = () => {
+        console.log('body hist ===',bodyHistory.body.present)
+        for (const item of bodyHistory.body.present) {
+            for (const presentBody of item.data) {
+                let checkType0 = false;
+                let checkType1 = false;
+                let checkTypeMinus1 = false;
+                let checkType2 = false;
+    
+                for (const iPresentBodyValue of presentBody) {
+                    for (const wordBodyValue of iPresentBodyValue) {
+                        for (const checkBodyTarget of wordBodyValue) {
+                            switch (checkBodyTarget.type) {
+                                case 0:
+                                    checkType0 = true;
+                                    continue;
+                                case 1:
+                                    checkType1 = true;
+                                    continue;
+                                case -1:
+                                    checkTypeMinus1 = true;
+                                    continue;
+                                case 2:
+                                    checkType2 = true;
+                                    break;
+                            }
+                        }
+    
+                        if ((checkType1 || checkTypeMinus1) && !checkType2) {
+                            console.log('check body true ==',wordBodyValue)
+                            console.log('checkType1::',checkType1)
+                            console.log('checkTypeMinus1::',checkTypeMinus1)
+                            console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
+                            console.log('checkType2::',checkType2)
+                            return true; // 조건 충족 시 함수 종료
+                        } else {
+                            checkType0 = false;
+                            checkType1 = false;
+                            checkTypeMinus1 = false;
+                            checkType2 = false;
+                        }
+                    }
+                }
+            }
+        }
+    
+        return false; // 모든 반복이 끝나도 조건 미충족 시 false 반환
+    };
     const previewTextforGrammarCheck = () => {
         const outlineData:TSparkWritingData = sparkWritingData[unitIndex];
         // margin index setting
@@ -168,6 +333,7 @@ const PreviewSparkWriting = (props:any) => {
                     break;
                 }
             }
+            console.log('checkIsSelected ==',checkIsSelected)
             if (!checkIsSelected) {
                 const userSelectData:TGrammarResDiff = {
                     key: `${wordIndex}-${wordInnerLength}`,
@@ -229,9 +395,202 @@ const PreviewSparkWriting = (props:any) => {
             })
         }
     }
+    const replaceUpdateSparkWritingTitle = () => {
+        const unitId = sparkWritingData[unitIndex].unit_id
+        console.log('unit index =',sparkWritingData[unitIndex])
+        console.log('unit ==',unitId)
+        for (const presentTitle of bodyHistory.title.present) {
+            let presentParagraghString = '';
+            for (const iPresentTitleValue of presentTitle) {
+                // let checkType0 = false;
+                // let checkType1 = false;
+                // let checkTypeMinus1 = false;
+                // let checkType2 = false;
+    
+                for (const wordTitleValue of iPresentTitleValue) {
+                    let addWordString = '';
+                    for (const checkTitleTarget of wordTitleValue) {
+                        switch (checkTitleTarget.type) {
+                            case 0:
+                                if (addWordString==='') {
+                                    addWordString=checkTitleTarget.word;
+                                }
+                                continue;
+                            case 1:
+                                continue;
+                            case -1:
+                                continue;
+                            case 2:
+                                addWordString=checkTitleTarget.word;
+                                break;
+                        }
+                    }
+                    presentParagraghString+=addWordString;
+                }
+
+            }
+            console.log('in checking proceed ')
+            console.log('unitId : ',unitId, ', unitIndex ::',unitIndex)
+            
+            setOutlineInputText(presentParagraghString,unitId, unitIndex,1,1)
+        }
+    }
+    const replaceUpdateSparkWritingBody = () => {
+        const unitId = sparkWritingData[unitIndex].unit_id
+        console.log('body history =',bodyHistory.body.present)
+        for (const item of bodyHistory.body.present) {
+            for (const presentBody of item.data) {
+                
+                // paragragh
+                // let checkType0 = false;
+                // let checkType1 = false;
+                // let checkTypeMinus1 = false;
+                // let checkType2 = false;
+                let presentParagraghString = '';
+                
+                for (const iPresentTitleValue of presentBody) {
+                    for (const wordTitleValue of iPresentTitleValue) {
+                        
+                        let wordString = '';
+                        for (const checkTitleTarget of wordTitleValue) {
+                            switch (checkTitleTarget.type) {
+                                case 0:
+                                    wordString = checkTitleTarget.word;
+                                    continue;
+                                case 1:
+                                    continue;
+                                case -1:
+                                    continue;
+                                case 2:
+                                    wordString = checkTitleTarget.word;
+                                    break;
+                            }
+                        }
+                        
+                        presentParagraghString+=wordString;
+                    }
+                }
+                console.log('presentBody:::',presentParagraghString)
+                // paragragh update store
+                setOutlineInputText(presentParagraghString,unitId, unitIndex,item.order_index,1 )
+            }
+        }
+    }
+    // after grammar select complete, save db
+    const grammarResultSave = () => {
+        // title save
+        // const titleSave = 
+        for (const presentTitle of bodyHistory.title.present) {
+            for (const iPresentTitleValue of presentTitle) {
+                let checkType0 = false;
+                let checkType1 = false;
+                let checkTypeMinus1 = false;
+                let checkType2 = false;
+    
+                for (const wordTitleValue of iPresentTitleValue) {
+                    for (const checkTitleTarget of wordTitleValue) {
+                        switch (checkTitleTarget.type) {
+                            case 0:
+                                checkType0 = true;
+                                continue;
+                            case 1:
+                                checkType1 = true;
+                                continue;
+                            case -1:
+                                checkTypeMinus1 = true;
+                                continue;
+                            case 2:
+                                checkType2 = true;
+                                break;
+                        }
+                    }
+    
+                    if ((checkType1 || checkTypeMinus1) && !checkType2) {
+                        return true; // 조건 충족 시 함수 종료
+                    } else {
+                        checkType0 = false;
+                        checkType1 = false;
+                        checkTypeMinus1 = false;
+                        checkType2 = false;
+                    }
+                }
+            }
+        }
+        // body save
+        const bodySave = replaceUpdateSparkWritingBody();
+    }
+    const forcedTemporarySave = async (isGrammarSave?:boolean) => {
+        
+        const targetData = sparkWritingData[unitIndex];
+        const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+            const historyMinusIndex = targetData.draft_1_outline[0].name==='Title' ? 2:1;
+            const currentGrammarIndex = item.order_index-historyMinusIndex;
+            const grammar_correction_content = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
+            return {
+                heading_name: item.name,
+                input_content: item.input_content,
+                grammar_correction_content,
+                order_index: item.order_index
+            }
+        });
+        const data:TSparkWritingTemporarySaveData = {
+            student_code: userInfo.userCode,
+            student_name_en: userInfo.memberNameEn,
+            student_name_kr: userInfo.memberNameKr,
+            unit_id: targetData.unit_id,
+            draft_index: 1,
+            proofreading_count: targetData.proofreading_count,
+            contents: contentsData
+        };
+        console.log('data ==',data)
+        commonAlertOpen({
+            useOneButton: true,
+            yesButtonLabel: 'OK',
+            alertType: 'continue',
+            messages: ['Please temporary saving your data.'],
+            yesEvent: async () => {
+                const isSaveTemporary = await draftSaveTemporary(data);
+                if (isSaveTemporary) {
+                    if (isGrammarSave) {
+                        commonAlertOpen({
+                            useOneButton:true,
+                            yesButtonLabel: 'OK',
+                            alertType: 'continue',
+                            messages: ['Temporary saving is complete.'],
+                            yesEvent: async () => {
+                                commonAlertClose()
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                            }
+                        })
+                    } else {
+                        commonAlertOpen({
+                            useOneButton:true,
+                            yesButtonLabel: 'OK',
+                            alertType: 'continue',
+                            messages: ['Temporary saving is complete.'],
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                navigate(-1)
+                            }
+                        })
+                    }
+                } else {
+                    commonAlertOpen({
+                        messages: ['Are you sure you want to try again?'],
+                        yesButtonLabel: 'Yes',
+                        noButtonLabel: 'Cancel',
+                        alertType: 'continue',
+                        yesEvent: async ()=> {
+                            await forcedTemporarySave();
+                        },
+                    })
+                }
+            }
+        })
+    }
 
     React.useMemo(()=>{
-        previewTextforGrammarCheck()
+        previewTextforGrammarCheck();
     }, [sparkWritingData])
     
     React.useMemo(()=>{
@@ -260,17 +619,16 @@ const PreviewSparkWriting = (props:any) => {
             const rightTitle = <span>{'Step 2'}<span className='ordinal pl-4 pr-1'>{'2nd'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         }
-        // count AI Proofreading
-        if (countofUseAIProofreading === undefined || countofUseAIProofreading === -1) {
-            const countCheck = sparkWritingData[unitIndex].proofreading_count;
-            setCountofUseAIProofreading(countCheck)
+// setCountofUseAIProofreading, countofUseAIProofreading 
+        if (countofUseAIProofreading !== undefined || countofUseAIProofreading !== -1) {
+            setCountofUseAIProofreading(sparkWritingData[unitIndex].proofreading_count);
         } else {
             if (countofUseAIProofreading < 2) {
                 if (countofUseAIProofreading > 0) setOpenSubmitButton(true);
-                setSelectBoxUnit(unitIndex, countofUseAIProofreading);
+                setSelectBoxUnit(unitIndex, sparkWritingData[unitIndex].proofreading_count);
 
             } else if (countofUseAIProofreading === 2) {
-                if (countofUseAIProofreading > 0) setOpenSubmitButton(true);
+                setOpenSubmitButton(true);
                 setOpenAIProofreadingButton(true);
             }
             // use grammar checking
@@ -293,6 +651,72 @@ const PreviewSparkWriting = (props:any) => {
                 setIsUndoBody(false);
             }
         }
+
+        // check grammar modal select
+        if (bodyHistory.body.present.length > 0 && bodyHistory.title.present) {
+            // grammar 진행 시작
+            const checkGrammarsSelectAll = checkSelectedGrammarModals();
+            if (countofUseAIProofreading===2) {
+                if (checkGrammarsSelectAll) {
+                    console.log('grammar 진행 중')
+                    setIsSaveButtonOpen(true);
+                    setOpenSubmitButton(false)
+                } else {
+                    console.log('grammar 진행 종료')
+                    replaceUpdateSparkWritingTitle()
+                    replaceUpdateSparkWritingBody()
+                    setIsGrammarProceed(false)
+                    setOpenSubmitButton(true)
+                }
+            } else if (countofUseAIProofreading>=0 && countofUseAIProofreading <2) {
+                if (checkGrammarsSelectAll) {
+                    // grammar 진행중
+                    console.log('grammar 진행 중')
+                    setIsSaveButtonOpen(true);
+                    setOpenSubmitButton(false)
+                } else {
+                    // grammar 종료
+                    console.log('grammar 진행 종료')
+                    replaceUpdateSparkWritingTitle()
+                    replaceUpdateSparkWritingBody()
+                    setIsGrammarProceed(false)
+                    setOpenSubmitButton(true)
+                }
+            }
+        } else {
+            // grammar 진행 전
+            console.log('grammar 진행 전')
+            
+            if (countofUseAIProofreading>0) {
+                if (countofUseAIProofreading===2) {
+                    const checkGrammarsSelectAll = checkSelectedGrammarModals();
+                    if (checkGrammarsSelectAll) {
+                        setOpenSubmitButton(false);
+                    } else {
+                        setOpenSubmitButton(true);
+                    }
+                };
+                
+                const submitDate = sparkWritingData[unitIndex].draft_1_status.submit_date;
+                if (submitDate!==null && submitDate!=='') {
+                    setIsSaveButtonOpen(false);
+                } else {
+                    if (bodyHistory.body.present.length>0) {
+                        setIsSaveButtonOpen(true);
+                    } else {
+                        setIsSaveButtonOpen(false);
+                    }
+                }
+            } else {
+                setIsSaveButtonOpen(false);
+            }
+        }
+        if (isSubmitted===undefined || !isSubmitted) {
+            const checkSubmit = sparkWritingData[unitIndex].draft_1_status.submit_date;
+            if (checkSubmit===null||checkSubmit===undefined||checkSubmit==='') {
+                setIsSubmitted(true)
+            }
+        }
         // console.log('test outline items =',sparkWritingData[unitIndex])
         return ()=>{
             setTopNavHiddenFlagged(false)
@@ -302,11 +726,10 @@ const PreviewSparkWriting = (props:any) => {
         }
     },[
         // page state
-        countofUseAIProofreading, setCountofUseAIProofreading, bodyHistory,
+        bodyHistory, countofUseAIProofreading, isSaveButtonOpen, isSubmitted,
         // Nav store
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString,
         // Spark store
-        
     ])
     
 
@@ -358,32 +781,150 @@ const PreviewSparkWriting = (props:any) => {
                 </div>
                 
                 <div className={`buttons-div`}>
-                    <button className={`save-button-active`} onClick={()=>{
-                        commonAlertOpen({
-                            messages: ['Do you want to save?'],
-                            yesButtonLabel: "Yes",
-                            yesEvent: ()=>{
-                                navigate(-1);
-                            },
-                            noButtonLabel: "No"
-                        })
-                    }}>Edit</button>
-                    <button className={`${countofUseAIProofreading<2?'save-button-active div-to-button-hover-effect':'save-button'}`} 
-                    onClick={()=>{
-                        commonAlertOpen({
-                            messages: countofUseAIProofreading===2 ? ['You have already used AI proofreading twice.']: [
-                                'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
-                                `${countofUseAIProofreading}/2`
-                            ],
-                            yesButtonLabel: 'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => await AIProofreadingYesOnClick()
-                        })
-                    }}>AI Proofreading</button>
-                    <button className={`${openSubmitButton?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
-                        console.log('bodyHistory =',bodyHistory)
-                        // onSubmitEvent()
-                    }}>Submit</button>
+                    {!isSubmitted &&
+                        <button className={isSubmitted ?`save-button-active`:'hidden'} onClick={()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to save?'],
+                                yesButtonLabel: "Yes",
+                                alertType: 'continue',
+                                yesEvent: async ()=>{
+                                    // grammar 시작 후
+                                    if (bodyHistory.body.present.length > 0) {
+                                        // select 완료 여부
+                                        if (isGrammarProceed) {
+                                            // 진행 중
+                                            commonAlertClose();
+                                            // grammar data 저장
+                                        } else {
+                                            // 진행 종료
+                                            // data 저장
+                                            await forcedTemporarySave();
+
+                                        }
+                                    } else {
+                                        // grammar 시작 전
+                                        commonAlertClose();
+                                        navigate(-1);
+                                    }
+                                    
+                                },
+                                noButtonLabel: "No"
+                            })
+                        }}>Edit</button>
+                    }
+                    {!isSubmitted &&
+                        <div className={isSubmitted ?`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                            if (isSaveButtonOpen) {
+                                
+                                commonAlertOpen({
+                                    messages: ['Do you want to save?'],
+                                    alertType: 'continue',
+                                    yesButtonLabel: `Yes, I'm sure.`,
+                                    noButtonLabel: `No, Cancel.`,
+                                    yesEvent: async ()=> await forcedTemporarySave(true)
+                                })
+                            }
+
+                        }}>Save</div>
+                    }
+                    {!isSubmitted &&
+                        <button className={isSubmitted 
+                            ?`${sparkWritingData[unitIndex].proofreading_count<2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                            :'hidden'
+                        } 
+                        onClick={()=>{
+                            commonAlertOpen({
+                                messages: sparkWritingData[unitIndex].proofreading_count===2 ? ['You have already used AI proofreading twice.']: [
+                                    'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
+                                    `${sparkWritingData[unitIndex].proofreading_count}/2`
+                                ],
+                                yesButtonLabel: 'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => await AIProofreadingYesOnClick()
+                            })
+                        }}>AI Proofreading</button>
+                    }
+                    {!isSubmitted &&
+                        <button className={ isSubmitted ?`${openSubmitButton?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                            const checkGrammarsSelectAll = checkSelectedGrammarModals();
+                            console.log('select all =',checkGrammarsSelectAll)
+                            // grammar 시작 후
+                            // select 완료 여부
+                            // grammar 시작 전
+                            if (!checkGrammarsSelectAll) {
+                                replaceUpdateSparkWritingTitle();
+                                replaceUpdateSparkWritingBody();
+                            }
+                            if (openSubmitButton&&countofUseAIProofreading>0) {
+                                // submit date check
+                                const currentSparkWritingData = sparkWritingData[unitIndex]
+                                const submitDate = currentSparkWritingData.draft_1_status.submit_date;
+                                let noMessages = '';
+                                if (submitDate && submitDate!=='') {
+                                    noMessages = `Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
+                                }
+                                // onSubmitEvent()
+
+                                commonAlertOpen({
+                                    yesButtonLabel: 'Yes',
+                                    alertType: 'continue',
+                                    messages: [
+                                        `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
+                                        'Are you ready to submit?'
+                                    ],
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+
+                                        // submit
+                                        // make contents 
+                                        const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
+                                            return {
+                                                input_content: item.input_content,
+                                                grammar_correction_content: '',
+                                                heading_name: item.heading_content,
+                                                order_index: item.order_index
+                                            }
+                                        })
+                                        const submitData:TSubmit1stDraftRequestData = {
+                                            student_code: userInfo.userCode,
+                                            student_name_en: userInfo.memberNameEn,
+                                            student_name_kr: userInfo.memberNameKr,
+                                            unit_id: currentSparkWritingData.unit_id,
+                                            draft_index: 1,
+                                            contents: contentsData,
+                                            proofreading_count: currentSparkWritingData.proofreading_count
+                                        }
+                                        const submit = await draft1stSubmit(submitData);
+                                        console.log('submit return data =',submit)
+                                        if (submit) {
+                                            commonAlertOpen({
+                                                useOneButton:true,
+                                                yesButtonLabel: 'OK',
+                                                alertType: 'continue',
+                                                messages: [`Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`],
+                                                yesEvent: () => {
+                                                    commonAlertClose()
+                                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                                                }
+                                            })
+                                        }
+                                    },
+                                    closeEvent: async() => {
+                                        if (noMessages!=='') {
+                                            commonAlertOpen({
+                                                messages: [noMessages],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: ()=> commonAlertClose(),
+                                            })
+                                        } else {
+                                            commonAlertClose();
+                                        }
+                                    }
+                                })
+                            }
+                        }}>Submit</button>
+                    }
                 </div>
             </div>
         </section>
@@ -391,3 +932,4 @@ const PreviewSparkWriting = (props:any) => {
 }
 
 export default PreviewSparkWriting;
+
