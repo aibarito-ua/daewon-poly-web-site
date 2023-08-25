@@ -42,6 +42,12 @@ export const RN = {
         },
         checkMobiles: (userAgent:string) => {
             return userAgent.indexOf('android') > -1 || userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1 || userAgent.indexOf('ipod') > -1;
+        },
+        checkMac: (userAgent:string) => {
+            return userAgent.indexOf('mac') > -1
+        },
+        checkWindows: (userAgent:string) => {
+            return userAgent.indexOf('windows') > -1
         }
     }
 }

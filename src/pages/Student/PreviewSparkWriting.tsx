@@ -12,7 +12,7 @@ import GrammarContentComponent from '../../components/pageComponents/previewSpar
 import { isEqual } from 'lodash';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
-import { draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
+import { callUnitInfobyStudent, draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 
 const PreviewSparkWriting = (props:any) => {
@@ -22,7 +22,8 @@ const PreviewSparkWriting = (props:any) => {
         sparkWritingData,
         setSelectBoxUnit,
         setProofreadingCount,
-        setOutlineInputText
+        setOutlineInputText,
+        setSparkWritingDataFromAPI
     } = useSparkWritingStore();
     // Nav Store
     const {setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString} = useNavStore();
@@ -116,38 +117,65 @@ const PreviewSparkWriting = (props:any) => {
 
      // will mount grammar data check
      const beforeRenderedFn = async () => {
-        const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
-        // check submit?
-        const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.submit_date;
-        if (checkSubmitted!==null) {
-            setIsSubmitted(true);
-        } else {
-            let titleGrammarData:TTitleHistory = [];
-            let bodyGrammarData:TbodyHistory = [];
-            for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
-                const targetValue = checkTarget[unitsIdx];
-                if (targetValue.grammar_correction_content&&targetValue.grammar_correction_content!=='') {
-                    if (targetValue.name==='Title') {
-                        titleGrammarData = JSON.parse(targetValue.grammar_correction_content);
-                    } else {
-                        const targetDataParsing = JSON.parse(targetValue.grammar_correction_content)
-                        bodyGrammarData.push(targetDataParsing)
+        
+        // data reload 
+        const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response)=>{
+            if (response.book_name!=='') {
+                setSparkWritingDataFromAPI(response.units, response.book_name);
+                setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
+                return true;
+            } else {
+                return false;
+            }
+        })
+        if (reloadData) {
+            const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
+            // check submit?
+            const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.submit_date;
+            if (checkSubmitted!==null) {
+                console.log('test 11')
+                setIsSubmitted(true);
+            } else {
+                let titleGrammarData:TTitleHistory = [];
+                let bodyGrammarData:TbodyHistory = [];
+                for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
+                    const targetValue = checkTarget[unitsIdx];
+                    if (targetValue.grammar_correction_content&&targetValue.grammar_correction_content!=='') {
+                        if (targetValue.name==='Title') {
+                            titleGrammarData = JSON.parse(targetValue.grammar_correction_content);
+                        } else {
+                            const targetDataParsing = JSON.parse(targetValue.grammar_correction_content)
+                            bodyGrammarData.push(targetDataParsing)
+                        }
                     }
                 }
+                if (bodyGrammarData.length > 0) {
+        
+                    setBodyHistory({
+                        title: {past: [], future: [], present: titleGrammarData},
+                        body: {past:[], future: [], present: bodyGrammarData}
+                    })
+                    // setIsGrammarProceed(true);
+                    // setGuideFlag(1)
+                }
             }
-            if (bodyGrammarData.length > 0) {
-    
-                setBodyHistory({
-                    title: {past: [], future: [], present: titleGrammarData},
-                    body: {past:[], future: [], present: bodyGrammarData}
-                })
-                setIsGrammarProceed(true);
-                setGuideFlag(1)
-            }
+            setCommonStandbyScreen({openFlag:false})
+        } else {
+            commonAlertOpen({
+                alertType: 'warning',
+                useOneButton: true,
+                yesButtonLabel: 'OK',
+                messages: ['Please try again.'],
+                yesEvent: () => {
+                    setCommonStandbyScreen({openFlag:false})
+                    navigate(-1)
+                }
+            })
         }
     }
-    useComponentWillMount(()=>{
-        beforeRenderedFn();
+    useComponentWillMount(async ()=>{
+        setCommonStandbyScreen({openFlag:true})
+        await beforeRenderedFn();
     })
 
     // AI Proofreading Events
@@ -669,6 +697,7 @@ const PreviewSparkWriting = (props:any) => {
                     setOpenSubmitButton(true)
                 }
             } else if (countofUseAIProofreading>=0 && countofUseAIProofreading <2) {
+                console.log(bodyHistory)
                 if (checkGrammarsSelectAll) {
                     // grammar 진행중
                     console.log('grammar 진행 중')
@@ -713,11 +742,14 @@ const PreviewSparkWriting = (props:any) => {
         }
         if (isSubmitted===undefined || !isSubmitted) {
             const checkSubmit = sparkWritingData[unitIndex].draft_1_status.submit_date;
+            console.log('check submit ==',checkSubmit)
             if (checkSubmit===null||checkSubmit===undefined||checkSubmit==='') {
-                setIsSubmitted(true)
+                setIsSubmitted(false)
             }
         }
-        // console.log('test outline items =',sparkWritingData[unitIndex])
+        console.log('submit ==',isSubmitted)
+        console.log('submit ==',sparkWritingData[unitIndex].proofreading_count)
+        console.log('test outline items =',sparkWritingData[unitIndex])
         return ()=>{
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
@@ -782,30 +814,31 @@ const PreviewSparkWriting = (props:any) => {
                 
                 <div className={`buttons-div`}>
                     {!isSubmitted &&
-                        <button className={isSubmitted ?`save-button-active`:'hidden'} onClick={()=>{
+                        <button className={!isSubmitted ?(sparkWritingData[unitIndex].proofreading_count===2?'hidden':`save-button-active`):'hidden'} onClick={()=>{
                             commonAlertOpen({
-                                messages: ['Do you want to save?'],
+                                messages: ['Do you want to return to edit your writing?'],
                                 yesButtonLabel: "Yes",
                                 alertType: 'continue',
                                 yesEvent: async ()=>{
                                     // grammar 시작 후
-                                    if (bodyHistory.body.present.length > 0) {
-                                        // select 완료 여부
-                                        if (isGrammarProceed) {
-                                            // 진행 중
-                                            commonAlertClose();
-                                            // grammar data 저장
-                                        } else {
-                                            // 진행 종료
-                                            // data 저장
-                                            await forcedTemporarySave();
+                                    // if (bodyHistory.body.present.length > 0) {
+                                    //     // select 완료 여부
+                                    //     if (isGrammarProceed) {
+                                    //         // 진행 중
+                                    //         await forcedTemporarySave();
+                                    //         // commonAlertClose();
+                                    //         // grammar data 저장
+                                    //     } else {
+                                    //         // 진행 종료
+                                    //         // data 저장
+                                    //         await forcedTemporarySave();
 
-                                        }
-                                    } else {
+                                    //     }
+                                    // } else {
                                         // grammar 시작 전
                                         commonAlertClose();
                                         navigate(-1);
-                                    }
+                                    // }
                                     
                                 },
                                 noButtonLabel: "No"
@@ -813,7 +846,7 @@ const PreviewSparkWriting = (props:any) => {
                         }}>Edit</button>
                     }
                     {!isSubmitted &&
-                        <div className={isSubmitted ?`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                        <div className={!isSubmitted ?`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
                             if (isSaveButtonOpen) {
                                 
                                 commonAlertOpen({
@@ -828,7 +861,7 @@ const PreviewSparkWriting = (props:any) => {
                         }}>Save</div>
                     }
                     {!isSubmitted &&
-                        <button className={isSubmitted 
+                        <button className={!isSubmitted 
                             ?`${sparkWritingData[unitIndex].proofreading_count<2?'save-button-active div-to-button-hover-effect':'save-button'}`
                             :'hidden'
                         } 
@@ -845,7 +878,7 @@ const PreviewSparkWriting = (props:any) => {
                         }}>AI Proofreading</button>
                     }
                     {!isSubmitted &&
-                        <button className={ isSubmitted ?`${openSubmitButton?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                        <button className={ !isSubmitted ?`${openSubmitButton?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
                             const checkGrammarsSelectAll = checkSelectedGrammarModals();
                             console.log('select all =',checkGrammarsSelectAll)
                             // grammar 시작 후
@@ -878,9 +911,12 @@ const PreviewSparkWriting = (props:any) => {
                                         // submit
                                         // make contents 
                                         const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
+                                            const historyMinusIndex = item.name==='Title' ? 2:1;
+                                            const currentGrammarIndex = item.order_index-historyMinusIndex;
+                                            const grammar_correction_content = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
                                             return {
                                                 input_content: item.input_content,
-                                                grammar_correction_content: '',
+                                                grammar_correction_content,
                                                 heading_name: item.heading_content,
                                                 order_index: item.order_index
                                             }

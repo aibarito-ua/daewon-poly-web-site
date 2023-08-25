@@ -12,7 +12,7 @@ import FormDialog from '../../components/toggleModalComponents/ChatbotModalCompo
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
-import { draftSaveTemporary } from './api/EssayWriting.api';
+import { callUnitInfobyStudent, draftSaveTemporary } from './api/EssayWriting.api';
 interface IDUMPOutlineItem {
     name:string;
     CheckWriting: string;
@@ -34,6 +34,11 @@ const EssayWriting = () => {
 
     // unit/draft index params: unit start to 0, draft use 1 or 2
     const [paramValues, setParamValues] = React.useState<{unitIndex:number, draft:number}>({unitIndex:0, draft: 0});
+
+    // save flag
+    const [ isSaved, setIsSaved] = React.useState<boolean>(false);
+    // 비교할 원본 데이터
+    const [originalTargetData, setOriginalTargetData] = React.useState<TSparkWritingDatas>([]);
 
     // user info
     const {
@@ -58,10 +63,27 @@ const EssayWriting = () => {
     const navigate = useNavigate();
     // current role
     const {role} = useLoginStore();
-    const {commonAlertOpen} = useControlAlertStore();
+    const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen} = useControlAlertStore();
 
-    useComponentWillMount(()=>{
+    const pageInitSetting = async () => {
+        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+            const data = response.units
+            setOriginalTargetData(data);
+            setIsSaved(false);
+            return true;
+        })
+    }
+    useComponentWillMount(async ()=>{
         // console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
+        setCommonStandbyScreen({openFlag:true})
+        const init = await pageInitSetting()
+        if (init) {
+            setCommonStandbyScreen({openFlag:false})
+        }
+        
+        return ()=>{
+            setIsSaved(false);
+        }
     })
 
     React.useEffect(()=>{
@@ -185,6 +207,7 @@ const EssayWriting = () => {
         // console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data);
         if (isSaveTemporary) {
+            setIsSaved(true);
             commonAlertOpen({
                 useOneButton: true,
                 yesButtonLabel: 'OK',
@@ -209,6 +232,27 @@ const EssayWriting = () => {
         })
         setFoldFlag(dumpFlags)
         setUpdateFoldIndex(i);
+    }
+    // 수정된 데이터인지 체크
+    const checkNewLine = () => {
+        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
+        const draftIndex = parseInt(DraftIndex);
+        const originalTarget = originalTargetData[parseInt(UnitIndex)-1];
+        let checkFlag = false;
+        const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item, itemIndex) => {
+            const input_content = item.input_content.replace(/\s{2,}/g, ' ');
+            const originalInputContent = originalTarget.draft_1_outline[itemIndex].input_content.replace(/\s{2,}/g, ' ');
+            if (input_content !== originalInputContent) {
+                checkFlag=true;
+            }
+            return {
+                heading_name: item.name,
+                input_content,
+                grammar_correction_content: '',
+                order_index: item.order_index,
+            }
+        })
+        return checkFlag;
     }
     const outlineBody = (outlineItem: TSparkWritingData ) => {
         let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
@@ -294,7 +338,6 @@ const EssayWriting = () => {
                                 yesButtonLabel: `Yes, I'm sure.`,
                                 noButtonLabel: `No, Cancel.`,
                                 yesEvent: async ()=> await temporarySaveFunction()
-
                             })
                         }
                     }}>Save</div>
@@ -302,14 +345,39 @@ const EssayWriting = () => {
                         if (isPreviewButtonOpen) {
                             callbackCheckValues()
                             // setShowPreviewModal(true)
-                            commonAlertOpen({
-                                messages:['Do you want to Preview?'],
-                                yesButtonLabel: `Yes, I'm sure.`,
-                                noButtonLabel: `No, Cancel.`,
-                                yesEvent: ()=>{
-                                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                }
-                            })
+                                commonAlertOpen({
+                                    messages:['Are you ready to preview your writing?'],
+                                    alertType: 'continue',
+                                    yesButtonLabel: `Yes, I'm sure.`,
+                                    noButtonLabel: `No, Cancel.`,
+                                    yesEvent: ()=>{
+                                        if (isSaved) {
+                                            CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                            commonAlertClose();
+                                        } else {
+                                            const check = checkNewLine();
+                                            if (check) {
+                                                commonAlertOpen({
+                                                    messages: ['There is modified data.','Proceed to save.'],
+                                                    useOneButton:true,
+                                                    alertType: 'continue',
+                                                    yesButtonLabel: `OK`,
+                                                    yesEvent: async ()=> {
+                                                        await temporarySaveFunction();
+                                                        commonAlertClose();
+                                                        CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                                    }
+                                                })
+                                            } else {
+                                                commonAlertClose();
+                                                CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                            }
+                                            
+
+                                        }
+                                    }
+                                })
+                            
                         }
                     }}>Preview</div>
                 </div>

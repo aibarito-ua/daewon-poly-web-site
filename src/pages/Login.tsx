@@ -14,9 +14,11 @@ export const Login = () => {
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
+    const [deviceId,setDeviceId] = React.useState<string>('');
     const {
         commonAlertOpen
     } = useControlAlertStore();
+    
     const validate=()=>{
         const errors = {
             displayMessage: '',
@@ -35,7 +37,7 @@ export const Login = () => {
         window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW, "_blank", "noopener, noreferrer" )
     }
     const forceLogin = async () => {
-        const response = await forcedLoginAPI(loginValues.username, loginValues.password);
+        const response = await forcedLoginAPI(loginValues.username, loginValues.password, deviceId);
         console.log('response =',response)
         const rnData = {userInfo:response}
         
@@ -54,7 +56,7 @@ export const Login = () => {
             return;
         } else {
             // alert(JSON.stringify(loginValues, null, 2))
-            const response = await loginAPI(loginValues.username, loginValues.password);
+            const response = await loginAPI(loginValues.username, loginValues.password, deviceId);
             // console.log('login =',response)
             // 1 비밀번호 체크 
             // count 0 -> 아이디 또는 비밀번호를 다시 확인하세요
@@ -148,15 +150,40 @@ export const Login = () => {
     const sendMessage = (data:any) => {
         console.log('Send message data =',data)
         const messageData = JSON.stringify(data);
-
         window.ReactNativeWebView.postMessage(messageData);
     };
     const receiveMessage = (event:any) => {
         console.log('Receive message data =',event.data);
+        
+        if (loginValues.username===''&&loginValues.password==='') {
+            const rnData = JSON.parse(JSON.stringify(event.data));
+            // auto login
+            const autoLoginValue = rnData['loginValues']
+            if (autoLoginValue) {
+                setLoginValues(autoLoginValue);
+            }
+            const deviceIdCheck = rnData['deviceId']
+            if (deviceIdCheck && deviceIdCheck!=='') {
+                setDeviceId(deviceIdCheck)
+            } else {
+
+            }
+        }
     };
+
+    // is not mobile id
+    const fetchIpAddress = async () => {
+        const response = await fetch('https://api64.ipify.org?format=json').then((res) => {return res}).catch((rej) => {return ''});
+        if (typeof(response)!=='string') {
+            const data = await response.json();
+            setDeviceId(data.ip);
+        } else {
+            setDeviceId('');
+        }
+    }
     React.useEffect(()=>{
         const varUserAgent = navigator.userAgent.toLowerCase();
-        const sendData = {"userInfo":userInfo}
+        const sendData = {"userInfo":userInfo,"loginValues":loginValues}
 
         if (RN.RNWebView.checkAdroid(varUserAgent)) {
             // android
@@ -173,6 +200,32 @@ export const Login = () => {
             window.removeEventListener('message', receiveMessage)
         }
     }, [userInfo])
+
+    
+    React.useEffect(()=>{
+        const varUserAgent = navigator.userAgent.toLowerCase();
+        // console.log('var user agent::',varUserAgent.indexOf('mac'))
+        const sendData = "AutoLogin"
+
+        if (RN.RNWebView.checkAdroid(varUserAgent)) {
+            // android
+            document.addEventListener('message', receiveMessage);
+            sendMessage(sendData)
+        } else if (RN.RNWebView.checkiOS(varUserAgent)) {
+            // iOS
+            window.addEventListener('message', receiveMessage);
+            sendMessage(sendData)
+        } else if (RN.RNWebView.checkMac(varUserAgent)) {
+            fetchIpAddress();
+        } else if (RN.RNWebView.checkWindows(varUserAgent)) {
+            fetchIpAddress();
+        }
+
+        return () => {
+            document.removeEventListener('message', receiveMessage);
+            window.removeEventListener('message', receiveMessage)
+        }
+    },[])
 
 
     return (
