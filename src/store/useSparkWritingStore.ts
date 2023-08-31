@@ -464,35 +464,35 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     "order_index": 1,
                     "heading_content": "Here goes your title",
                     "input_content": "This is the title of my essay",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 },
                 {
                     "name": "Introduction",
                     "order_index": 2,
                     "heading_content": "Here goes your into",
                     "input_content": "This is the intro of my essay",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 },
                 {
                     "name": "Body_1",
                     "order_index": 3,
                     "heading_content": "Some body 1",
                     "input_content": "Some body 1",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 },
                 {
                     "name": "Body_2",
                     "order_index": 4,
                     "heading_content": "Some body 2",
                     "input_content": "This is the body of my essay",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 },
                 {
                     "name": "Conclusion",
                     "order_index": 5,
                     "heading_content": "The end",
                     "input_content": "",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 }
             ],
             "draft_2_outline": [
@@ -501,14 +501,14 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     "order_index": 1,
                     "heading_content": "",
                     "input_content": "This is the title of my essay",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 },
                 {
                     "name": "Body",
                     "order_index": 2,
                     "heading_content": "",
                     "input_content": "This is the intro of my essay",
-                    "grammar_correction_content": ''
+                    "grammar_correction_content_student": ''
                 }
             ],
             "proofreading_count": 0

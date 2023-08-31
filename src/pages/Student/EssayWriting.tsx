@@ -190,7 +190,7 @@ const EssayWriting = () => {
             return {
                 heading_name: item.name,
                 input_content,
-                grammar_correction_content: '',
+                grammar_correction_content_student: '',
                 order_index: item.order_index,
             }
         })
@@ -248,7 +248,7 @@ const EssayWriting = () => {
             return {
                 heading_name: item.name,
                 input_content,
-                grammar_correction_content: '',
+                grammar_correction_content_student: '',
                 order_index: item.order_index,
             }
         })

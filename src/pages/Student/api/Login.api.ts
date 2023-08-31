@@ -13,13 +13,13 @@ export async function loginAPI(username:string, password:string, device_id:strin
         console.log('result =',response)
         return response.data.data;
     }).catch((reject) => {
-        console.log('reject =',reject)
+        console.log('reject =',JSON.stringify(reject))
     })
 }
 
 export async function forcedLoginAPI(username:string, password:string, device_id:string):Promise<any>{
     const reqUrl = CONFIG.LOGIN.POST.FORCE_URL;
-    const data = {username, password, device_id};
+    const data = {username, password, device_id:'test'};
     return await axios.post(reqUrl, data, {
         headers: {
             Accept: 'application/json',

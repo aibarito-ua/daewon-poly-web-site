@@ -11,7 +11,22 @@ interface INavItem {
     subRightNavTitleString: string|JSX.Element;
     setSubRightNavTitleString: any;
     selectUnitInfo: TUnitTitleItem;
+    // navItems: TNavItems;
+
     setSelectUnitInfo: (unitMainTitle:string, unitSubTitle:string) =>void;
 }
 type TStudentNavItem = "MyPage" | "EssayWriting" | "Portfolio";
 // type TTeacherNavItem = ""
+
+// nav item types
+type TNavItems = {
+    [key in TRole]: {
+        selectedMenu: TNavItemSelectedMenu[]
+    };
+}
+type TNavItemSelectedMenu = {
+    path:string,
+    label: string,
+    onMenuIcon: JSX.Element,
+    offMenuIcon: JSX.Element
+}

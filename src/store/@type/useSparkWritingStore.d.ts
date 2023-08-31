@@ -44,7 +44,7 @@ type TSparkWritingDataOutline = {
     input_content:string;
     name: string;
     order_index: number;
-    grammar_correction_content: string;
+    grammar_correction_content_student: string;
 }
 
 // save draft temporary 
@@ -61,7 +61,7 @@ type TSparkWritingTemporarySaveData = {
 type TSparkWritingSaveTemporaryContent = {
     input_content: string;
     heading_name: string;
-    grammar_correction_content: string;
+    grammar_correction_content_student: string;
     order_index: number;
 }
 
@@ -132,7 +132,7 @@ type TSubmit1stDraftRequestData = {
 }
 type TSubmit1stDraftReqDataContent = {
     input_content:string;
-    grammar_correction_content:string;
+    grammar_correction_content_student:string;
     heading_name: string;
     order_index: number;
 }

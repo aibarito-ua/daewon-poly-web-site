@@ -128,6 +128,7 @@ const PreviewSparkWriting = (props:any) => {
                 return false;
             }
         })
+        
         if (reloadData) {
             const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
             // check submit?
@@ -140,11 +141,11 @@ const PreviewSparkWriting = (props:any) => {
                 let bodyGrammarData:TbodyHistory = [];
                 for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
                     const targetValue = checkTarget[unitsIdx];
-                    if (targetValue.grammar_correction_content&&targetValue.grammar_correction_content!=='') {
+                    if (targetValue.grammar_correction_content_student&&targetValue.grammar_correction_content_student!=='') {
                         if (targetValue.name==='Title') {
-                            titleGrammarData = JSON.parse(targetValue.grammar_correction_content);
+                            titleGrammarData = JSON.parse(targetValue.grammar_correction_content_student);
                         } else {
-                            const targetDataParsing = JSON.parse(targetValue.grammar_correction_content)
+                            const targetDataParsing = JSON.parse(targetValue.grammar_correction_content_student)
                             bodyGrammarData.push(targetDataParsing)
                         }
                     }
@@ -553,11 +554,11 @@ const PreviewSparkWriting = (props:any) => {
         const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
             const historyMinusIndex = targetData.draft_1_outline[0].name==='Title' ? 2:1;
             const currentGrammarIndex = item.order_index-historyMinusIndex;
-            const grammar_correction_content = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
+            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
             return {
                 heading_name: item.name,
                 input_content: item.input_content,
-                grammar_correction_content,
+                grammar_correction_content_student,
                 order_index: item.order_index
             }
         });
@@ -746,10 +747,13 @@ const PreviewSparkWriting = (props:any) => {
             if (checkSubmit===null||checkSubmit===undefined||checkSubmit==='') {
                 setIsSubmitted(false)
             }
+            if (countofUseAIProofreading > 0) {
+                setIsSubmitted(false)
+            }
         }
         console.log('submit ==',isSubmitted)
         console.log('submit ==',sparkWritingData[unitIndex].proofreading_count)
-        console.log('test outline items =',sparkWritingData[unitIndex])
+        console.log('test outline items =',sparkWritingData)
         return ()=>{
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
@@ -878,7 +882,7 @@ const PreviewSparkWriting = (props:any) => {
                         }}>AI Proofreading</button>
                     }
                     {!isSubmitted &&
-                        <button className={ !isSubmitted ?`${openSubmitButton?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                        <button className={ !isSubmitted ?`${(openSubmitButton)?'save-button-active div-to-button-hover-effect': (countofUseAIProofreading>0 ?'save-button-active div-to-button-hover-effect':'hidden')}`:'hidden'} onClick={()=>{
                             const checkGrammarsSelectAll = checkSelectedGrammarModals();
                             console.log('select all =',checkGrammarsSelectAll)
                             // grammar 시작 후
@@ -913,10 +917,10 @@ const PreviewSparkWriting = (props:any) => {
                                         const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
                                             const historyMinusIndex = item.name==='Title' ? 2:1;
                                             const currentGrammarIndex = item.order_index-historyMinusIndex;
-                                            const grammar_correction_content = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
+                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
                                             return {
                                                 input_content: item.input_content,
-                                                grammar_correction_content,
+                                                grammar_correction_content_student,
                                                 heading_name: item.heading_content,
                                                 order_index: item.order_index
                                             }
@@ -930,7 +934,10 @@ const PreviewSparkWriting = (props:any) => {
                                             contents: contentsData,
                                             proofreading_count: currentSparkWritingData.proofreading_count
                                         }
+                                        console.log('submit item = ',submitData)
+                                        setCommonStandbyScreen({openFlag:true})
                                         const submit = await draft1stSubmit(submitData);
+                                        setCommonStandbyScreen({openFlag:false})
                                         console.log('submit return data =',submit)
                                         if (submit) {
                                             commonAlertOpen({

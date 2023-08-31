@@ -14,7 +14,7 @@ export const Login = () => {
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
-    const [deviceId,setDeviceId] = React.useState<string>('');
+    const [deviceId,setDeviceId] = React.useState<string>('test');
     const {
         commonAlertOpen
     } = useControlAlertStore();
@@ -37,8 +37,11 @@ export const Login = () => {
         window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW, "_blank", "noopener, noreferrer" )
     }
     const forceLogin = async () => {
-        const response = await forcedLoginAPI(loginValues.username, loginValues.password, deviceId);
-        console.log('response =',response)
+        const response = await forcedLoginAPI(loginValues.username, loginValues.password, deviceId).then((res) => {
+            alert('response ='+res)
+            return res
+        });
+            
         const rnData = {userInfo:response}
         
         const varUserAgent = navigator.userAgent.toLowerCase();
@@ -49,15 +52,17 @@ export const Login = () => {
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        await fetchIpAddress();
+        alert(deviceId)
         const errors = validate()
         setErrors(errors);
         if (Object.values(errors).some(v => v)) {
             return;
         } else {
-            // alert(JSON.stringify(loginValues, null, 2))
-            const response = await loginAPI(loginValues.username, loginValues.password, deviceId);
-            // console.log('login =',response)
+            alert(JSON.stringify(loginValues, null, 2))
+            const response = await loginAPI(loginValues.username, loginValues.password, 'test');
+            console.log('login =',response)
+            // alert(response)
             // 1 비밀번호 체크 
             // count 0 -> 아이디 또는 비밀번호를 다시 확인하세요
             // count 1~4 -> 비밀번호를 잘못 입력하셨습니다. (2/5)
@@ -177,6 +182,7 @@ export const Login = () => {
         if (typeof(response)!=='string') {
             const data = await response.json();
             setDeviceId(data.ip);
+            alert(data.ip)
         } else {
             setDeviceId('');
         }
@@ -204,9 +210,9 @@ export const Login = () => {
     
     React.useEffect(()=>{
         const varUserAgent = navigator.userAgent.toLowerCase();
-        // console.log('var user agent::',varUserAgent.indexOf('mac'))
+        console.log('var user agent::',varUserAgent)
         const sendData = "AutoLogin"
-
+        // alert(varUserAgent)
         if (RN.RNWebView.checkAdroid(varUserAgent)) {
             // android
             document.addEventListener('message', receiveMessage);
