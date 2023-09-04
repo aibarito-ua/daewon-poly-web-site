@@ -348,16 +348,17 @@ const PreviewSparkWriting = (props:any) => {
     }
 
     const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
-        
+        console.log('main div =',mainDiv)
         if (mainDiv === 'Body') {
             let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
             let dumybodyHistory = dumyBodyHist.body.present;
+            
             let checkIsSelected = false;
             const wordInnerLength = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].length;
             for (let checkIdx = 0; checkIdx< wordInnerLength; checkIdx++) {
                 const targetData = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex][checkIdx];
                 const targetCheck = targetData.type;
-                if (targetCheck > 1) {
+                if (targetCheck !== 3 && targetCheck > 1) {
                     checkIsSelected=true;
                     break;
                 }
@@ -380,7 +381,7 @@ const PreviewSparkWriting = (props:any) => {
             const wordInnerLength = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].length;
             for (let checkIdx = 0; checkIdx < wordInnerLength; checkIdx++) {
                 const targetCheck = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex][checkIdx].type;
-                if (targetCheck > 1) {
+                if (targetCheck!==3 && targetCheck > 1) {
                     checkIsSelected=true;
                     break;
                 }

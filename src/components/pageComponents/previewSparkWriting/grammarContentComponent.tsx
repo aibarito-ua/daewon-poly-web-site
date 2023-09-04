@@ -44,16 +44,36 @@ const GrammarContentComponent = {
             return <span className='' key={sentenceKey}>
                 <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
                 {sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
+                    console.log('word =',word)
                     let returnValue:any = '';
                     const wordElementsLength = word.length;
                     // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
-                    if (wordElementsLength === 1) {
+                    if (wordElementsLength < 2) {
                         
                         const compareWordFlag = word[0].type;
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                         const dataKey = word[0].key;
                         const currentWord = word[0].word;
                         const reasons = word[0].correction_reason;
+
+                        const emptyCheckStart = currentWord.match(/^\s/gmi);
+                        const emptyCheckEnd = currentWord.match(/\s$/gmi);
+                        let displayText = '';
+                        const checkEmptyFn = (startCheck: RegExpMatchArray | null, endCheck: RegExpMatchArray | null) => {
+                            // remove empty space & return margin flag
+                            if (startCheck!==null) {
+                                displayText = currentWord.replace(/^\s/gmi, '');
+                                return 'before'
+                            } else if (endCheck!==null) {
+                                displayText = currentWord.replace(/\s$/gmi, '');
+                                return 'after'
+                            } else {
+                                displayText = currentWord
+                                return undefined;
+                            }
+                        }
+
+                        const displayTextCheck = checkEmptyFn(emptyCheckStart, emptyCheckEnd);
 
                         if (compareWordFlag === 1) {
                             // only add
@@ -66,10 +86,11 @@ const GrammarContentComponent = {
                             ]
                             returnValue = (
                                 <GrammarTooltipCustom 
+                                    addEmpty={displayTextCheck}
                                     mainTagkey={mainTagKey}
                                     textTagid={textTagId} 
                                     tagType={'add'} 
-                                    compareResultText={currentWord}
+                                    compareResultText={displayText}
                                     tooltipText={describeText} 
                                     acceptEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                     ignoreEventFunction={()=>clickTooltip('', 'Title', 0,paragraphIndex, sentenceIndex, wordIndex)} 
@@ -87,22 +108,24 @@ const GrammarContentComponent = {
                             ];
                             returnValue = (
                                 <GrammarTooltipCustom 
+                                    addEmpty={displayTextCheck}
                                     mainTagkey={mainTagKey} 
                                     textTagid={textTagId} 
                                     tagType={'delete'} 
-                                    compareResultText={currentWord}
+                                    compareResultText={displayText}
                                     tooltipText={describeText} 
                                     acceptEventFunction={()=>clickTooltip('', 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                     ignoreEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)}
                                     thisIndex={[]}
                                 />
                             )
-                        } else {
+                        } else if (compareWordFlag === 0) {
                             // original
                             const textTagId = 'title-'+mainTagKey + '-ori'
                             returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
                         }
                     } else {
+
                         
                         // delete + add set
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
@@ -113,8 +136,6 @@ const GrammarContentComponent = {
                         let reason:any = '';
                         let checkSelected = false;
                         let selectedWord = '';
-                        let emptyKey = '';
-                        let emptyWord = '';
                         
                         for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
                             const targetInnerWord = word[innerWordIdx];
@@ -132,10 +153,6 @@ const GrammarContentComponent = {
                                 // check selected
                                 selectedWord=targetInnerWord.word;
                                 checkSelected=true;
-                            } else {
-                                // empty space
-                                emptyKey=targetInnerWord.key;
-                                emptyWord=targetInnerWord.word
                             }
                         }
                         
@@ -165,7 +182,7 @@ const GrammarContentComponent = {
                                         ignoreEventFunction={()=>clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                         thisIndex={[]}                                    
                                     />
-                                    <span key={emptyKey}><span id={'title-'+mainTagKey + '-ori'}>{emptyWord}</span></span>
+                                    <span id={'title-'+mainTagKey + '-ori'}>{' '}</span>
                                     <GrammarTooltipCustom 
                                         mainTagkey={addKey} 
                                         textTagid={'title-'+mainTagKey+'-add'} 
@@ -213,17 +230,32 @@ const GrammarContentComponent = {
                     return sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
                         // word start
                         let returnValue:any = '';
-                        // console.log('word ==',word)
-                        // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',word.length)
                         const wordElementsLength = word.length;
-                        // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
-                        if (wordElementsLength === 1) {
-                            
+                        
+                        if (wordElementsLength < 2) {    
                             const compareWordFlag = word[0].type;
                             const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                             const dataKey = word[0].key;
                             const currentWord = word[0].word;
                             const reasons = word[0].correction_reason;
+                            const emptyCheckStart = currentWord.match(/^\s/gmi);
+                            const emptyCheckEnd = currentWord.match(/\s$/gmi);
+                            let displayText = '';
+                            const checkEmptyFn = (startCheck: RegExpMatchArray | null, endCheck: RegExpMatchArray | null) => {
+                                // remove empty space & return margin flag
+                                if (startCheck!==null) {
+                                    displayText = currentWord.replace(/^\s/gmi, '');
+                                    return 'before'
+                                } else if (endCheck!==null) {
+                                    displayText = currentWord.replace(/\s$/gmi, '');
+                                    return 'after'
+                                } else {
+                                    displayText = currentWord
+                                    return undefined;
+                                }
+                            }
+
+                            const displayTextCheck = checkEmptyFn(emptyCheckStart, emptyCheckEnd);
 
                             if (compareWordFlag === 1) {
                                 // only add
@@ -231,15 +263,16 @@ const GrammarContentComponent = {
                                 const describeText = [
                                     reasons,
                                     <span className='grammar-tooltip-custom-content-wrap'>
-                                        <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
+                                        <pre className='grammar-tooltip-custom-content-add-text'>{displayText}</pre>
                                     </span>
                                 ]
                                 returnValue = (
                                     <GrammarTooltipCustom 
+                                        addEmpty={displayTextCheck}
                                         mainTagkey={mainTagKey}
                                         textTagid={textTagId} 
                                         tagType={'add'} 
-                                        compareResultText={currentWord}
+                                        compareResultText={displayText}
                                         tooltipText={describeText} 
                                         acceptEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                         ignoreEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
@@ -252,22 +285,23 @@ const GrammarContentComponent = {
                                 const describeText = [
                                     reasons,
                                     <span className='grammar-tooltip-custom-content-wrap'>
-                                    <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                    <pre className='grammar-tooltip-custom-content-delete-text'>{displayText}</pre>
                                     </span>
                                 ];
                                 returnValue = (
                                     <GrammarTooltipCustom 
+                                        addEmpty={displayTextCheck}
                                         mainTagkey={mainTagKey} 
                                         textTagid={textTagId} 
                                         tagType={'delete'} 
-                                        compareResultText={currentWord}
+                                        compareResultText={displayText}
                                         tooltipText={describeText} 
                                         acceptEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                         ignoreEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)}
                                         thisIndex={[]}
                                     />
                                 )
-                            } else {
+                            } else if (compareWordFlag === 0) {
                                 // original
                                 const textTagId = 'title-'+mainTagKey + '-ori'
                                 returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
@@ -283,8 +317,6 @@ const GrammarContentComponent = {
                             let reason:any = '';
                             let checkSelected = false;
                             let selectedWord = '';
-                            let emptyKey = '';
-                            let emptyWord = '';
                             
                             for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
                                 const targetInnerWord = word[innerWordIdx];
@@ -302,10 +334,6 @@ const GrammarContentComponent = {
                                     // check selected
                                     selectedWord=targetInnerWord.word;
                                     checkSelected=true;
-                                } else {
-                                    // empty space
-                                    emptyKey=targetInnerWord.key;
-                                    emptyWord=targetInnerWord.word
                                 }
                             }
                             
@@ -319,6 +347,7 @@ const GrammarContentComponent = {
                                 reason,
                                 JsxText 
                             ]
+                            const empty = ' ';
                             if (checkSelected) {
                                 const textTagId = 'title-'+mainTagKey + '-ori'
                                 returnValue = <span key={mainTagKey}><span id={textTagId}>{selectedWord}</span></span>
@@ -335,7 +364,7 @@ const GrammarContentComponent = {
                                             ignoreEventFunction={()=>clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                             thisIndex={[]}                                    
                                         />
-                                        <span key={emptyKey}><span id={'title-'+mainTagKey + '-ori'}>{emptyWord}</span></span>
+                                        <span className='pl-[0px]'>{empty}</span>
                                         <GrammarTooltipCustom 
                                             mainTagkey={addKey} 
                                             textTagid={'title-'+mainTagKey+'-add'} 

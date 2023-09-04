@@ -18,7 +18,7 @@ interface IGrammarTooltipCustomProps {
     mainTagkey: string;
     textTagid: string;
     tagType: string; // "add" or "delete"
-    compareResultText: string;
+    compareResultText: string|JSX.Element;
     tooltipText: (string[]|JSX.Element)[];
     
     acceptEventFunction: Function;
@@ -29,6 +29,8 @@ interface IGrammarTooltipCustomProps {
     deleteTagString?: string;
     changeTagString?:string;
     beforeDeleteId?: string;
+
+    addEmpty?: 'before'|'after'|undefined;
 
     [key:string]: any;
 }
@@ -46,7 +48,8 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         beforeDeleteId,
         deleteTagString,
         // changeId,
-        thisIndex
+        thisIndex,
+        addEmpty,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
@@ -102,7 +105,12 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     ]);
     return (
         <span key={mainTagkey} 
-        className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] ${tagType==='delete'? 'line-through': ''} ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}`}>
+        className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] 
+            ${tagType==='delete'? 'line-through': ''} 
+            ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}
+            ${addEmpty!==undefined && (
+                addEmpty==='before'? 'ml-[3px]': (addEmpty==='after'? 'mr-[3px]':'')
+            )}`}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
             >{compareResultText}

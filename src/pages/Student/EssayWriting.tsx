@@ -154,9 +154,26 @@ const EssayWriting = () => {
             if (DraftIndex==='1') {
                 const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
                 const max_leng = targetDataOutline.length;
+                let titleMaxLengthCheck = false;
+
+                let orderIndex = -1;
+                let unitId = -1;
+                let unitIndex = -1;
+                let redoTitleText = '';
+
                 let targetFlags = Array.from({length:max_leng},()=>1)
                 targetFlags = targetDataOutline.map((v,i) => {
                     const target_leng = v.input_content.replaceAll(' ','').length;
+                    if (v.name === 'Title') {
+                        const lengthTitle = v.input_content.length;
+                        orderIndex = v.order_index;
+                        unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
+                        unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
+                        if (lengthTitle > 120) {
+                            redoTitleText = v.input_content.substring(0, 120);
+                            titleMaxLengthCheck = true;
+                        }
+                    }
                     if (target_leng >= 10) {
                         // 10자 이상
                         return 0;
@@ -165,6 +182,17 @@ const EssayWriting = () => {
                         return 1;
                     }
                 })
+                if (titleMaxLengthCheck) {
+                    commonAlertOpen({
+                        messages:['“Title” can be up to 120 characters including spaces.'],
+                        useOneButton: true,
+                        yesButtonLabel: 'OK',
+                        yesEvent: () => {
+                            setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
+                        }
+                    })
+                    return;
+                }
                 const sum = targetFlags.reduce((a,b) => (a+b));
                 // sum === 0 => Preview && save 활성화
                 // sum >0, sum < targetFlags.length; -> save 활성화
@@ -298,7 +326,6 @@ const EssayWriting = () => {
                                                 const unitId = outlineItem.unit_id
                                                 const unitIndex = outlineItem.unit_index
                                                 const orderIndex = item.order_index
-                                                
                                                 setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
                                                 callbackCheckValues()
                                             }}

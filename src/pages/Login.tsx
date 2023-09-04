@@ -38,7 +38,7 @@ export const Login = () => {
     }
     const forceLogin = async () => {
         const response = await forcedLoginAPI(loginValues.username, loginValues.password, deviceId).then((res) => {
-            alert('response ='+res)
+            // alert('response ='+res)
             return res
         });
             
@@ -53,13 +53,13 @@ export const Login = () => {
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await fetchIpAddress();
-        alert(deviceId)
+        // alert(deviceId)
         const errors = validate()
         setErrors(errors);
         if (Object.values(errors).some(v => v)) {
             return;
         } else {
-            alert(JSON.stringify(loginValues, null, 2))
+            // alert(JSON.stringify(loginValues, null, 2))
             const response = await loginAPI(loginValues.username, loginValues.password, 'test');
             console.log('login =',response)
             // alert(response)
@@ -182,7 +182,7 @@ export const Login = () => {
         if (typeof(response)!=='string') {
             const data = await response.json();
             setDeviceId(data.ip);
-            alert(data.ip)
+            // alert(data.ip)
         } else {
             setDeviceId('');
         }
