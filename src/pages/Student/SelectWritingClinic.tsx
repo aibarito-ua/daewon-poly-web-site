@@ -41,7 +41,7 @@ const SelectWritingClinic = () => {
                             CommonFunctions.goLink( 'WritingClinic/SparkWriting', navigate, role)}
                         }
                     }
-                    ><span className="text-xl">{'Spark Writing'}</span></commonIconSvgs.SparkWritingEnterButton>
+                    ><span className="text-xl select-none">{'Spark Writing'}</span></commonIconSvgs.SparkWritingEnterButton>
                     <Button className={`select-writing-item-button ${secondGenerationOpen? '':'hidden'}`}><span className="text-xl">{'Free Writing'}</span></Button>
                 </div>
             </div>

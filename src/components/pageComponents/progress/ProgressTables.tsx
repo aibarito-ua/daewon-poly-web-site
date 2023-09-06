@@ -77,20 +77,24 @@ const ProgressTable = (props:any) => {
                     // 5> df=return, fb=return 3,2 -> 0%
                     // first
                     if (firstDraftStatus===1) {
+                        console.log(1)
                         progressPercentValue+=0;
                         firstDraftState=<progressIcons.SaveYellowCircleIcon/>;
                         firstDraftStateData=unitItem.draft_1_status.temp_save_date ? formatDateforStringData(unitItem.draft_1_status.temp_save_date): '';
                     } else if (firstDraftStatus === 2||firstDraftStatus===3) {
+                        console.log(2)
                         progressPercentValue+=25;
                         firstDraftState=<progressIcons.CheckGreenCircleIcon/>;
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                     } else if (firstDraftStatus===4) {
-                        progressPercentValue+=25;
+                        console.log(4)
+                        progressPercentValue+=50;
                         firstDraftState=<progressIcons.CheckGreenCircleIcon/>;
                         firstDraftFeedbackState=<progressIcons.CheckBlueRectIcon/>;
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_complete_date ? formatDateforStringData(unitItem.draft_1_status.review_complete_date):'';
                     } else if (firstDraftStatus===5) {
+                        console.log(5)
                         progressPercentValue+=0;
                         firstDraftState=<progressIcons.RecycleRedCircleIcon/>;
                         firstDraftFeedbackState=<progressIcons.RejectRedRectIcon/>;
@@ -107,7 +111,7 @@ const ProgressTable = (props:any) => {
                         secondDrafteState=<progressIcons.CheckGreenCircleIcon/>;
                         secondDrafteStateData=unitItem.draft_2_status.submit_date? formatDateforStringData(unitItem.draft_2_status.submit_date):'';
                     } else if (secondDraftStatus===4) {
-                        progressPercentValue+=25;
+                        progressPercentValue+=50;
                         secondDrafteState=<progressIcons.CheckGreenCircleIcon/>;
                         finalEvaluationState=<progressIcons.CheckBlueRectIcon/>;
                         secondDrafteStateData=unitItem.draft_2_status.submit_date? formatDateforStringData(unitItem.draft_2_status.submit_date):'';

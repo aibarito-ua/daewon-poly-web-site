@@ -78,7 +78,7 @@ export default function SelectUnit () {
         
         return (
             <div className="flex flex-col bg-[#fff] h-[445px] max-w-[1010px] px-[25px] pb-[35px] pt-[23px] rounded-[24px]">
-                <div className='select-a-unit-to-begin'>{'* Select a unit to begin.'}</div>
+                <div className='select-a-unit-to-begin select-none'>{'* Select a unit to begin.'}</div>
                 <div className='select-unit-div'>
                 {props.items.map((item:TSparkWritingData, topicsIndex:number)=>{
                                 
@@ -102,7 +102,7 @@ export default function SelectUnit () {
                     return (
                         
                     <div key={topicsIndex} 
-                    className={`select-writing-topic-item-button group/unit`}
+                    className={`select-none select-writing-topic-item-button group/unit`}
                     onClick={async ()=>{
                         
                         if ( !firstFeedback && !secondFeedback ) {
@@ -197,7 +197,7 @@ export default function SelectUnit () {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >{sparkWritingBookName}</span>
+                        <span className='writing-activity-page-title-text select-none' >{sparkWritingBookName}</span>
                     </div>
                 </div>
                 {/* buttons */}

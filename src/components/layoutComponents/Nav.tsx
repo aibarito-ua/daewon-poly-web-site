@@ -105,14 +105,14 @@ export const Nav = () => {
             </div>
         </div>
         <div className={`absolute top-0 z-50 w-full h-[111px] ${topNavHiddenFlagged ? '': 'hidden'}`}>
-            <div className='btn-go-back-from-draft'
+            <div className='btn-go-back-from-draft select-none'
             onClick={()=>CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)}></div>
 
-            <div className='flex flex-1 flex-row justify-center mt-[48px]'>
+            <div className='flex flex-1 flex-row justify-center mt-[48px] select-none'>
                 <div className='flex flex-col gap-[6px] justify-center items-center'>
-                    <div className='draft-unit-title-head-text'>{subNavTitleString}</div>
+                    <div className='draft-unit-title-head-text select-none'>{subNavTitleString}</div>
                     {subRightNavTitleString !== '' && 
-                        <div className='flex flex-1 flex-row-reverse gap-4 px-4 content-center items-center'>
+                        <div className='flex flex-1 flex-row-reverse gap-4 px-4 content-center items-center select-none'>
                             <p className='draft-unit-sub-title-head-text'>{subRightNavTitleString}</p>
                         </div>
                     }

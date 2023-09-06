@@ -5,6 +5,7 @@ import useNavStore from "../../../store/useNavStore";
 import { useNavigate } from "react-router-dom";
 import { navItems } from "../Nav";
 import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
+import { useComponentWillMount } from '../../../hooks/useEffectOnce';
 
 
 const NavAside = () => {
@@ -17,11 +18,15 @@ const NavAside = () => {
         if (selectedMenu === menuTitle) {
             // await setSelectMenu(null);
         } else {
+            console.log('menuTitle =',menuTitle,', ',selectedMenu, ', sidebarFlagged=',sidebarFlagged,', role=',role)
             await setSelectMenu(menuTitle,);
             setSidebarFlagged(!sidebarFlagged);
             await goLink(role,menuTitle);
         }
     };
+    useComponentWillMount(()=>{
+        setSelectMenu('WritingClinic')
+    })
 
     const goLink = async (role: TRole, link: string) => {
         console.log("link :::", link);
@@ -29,10 +34,11 @@ const NavAside = () => {
         navigate(`/${rolePath}/${link}`);
     }
     React.useEffect(()=>{
-        console.log('test effect selectedMenu= ',selectedMenu)
+        console.log('test effect selectedMenu= ',selectedMenu,', sidebarFlagged=',sidebarFlagged)
         if (selectedMenu==='') {
             const menuTitle = navItems[role].selectedMenu[0].path;
             setSelectMenu(menuTitle)
+            setSidebarFlagged(true);
         }
     },[selectedMenu])
     React.useEffect(()=>{
@@ -41,7 +47,7 @@ const NavAside = () => {
         console.log('navigate =',checkTargetPath)
         console.log('nav =',navItems[role].selectedMenu[0].path)
         if (checkTargetPath!==selectedTargetPath) {
-            setSelectMenu(checkTargetPath)
+            setSelectMenu(checkTargetPath);
         }
     },[location])
 
@@ -61,18 +67,25 @@ const NavAside = () => {
                 <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`
+                        console.log('v.path =',v.path)
+                        console.log('selectedMenu =',selectedMenu)
                         return (
                             <li key={key} 
-                            className={`div-to-button-hover-effect w-[172px] h-[74px] ${
+                            className={`div-to-button-hover-effect w-[172px] h-[74px] select-none ${
                                 selectedMenu===v.path 
-                                ? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]' :''
+                                ? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]'
+                                : (
+                                    i==0&&selectedMenu===undefined? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]':''
+                                )
                             }`}
                             onClick={()=>handleMenuClick(role, v.path)}>
                                 <div className="flex flex-row items-center p-2 w-full h-full gap-[10px]">
                                 <div className='w-[45px] h-[45px]'>
-                                {selectedMenu===v.path ? v.onMenuIcon : v.offMenuIcon}
+                                {selectedMenu===v.path ? v.onMenuIcon :(i==0&&selectedMenu===undefined?v.onMenuIcon:v.offMenuIcon) }
                                 </div>
-                                <span className={selectedMenu===v.path? 'nav-menu-on':'nav-menu-off'}>{v.label}</span>
+                                <span className={selectedMenu===v.path? 'nav-menu-on':(
+                                    i==0&&selectedMenu===undefined ? 'nav-menu-on':'nav-menu-off'
+                                )}>{v.label}</span>
                                 </div>
                             </li>
                         )
@@ -83,7 +96,8 @@ const NavAside = () => {
                     // <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-xl" 
                     // onClick={()=>setLogoutUser()}>Logout</button>
                     
-                    <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' />
+                    <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
+                    onClick={()=>{window.location.reload()}}/>
                     
                 )}
             </div>

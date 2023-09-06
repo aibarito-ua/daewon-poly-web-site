@@ -7,9 +7,11 @@ import { svgIcons } from '../util/svgs/loginSvgs';
 import { forcedLoginAPI, loginAPI } from './Student/api/Login.api';
 import useControlAlertStore from '../store/useControlAlertStore';
 import { RN } from '../util/RN/commonPostMessage';
+import useNavStore from '../store/useNavStore';
 
 export const Login = () => {
     const { userInfo, setUserInfo, setIsOpen, } = useLoginStore();
+    const {setSelectMenu} = useNavStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
@@ -48,6 +50,7 @@ export const Login = () => {
         if (RN.RNWebView.checkMobiles(varUserAgent)) {
             sendMessage(rnData);
         }
+        setSelectMenu('WritingClinic')
         setUserInfo(response)
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
@@ -228,6 +231,7 @@ export const Login = () => {
         }
 
         return () => {
+            setSelectMenu('WritingClinic')
             document.removeEventListener('message', receiveMessage);
             window.removeEventListener('message', receiveMessage)
         }
@@ -287,7 +291,7 @@ export const Login = () => {
                                         console.log(value.currentTarget.value)
                                     }}
                                 />
-                                <label htmlFor="login-save-id-checkbox" className='ml-[8px] font-normal text-[14px]'>{'아이디 저장'}</label>
+                                <label htmlFor="login-save-id-checkbox" className='ml-[8px] font-normal text-[14px] select-none hover:cursor-pointer'>{'아이디 저장'}</label>
                         </div>
                         <div className='flex flex-row mt-[12.7px] font-[12px] h-[24px] text-[#ff3841]'>
                             <span>{errors.displayMessage}</span>
@@ -304,17 +308,17 @@ export const Login = () => {
                             <span>{errors.password}</span>
                         </div> */}
                         <div className='flex flex-row text-[12px] mt-[20px] justify-center w-[300px]'>
-                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.JOIN) }}>{'회원가입'}</div>
-                            <div className='flex mx-[11.5px] items-center'>
+                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.JOIN) }}>{'회원가입'}</div>
+                            <div className='flex mx-[11.5px] items-center select-none'>
                                 <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
                             </div>
-                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_ID)}}>{'아이디 찾기'}</div>
-                            <div className='flex mx-[11.5px] items-center'>
+                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_ID)}}>{'아이디 찾기'}</div>
+                            <div className='flex mx-[11.5px] items-center select-none'>
                                 <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
                             </div>
-                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
+                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
                         </div>
-                        <div className='flex flex-col mt-[61px] text-[11px] w-[308px] text-[#444444] font-["Noto Sans CJK KR"]' 
+                        <div className='flex flex-col mt-[61px] text-[11px] w-[308px] text-[#444444] font-["Noto Sans CJK KR"] select-none' 
                             style={{
 
                         }}>
