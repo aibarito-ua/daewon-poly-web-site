@@ -19,6 +19,7 @@ interface ISparkWritingStore {
 
     // proof reading count update => boolean
     setProofreadingCount: (unitId: number) => boolean;
+    setProofreadingCountReset: (unitId:number) => boolean;
 }
 type TSparkWritingDatas = TSparkWritingData[]
 type TSparkWritingData = {

@@ -42,6 +42,22 @@ export async function proofReadingCountUpdate(student_code:string, unit_id: numb
         return returnReject;
     })
 }
+export async function grammarReset(data:{student_code:string, unit_id:number, proofreading_count:number}):Promise<any> {
+    const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
+    return await axios.put(reqUrl,data,{
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+    }).then(( result ) => {
+        const response:TProofReadingCountUpdateResponse = result.data;
+        return response;
+    }).catch((reject) => {
+        const returnReject:TProofReadingCountUpdateReject = reject
+        console.log('returnReject =',returnReject)
+        return returnReject;
+    })
+}
 
 type TGrammarCompareResponse = {
     compare_text: (number|string)[][]

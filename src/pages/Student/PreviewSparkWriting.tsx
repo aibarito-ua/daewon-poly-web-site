@@ -6,7 +6,7 @@ import useSparkWritingStore from "../../store/useSparkWritingStore";
 import { useNavigate, useParams } from 'react-router-dom';
 import { PopupModalComponent } from '../../components/toggleModalComponents/popupModalComponent';
 import contentComponent from '../../components/pageComponents/previewSparkWriting/contentComponent';
-import { grammarCheck, previewTest, proofReadingCountUpdate } from './api/GrammarApi';
+import { grammarCheck, grammarReset, previewTest, proofReadingCountUpdate } from './api/GrammarApi';
 import useGrammarStore from '../../store/useGrammarStore';
 import GrammarContentComponent from '../../components/pageComponents/previewSparkWriting/grammarContentComponent';
 import { isEqual } from 'lodash';
@@ -23,7 +23,8 @@ const PreviewSparkWriting = (props:any) => {
         setSelectBoxUnit,
         setProofreadingCount,
         setOutlineInputText,
-        setSparkWritingDataFromAPI
+        setSparkWritingDataFromAPI,
+        setProofreadingCountReset
     } = useSparkWritingStore();
     // Nav Store
     const {setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString} = useNavStore();
@@ -182,6 +183,7 @@ const PreviewSparkWriting = (props:any) => {
     // AI Proofreading Events
     const AIProofreadingOnClickEvent = () => setShowAIProofreadingModal(true);
     const AIProofreadingClose = () => setShowAIProofreadingModal(false);
+
     const AIProofreadingYesOnClick = async () => {
         // 추가 로직
         // grammar 시작 후
@@ -882,6 +884,46 @@ const PreviewSparkWriting = (props:any) => {
                             })
                         }}>AI Proofreading</button>
                     }
+                    {/* 임시 버튼 - will del */}
+                    {!isSubmitted &&
+                        <button className={!isSubmitted 
+                            ?`${sparkWritingData[unitIndex].proofreading_count===2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                            :'hidden'
+                        } 
+                        onClick={()=>{
+                            if (sparkWritingData[unitIndex].proofreading_count===2) {
+                                commonAlertOpen({
+                                    messages: [
+                                        '임시 리셋 기능입니다.',
+                                    ],
+                                    yesButtonLabel: 'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        
+                                        const data = {
+                                            "student_code": userInfo.userCode,
+                                            "unit_id": sparkWritingData[unitIndex].unit_id,
+                                            "proofreading_count": 0
+                                        }
+                                        console.log('data =',data)
+                                        const reset = await grammarReset(data);
+                                        console.log('reset =',reset)
+                                        if (reset.statusCode === 200) {
+                                            setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);
+                                            
+                                            setBodyHistory({
+                                                title: { past: [], present: [], future: [] },
+                                                body:{ past: [], present: [], future: [] }
+                                            })
+                                            await beforeRenderedFn();
+                                        } 
+                                        
+                                    }
+                                })
+                            }
+                        }}>Reset AI Count</button>
+                    }
+
                     {!isSubmitted &&
                         <button className={ !isSubmitted ?`${(openSubmitButton)?'save-button-active div-to-button-hover-effect': (countofUseAIProofreading>0 ?'save-button-active div-to-button-hover-effect':'hidden')}`:'hidden'} onClick={()=>{
                             const checkGrammarsSelectAll = checkSelectedGrammarModals();

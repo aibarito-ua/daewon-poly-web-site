@@ -382,6 +382,24 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
         }
         return isAvailable;
     },
+    setProofreadingCountReset: (unitId:number) => {
+        let isAvailable = true;
+        const getCurrentData = get().sparkWritingData.map((item) => {
+            if (item.unit_id === unitId) {
+                const currentProofReadingCount = item.proofreading_count;
+                if (currentProofReadingCount < 2) {
+                    item.proofreading_count =0;
+                } else {
+                    isAvailable=false;
+                }
+            }
+            return item;
+        });
+        if (isAvailable) {
+            set(()=>({sparkWritingData:getCurrentData}))
+        }
+        return isAvailable;
+    },
     // {
     //     "status": 0,
     //   "reason": "not started",

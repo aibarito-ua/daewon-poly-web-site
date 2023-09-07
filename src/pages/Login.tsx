@@ -44,7 +44,7 @@ export const Login = () => {
             return res
         });
             
-        const rnData = {userInfo:response}
+        const rnData = {userInfo:response, loginValues}
         
         const varUserAgent = navigator.userAgent.toLowerCase();
         if (RN.RNWebView.checkMobiles(varUserAgent)) {
@@ -160,22 +160,25 @@ export const Login = () => {
         const messageData = JSON.stringify(data);
         window.ReactNativeWebView.postMessage(messageData);
     };
-    const receiveMessage = (event:any) => {
+    const receiveMessage = async (event:any) => {
         console.log('Receive message data =',event.data);
         
         if (loginValues.username===''&&loginValues.password==='') {
             const rnData = JSON.parse(JSON.stringify(event.data));
             // auto login
             const autoLoginValue = rnData['loginValues']
+            console.log('receive device id =',autoLoginValue)
             if (autoLoginValue) {
                 setLoginValues(autoLoginValue);
             }
             const deviceIdCheck = rnData['deviceId']
+            console.log('receive device id =',deviceId)
             if (deviceIdCheck && deviceIdCheck!=='') {
                 setDeviceId(deviceIdCheck)
             } else {
 
             }
+            await forceLogin();
         }
     };
 
