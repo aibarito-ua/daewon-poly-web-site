@@ -17,6 +17,7 @@ export const Login = () => {
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
     const [deviceId,setDeviceId] = React.useState<string>('test');
+    const [saveId, setSaveId] = React.useState<boolean>(false)
     const {
         commonAlertOpen
     } = useControlAlertStore();
@@ -38,14 +39,17 @@ export const Login = () => {
     const goPasswordUpdatePage = () => {
         window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW, "_blank", "noopener, noreferrer" )
     }
-    const forceLogin = async () => {
-        const response = await forcedLoginAPI(loginValues.username, loginValues.password, deviceId).then((res) => {
+    const forceLogin = async (loginvalues: {username: string, password: string}, deviceid: string, saveid: boolean) => {
+        console.log('loggin in with', loginvalues)
+        const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             // alert('response ='+res)
             return res
         });
+        if(!response) 
+            return
             
-        const rnData = {userInfo:response, loginValues}
-        
+        const rnData = {userInfo:response, loginValues: loginvalues, saveId: saveid}
+
         const varUserAgent = navigator.userAgent.toLowerCase();
         if (RN.RNWebView.checkMobiles(varUserAgent)) {
             sendMessage(rnData);
@@ -128,7 +132,7 @@ export const Login = () => {
                             })
                         } else {
                             // 정상 로그인
-                            forceLogin()
+                            forceLogin(loginValues, deviceId, saveId)
                         }
                     } // end password 6month check
                 } // end target check
@@ -162,23 +166,29 @@ export const Login = () => {
     };
     const receiveMessage = async (event:any) => {
         console.log('Receive message data =',event.data);
-        
+        if(typeof event.data !== 'string')
+            return
+
+        const data = JSON.parse(event.data)
         if (loginValues.username===''&&loginValues.password==='') {
-            const rnData = JSON.parse(JSON.stringify(event.data));
+            const rnData = JSON.parse(JSON.stringify(data));
             // auto login
             const autoLoginValue = rnData['loginValues']
-            console.log('receive device id =',autoLoginValue)
             if (autoLoginValue) {
                 setLoginValues(autoLoginValue);
             }
             const deviceIdCheck = rnData['deviceId']
-            console.log('receive device id =',deviceId)
             if (deviceIdCheck && deviceIdCheck!=='') {
                 setDeviceId(deviceIdCheck)
             } else {
 
             }
-            await forceLogin();
+            if(rnData['saveId']) {
+                setSaveId(rnData['saveId'])
+            }
+
+            // we use rnData, because react state is updated in the next render cycle
+            await forceLogin(rnData['loginValues'], rnData['deviceId'], rnData['saveId'])
         }
     };
 
@@ -193,25 +203,25 @@ export const Login = () => {
             setDeviceId('');
         }
     }
-    React.useEffect(()=>{
-        const varUserAgent = navigator.userAgent.toLowerCase();
-        const sendData = {"userInfo":userInfo,"loginValues":loginValues}
+    // React.useEffect(()=>{
+    //     const varUserAgent = navigator.userAgent.toLowerCase();
+    //     const sendData = {"userInfo":userInfo,"loginValues":loginValues}
 
-        if (RN.RNWebView.checkAdroid(varUserAgent)) {
-            // android
-            document.addEventListener('message', receiveMessage);
-            sendMessage(sendData)
-        } else if (RN.RNWebView.checkiOS(varUserAgent)) {
-            // iOS
-            window.addEventListener('message', receiveMessage);
-            sendMessage(sendData)
-        }
+    //     if (RN.RNWebView.checkAdroid(varUserAgent)) {
+    //         // android
+    //         document.addEventListener('message', receiveMessage);
+    //         sendMessage(sendData)
+    //     } else if (RN.RNWebView.checkiOS(varUserAgent)) {
+    //         // iOS
+    //         window.addEventListener('message', receiveMessage);
+    //         sendMessage(sendData)
+    //     }
 
-        return () => {
-            document.removeEventListener('message', receiveMessage);
-            window.removeEventListener('message', receiveMessage)
-        }
-    }, [userInfo])
+    //     return () => {
+    //         document.removeEventListener('message', receiveMessage);
+    //         window.removeEventListener('message', receiveMessage)
+    //     }
+    // }, [userInfo])
 
     
     React.useEffect(()=>{
@@ -221,7 +231,8 @@ export const Login = () => {
         // alert(varUserAgent)
         if (RN.RNWebView.checkAdroid(varUserAgent)) {
             // android
-            document.addEventListener('message', receiveMessage);
+            // document.addEventListener('message', receiveMessage);
+            window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
         } else if (RN.RNWebView.checkiOS(varUserAgent)) {
             // iOS
@@ -291,8 +302,9 @@ export const Login = () => {
                                 <input id="login-save-id-checkbox" type='checkbox' 
                                     className='flex rounded-[5px] w-[20px] h-[20px] text-[#25358c] border-[#dddddd] focus:ring-transparent focus:ring-0'
                                     onChange={(value)=>{
-                                        console.log(value.currentTarget.value)
+                                        setSaveId(!saveId)
                                     }}
+                                    checked={saveId}
                                 />
                                 <label htmlFor="login-save-id-checkbox" className='ml-[8px] font-normal text-[14px] select-none hover:cursor-pointer'>{'아이디 저장'}</label>
                         </div>

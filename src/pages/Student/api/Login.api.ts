@@ -19,7 +19,7 @@ export async function loginAPI(username:string, password:string, device_id:strin
 
 export async function forcedLoginAPI(username:string, password:string, device_id:string):Promise<any>{
     const reqUrl = CONFIG.LOGIN.POST.FORCE_URL;
-    const data = {username, password, device_id:'test'};
+    const data = {username, password, device_id};
     return await axios.post(reqUrl, data, {
         headers: {
             Accept: 'application/json',
