@@ -102,6 +102,9 @@ const NavAside = () => {
                         logoutAPI(userInfo.userCode, device_id)
                         if(isMobile)
                             window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+                        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+                            (window as any).api.toElectron.send('clear')
+                        }
                         window.location.reload()
                     }}/>
                     
