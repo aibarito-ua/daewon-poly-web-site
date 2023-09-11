@@ -17,9 +17,7 @@ export const Login = () => {
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
-    // const [deviceId,setDeviceID] = React.useState<string>('test');
     const [saveId, setSaveId] = React.useState<boolean>(false)
-    // const [isMobile, setIsMobile] = React.useState<boolean>(false)
 
     const {
         commonAlertOpen
@@ -55,13 +53,15 @@ export const Login = () => {
 
         if (isMobile) {
             sendMessage(rnData);
+        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('saveUser', rnData)
         }
         setSelectMenu('WritingClinic')
         setUserInfo(response)
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(isMobile) {
+        if(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
 
         } else {
             await fetchIpAddress();
@@ -199,6 +199,25 @@ export const Login = () => {
         }
     };
 
+    // electron js
+    const receiveElectronData = async (data: any) => {
+        const autoLoginValue = data['loginValues']
+        if(autoLoginValue) {
+            setLoginValues(autoLoginValue)
+        }
+        const deviceIdCheck = data['deviceId']
+        if (deviceIdCheck && deviceIdCheck!=='') {
+            setDeviceId(deviceIdCheck)
+        }
+        if(data['saveId']) {
+            setSaveId(data['saveId'])
+        }
+        if(data['userInfo']) {
+            setUserInfo(data['userInfo'])
+        }
+        await forceLogin(data['loginValues'], data['deviceId'], data['saveId'])
+    }
+
     // is not mobile id
     const fetchIpAddress = async () => {
         const response = await fetch('https://api64.ipify.org?format=json').then((res) => {return res}).catch((rej) => {return ''});
@@ -222,6 +241,10 @@ export const Login = () => {
             setMobile(true)
             window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
+        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            const electronData = (window as any).api.toElectron.sendSync('autologin')
+            console.log('electron data:', electronData)
+            receiveElectronData(electronData)
         } else {
             fetchIpAddress();
         }
