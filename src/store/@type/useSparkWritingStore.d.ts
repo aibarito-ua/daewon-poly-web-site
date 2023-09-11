@@ -39,13 +39,22 @@ type TDraftStatus = {
     temp_save_date: string|null;
     review_reject_date: string|null;
     review_complete_date: string|null;
+    overall_comment: string;
+    return_reason: string;
+    return_teacher_comment: string;
 }
 type TSparkWritingDataOutline = {
-    heading_content: string;
-    input_content:string;
     name: string;
     order_index: number;
+    heading_content: string;
+    input_content:string;
     grammar_correction_content_student: string;
+    screen_data: TScreenData[];
+}
+type TScreenData = {
+    type: number;
+    text:string;
+    comment_index: number
 }
 
 // save draft temporary 

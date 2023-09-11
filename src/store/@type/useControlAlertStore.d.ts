@@ -19,6 +19,10 @@ interface IUseControlAlertStore {
     commonStandbyScreen: TCommonStandbyScreen,
     setCommonStandbyScreen: (controlData:TCommonStandbyScreen) => void;
 
+    // return 1st draft reason alert
+    return1stDraftReasonAlert: TReturn1stDraftReasonAlertValue,
+    setReturn1stDraftReasonAlertOpen: (value:TReturn1stDraftReasonAlertValue) => void;
+
     // unit report modal
     unitReportModalData: TUnitReportModalData,
     unitReportModal: TUnitReportModal,
@@ -30,6 +34,13 @@ interface IUseControlAlertStore {
     
 }
 type TAlertType = ''|'warning'|'continue';
+type TReturn1stDraftReasonAlertValue = {
+    openFlag: boolean;
+    returnReason: string;
+    returnTeacherComment: string;
+    yesEvent?:Function,
+    NoEvent?:Function,
+}
 type TCommonAlertOpenOptions = {
     head?:string,
     yesButtonLabel?:string,

@@ -60,6 +60,18 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         }))
     },
 
+    // return 1st draft reason alert
+    return1stDraftReasonAlert: {
+        openFlag:false,
+        returnReason: '',
+        returnTeacherComment: '',
+    },
+    
+    setReturn1stDraftReasonAlertOpen: (value) => {
+        set(()=>({return1stDraftReasonAlert:value}))
+    },
+
+
     // unit report modal controller 
     unitReportModalData : {
         wordCountSummary: {

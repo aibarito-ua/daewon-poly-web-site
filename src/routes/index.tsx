@@ -22,6 +22,7 @@ import CommonAlertModalComponent from '../components/toggleModalComponents/Commo
 import StandbyScreen from '../components/commonComponents/standby/StandbyScreen';
 import Progress from '../pages/Student/Progress';
 import UnitReportModalComponent from '../components/toggleModalComponents/UnitReportModalComponent';
+import ReturnFeedbackModalComponent from '../components/toggleModalComponents/ReturnFeedbackModalComponent';
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
@@ -87,6 +88,7 @@ export default function Roter() {
                 <CommonAlertModalComponent />
                 <StandbyScreen />
                 <UnitReportModalComponent />
+                <ReturnFeedbackModalComponent />
             </div>
           
         </div>

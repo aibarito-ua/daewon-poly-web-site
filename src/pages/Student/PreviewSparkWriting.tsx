@@ -753,6 +753,10 @@ const PreviewSparkWriting = (props:any) => {
             if (countofUseAIProofreading > 0) {
                 setIsSubmitted(false)
             }
+        } else {
+            if (sparkWritingData[unitIndex].draft_1_status.status===5) {
+                setIsSubmitted(false)
+            }
         }
         console.log('submit ==',isSubmitted)
         console.log('submit ==',sparkWritingData[unitIndex].proofreading_count)
@@ -978,11 +982,13 @@ const PreviewSparkWriting = (props:any) => {
                                             proofreading_count: currentSparkWritingData.proofreading_count
                                         }
                                         console.log('submit item = ',submitData)
+                                        commonAlertClose();
                                         setCommonStandbyScreen({openFlag:true})
                                         const submit = await draft1stSubmit(submitData);
-                                        setCommonStandbyScreen({openFlag:false})
+                                        
                                         console.log('submit return data =',submit)
                                         if (submit) {
+                                            setCommonStandbyScreen({openFlag:false})
                                             commonAlertOpen({
                                                 useOneButton:true,
                                                 yesButtonLabel: 'OK',

@@ -113,12 +113,12 @@ export default function SelectUnit () {
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
-                            } else if (firstDraft > 1 && firstDraft < 5) {
+                            } else if (firstDraft === 2|| firstDraft === 3) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
                             } else if (firstDraft === 5) {
                                 // 1차 재학습 -> 편집 가능
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
-                            } else {
+                            } else if (firstDraft === 4) {
                                 // 2차 진입 가능
                             }
     
@@ -126,13 +126,14 @@ export default function SelectUnit () {
                             // 2차 진입 가능
                             if (secondDraft === 0) {
                                 // 2차 진행 -> 편집 가능
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
                             } else if (secondDraft === 1) {
                                 // 2차 임시저장 -> 편집 가능
-                            } else if (secondDraft > 1 && secondDraft < 5) {
+                            } else if (secondDraft === 2 || secondDraft === 3) {
                                 // 2차 완료(submit) -> 편집 x, 뷰잉만
                             } else if (secondDraft === 5) {
                                 // 2차 재학습 -> 편집 가능
-                            } else {
+                            } else if (secondDraft === 4) {
                                 // -> final
                             }
                         } else if (firstFeedback && secondFeedback) {

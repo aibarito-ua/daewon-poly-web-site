@@ -102,7 +102,7 @@ export default function FormDialog() {
   return (
     <div className='flex'>
     <button 
-        className={`chatbot-modal-button`}
+        className={open ? `chatbot-modal-button`:'chatbot-modal-button-inactive'}
         // className='relative z-50'
         onClick={handleClickOpen}
     ></button>

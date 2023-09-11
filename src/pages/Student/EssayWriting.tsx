@@ -13,6 +13,7 @@ import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import { callUnitInfobyStudent, draftSaveTemporary } from './api/EssayWriting.api';
+import TooltipOverallCommentComponent, { ArrowBubble } from '../../components/toggleModalComponents/TooltipOverallCommentComponent';
 interface IDUMPOutlineItem {
     name:string;
     CheckWriting: string;
@@ -40,6 +41,14 @@ const EssayWriting = () => {
     // 비교할 원본 데이터
     const [originalTargetData, setOriginalTargetData] = React.useState<TSparkWritingDatas>([]);
 
+    // 1st overall comment
+    const [overallComment1stDraft, setOverallComment1stDraft] = React.useState<{open:boolean, content: string}>({content:'', open: false});
+    // overall button ref
+    const overallCommentButtonRef = React.useRef<HTMLDivElement|null>(null);
+    // unit status
+    // const [draft1stStatus, setDraft1stStatus] = React.useState<TDraftStatus>();
+    // const [draft2ndStatus, setDraft2ndStatus] = React.useState<TDraftStatus>();
+
     // user info
     const {
         userInfo
@@ -63,7 +72,7 @@ const EssayWriting = () => {
     const navigate = useNavigate();
     // current role
     const {role} = useLoginStore();
-    const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen} = useControlAlertStore();
+    const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen} = useControlAlertStore();
 
     const pageInitSetting = async () => {
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
@@ -74,12 +83,33 @@ const EssayWriting = () => {
         })
     }
     useComponentWillMount(async ()=>{
-        // console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
+        console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
+        const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
         setCommonStandbyScreen({openFlag:true})
+        if (draft1stStatus.status === 5) {
+            setCommonStandbyScreen({openFlag:false})
+            // return submit
+            setReturn1stDraftReasonAlertOpen({
+                openFlag:true, 
+                returnReason: draft1stStatus.return_reason,
+                returnTeacherComment: draft1stStatus.return_teacher_comment,
+                NoEvent:()=>{
+                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                },
+                yesEvent:()=>{
+
+                }
+            })
+        } else if (draft1stStatus.status===4) {
+            // 1차 완료 , 2차 시작 init 
+            setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+        }
+        
         const init = await pageInitSetting()
         if (init) {
             setCommonStandbyScreen({openFlag:false})
         }
+        
         
         return ()=>{
             setIsSaved(false);
@@ -266,6 +296,7 @@ const EssayWriting = () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
         const originalTarget = originalTargetData[parseInt(UnitIndex)-1];
+        console.log('originalTarget =',originalTarget)
         let checkFlag = false;
         const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item, itemIndex) => {
             const input_content = item.input_content.replace(/\s{2,}/g, ' ');
@@ -341,11 +372,8 @@ const EssayWriting = () => {
             </div>
         })
     }
-    return (
-        <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
-            <div className='absolute w-fit h-fit top-[15px] right-[20px]'>
-                <FormDialog />
-            </div>
+    const Draft1stWritingPage = () => {
+        return (
             <div className='wrap-contain-spark-writing'>
                 {/* guide text */}
                 <div className='wrap-guide-text-spark-writing'>
@@ -409,6 +437,63 @@ const EssayWriting = () => {
                     }}>Preview</div>
                 </div>
             </div>
+        )
+    }
+
+    const Draft2ndWritingPage = () => {
+        const draftItem = sparkWritingData[parseInt(UnitIndex)-1];
+        return (
+            <div className='wrap-contain-spark-writing'>
+                <div className='wrap-guide-2nd-top-text-spark-writing'>{'Check your teacher’s feedback and work on your 2nd draft.'}</div>
+                <div className='flex flex-row w-full gap-[10px] mt-[10px]'>
+                    <div className='flex flex-col flex-1'>
+                        {/* guide text */}
+                        <div className='wrap-guide-2nd-text-spark-writing'>
+                            {'teacher feedback'}
+                        </div>
+                        <div className='wrap-content-2nd-spark-writing'>
+                            {/* <div className='flex '>{draftItem.draft_1_outline[0]}</div> */}
+                        </div>
+                    </div>
+                    <div className='flex flex-col flex-1'>
+                        <div className='wrap-guide-2nd-text-spark-writing'>
+                            {'2nd draft'}
+                        </div>
+                        <div className='wrap-content-2nd-spark-writing'></div>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+    return (
+        <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
+            {/* draft 1 => chat */}
+            {DraftIndex === '1' && (
+                <div className='absolute w-fit h-fit top-[15px] right-[20px] overfl'>
+                    <FormDialog />
+                </div>
+            )}
+            {/* draft 2 => overall comment */}
+            {DraftIndex === '2' && overallComment1stDraft.content!=='' && (
+                <div className='flex flex-row absolute w-fit h-fit top-[30px] right-[35px] gap-[50px] z-[50]'>
+                    <div className={overallComment1stDraft.open? 'overall-comment-2nd-draft-write-top-tooltip-content':'hidden'}>
+                        <span></span>
+                        {overallComment1stDraft.content}
+                        <span></span>
+                    </div>
+                    <div className='overall-comment-2nd-draft-write-top-button'
+                    onClick={()=>{
+                        setOverallComment1stDraft({
+                            content:overallComment1stDraft.content,
+                            open: !overallComment1stDraft.open
+                        });
+                    }}>{'overall comments'}</div>
+                </div>
+            )}
+
+            { DraftIndex==='1' && Draft1stWritingPage()}
+            { DraftIndex==='2' && Draft2ndWritingPage()}
         </section>
     )
 }
