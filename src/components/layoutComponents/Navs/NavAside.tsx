@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { navItems } from "../Nav";
 import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
 import { useComponentWillMount } from '../../../hooks/useEffectOnce';
+import { logoutAPI } from '../../../pages/Student/api/Login.api';
 
 
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
-    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser } = useLoginStore();
+    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser, userInfo, device_id, isMobile } = useLoginStore();
     // const [menuLocateValue, setMenuLocateValue] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
@@ -97,7 +98,12 @@ const NavAside = () => {
                     // onClick={()=>setLogoutUser()}>Logout</button>
                     
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
-                    onClick={()=>{window.location.reload()}}/>
+                    onClick={()=>{
+                        logoutAPI(userInfo.userCode, device_id)
+                        if(isMobile)
+                            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+                        window.location.reload()
+                    }}/>
                     
                 )}
             </div>

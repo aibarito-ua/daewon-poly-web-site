@@ -8,9 +8,12 @@ interface IUserInfo {
     role: TRole;
     isOpen: boolean;
     setIsOpen: any;
+    device_id: string;
+    isMobile: boolean;
+    setMobile: (v: boolean) => void;
     // setUserInfo: (userLoginInfomation: IUserLoginInfo)=>void;
     updateTryLoginCount: () => void;
-
+    setDeviceId: (id: string) => void;
     userInfo: TUserInfoData;
     setUserInfo: (userLoginInformation: TSetUserInfoData) => void;
     setLogoutUser: ()=>void;

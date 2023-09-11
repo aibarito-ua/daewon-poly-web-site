@@ -10,11 +10,16 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
     tryLoginCount: 0,
     // role: 'student',
     isOpen: false,
+    device_id: "",
+    isMobile: false,
     updateTryLoginCount: () => {
         const setCount = get().tryLoginCount+1;
         set(()=>({
             tryLoginCount: setCount
         }))
+    },
+    setMobile: (v) => {
+        set(()=>({isMobile:v}))
     },
     // setUserInfo: (userInfo:IUserLoginInfo) => {
 
@@ -29,7 +34,9 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
     setIsOpen: (boolean:boolean) => {
         set(()=>({isOpen:boolean}))
     },
-
+    setDeviceId: (id: string) => {
+        set(()=>({device_id:id}))
+    },
     userInfo: {
         accessToken:'',
         courseCode: '',

@@ -38,10 +38,10 @@ export const RN = {
             return userAgent.indexOf('android') > -1;
         },
         checkiOS: (userAgent:string) => {
-            return userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1 || userAgent.indexOf('ipod') > -1;
+            return userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1 || userAgent.indexOf('ipod') > -1 || userAgent.indexOf('ios') > -1;
         },
         checkMobiles: (userAgent:string) => {
-            return userAgent.indexOf('android') > -1 || userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1 || userAgent.indexOf('ipod') > -1;
+            return userAgent.indexOf('android') > -1 || userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1 || userAgent.indexOf('ipod') > -1 || userAgent.indexOf('ios') > -1;
         },
         checkMac: (userAgent:string) => {
             return userAgent.indexOf('mac') > -1

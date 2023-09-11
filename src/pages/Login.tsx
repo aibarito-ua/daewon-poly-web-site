@@ -8,16 +8,19 @@ import { forcedLoginAPI, loginAPI } from './Student/api/Login.api';
 import useControlAlertStore from '../store/useControlAlertStore';
 import { RN } from '../util/RN/commonPostMessage';
 import useNavStore from '../store/useNavStore';
+import { detect } from 'detect-browser';
 
 export const Login = () => {
-    const { userInfo, setUserInfo, setIsOpen, } = useLoginStore();
+    const { userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id } = useLoginStore();
     const {setSelectMenu} = useNavStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
-    const [deviceId,setDeviceId] = React.useState<string>('test');
+    // const [deviceId,setDeviceID] = React.useState<string>('test');
     const [saveId, setSaveId] = React.useState<boolean>(false)
+    // const [isMobile, setIsMobile] = React.useState<boolean>(false)
+
     const {
         commonAlertOpen
     } = useControlAlertStore();
@@ -50,8 +53,7 @@ export const Login = () => {
             
         const rnData = {userInfo:response, loginValues: loginvalues, saveId: saveid}
 
-        const varUserAgent = navigator.userAgent.toLowerCase();
-        if (RN.RNWebView.checkMobiles(varUserAgent)) {
+        if (isMobile) {
             sendMessage(rnData);
         }
         setSelectMenu('WritingClinic')
@@ -59,7 +61,11 @@ export const Login = () => {
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await fetchIpAddress();
+        if(isMobile) {
+
+        } else {
+            await fetchIpAddress();
+        }
         // alert(deviceId)
         const errors = validate()
         setErrors(errors);
@@ -67,7 +73,7 @@ export const Login = () => {
             return;
         } else {
             // alert(JSON.stringify(loginValues, null, 2))
-            const response = await loginAPI(loginValues.username, loginValues.password, 'test');
+            const response = await loginAPI(loginValues.username, loginValues.password, device_id);
             console.log('login =',response)
             // alert(response)
             // 1 비밀번호 체크 
@@ -126,13 +132,13 @@ export const Login = () => {
                                 alertType: 'warning',
                                 messages: ['다른 기기에서 로그인 중입니다.','강제 로그아웃하고 현재 기기에서 로그인하시겠습니까?'],
                                 yesButtonLabel: 'yes',
-                                yesEvent: forceLogin,
+                                yesEvent: () => forceLogin(loginValues, device_id, saveId),
                                 noButtonLabel: 'no',
                                 
                             })
                         } else {
                             // 정상 로그인
-                            forceLogin(loginValues, deviceId, saveId)
+                            forceLogin(loginValues, device_id, saveId)
                         }
                     } // end password 6month check
                 } // end target check
@@ -180,11 +186,12 @@ export const Login = () => {
             const deviceIdCheck = rnData['deviceId']
             if (deviceIdCheck && deviceIdCheck!=='') {
                 setDeviceId(deviceIdCheck)
-            } else {
-
             }
             if(rnData['saveId']) {
                 setSaveId(rnData['saveId'])
+            }
+            if(rnData['userInfo']) {
+                setUserInfo(rnData['userInfo'])
             }
 
             // we use rnData, because react state is updated in the next render cycle
@@ -203,51 +210,28 @@ export const Login = () => {
             setDeviceId('');
         }
     }
-    // React.useEffect(()=>{
-    //     const varUserAgent = navigator.userAgent.toLowerCase();
-    //     const sendData = {"userInfo":userInfo,"loginValues":loginValues}
 
-    //     if (RN.RNWebView.checkAdroid(varUserAgent)) {
-    //         // android
-    //         document.addEventListener('message', receiveMessage);
-    //         sendMessage(sendData)
-    //     } else if (RN.RNWebView.checkiOS(varUserAgent)) {
-    //         // iOS
-    //         window.addEventListener('message', receiveMessage);
-    //         sendMessage(sendData)
-    //     }
-
-    //     return () => {
-    //         document.removeEventListener('message', receiveMessage);
-    //         window.removeEventListener('message', receiveMessage)
-    //     }
-    // }, [userInfo])
-
-    
     React.useEffect(()=>{
-        const varUserAgent = navigator.userAgent.toLowerCase();
-        console.log('var user agent::',varUserAgent)
         const sendData = "AutoLogin"
-        // alert(varUserAgent)
-        if (RN.RNWebView.checkAdroid(varUserAgent)) {
-            // android
-            // document.addEventListener('message', receiveMessage);
+        // alert(window.navigator.userAgent)
+        const browser = detect()
+        // alert(JSON.stringify(browser))
+        if (browser?.name === 'chromium-webview'||browser?.name==='ios-webview') {
+            // mobile
+            // alert('mobile')
+            setMobile(true)
             window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
-        } else if (RN.RNWebView.checkiOS(varUserAgent)) {
-            // iOS
-            window.addEventListener('message', receiveMessage);
-            sendMessage(sendData)
-        } else if (RN.RNWebView.checkMac(varUserAgent)) {
-            fetchIpAddress();
-        } else if (RN.RNWebView.checkWindows(varUserAgent)) {
+        } else {
             fetchIpAddress();
         }
 
         return () => {
             setSelectMenu('WritingClinic')
-            document.removeEventListener('message', receiveMessage);
-            window.removeEventListener('message', receiveMessage)
+            if (isMobile) {
+                document.removeEventListener('message', receiveMessage);
+                window.removeEventListener('message', receiveMessage)
+            }
         }
     },[])
 
