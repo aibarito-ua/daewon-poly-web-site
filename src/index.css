@@ -435,6 +435,17 @@ body {
   px-[20px]
   pb-[30px]
 }
+.wrap-contain-2nd-spark-writing {
+  @apply
+  w-[calc(100%)]
+  h-[calc(100%)]
+  flex flex-1
+  flex-col
+  z-0
+  pt-[0px]
+  px-[20px]
+  pb-[0px]
+}
 .wrap-guide-2nd-top-text-spark-writing {
   font-family: 'Roboto';
   font-size: 16px;
@@ -458,6 +469,7 @@ body {
   letter-spacing: normal;
   text-align: center;
   @apply
+  relative
   flex flex-row
   justify-center
   items-center
@@ -498,7 +510,7 @@ body {
   overflow-y-auto
   z-0
   rounded-b-[20px]
-  gap-[40px]
+  gap-[15px]
   p-[20px]
 }
 .wrap-content-spark-writing {
@@ -2144,4 +2156,144 @@ bg-[#ffea2c]
   overflow-y-auto
   overflow-x-hidden
   bg-white
+}
+.update-words {
+  @apply
+  h-fit
+}
+
+.teacher-feedback-title-font {
+  font-family: 'Roboto';
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.22;
+  @apply
+  text-[#333]
+  flex
+  py-[9px]
+  px-[10px]
+  border-[2px]
+  border-[#3e61aa]
+  rounded-[15px]
+  bg-white
+}
+.teacher-feedback-body-font {
+  font-family: 'Roboto';
+  font-size: 18px;
+  text-align: left;
+  font-weight: 400;
+  line-height: 1.22;
+  @apply
+  text-[#333]
+  flex
+  flex-col
+  gap-[13px]
+  justify-start
+  bg-white
+}
+.draft-2nd-title-font {
+  font-family: 'Roboto';
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.22;
+  @apply
+  text-[#333]
+  flex
+  border-[2px]
+  border-[#3e61aa]
+  rounded-[15px]
+  bg-white
+}
+.draft-2nd-title-wrap-textarea {
+  @apply
+  w-full
+  resize-none
+  border-none
+  focus:border-none
+  focus:ring-0
+  py-[9px]
+  px-[10px]
+  rounded-[15px]
+}
+.draft-2nd-body-wrap-textarea {
+  @apply
+  w-full
+  h-full
+  resize-none
+  border-none
+  focus:border-none
+  focus:ring-0
+  p-0
+
+}
+.draft-title-paragragh-wrap {
+  @apply
+  text-left
+}
+.draft-hover-tooltip-content-wrap {
+  @apply
+  w-fit
+  h-fit
+  p-[10px]
+  border-[2px]
+  border-[#f1b02e]
+  bg-white
+  rounded-[5px]
+}
+
+.draft-teacher-feedback-title-docs-find-button {
+  @apply
+  absolute
+  top-[7px]
+  right-[15px]
+  w-[36px]
+  h-[36px]
+  bg-no-repeat
+  bg-teacher-feedback-more-comment-detail-button-icon
+}
+
+.draft-2nd-select-button-fresh {
+  @apply
+  w-[250px]
+  h-[73px]
+  bg-no-repeat
+  bg-draft-2nd-fresh-page-button-svg
+  hover:cursor-pointer
+}
+.draft-2nd-select-button-revise {
+  @apply
+  w-[250px]
+  h-[73px]
+  bg-no-repeat
+  bg-draft-2nd-revise-1st-button-svg
+  hover:cursor-pointer
+}
+.draft-2nd-button-wrap {
+  @apply
+  w-[140px]
+  h-[49px]
+  bg-no-repeat
+  hover:cursor-pointer
+}
+.draft-2nd-save-button {
+  @apply
+  draft-2nd-button-wrap
+  bg-draft-2nd-save-button-svg
+}
+.draft-2nd-save-button-readonly {
+  @apply
+  draft-2nd-button-wrap
+  bg-draft-2nd-save-button-readonly-svg
+}
+.draft-2nd-submit-button {
+  @apply
+  draft-2nd-button-wrap
+  bg-draft-2nd-submit-button-svg
+}
+.draft-2nd-submit-button-readonly {
+  @apply
+  draft-2nd-button-wrap
+  bg-draft-2nd-submit-button-readonly-svg
 }

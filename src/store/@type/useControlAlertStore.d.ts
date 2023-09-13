@@ -1,6 +1,6 @@
 interface IUseControlAlertStore {
     commonAlertOpenFlag: boolean;
-    commonAlertMessage: string[]|JSX.Element[];
+    commonAlertMessage: (string|JSX.Element)[];
     commonAlertControllerFlag : number;
     commonAlertHeadTitle:string;
     commonAlertYesLabel:string;
@@ -45,7 +45,7 @@ type TCommonAlertOpenOptions = {
     head?:string,
     yesButtonLabel?:string,
     noButtonLabel?:string,
-    messages?:string[]|JSX.Element[],
+    messages?:(string|JSX.Element)[],
     yesEvent?:Function,
     closeEvent?:Function,
     useOneButton?:boolean,

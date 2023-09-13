@@ -20,7 +20,20 @@ interface ISparkWritingStore {
     // proof reading count update => boolean
     setProofreadingCount: (unitId: number) => boolean;
     setProofreadingCountReset: (unitId:number) => boolean;
+
+    // draft select student display steps
+    feedbackDataInStudent: TFeedbackStates;
+    setFeedbackDataInStudent: (data:TFeedbackStates) => void;
+
+    // 2nd draft Fresh Page or Revise 1st Draft flag
+    draft2ndPageSet:TDraft2ndPageSet,
+    setDraft2ndPageSet: (draft2ndPageSet:TDraft2ndPageSet) => void;
+
+    // control modal
+    commentFocusId: string;
+    setCommentFocusId: (setCommentFocusId:string) => void;
 }
+type TDraft2ndPageSet = 'fresh'|'revise'|'';
 type TSparkWritingDatas = TSparkWritingData[]
 type TSparkWritingData = {
     unit_id: number;
@@ -31,6 +44,9 @@ type TSparkWritingData = {
     draft_2_status: TDraftStatus;
     draft_1_outline: TSparkWritingDataOutline[];
     draft_2_outline: TSparkWritingDataOutline[];
+    draft_1_comment: TCommentDataList;
+    draft_2_comment: TCommentDataList;
+    draft_2_init_page_flag: TDraft2ndPageSet;
 }
 type TDraftStatus = {
     status: number;
@@ -66,6 +82,7 @@ type TSparkWritingTemporarySaveData = {
     unit_id: number;
     draft_index: number;
     proofreading_count: number;
+    draft_init_page_flag?: string;
     contents: TSparkWritingSaveTemporaryContent[];
 }
 type TSparkWritingSaveTemporaryContent = {
@@ -145,4 +162,100 @@ type TSubmit1stDraftReqDataContent = {
     grammar_correction_content_student:string;
     heading_name: string;
     order_index: number;
+}
+type TSubmit2ndDraftReqDataContent = {
+    input_content:string;
+    heading_name: string;
+    order_index: number;
+}
+type TSubmit2ndDraftRequestData = {
+    student_code: string;
+    student_name_en: string;
+    student_name_kr: string;
+    unit_id: number;
+    draft_index: number;
+    contents: TSubmit2ndDraftReqDataContent[];
+}
+// Draft feedback type
+type TFeedbackStates = {
+    defautInfo: TFeedbackDefaultInfomations;
+    draft_data: TFindDraftInfoByDraftIdResponse;
+    comment: [];
+    overall_comment: string;
+    status: TLMSparkWritingStudentUnitDraft1StatusItemInClass|null
+}
+type TFeedbackDefaultInfomations = {
+    campus: TFeedbackfilteredDatas;
+    level: TFeedbackfilteredDatas;
+    class: TFeedbackfilteredDatas;
+    student_code: string;
+    student_name: TNamesetData;
+    divison: string;
+    book_name: string;
+    unit_index: number;
+    unit_topic: string;
+    step_label: string; // "1st or 2nd draft"
+    submit_date: string;
+    select_draft_id: string;
+}
+type TFeedbackfilteredDatas = {
+    code: string;
+    name: string;
+}
+type TNamesetData = {
+    student_name_kr:string;
+    student_name_en:string
+}
+// find draft by draft id
+type TFindDraftInfoByDraftIdResponse = {
+    comment: TCommentDataList
+    draft_index: number;
+    draft_outline: TFindDraftInfoByDraftIdDraftOutline[];
+    overall_comment: string;
+    return_reason:string;
+    return_teacher_comment:string;
+}
+type TFindDraftInfoByDraftIdDraftOutline = {
+    grammar_correction_content_teacher: string;
+    input_content: string;
+    name: string;
+    order_index:number;
+    screen_data: TParagraphScreenData[]
+}
+// "comment"
+type TCommentDataList = TCommentData[];
+type TCommentData = {
+    comment: string;
+    comment_className: string;
+    comment_index: number;
+    start_index: number;
+    end_index: number;
+    paragraph_name: string;
+    target_text: string;
+}
+type TParagraphScreenData = {
+    type:-1|0|1|number;
+    text: string;
+    comment_index: number;
+}
+
+type TLMSparkWritingStudentUnitDraft1StatusItemInClass = {
+    draft_id: number;
+    reason: string;
+    status: number;
+    review_complete_date:string|null;
+    review_reject_date:string|null;
+    review_temp_save_date:string|null;
+    submit_date:string|null;
+    temp_save_date:string|null;
+}
+type TLMSparkWritingStudentUnitDraft2StatusItemInClass = {
+    draft_id: number;
+    reason: string;
+    status: number;
+    review_complete_date:string|null;
+    review_reject_date:string|null;
+    review_temp_save_date:string|null;
+    submit_date:string|null;
+    temp_save_date:string|null;
 }

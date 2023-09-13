@@ -300,12 +300,13 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
         draft:number
     )=>{
         console.log('setOutlineInputText ====\n===input text =',inputText)
-        inputText = inputText.replace(/\s{2,}/g, ' ');
+        
         let dumyUnitData = get().sparkWritingData.map((unitItem) => {
             if (unitItem.unit_id !== unitId) {
                 return unitItem;
             } else {
                 if (draft === 1) {
+                    inputText = inputText.replace(/\s{2,}/g, ' ');
                     const outlineItem = unitItem.draft_1_outline.map((draftItem) => {
                         const targetOrderIdx = draftItem.order_index;
                         if (targetOrderIdx === orderIndex) {
@@ -318,6 +319,8 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     unitItem.draft_1_outline=outlineItem;
                     return unitItem;
                 } else {
+                    // [^\S\n]{2,}
+                    inputText = inputText.replace(/[^\S\n]{2,}/g, ' ');
                     const outlineItem = unitItem.draft_2_outline.map((draftItem) => {
                         const targetOrderIdx = draftItem.order_index;
                         if (targetOrderIdx === orderIndex) {
@@ -332,6 +335,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                 }
             }
         });
+        console.log('title ===',dumyUnitData)
         if (orderIndex===0) {
             console.log('title ===',dumyUnitData)
         }
@@ -432,6 +436,42 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     // }
 //    temp_save_date > submit_date > review_reject_date > review_complete_date
     sparkWritingData: [],
+
+    // student's feedback 
+    feedbackDataInStudent: {
+        defautInfo: {
+            campus: {code:'',name:''},
+            level: {code:'',name:''},
+            class: {code:'',name:''},
+            student_code: '',
+            student_name: {student_name_en:'',student_name_kr:''},
+            divison: '',
+            book_name: '',
+            unit_index: 0,
+            unit_topic: '',
+            step_label: '',
+            submit_date:'',
+            select_draft_id: ''
+        },
+        draft_data: {
+            comment: [],
+            draft_index: 0,
+            draft_outline: [],
+            overall_comment: '',
+            return_reason: '',
+            return_teacher_comment: ''
+        },
+        comment: [],
+        overall_comment: '',
+        status: null
+    },
+    setFeedbackDataInStudent: (data) => {
+        set(()=>({feedbackDataInStudent: data}))
+    },
+    draft2ndPageSet:'',
+    setDraft2ndPageSet:(draft2ndPageSet) => set(()=>({draft2ndPageSet})),
+    commentFocusId: '',
+    setCommentFocusId: (commentFocusId) => set(()=>({commentFocusId}))
 }))
 
 export default useSparkWritingStore;

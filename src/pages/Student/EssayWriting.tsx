@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useNavStore from '../../store/useNavStore';
 import useEssayWritingCenterDTStore from '../../store/useEssayWritingCenterDTStore';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
@@ -12,8 +12,10 @@ import FormDialog from '../../components/toggleModalComponents/ChatbotModalCompo
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
-import { callUnitInfobyStudent, draftSaveTemporary } from './api/EssayWriting.api';
+import { callUnitInfobyStudent, draft2ndSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import TooltipOverallCommentComponent, { ArrowBubble } from '../../components/toggleModalComponents/TooltipOverallCommentComponent';
+import draftViewBox from '../../components/pageComponents/feedbackComponents/draftFeedback';
+import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
 interface IDUMPOutlineItem {
     name:string;
     CheckWriting: string;
@@ -43,11 +45,14 @@ const EssayWriting = () => {
 
     // 1st overall comment
     const [overallComment1stDraft, setOverallComment1stDraft] = React.useState<{open:boolean, content: string}>({content:'', open: false});
-    // overall button ref
-    const overallCommentButtonRef = React.useRef<HTMLDivElement|null>(null);
-    // unit status
-    // const [draft1stStatus, setDraft1stStatus] = React.useState<TDraftStatus>();
-    // const [draft2ndStatus, setDraft2ndStatus] = React.useState<TDraftStatus>();
+    
+    // comment focus flag -> target border
+    // const [commentFocusId, setCommentFocusId] = React.useState<string>('');
+
+    // 2nd save active flag
+    const [draft2ndSaveActive, setDraft2ndSaveActive] = React.useState<boolean>(false);
+    // 2nd submit active flag
+    const [draft2ndSubmitActive, setDraft2ndSubmitActive] = React.useState<boolean>(false);
 
     // user info
     const {
@@ -63,7 +68,15 @@ const EssayWriting = () => {
     // WritingCenter Store
     const {essayWritingInputItems, } = useEssayWritingCenterDTStore();
     // Spark Store
-    const { setOutlineInputText, sparkWritingData} = useSparkWritingStore();
+    const { 
+        setOutlineInputText,
+        sparkWritingData,
+        feedbackDataInStudent,
+        setFeedbackDataInStudent,
+        draft2ndPageSet,
+        setDraft2ndPageSet,
+        commentFocusId,
+    } = useSparkWritingStore();
     const params = useParams();
     // console.log('params : unit =',params.unit,': draft =',params.draft)
     const UnitIndex:string = params.unit!==undefined? params.unit: '0';
@@ -77,6 +90,7 @@ const EssayWriting = () => {
     const pageInitSetting = async () => {
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
             const data = response.units
+            
             setOriginalTargetData(data);
             setIsSaved(false);
             return true;
@@ -111,8 +125,10 @@ const EssayWriting = () => {
         }
         
         
+        
         return ()=>{
             setIsSaved(false);
+            setDraft2ndPageSet('')
         }
     })
 
@@ -152,10 +168,10 @@ const EssayWriting = () => {
             // nav header setting
             setEssayTopicInput(sparkWritingData[unitIndex].topic);
         }
+        
         callbackCheckValues();
         return () => {
             // console.log('did unmount in Essay Writing Page')
-            
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
             setSubRightNavTitleString('')
@@ -168,6 +184,7 @@ const EssayWriting = () => {
         foldFlag,
         essayTopicInput,
         paramValues,
+        draft2ndPageSet, draft2ndSaveActive, draft2ndSubmitActive,
         // nav store
         setTopNavHiddenFlagged, 
         setSubNavTitleString,
@@ -178,6 +195,88 @@ const EssayWriting = () => {
         sparkWritingData
         // Spark Store
     ])
+    React.useEffect(()=>{
+        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        const target = sparkWritingData[unitIndex].draft_2_outline;
+        // 2nd draft check
+        if (target[0].input_content!=='' && target[1].input_content!=='' ) {
+            setDraft2ndSubmitActive(true);
+            setDraft2ndSaveActive(true);
+        } else if (target[0].input_content!=='' || target[1].input_content!=='' ) {
+            setDraft2ndSaveActive(true);
+            setDraft2ndSubmitActive(false);
+        } else {
+            setDraft2ndSubmitActive(false);
+            setDraft2ndSaveActive(false);
+        }
+    }, [sparkWritingData])
+    React.useEffect(()=>{
+        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        const target = sparkWritingData[unitIndex]
+        console.log('draft2ndPageSet ==',draft2ndPageSet)
+        if (target.draft_2_status.status === 0||target.draft_2_status.status === 5) {
+            console.log('1')
+            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
+                console.log('1-1')
+                if (draft2ndPageSet==='revise') {
+                    console.log('revise')
+                    const target1st = target.draft_1_outline;
+            
+                    let titleInput = '';
+                    let bodyInput = '';
+                    for (let i = 0; i < target1st.length; i++) {
+                        const current1stTarget = target1st[i];
+                        if (current1stTarget.name === 'Title') {
+                            titleInput = current1stTarget.input_content
+                        } else {
+                            bodyInput += current1stTarget.input_content+'\n\n';
+                        }
+                    }
+            
+                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
+                } else if (draft2ndPageSet==='fresh') {
+                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
+                } else {
+                    
+                }
+            } else {
+                console.log('1-2')
+            }
+        } else if (target.draft_2_status.status === 1) {
+            console.log('2')
+            if (draft2ndPageSet === '') {
+                setDraft2ndPageSet(target.draft_2_init_page_flag)
+            }
+            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
+                if (draft2ndPageSet==='revise') {
+                    console.log('revise')
+                    const target1st = target.draft_1_outline;
+            
+                    let titleInput = '';
+                    let bodyInput = '';
+                    for (let i = 0; i < target1st.length; i++) {
+                        const current1stTarget = target1st[i];
+                        if (current1stTarget.name === 'Title') {
+                            titleInput = current1stTarget.input_content
+                        } else {
+                            bodyInput += current1stTarget.input_content+'\n\n';
+                        }
+                    }
+            
+                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
+                } else if (draft2ndPageSet==='fresh') {
+                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
+                } else {
+                    
+                }
+            }
+            
+        }
+    }, [draft2ndPageSet])
 
     const callbackCheckValues = React.useCallback( ()=>{
         if (sparkWritingData !== undefined) {
@@ -243,40 +342,141 @@ const EssayWriting = () => {
     const temporarySaveFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
-        const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
-            const input_content = item.input_content.replace(/\s{2,}/g, ' ');
-            return {
-                heading_name: item.name,
-                input_content,
-                grammar_correction_content_student: '',
-                order_index: item.order_index,
+        if (draftIndex === 1){
+            const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+                const input_content = item.input_content.replace(/\s{2,}/g, ' ');
+                return {
+                    heading_name: item.name,
+                    input_content,
+                    grammar_correction_content_student: '',
+                    order_index: item.order_index,
+                }
+            })
+            // console.log('content =',contensData)
+            const data:TSparkWritingTemporarySaveData = {
+                student_code: userInfo.userCode,
+                student_name_en: userInfo.memberNameEn,
+                student_name_kr: userInfo.memberNameKr,
+                unit_id: targetData.unit_id,
+                draft_index: draftIndex,
+                proofreading_count: targetData.proofreading_count,
+                contents: contensData,
+                draft_init_page_flag:''
             }
-        })
-        // console.log('content =',contensData)
-        const data:TSparkWritingTemporarySaveData = {
+            // console.log('data ==',data)
+            const isSaveTemporary = await draftSaveTemporary(data);
+            if (isSaveTemporary) {
+                setIsSaved(true);
+                commonAlertOpen({
+                    useOneButton: true,
+                    yesButtonLabel: 'OK',
+                    messages: ['Temporary saving is complete.']
+                })
+            } else {
+                commonAlertOpen({
+                    messages: ['Are you sure you want to try again?'],
+                    yesButtonLabel: 'Yes',
+                    noButtonLabel: 'Cancel',
+                    yesEvent: async ()=> await temporarySaveFunction(),
+                })
+            }
+        } else if (draftIndex === 2) {
+            
+            const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
+                const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
+                return {
+                    grammar_correction_content_student:'',
+                    input_content,
+                    heading_name: item.name,
+                    order_index: item.order_index
+                }
+            });
+            
+            const data:TSparkWritingTemporarySaveData = {
+                student_code: userInfo.userCode,
+                student_name_en: userInfo.memberNameEn,
+                student_name_kr: userInfo.memberNameKr,
+                unit_id: targetData.unit_id,
+                draft_index: draftIndex,
+                proofreading_count: targetData.proofreading_count,
+                contents: contentsData,
+                draft_init_page_flag: draft2ndPageSet
+            };
+            const isSaveTemporary = await draftSaveTemporary(data);
+            if (isSaveTemporary) {
+                setCommonStandbyScreen({openFlag:false});
+                setIsSaved(true);
+                commonAlertOpen({
+                    useOneButton: true,
+                    yesButtonLabel: 'OK',
+                    messages: ['Temporary saving is complete.'],
+                    yesEvent: ()=>{
+                        commonAlertClose();
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    }
+                })
+            } else {
+                setCommonStandbyScreen({openFlag:false})
+                commonAlertOpen({
+                    messages: ['Are you sure you want to try again?'],
+                    yesButtonLabel: 'Yes',
+                    noButtonLabel: 'Cancel',
+                    yesEvent: async ()=> {
+                        setCommonStandbyScreen({openFlag:true})
+                        await temporarySaveFunction()
+                    },
+                })
+            }
+        }
+    }
+
+    const submit2ndDraftFunction = async () => {
+        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
+        const draftIndex = parseInt(DraftIndex);
+        const contents:TSubmit2ndDraftReqDataContent[] = targetData.draft_2_outline.map((item) => {
+            const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
+            return {
+                input_content,
+                heading_name: item.name,
+                order_index: item.order_index
+            }
+        });
+        const submitData:TSubmit2ndDraftRequestData = {
             student_code: userInfo.userCode,
             student_name_en: userInfo.memberNameEn,
             student_name_kr: userInfo.memberNameKr,
             unit_id: targetData.unit_id,
             draft_index: draftIndex,
-            proofreading_count: targetData.proofreading_count,
-            contents: contensData
+            contents,
+
         }
-        // console.log('data ==',data)
-        const isSaveTemporary = await draftSaveTemporary(data);
-        if (isSaveTemporary) {
-            setIsSaved(true);
+        commonAlertClose();
+        setCommonStandbyScreen({openFlag:true});
+        const submit = await draft2ndSubmit(submitData);
+        if (submit) {
+            setCommonStandbyScreen({openFlag:false})
             commonAlertOpen({
                 useOneButton: true,
                 yesButtonLabel: 'OK',
-                messages: ['Temporary saving is complete.']
+                messages: [
+                    `Your Unit ${targetData.unit_index} ${targetData.topic}'s`,
+                    <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup>draft</span> has been submitted.</span>
+                ],
+                yesEvent: async () => {
+                    commonAlertClose();
+                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                }
             })
         } else {
+            setCommonStandbyScreen({openFlag:false})
             commonAlertOpen({
                 messages: ['Are you sure you want to try again?'],
                 yesButtonLabel: 'Yes',
                 noButtonLabel: 'Cancel',
-                yesEvent: async ()=> await temporarySaveFunction(),
+                yesEvent: async ()=> {
+                    setCommonStandbyScreen({openFlag:true})
+                    await submit2ndDraftFunction()
+                },
             })
         }
     }
@@ -442,26 +642,147 @@ const EssayWriting = () => {
 
     const Draft2ndWritingPage = () => {
         const draftItem = sparkWritingData[parseInt(UnitIndex)-1];
+        
         return (
-            <div className='wrap-contain-spark-writing'>
+            <div className='wrap-contain-2nd-spark-writing'>
                 <div className='wrap-guide-2nd-top-text-spark-writing'>{'Check your teacher’s feedback and work on your 2nd draft.'}</div>
                 <div className='flex flex-row w-full gap-[10px] mt-[10px]'>
                     <div className='flex flex-col flex-1'>
                         {/* guide text */}
                         <div className='wrap-guide-2nd-text-spark-writing'>
                             {'teacher feedback'}
+                            <TeacherFeedbackDetailModalComponents draftItem={draftItem}/>
                         </div>
                         <div className='wrap-content-2nd-spark-writing'>
-                            {/* <div className='flex '>{draftItem.draft_1_outline[0]}</div> */}
+                            <div className='teacher-feedback-title-font'>{
+                                draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem})
+                            }</div>
+                            <div className='teacher-feedback-body-font'>{
+                                draftViewBox.loadFeedbackDraftBody({feedbackDataInStudent:draftItem})
+                            }</div>
                         </div>
                     </div>
                     <div className='flex flex-col flex-1'>
                         <div className='wrap-guide-2nd-text-spark-writing'>
                             {'2nd draft'}
                         </div>
-                        <div className='wrap-content-2nd-spark-writing'></div>
+                        
+                        {/* select 2nd draft start page */}
+                        {draft2ndPageSet==='' && 
+                            <div className='wrap-content-2nd-spark-writing'>
+                                <div className='flex flex-1 flex-col items-center justify-center gap-[20px]'>
+                                    <div className='draft-2nd-select-button-fresh' onClick={()=>{
+                                        setOutlineInputText('', draftItem.unit_id, draftItem.unit_index, 1,2)
+                                        setOutlineInputText('', draftItem.unit_id, draftItem.unit_index, 2,2)
+                                        setDraft2ndPageSet('fresh')
+                                    }}/>
+                                    <div className='draft-2nd-select-button-revise' onClick={()=>{setDraft2ndPageSet('revise')}}/>
+                                </div>
+                            </div>
+                        }
+
+                        {/* Fresh Page */}
+                        {draft2ndPageSet === 'fresh' &&
+                            <div className='wrap-content-2nd-spark-writing'>
+                            <div className='draft-2nd-title-font'>
+                                {/* 2nd draft title content */}
+                                <textarea className='draft-2nd-title-wrap-textarea'
+                                    maxLength={120}
+                                    rows={1}
+                                    ref={(textarea)=>{
+                                        if (textarea) {
+                                            textarea.style.height='auto';
+                                            textarea.style.height = textarea.scrollHeight+'px';
+                                        }
+                                    }}
+                                    onChange={(e) => {
+                                        e.currentTarget.style.height='auto';
+                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                        const value = e.currentTarget.value;
+                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                    }}
+                                    value={draftItem.draft_2_outline[0].input_content}
+                                />
+                            </div>
+                            <div className='flex flex-1'>
+                                {/* 2nd draft body content */}
+                                <textarea className='draft-2nd-body-wrap-textarea'
+                                    onChange={(e) => {
+                                        const value = e.currentTarget.value;
+                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                    }}
+                                    placeholder='Start typing'
+                                    value={draftItem.draft_2_outline[1].input_content}
+                                />
+                            </div>
+                            </div>
+                        }
+                        {/* Revise 1st Draft Page */}
+                        {draft2ndPageSet === 'revise' &&
+                            <div className='wrap-content-2nd-spark-writing'>
+                            <div className='draft-2nd-title-font'>
+                                {/* 2nd draft title content */}
+                                <textarea className='draft-2nd-title-wrap-textarea'
+                                    maxLength={120}
+                                    rows={1}
+                                    ref={(textarea)=>{
+                                        if (textarea) {
+                                            textarea.style.height='auto';
+                                            textarea.style.height = textarea.scrollHeight+'px';
+                                        }
+                                    }}
+                                    onChange={(e) => {
+                                        e.currentTarget.style.height='auto';
+                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                        const value = e.currentTarget.value;
+                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                    }}
+                                    value={draftItem.draft_2_outline[0].input_content}
+                                />
+                            </div>
+                            <div className='flex flex-1'>
+                                {/* 2nd draft body content */}
+                                <textarea className='draft-2nd-body-wrap-textarea'
+                                    onChange={(e) => {
+                                        const value = e.currentTarget.value;
+                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                    }}
+                                    placeholder='Start typing'
+                                    value={draftItem.draft_2_outline[1].input_content}
+                                />
+                            </div>
+                            </div>
+                        }
                     </div>
 
+                </div>
+                <div className='absolute right-[30px] bottom-[25px] flex flex-row gap-[10px]'>
+                    <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div>
+                    <div className={draft2ndSaveActive ? 'draft-2nd-save-button': 'draft-2nd-save-button-readonly'} onClick={async () => {
+                        commonAlertOpen({
+                            messages:['Do you want to return to edit your writing?'],
+                            yesButtonLabel: 'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                setCommonStandbyScreen({openFlag:true})
+                                await temporarySaveFunction();
+                            }
+                        })
+                    }}/>
+                    <div className={draft2ndSubmitActive ? 'draft-2nd-submit-button':'draft-2nd-submit-button-readonly'} onClick={async()=>{
+                        commonAlertOpen({
+                            messages: ['Are you ready to submit?'],
+                            head: `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                            yesButtonLabel: 'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                setCommonStandbyScreen({openFlag:true})
+                                await submit2ndDraftFunction();
+                            },
+                        })
+                    }}/>
                 </div>
             </div>
         )

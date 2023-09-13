@@ -40,6 +40,16 @@ module.exports = {
         'report-rechart-custom-tooltip-box-conventions': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipConventions.svg')",
         'unit-report-modal-active-manu': "url('/src/components/toggleModalComponents/img/reportActiveMenu.svg')",
         'print-writing-hub-memo-icon': "url('/src/components/toggleModalComponents/img/printReportMemoIcon.svg')",
+        'teacher-feedback-more-comment-detail-button-icon': "url('/src/util/svgs/btn-docs-find-icon.svg')",
+        'draft-2nd-fresh-page-button-svg':"url('/src/util/svgs/bt_fresh.svg')",
+        'draft-2nd-revise-1st-button-svg':"url('/src/util/svgs/bt_revise.svg')",
+
+        'draft-2nd-save-button-svg': "url('/src/util/svgs/bt_save.svg')",
+        'draft-2nd-save-button-readonly-svg': "url('/src/util/svgs/bt_save_readonly.svg')",
+        'draft-2nd-submit-button-svg': "url('/src/util/svgs/bt_submit.svg')",
+        'draft-2nd-submit-button-readonly-svg': "url('/src/util/svgs/bt_submit_readonly.svg')",
+
+        'modal-close-button-svg': "url('/src/util/svgs/bt_close.svg')",
       }
     },
     borderWidth: {

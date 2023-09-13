@@ -129,10 +129,12 @@ export default function SelectUnit () {
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
                             } else if (secondDraft === 1) {
                                 // 2차 임시저장 -> 편집 가능
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
                             } else if (secondDraft === 2 || secondDraft === 3) {
                                 // 2차 완료(submit) -> 편집 x, 뷰잉만
                             } else if (secondDraft === 5) {
                                 // 2차 재학습 -> 편집 가능
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
                             } else if (secondDraft === 4) {
                                 // -> final
                             }
