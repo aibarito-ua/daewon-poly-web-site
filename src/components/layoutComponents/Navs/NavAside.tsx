@@ -7,11 +7,13 @@ import { navItems } from "../Nav";
 import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
 import { useComponentWillMount } from '../../../hooks/useEffectOnce';
 import { logoutAPI } from '../../../pages/Student/api/Login.api';
+import useControlAlertStore from '../../../store/useControlAlertStore';
 
 
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
     const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser, userInfo, device_id, isMobile } = useLoginStore();
+    const { commonAlertClose, commonAlertOpen} = useControlAlertStore()
     // const [menuLocateValue, setMenuLocateValue] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
@@ -33,6 +35,16 @@ const NavAside = () => {
         console.log("link :::", link);
         const rolePath = role==='logout'? '': (role==='admin'? 'admin': (role==='teacher'?'teacher':'student'))
         navigate(`/${rolePath}/${link}`);
+    }
+
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
     }
     React.useEffect(()=>{
         console.log('test effect selectedMenu= ',selectedMenu,', sidebarFlagged=',sidebarFlagged)
@@ -99,13 +111,14 @@ const NavAside = () => {
                     
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
                     onClick={()=>{
-                        logoutAPI(userInfo.userCode, device_id)
-                        if(isMobile)
-                            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
-                        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-                            (window as any).api.toElectron.send('clear')
-                        }
-                        window.location.reload()
+                        commonAlertOpen({
+                            alertType:'warning',
+                            messages: ['Do you want to leave the Writing Hub?'],
+                            yesButtonLabel: 'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: ()=>logoutFn(),
+                        })
+                        
                     }}/>
                     
                 )}
