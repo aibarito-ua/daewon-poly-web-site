@@ -106,8 +106,6 @@ const NavAside = () => {
                     
                 </ul>
                 {role !== 'logout' && (
-                    // <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-xl" 
-                    // onClick={()=>setLogoutUser()}>Logout</button>
                     
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
                     onClick={()=>{
@@ -124,31 +122,6 @@ const NavAside = () => {
                 )}
             </div>
         </div>
-        {/* <div className={`absolute top-0 left-0 z-[49] w-full h-20 pl-64 transition-transform ${
-            // !sidebarFlagged ? '-translate-x-full':'translate-x-0'
-            topNavHiddenFlagged ? '-translate-x-full hidden': 'translate-x-0'
-            // 'translate-x-0'
-        } bg-white border-r border-gray-200`}
-        // aria-label="Sidebar"
-        >
-            <div className='flex flex-1 flex-row pl-4'>
-                <div className='flex flex-1 content-center items-center'>
-                    <div></div>
-                </div>
-                
-                <div className='flex flex-1 flex-row-reverse pr-4'>
-                    <div className='flex'>
-                        <span className=''>Image</span>
-                    </div>
-                    <div className='flex flex-col'>
-                        <div className='flex flex-1 justify-end'>{name}</div>
-                        <div className='flex flex-1 justify-end'>class</div>
-                        <div className='flex flex-1 justify-end'>Class-what</div>
-                    </div>
-                </div>
-            
-            </div>
-        </div> */}
 
         </nav>
     )

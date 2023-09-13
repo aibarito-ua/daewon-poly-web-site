@@ -18,6 +18,7 @@ export const Login = () => {
     const [errors, setErrors] = React.useState<{displayMessage:string}>({displayMessage:''})
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
     const [saveId, setSaveId] = React.useState<boolean>(false)
+    const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
 
     const {
         commonAlertOpen
@@ -258,6 +259,16 @@ export const Login = () => {
         }
     },[])
 
+    React.useEffect(()=>{
+        const checkName = loginValues.username.replace(/\s{1,}/gmi,'')==='';
+        const checkPW = loginValues.password.replace(/\s{1,}/gmi,'')==='';
+        if (checkName || checkPW) {
+            setIsLoginBtn(false);
+        } else {
+            setIsLoginBtn(true);
+        }
+    }, [loginValues])
+
 
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right justify-center items-center bg-login-img'>
@@ -276,7 +287,7 @@ export const Login = () => {
                                     id='username'
                                     name="username"
                                     className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6]" 
-                                    placeholder="ID"
+                                    placeholder="User Name"
                                     value={loginValues.username}
                                     onChange={(evt)=>{handleChange(evt)}}/>
                             </div>
@@ -319,7 +330,9 @@ export const Login = () => {
                             <span>{errors.displayMessage}</span>
                         </div>
                         <div className='flex flex-row mt-[8.5px]'>
-                            <button className='bg-[#192878] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
+                            <button className={isLoginBtn ? 'bg-[#192878] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
+                            : 'bg-[#192878] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd] hover:cursor-no-drop'}
+                            disabled={!isLoginBtn}
                                 type='submit'
                             >
                                 <span className='uppercase text-[#ffffff]'>login</span>
