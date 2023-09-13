@@ -100,7 +100,7 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                                     }}
                                     onClick={()=>{
                                         setCommentFocusId(item.comment_className);
-                                        document.getElementById(item.comment_className)?.focus();
+                                        
                                     }}
                                     >{item.comment}</div>
                                 )
