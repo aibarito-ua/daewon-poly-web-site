@@ -498,7 +498,7 @@ const EssayWriting = () => {
         const originalTarget = originalTargetData[parseInt(UnitIndex)-1];
         console.log('originalTarget =',originalTarget)
         let checkFlag = false;
-        const targetOutline = originalTarget.draft_1_outline?originalTarget.draft_1_outline:[];
+        const targetOutline = originalTarget? originalTarget.draft_1_outline:[];
         const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item, itemIndex) => {
             const input_content = item.input_content.replace(/\s{2,}/g, ' ');
             const originalInputContent = targetOutline[itemIndex]?.input_content.replace(/\s{2,}/g, ' ');
