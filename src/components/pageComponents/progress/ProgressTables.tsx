@@ -45,12 +45,12 @@ const ProgressTable = (props:any) => {
         <table className='w-[1010px] p-[10px]'>
             <thead className='table-header-group'>
                 <tr className='progress-page-view-box-table-head-row'>
-                    <tr className='w-[440px]'></tr>
+                    <td className='w-[440px]'></td>
                     <THeadText str1='1st' str2='draft'/>
                     <THeadText str1='1st' str2='feedback'/>
                     <THeadText str1='2nd' str2='draft'/>
                     <THeadText str1='final' str2='evaluation'/>
-                    <tr className='w-[140px]'></tr>
+                    <td className='w-[140px]'></td>
                 </tr>
             </thead>
             <tbody className=''>

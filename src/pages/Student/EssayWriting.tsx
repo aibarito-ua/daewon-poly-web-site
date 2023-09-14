@@ -498,9 +498,10 @@ const EssayWriting = () => {
         const originalTarget = originalTargetData[parseInt(UnitIndex)-1];
         console.log('originalTarget =',originalTarget)
         let checkFlag = false;
+        const targetOutline = originalTarget.draft_1_outline?originalTarget.draft_1_outline:[];
         const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item, itemIndex) => {
             const input_content = item.input_content.replace(/\s{2,}/g, ' ');
-            const originalInputContent = originalTarget.draft_1_outline[itemIndex].input_content.replace(/\s{2,}/g, ' ');
+            const originalInputContent = targetOutline[itemIndex]?.input_content.replace(/\s{2,}/g, ' ');
             if (input_content !== originalInputContent) {
                 checkFlag=true;
             }
@@ -550,7 +551,8 @@ const EssayWriting = () => {
                                             <textarea rows={1} style={{'resize':'none'}} 
                                             id={item.name+item.order_index}
                                             className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
-                                            placeholder={`Start typing in your ${item.name}...`}
+                                            // placeholder={`Start typing in your ${item.name}...`}
+                                            placeholder={`Write here.`}
                                             onChange={(e)=>{
                                                 e.currentTarget.style.height = 'auto';
                                                 e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -757,7 +759,7 @@ const EssayWriting = () => {
 
                 </div>
                 <div className='absolute right-[30px] bottom-[25px] flex flex-row gap-[10px]'>
-                    <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div>
+                    {/* <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div> */}
                     <div className={draft2ndSaveActive ? 'draft-2nd-save-button': 'draft-2nd-save-button-readonly'} onClick={async () => {
                         commonAlertOpen({
                             messages:['Do you want to return to edit your writing?'],
@@ -797,7 +799,7 @@ const EssayWriting = () => {
             )}
             {/* draft 2 => overall comment */}
             {DraftIndex === '2' && overallComment1stDraft.content!=='' && (
-                <div className='flex flex-row absolute w-fit h-fit top-[30px] right-[35px] gap-[50px] z-[50]'>
+                <div className='flex flex-row absolute w-fit h-[80px] overflow-auto top-[30px] right-[35px] gap-[50px] z-[50]'>
                     <div className={overallComment1stDraft.open? 'overall-comment-2nd-draft-write-top-tooltip-content':'hidden'}>
                         <span></span>
                         {overallComment1stDraft.content}

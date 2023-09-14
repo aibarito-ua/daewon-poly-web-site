@@ -7,12 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/useLoginStore';
 import { SvgIconCheck } from '../../util/svgs/svgCheck';
 import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
-import SelectUnitBox from '../../components/pageComponents/selectUnitPage/SelectUnitBox';
-import ReportModalComponent from '../../components/toggleModalComponents/ReportModalComponent';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
-import { useComponentWillMount } from '../../hooks/useEffectOnce';
-import { callUnitInfobyStudent } from './api/EssayWriting.api';
 
 export default function SelectUnit () {
     const navigate = useNavigate();

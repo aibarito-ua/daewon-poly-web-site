@@ -167,8 +167,8 @@ const GrammarContentComponent = {
                             JsxText 
                         ]
                         if (checkSelected) {
-                            const textTagId = 'title-'+mainTagKey + '-ori'
-                            returnValue = <span key={mainTagKey}><span id={textTagId}>{selectedWord}</span></span>
+                            const textTagId = 'title-'+mainTagKey + '-change'
+                            returnValue = <span key={mainTagKey} className='text-[#00be91]'><span id={textTagId}>{selectedWord}</span></span>
                         } else {
                             returnValue = (
                                 <span key={mainTagKey+'-both'}>
@@ -349,8 +349,8 @@ const GrammarContentComponent = {
                             ]
                             const empty = ' ';
                             if (checkSelected) {
-                                const textTagId = 'title-'+mainTagKey + '-ori'
-                                returnValue = <span key={mainTagKey}><span id={textTagId}>{selectedWord}</span></span>
+                                const textTagId = 'title-'+mainTagKey + '-change'
+                                returnValue = <span key={mainTagKey} className='text-[#00be91]'><span id={textTagId}>{selectedWord}</span></span>
                             } else {
                                 returnValue = (
                                     <span key={mainTagKey+'-both'}>

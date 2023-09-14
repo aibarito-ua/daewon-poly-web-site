@@ -64,12 +64,12 @@ function CheckBlueRectIcon(props: React.SVGAttributes<SVGElement>) {
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="30" height="32" viewBox="0 0 30 32" fill="none">
         <g filter="url(#filter0_d_322_2674)">
             <rect width="30" height="30" rx="3" fill="#5FACF3"/>
-            <rect x="1" y="1" width="28" height="28" rx="2" stroke="#B5DBFF" stroke-width="2"/>
+            <rect x="1" y="1" width="28" height="28" rx="2" stroke="#B5DBFF" strokeWidth="2"/>
         </g>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M21.3295 10.2998C21.5212 10.4916 21.6289 10.7517 21.6289 11.0228C21.6289 11.294 21.5212 11.5541 21.3295 11.7459L13.6638 19.4116C13.5625 19.5129 13.4422 19.5933 13.3099 19.6481C13.1775 19.703 13.0356 19.7312 12.8923 19.7312C12.7491 19.7312 12.6072 19.703 12.4748 19.6481C12.3424 19.5933 12.2222 19.5129 12.1209 19.4116L8.31223 15.6036C8.21455 15.5093 8.13663 15.3964 8.08303 15.2717C8.02943 15.1469 8.00122 15.0127 8.00004 14.8769C7.99886 14.7411 8.02474 14.6064 8.07616 14.4807C8.12758 14.355 8.20352 14.2409 8.29955 14.1448C8.39558 14.0488 8.50977 13.9729 8.63546 13.9214C8.76114 13.87 8.89582 13.8441 9.03161 13.8453C9.16741 13.8465 9.30161 13.8747 9.42639 13.9283C9.55117 13.9819 9.66402 14.0598 9.75836 14.1575L12.892 17.2911L19.8827 10.2998C19.9777 10.2047 20.0904 10.1294 20.2146 10.0779C20.3387 10.0265 20.4717 10 20.6061 10C20.7405 10 20.8735 10.0265 20.9976 10.0779C21.1217 10.1294 21.2345 10.2047 21.3295 10.2998Z" fill="white"/>
+        <path fillRule="evenodd" clipRule="evenodd" d="M21.3295 10.2998C21.5212 10.4916 21.6289 10.7517 21.6289 11.0228C21.6289 11.294 21.5212 11.5541 21.3295 11.7459L13.6638 19.4116C13.5625 19.5129 13.4422 19.5933 13.3099 19.6481C13.1775 19.703 13.0356 19.7312 12.8923 19.7312C12.7491 19.7312 12.6072 19.703 12.4748 19.6481C12.3424 19.5933 12.2222 19.5129 12.1209 19.4116L8.31223 15.6036C8.21455 15.5093 8.13663 15.3964 8.08303 15.2717C8.02943 15.1469 8.00122 15.0127 8.00004 14.8769C7.99886 14.7411 8.02474 14.6064 8.07616 14.4807C8.12758 14.355 8.20352 14.2409 8.29955 14.1448C8.39558 14.0488 8.50977 13.9729 8.63546 13.9214C8.76114 13.87 8.89582 13.8441 9.03161 13.8453C9.16741 13.8465 9.30161 13.8747 9.42639 13.9283C9.55117 13.9819 9.66402 14.0598 9.75836 14.1575L12.892 17.2911L19.8827 10.2998C19.9777 10.2047 20.0904 10.1294 20.2146 10.0779C20.3387 10.0265 20.4717 10 20.6061 10C20.7405 10 20.8735 10.0265 20.9976 10.0779C21.1217 10.1294 21.2345 10.2047 21.3295 10.2998Z" fill="white"/>
         <defs>
-            <filter id="filter0_d_322_2674" x="0" y="0" width="30" height="32" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <filter id="filter0_d_322_2674" x="0" y="0" width="30" height="32" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
             <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
             <feOffset dy="2"/>
             <feComposite in2="hardAlpha" operator="out"/>
@@ -97,8 +97,8 @@ function LevelSelectToggleDownArrowIcon(props: React.SVGAttributes<SVGElement>) 
         <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
         </g>
         <defs>
-        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
         <feOffset dy="1"/>
         <feComposite in2="hardAlpha" operator="out"/>
@@ -117,8 +117,8 @@ function LevelSelectToggleUpArrowIcon(props: React.SVGAttributes<SVGElement>) {
         <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
         </g>
         <defs>
-        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
         <feOffset dy="1"/>
         <feComposite in2="hardAlpha" operator="out"/>

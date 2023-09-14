@@ -9,21 +9,27 @@ import SmallHead from '../../components/commonComponents/SmallHeadComponent/Smal
 import { callUnitInfobyStudent } from './api/EssayWriting.api';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
+import useControlAlertStore from '../../store/useControlAlertStore';
 
 const SelectWritingClinic = () => {
     const [buttonActive, setButtonActive] = React.useState<boolean>(false);
     const {role, userInfo} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
     const {
+        setCommonStandbyScreen
+    } = useControlAlertStore();
+    const {
         setSparkWritingDataFromAPI
     } = useSparkWritingStore()
     const navigate = useNavigate();
     const beforeRenderedFn = async () => {
+        setCommonStandbyScreen({openFlag:true})
         await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
             if (response.book_name!=='') {
                 setButtonActive(true)
             }
             setSparkWritingDataFromAPI(response.units, response.book_name)
+            setCommonStandbyScreen({openFlag:false})
             return response;
         });
     }
