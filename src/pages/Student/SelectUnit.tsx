@@ -9,13 +9,19 @@ import { SvgIconCheck } from '../../util/svgs/svgCheck';
 import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
+import { callUnitInfobyStudent } from './api/EssayWriting.api';
+import useControlAlertStore from '../../store/useControlAlertStore';
+import { useComponentWillMount } from '../../hooks/useEffectOnce';
 
 export default function SelectUnit () {
     const navigate = useNavigate();
-    const {role} = useLoginStore();
+    const {role, userInfo} = useLoginStore();
     const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen} = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
-    const {sparkWritingData, sparkWritingBookName} = useSparkWritingStore();
+    const {sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI} = useSparkWritingStore();
+    const {
+        setCommonStandbyScreen
+    } = useControlAlertStore();
 
     React.useEffect(()=>{
         setSubNavTitleString('Spark Writing')
@@ -32,6 +38,18 @@ export default function SelectUnit () {
         setCompleteTopicIndex,
         sparkWritingData
     ])
+    const beforeRenderedFn = async () => {
+        setCommonStandbyScreen({openFlag:true})
+        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+            
+            setSparkWritingDataFromAPI(response.units, response.book_name)
+            setCommonStandbyScreen({openFlag:false})
+            return response;
+        });
+    }
+    useComponentWillMount(()=>{
+        beforeRenderedFn();
+    })
 
     
     

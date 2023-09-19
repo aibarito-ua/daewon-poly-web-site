@@ -9,7 +9,129 @@ import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import ReportSelectButton from '../../components/pageComponents/report/ReportSelectButton';
-
+const dumyUnitRubricData:TUnitRubricScore[]=[
+    {
+        unit_index:1,
+        rubric_scores: [
+            {
+                name: 'ideas',
+                score: 4
+            }, {
+                name: 'organization',
+                score: 4
+            }, {
+                name: 'voice',
+                score: 6
+            }, {
+                name: 'word choice',
+                score: 8
+            }, {
+                name: 'sentence fluency',
+                score: 10
+            }, {
+                name: 'conventions',
+                score: 6
+            }
+            
+        ]
+    }, {
+        unit_index:2,
+        rubric_scores: [
+            {
+                name: 'ideas',
+                score: 4
+            }, {
+                name: 'organization',
+                score: 6
+            }, {
+                name: 'voice',
+                score: 8
+            }, {
+                name: 'word choice',
+                score: 10
+            }, {
+                name: 'sentence fluency',
+                score: 8
+            }, {
+                name: 'conventions',
+                score: 6
+            }
+            
+        ]
+    }, {
+        unit_index:3,
+        rubric_scores: [
+            {
+                name: 'ideas',
+                score: 6
+            }, {
+                name: 'organization',
+                score: 8
+            }, {
+                name: 'voice',
+                score: 10
+            }, {
+                name: 'word choice',
+                score: 8
+            }, {
+                name: 'sentence fluency',
+                score: 6
+            }, {
+                name: 'conventions',
+                score: 4
+            }
+            
+        ]
+    }, {
+        unit_index:4,
+        rubric_scores: [
+            {
+                name: 'ideas',
+                score: 8
+            }, {
+                name: 'organization',
+                score: 10
+            }, {
+                name: 'voice',
+                score: 10
+            }, {
+                name: 'word choice',
+                score: 10
+            }, {
+                name: 'sentence fluency',
+                score: 8
+            }, {
+                name: 'conventions',
+                score: 8
+            }
+            
+        ]
+    }, {
+        unit_index:5,
+        rubric_scores: [
+            {
+                name: 'ideas',
+                score: 2
+            }, {
+                name: 'organization',
+                score: 2
+            }, {
+                name: 'voice',
+                score: 2
+            }, {
+                name: 'word choice',
+                score: 8
+            }, {
+                name: 'sentence fluency',
+                score: 6
+            }, {
+                name: 'conventions',
+                score: 10
+            }
+            
+        ]
+    }
+]
 const Report = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const {role, userInfo} = useLoginStore();
@@ -62,6 +184,20 @@ const Report = () => {
                 </div>
                 
                 {/* progress view box */}
+                <button onClick={()=>{
+                        const unit_idx = 5
+                        let unitTitle = '';
+                        for (let i = 0; i < sparkWritingData.length;i++) {
+                            const targetUnitIdx = sparkWritingData[i];
+                            if (unit_idx === targetUnitIdx.unit_index) {
+                                unitTitle = `Unit ${targetUnitIdx.unit_index}. ${targetUnitIdx.topic}`
+                            }
+                        }
+                        setUnitRubricScoresData(dumyUnitRubricData, unit_idx);
+
+                        setUnitReportModal({open:true, unitTitle})
+                        
+                    }}>test button</button>
                 
             </div>
         </section>

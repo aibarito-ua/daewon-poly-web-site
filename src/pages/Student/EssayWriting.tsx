@@ -768,6 +768,7 @@ const EssayWriting = () => {
                             yesEvent: async () => {
                                 commonAlertClose();
                                 setCommonStandbyScreen({openFlag:true})
+                                setDraft2ndPageSet('')
                                 await temporarySaveFunction();
                             }
                         })
@@ -781,6 +782,7 @@ const EssayWriting = () => {
                             yesEvent: async () => {
                                 commonAlertClose();
                                 setCommonStandbyScreen({openFlag:true})
+                                setDraft2ndPageSet('')
                                 await submit2ndDraftFunction();
                             },
                         })

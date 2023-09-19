@@ -199,6 +199,7 @@ const PreviewSparkWriting = (props:any) => {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
             const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline);
+            console.log('res ====',res)
             if (res.result_body.length>0) {
                 const unitId = sparkWritingData[unitIndex].unit_id
                 const proofReadingCountUpdateValue = ProofReadingCountValue+1;
@@ -962,9 +963,11 @@ const PreviewSparkWriting = (props:any) => {
                                         // submit
                                         // make contents 
                                         const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
-                                            const historyMinusIndex = item.name==='Title' ? 2:1;
+                                            const historyMinusIndex = item.name==='Title' ? 2:2;
                                             const currentGrammarIndex = item.order_index-historyMinusIndex;
-                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
+                                            console.log('historyMinusIndex ==',historyMinusIndex)
+                                            console.log('currentGrammarIndex =',currentGrammarIndex)
+                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,
