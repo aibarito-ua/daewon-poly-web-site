@@ -110,9 +110,9 @@ const ReportCorrectionSummaryComponent = (
     )
 }
 
-const ReportItemComponents = {
+const ReportItemComponentsOld = {
     ReportWordCountSummaryComponent,
     ReportCorrectionSummaryComponent
 }
 
-export default ReportItemComponents;
+export default ReportItemComponentsOld;

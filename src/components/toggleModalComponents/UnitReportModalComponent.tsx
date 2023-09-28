@@ -5,7 +5,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled }
 import useControlAlertStore from '../../store/useControlAlertStore';
 import ReportChart from '../chartComponents/reportChart';
 import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
-import ReportItemComponents from './ItemComponents/ReportItemComponents';
+
 import { ReactComponent as ReportPrint } from './img/reportPrintButton.svg';
 import ReactToPrint,{useReactToPrint} from 'react-to-print';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
@@ -13,168 +13,105 @@ import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import {ReactComponent as PrintWritingHubIcon} from './img/printReportMemoIcon.svg';
 import PrintReportDoughnutChart from '../chartComponents/printReportDoughnutChart';
 import PrintReportBarChart from '../chartComponents/printReportBarChart';
+import CustomizedReportTabsActivity from '../pageComponents/report/SPReportTabComponent';
+import ReportByUnitComponent from '../chartComponents/reportByUnit/ReportByUnitComponent';
+import ReportItemComponents from '../chartComponents/reportByUnit/ItemComponents/ReportItemComponents';
+
+import PieChart from '../chartComponents/dounutChat';
+import BarChart from '../chartComponents/barChart'
+import ReportRubricModalComponent from './ReportRubricModalComponent';
+import PrintReportExportButton from '../commonComponents/printComponent/report/PrintComponent';
 
 
 export default function UnitReportModalComponent() {
     const {
         unitReportModal,
+        initializeUnitReportModal,
+        unitReportData,
         setUnitReportModal,
-        unitReportModalData,
-        setCommonStandbyScreen
+        reportByUnitMainTitle,
+
+        reportSelectUnit, setReportSelectUnit,
+        unitReportsData,
+        reportSelectFinder,
     } = useControlAlertStore();
-    const [menuControll, setMenuControl] = React.useState<number>();
+    const [menuControll, setMenuControl] = React.useState<number>(0);
     const [printPreviewer, setPrintPreviewer] = React.useState<boolean>(false);
     const printComponentRef = React.useRef<HTMLDivElement>(null);
-   
-    // modal close -> init states
+    const [isPrev, setIsPrev] = React.useState<boolean>(false);
+    const [isNext, setIsNext] = React.useState<boolean>(false);
     React.useEffect(()=>{
-        if (unitReportModal.open===false) {
-            setMenuControl(0)
-            setPrintPreviewer(false)
-        } else {
+        if ( unitReportModal.open) {
             
-        }
-    },[unitReportModal])
-    // print handler
-    const handlePrint = useReactToPrint({
-        content: () => printComponentRef.current,
-    })
-    React.useEffect(()=>{
-        if (printPreviewer) {
-            // setTimeout(()=>{
-            //     handlePrint();
-            // },2000)
         } else {
+            setMenuControl(0);
+        }
+    }, [unitReportModal])
+    React.useEffect(()=>{
+        if (unitReportsData.length > 0) {
+            let currentUnit = 0;
+            let nextUnits = [];
+            let prevUnits = [];
+            for (let j = 0; j < unitReportsData.length; j++) {
+                if (unitReportsData[j].unit_index === reportSelectUnit) {
+                    currentUnit = reportSelectUnit;
+                } else if (unitReportsData[j].unit_index > reportSelectUnit) {
+                    nextUnits.push(unitReportsData[j].unit_index)
+                } else {
+                    prevUnits.push(unitReportsData[j].unit_index)
+                }
+            };
+            if (currentUnit === 1) {
+                if (nextUnits.length > 0) {
+                    setIsNext(true);
+                    setIsPrev(false);
+                } else {
+                    setIsNext(false);
+                    setIsPrev(false);
+                }
+            } else if (currentUnit === 5) {
+                if (prevUnits.length > 0) {
+                    setIsNext(false);
+                    setIsPrev(true);
+                } else {
+                    setIsNext(false);
+                    setIsPrev(false);
+                }
+            } else {
+                if (prevUnits.length > 0) {
+                    setIsPrev(true);
+                } else {
+                    setIsPrev(false);
+                }
+                if (nextUnits.length > 0) {
+                    setIsNext(true);
+                } else {
+                    setIsNext(false);
+                }
+            }
         }
         
-    })
-    // The print function is automatically executed 2 seconds after the screen is opened.
-    // click print event
-    const onClickPrintEvent = () => {
-        // button click event
-        if (printPreviewer) {
-            setPrintPreviewer(false)
-        } else {
-            setPrintPreviewer(true)
-            // call print function
+    },[unitReportsData, reportSelectUnit, reportSelectFinder])
+    const handlePrev = (currentIndex:number) => {
+
+        if (isPrev && currentIndex!==1) {
+            const prevIndex = currentIndex-1;
+            setReportSelectUnit(prevIndex);
         }
     }
-    
-    const PrintUserInfoDiv = (props: {
-        userInfo:{
-            level: string;
-            class: string;
-            book: string;
-            student_code: string;
-            student_name_kr: string;
-            student_name_en: string;
-            unit_index: number;
-            unit_topic: string;
-            draft_1st: {
-                date_complete: string;
-            };
-            draft_2nd: {
-                date_complete: string;
-            };
+    const handleNext = (currentIndex:number) => {
+        if (isNext && currentIndex!==5) {
+            const nextIndex = currentIndex+1;
+            setReportSelectUnit(nextIndex)
         }
-    }) => {
-        const {userInfo} = props
-        return (
-            <div className='report-print-user-info'>
-                <div className='report-print-user-info-row'>
-                    <div className='report-print-user-info-label-left'>level / class</div>
-                    <div className='report-print-user-info-value-middle'>
-                        <div className='col-div'>
-                            <div>{`${userInfo.level}/`}</div>
-                            <div>{userInfo.class}</div>
-                        </div>
-                    </div>
-                    <div className='report-print-user-info-label-right'>student</div>
-                    <div className='report-print-user-info-value-small'>
-                        <div className='col-div'>
-                            <div>{userInfo.student_code}</div>
-                            <div>{`${userInfo.student_name_kr}(${userInfo.student_name_en})`}</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='report-print-user-info-row'>
-                    <div className='report-print-user-info-label-left'>book</div>
-                    <div className='report-print-user-info-value-middle'>{`${userInfo.book}`}</div>
-                    <div className='report-print-user-info-label-right'>unit</div>
-                    <div className='report-print-user-info-value-small'>{`Unit ${userInfo.unit_index}. ${userInfo.unit_topic}`}</div>
-                </div>
-                <div className='report-print-user-info-row'>
-                    <div className='report-print-user-info-label-left'>{'data completed'}</div>
-                    <div className='report-print-user-info-value-middle'>
-                        {`1st: ${userInfo.draft_1st.date_complete}`}
-                        <span className='border-l-[1px] border-l-[#aaaaaa] h-[8px]'/>
-                        {`2nd: ${userInfo.draft_2nd.date_complete}`}
-                    </div>
-                </div>
-            </div>
-        )
     }
-    
   
   return (
     <div className='flex'>
-        <Dialog open={printPreviewer}
-            onClose={()=>setPrintPreviewer(false)}
-            ref={printComponentRef}
-            sx={{
-                '.MuiPaper-root': {
-                    width: 'fit-content',
-                    height: 'fit-content',
-                    minWidth: 'fit-content',
-                    minHeight: 'fit-content'
-                },
-            }}
-        >
-            <DialogContent sx={{
-                minWidth: '850px',
-                maxWidth: '850px',
-                width: '850px',
-                maxHeight: '800px',
-                padding: '20px',
-            }}>
-                <div id='print-report-modal-viewer' className='col-div overflow-y-auto w-full h-[1228px] bg-white' >
-                    <div className='row-div'>
-                        <div className='report-print-icon-div'>
-                            <PrintWritingHubIcon className='w-[37px] h-[45.2px]' />
-                            <div className='capitalize gothamrounded-medium text-[16px] leading-[19px]'>writing hub</div>
-                            <div className='capitalize notoSansCJKKR-regular text-[12px] leading-[18px]'>spark writing</div>
-                        </div>
-                        <PrintUserInfoDiv userInfo={{
-                            "level":"MAG3",
-                            "class": "MAG3-Walnut",
-                            "book": "Spark Writing B-1",
-                            "student_code": "20111111",
-                            "student_name_kr": "김테스터",
-                            "student_name_en": "Tester Kim",
-                            "unit_index": 4,
-                            "unit_topic": "science fictions ...",
-                            "draft_1st": {
-                                "date_complete": "23-03-28"
-                            },
-                            "draft_2nd": {
-                                "date_complete": "23-04-25"
-                            }
-                        }}/>
-                    </div>
-                    <div className='col-div mt-[15px] gap-[5px]'>
-                        <div className='row-div capitalize gothamrounded-medium justify-center text-[16px] leading-[18px]'>evaluation gragh</div>
-                        <div className='report-print-evalueation-gragh-box'>
-                            <PrintReportDoughnutChart />
-                            <PrintReportBarChart />
-                        </div>
-                    </div>
-
-                </div>
-            </DialogContent>
-        </Dialog>
+        
       <Dialog
         open={unitReportModal.open}
-        onClose={()=>setUnitReportModal({open:false, unitTitle:''})}
+        onClose={()=>setUnitReportModal(initializeUnitReportModal) }
         fullWidth={true}
         sx={{
             '.MuiPaper-root': {
@@ -212,7 +149,7 @@ export default function UnitReportModalComponent() {
                     }}
                 >
                     <ReportClose className='w-[50px] h-[50px] m-0 p-0'
-                    onClick={()=>setUnitReportModal({open:false, unitTitle:''})}/>
+                    onClick={()=>setUnitReportModal(initializeUnitReportModal)}/>
                 </IconButton>
             </div>
         </DialogTitle>
@@ -235,63 +172,67 @@ export default function UnitReportModalComponent() {
                     onClick={()=>setMenuControl(1)}
                     >report by unit</div>
                 </div>
-                <div className='report-modal-menu-print'>
-                    {menuControll===1 && (
-                        // <ReactToPrint 
-                        //     trigger={()=>}
-                        // content={() => printComponentRef.current}
-                        // />
-                        <div className='report-modal-menu-print-button'
-                            onClick={()=>onClickPrintEvent()}
-                        >
-                            <ReportPrint />
-                            <span className='report-modal-menu-print-button-text'>print</span>
-                        </div>
+                <div className='absolute top-[55px] right-[30px]'>
+                    {menuControll===0 && (
+                      <ReportRubricModalComponent 
+                        handleNext={handleNext}
+                        handlePrev={handlePrev}
+                        isNext={isNext}
+                        isPrev={isPrev}
+                        setIsNext={setIsNext}
+                        setIsPrev={setIsPrev}
+                        isActivityPage={true}
+                        isNoData={false}
+                    />  
                         
+                    )}
+                    {menuControll===1 && (
+                        <div className='absolute top-[0px] right-[25px]'>
+                            <PrintReportExportButton isActivityPage={true}/>
+                        </div>
                     )}
                 </div>
             </div>
             {/* Overall Report */}
             {menuControll===0 && (
-                <div className='flex flex-col'></div>
+                <div className='w-full h-full flex flex-row justify-center items-center px-[40px] pt-[40px]'>
+                {/* left pie chart */}
+                <div className='flex flex-col items-center justify-center'>
+                    <PieChart />
+                    <div className='bg-tab-overall-pie-legend-img-svg bg-no-repeat w-[413px] h-[60px]' />
+                </div>
+                {/* right bar chart */}
+                <div className='flex flex-col items-center justify-center gap-[20px]'>
+                    <BarChart />
+                    <div className='bg-tab-overall-bar-legend-img-svg bg-no-repeat w-[393px] h-[15px]' />
+                </div>
+                
+            </div>
             )}
             {/* Report By Unit */}
             {menuControll===1 && (
-                <div className='flex flex-col'>
-                    <div className='flex flex-row justify-center items-center'>
-                        <span className='report-chart-report-by-unit-title'>
-                        {unitReportModal.unitTitle}
-                        </span>
-                    </div>
-                    <div className='flex flex-row mt-[30px] gap-[40px] justify-center'>
-                        <div className='flex'>
-                            <ReportChart/>
-                        </div>
-                        <div className='report-chart-right-components-div'>
-                            <ReportItemComponents.ReportWordCountSummaryComponent 
-                                item={unitReportModalData.wordCountSummary}
-                            />
-                            <ReportItemComponents.ReportCorrectionSummaryComponent 
-                                item={unitReportModalData.correctionSummary}
-                            />
-                            <div className='flex flex-col'>
-                                <div className='flex flex-row'>Teacher Comment Develop</div>
-                                <div className='flex flex-row'>
-                                    <div>drafts</div>
-                                    <div>drafts</div>
-                                    <div>drafts</div>
-                                    <div>drafts</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className='absolute bottom-[10px] right-[50px] flex flex-row capitalize'>
-                        <div>completion data: </div>
-                        <div>{`[1st draft]`}</div>
-                        <div>{`[2nd draft]`}</div>
-                    </div>
+                <div className='w-[964px] h-[424px] flex flex-col justify-center items-center pt-[30px] px-[50px]'>
+                {/* title */}
+                <div className='flex flex-row report-by-unit-page-title-font pb-[15px]'>
+                    {reportByUnitMainTitle}
                 </div>
+                {/* unit report */}
+                <ReportByUnitComponent reportByUnitAPIData={unitReportData} />
+                <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData} isActivityPage={true}/>
+
+                <div className={!isPrev
+                    ? 'absolute top-[240px] left-[0px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                    : 'absolute top-[240px] left-[0px] bg-tab-rubric-modal-left w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
+                    onClick={()=>handlePrev(reportSelectUnit)}
+                />
+                <div className={!isNext
+                    ? 'absolute top-[240px] right-[0px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                    : 'absolute top-[240px] right-[0px] bg-tab-rubric-modal-right w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
+                }
+                    onClick={()=>handleNext(reportSelectUnit)}
+                />
+
+            </div>
             )}
             
         </DialogContent>

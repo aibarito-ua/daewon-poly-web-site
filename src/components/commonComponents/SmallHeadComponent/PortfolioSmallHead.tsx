@@ -1,14 +1,12 @@
 import React from 'react';
 import useLoginStore from "../../../store/useLoginStore";
 import { commonIconSvgs } from "../../../util/svgs/commonIconsSvg";
-import useProgressPageStore from '../../../store/useProgressPageStore';
 
-export default function SmallHead (props: {
+export default function PortfolioSmallHead (props: {
     mainTitle: string,
     subTitle?: string,
 }) {
     const { userInfo } = useLoginStore();
-    const {progressTabActiveIndex, setProgressTabActiveIndex} = useProgressPageStore();
     const progressButtonLabel = [
         'spark writing',
         // 'free writing'
@@ -22,24 +20,16 @@ export default function SmallHead (props: {
                     {props.mainTitle!=='' && <span className='left-top-text-title select-none'>{props.mainTitle}</span>}
                 </div>
                 {props.subTitle!==undefined && <span className='left-top-text-sub-title select-none'>{props.subTitle}</span>}
-                {(props.mainTitle==='Progress'&&props.subTitle===undefined) && (
-                    <div className="left-top-progress-buttons-div select-none">
-                        {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
-                        })}
-                    </div>
-                )}
-                {(props.mainTitle==='Report'&&props.subTitle===undefined) && (
-                    <div className="left-top-progress-buttons-div select-none">
-                        {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
-                        })}
-                    </div>
-                )}
+                
                 {(props.mainTitle==='Portfolio'&&props.subTitle===undefined) && (
                     <div className="left-top-progress-buttons-div select-none">
                         {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
+                            return <button key={progressButtonIndex} 
+                            className={'left-top-progress-button-active'
+                                // progressTabActiveIndex===progressButtonIndex 
+                                // ? 'left-top-progress-button-active'
+                                // : 'left-top-progress-button'
+                            }>{item}</button>
                         })}
                     </div>
                 )}

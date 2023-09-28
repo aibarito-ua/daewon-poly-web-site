@@ -132,10 +132,40 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             ]
         }
     },
-    
+    initializeUnitReportModal: {
+        open: false,
+        unitTitle: '',
+        report: {
+            is_completed:false,
+            word_counts:[],
+            grammar_correction: {
+                grammar:{
+                    sentences:[],
+                    sentences_count:0
+                },
+                punctuation:{
+                    sentences:[],
+                    sentences_count:0
+                },
+                spelling:{
+                    sentences:[],
+                    sentences_count:0
+                }
+            },
+            teacher_comments: [],
+            rubric: {
+                overall_score:0,
+                categories: []
+            },
+            completion_date: [],
+            portfolio: []
+        },
+        overallData: {
+            units: []
+        }
+    },
     unitReportModal: {
         open: false,
-        unitTitle: ''
     },
     setUnitReportModal: (controlData) => {
         set(()=>({
@@ -159,7 +189,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         },
         barChartData: [
             {
-              name: "idea",
+              name: "ideas",
               score: 0,
               colors: { start:'#c9defc', end: '#588ee1'},
               customY: 10,
@@ -198,123 +228,148 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         unitsData: [
             {
                 unit_index:1,
-                rubric_scores: [
+                categories: [
                     {
-                        name: 'ideas',
-                        score: 2
+                        category: 'ideas',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'organization',
-                        score: 4
+                        category: 'organization',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'voice',
-                        score: 6
+                        category: 'voice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'word choice',
-                        score: 8
+                        category: 'word choice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'sentence fluency',
-                        score: 10
+                        category: 'sentence fluency',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'conventions',
-                        score: 6
-                    }
-                    
+                        category: 'conventions',
+                        score: 0,
+                        description: ''
+                    },
                 ]
             }, {
                 unit_index:2,
-                rubric_scores: [
+                categories: [
                     {
-                        name: 'ideas',
-                        score: 4
+                        category: 'ideas',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'organization',
-                        score: 6
+                        category: 'organization',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'voice',
-                        score: 8
+                        category: 'voice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'word choice',
-                        score: 10
+                        category: 'word choice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'sentence fluency',
-                        score: 8
+                        category: 'sentence fluency',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'conventions',
-                        score: 6
-                    }
-                    
+                        category: 'conventions',
+                        score: 0,
+                        description: ''
+                    },
                 ]
             }, {
                 unit_index:3,
-                rubric_scores: [
+                categories: [
                     {
-                        name: 'ideas',
-                        score: 6
+                        category: 'ideas',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'organization',
-                        score: 8
+                        category: 'organization',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'voice',
-                        score: 10
+                        category: 'voice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'word choice',
-                        score: 8
+                        category: 'word choice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'sentence fluency',
-                        score: 6
+                        category: 'sentence fluency',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'conventions',
-                        score: 4
-                    }
-                    
+                        category: 'conventions',
+                        score: 0,
+                        description: ''
+                    },
                 ]
             }, {
                 unit_index:4,
-                rubric_scores: [
+                categories: [
                     {
-                        name: 'ideas',
-                        score: 8
+                        category: 'ideas',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'organization',
-                        score: 10
+                        category: 'organization',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'voice',
-                        score: 10
+                        category: 'voice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'word choice',
-                        score: 10
+                        category: 'word choice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'sentence fluency',
-                        score: 8
+                        category: 'sentence fluency',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'conventions',
-                        score: 8
-                    }
-                    
+                        category: 'conventions',
+                        score: 0,
+                        description: ''
+                    },
                 ]
             }, {
                 unit_index:5,
-                rubric_scores: [
+                categories: [
                     {
-                        name: 'ideas',
-                        score: 2
+                        category: 'ideas',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'organization',
-                        score: 2
+                        category: 'organization',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'voice',
-                        score: 2
+                        category: 'voice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'word choice',
-                        score: 8
+                        category: 'word choice',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'sentence fluency',
-                        score: 6
+                        category: 'sentence fluency',
+                        score: 0,
+                        description: ''
                     }, {
-                        name: 'conventions',
-                        score: 10
-                    }
-                    
+                        category: 'conventions',
+                        score: 0,
+                        description: ''
+                    },
                 ]
             }
         ],
@@ -336,7 +391,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'organization',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#fcddc8'
                     }
                 ],
                 addWidth: 40,
@@ -355,7 +411,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'voice',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#E5D1F1'
                     }
                 ],
                 addWidth: 10,
@@ -374,7 +431,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'conventions',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#F4CBCB'
         
                     }
                 ],
@@ -394,7 +452,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'sentence fluency',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#E2E1FD'
                     }
                 ],
                 addWidth: 55,
@@ -413,7 +472,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'word choice',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#DCF4EC'
                     }
                 ],
                 addWidth: 40,
@@ -432,7 +492,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         tooltip: {
                             title: 'ideas',
                             content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
-                        }
+                        },
+                        circleBaseLineColor: '#C5DBFC'
                     }
                 ],
                 addWidth: 10,
@@ -442,8 +503,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         ]
     },
     setUnitRubricScoresData: (data, unit_idx) => {
+        const originData = data.units
         // total unit count: default 5
-        const unitCount = data.length;
+        const unitCount = originData.length;
         // each rubric max score
         const maxScore = 10*unitCount;
         const rubricNames = ['ideas','organization','voice','word choice','sentence fluency','conventions']
@@ -451,12 +513,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         const updateTargetData = get().unitRubricScoresData;
         
         for (let i =0; i < unitCount; i++) {
-            const rubricScoresDataByUnit = data[i].rubric_scores;
+            const rubricScoresDataByUnit = originData[i].categories;
             // hexagonChartData by Unit
             if (i+1 === unit_idx) {
                 updateTargetData.reportByUnit.selectUnitInfo.unit_index = unit_idx;
                 for (let z = 0; z < rubricScoresDataByUnit.length; z++) {
-                    const currentRubricName = rubricScoresDataByUnit[z].name;
+                    const currentRubricName = rubricScoresDataByUnit[z].category;
                     for (let hexaIdx = 0; hexaIdx < updateTargetData.hexagonChartData.length; hexaIdx++) {
                         const hexaRubricName = updateTargetData.hexagonChartData[hexaIdx].target;
                         if (currentRubricName === hexaRubricName) {
@@ -470,7 +532,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             // rubric for loop
             for (let j = 0; j < rubricScoresDataByUnit.length; j++) {
                 const currentRubricData = rubricScoresDataByUnit[j];
-                if (currentRubricData.name===rubricNames[j]) {
+                if (currentRubricData.category===rubricNames[j]) {
                     rubric_total_scores[j]+=currentRubricData.score;
                 }
             }
@@ -494,8 +556,384 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
 
         set(()=>({
            unitRubricScoresData: updateTargetData 
+        }));
+    },
+    reportAPIData: {
+        periods: []
+    },
+    setReportAPIData: (data) => {
+        set(()=>({reportAPIData:data}))
+    },
+    
+    reportSelectedOverallBarChart: [
+        {
+          name: "ideas",
+          target: "ideas",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+        {
+          name: "organization",
+          target: "organization",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+        {
+          name: "voice",
+          target: "voice",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+        {
+          name: "word",
+          target: "word choice",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+        {
+          name: "sentence",
+          target: "sentence fluency",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+        {
+          name: "conventions",
+          target: "conventions",
+          unit1: 0,
+          unit2: 0,
+          unit3: 0,
+          unit4: 0,
+          unit5: 0,
+          amt: 10
+        },
+    ],
+    reportSelectedOverallPieChart: [
+        {
+            target: 'conventions',
+            data: [
+                {
+                    name: 'conventions',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#db5757',
+                    fillBorderColor: '#be1f1f'
+                }
+            ],
+            addWidth: 40,
+            fitText: 40,
+            toolLineColor: '#be1f1f',
+        },
+        {
+            target: 'sentence fluency',
+            data: [
+                {
+                    name: 'sentence fluency',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#6865cc',
+                    fillBorderColor: '#433fa7'
+                }
+            ],
+            addWidth: 55,
+            fitText: 55,
+            toolLineColor: '#433fa7'
+        },
+        {
+            target: 'word choice',
+            data: [
+                {
+                    name: 'word choice',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#30c194',
+                    fillBorderColor: '#12986f'
+                }
+            ],
+            addWidth: 40,
+            fitText: 40,
+            toolLineColor: '#12986f'
+        },
+        {
+            target: 'voice',
+            data: [
+                {
+                    name: 'voice',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#aa6bd4',
+                    fillBorderColor: '#863fb5'
+                }
+            ],
+            addWidth: 10,
+            fitText: 14,
+            toolLineColor: '#863fb5'
+        },
+        {
+            target: 'organization',
+            data: [
+                {
+                    name: 'organization',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#f6914d',
+                    fillBorderColor: '#ee711e'
+                }
+            ],
+            addWidth: 40,
+            fitText: 40,
+            toolLineColor: '#ee711e'
+        },
+        {
+            target: 'ideas',
+            data: [
+                {
+                    name: 'ideas',
+                    value: 0,
+                    selectName: '',
+                    fillColor: '#588ee1',
+                    fillBorderColor: '#1f61c8'
+                }
+            ],
+            addWidth: 10,
+            fitText: 14,
+            toolLineColor: '#1f61c8'
+        },
+    ],
+    setSelectReportData: (data, year, semester, level) => {
+        // find data
+        let dumyData:TReportByStudentPeriodLevel= {
+            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+        }
+
+        let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
+        let dumyUnitReportsData:TUnitReportsData[] = JSON.parse(JSON.stringify(get().unitReportsData));
+        let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(get().reportModalRubricData));
+        let dumyOverallBar:TOverallBarChartDataItem[] = JSON.parse(JSON.stringify(get().reportSelectedOverallBarChart));
+        let dumyOverallPie:TAllDoughnutDatas = JSON.parse(JSON.stringify(get().reportSelectedOverallPieChart));
+        for (let i = 0; i < data.periods.length; i++) {
+            const currentPeriod = data.periods[i];
+            console.log('currentPeriod ==',currentPeriod)
+            // find year & semester
+            if (currentPeriod.year === year && currentPeriod.semester === semester) {
+                for (let j = 0; j < currentPeriod.levels.length; j++) {
+                    // find level
+                    const currentData = currentPeriod.levels[j];
+                    if (currentData.level_name === level) {
+                        dumyData = currentData;
+                        
+                        dumySelectReportRubricAllData = currentData.rubric_info;
+                        dumyUnitReportsData = currentData.unit_reports;
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
+        let sumData = [
+            {name:'conventions', sum: 0},
+            {name:'sentence fluency', sum: 0},
+            {name:'word choice', sum: 0},
+            {name:'voice', sum: 0},
+            {name:'organization', sum: 0},
+            {name:'ideas', sum: 0},
+        ]
+        let unitCount = 0;
+        for (let z = 0; z < dumyData.overall_report.length; z++) {
+            const targetOverall = dumyData.overall_report[z];
+            const targetUnitIdx = targetOverall.unit_index;
+            const targetCate = targetOverall.categories;
+
+            for (let k = 0; k < targetCate.length; k++) {
+                const targetCateName = targetCate[k].category;
+                const targetScore = targetCate[k].score;
+                for (let j = 0; j < rubricScoreDataStates.hexagonChartData.length; j++) {
+                    if (rubricScoreDataStates.hexagonChartData[j].target === targetCateName) {
+                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = targetCate[k].description
+                    }
+                }
+                for (let s = 0; s < sumData.length; s++) {
+                    if (sumData[s].name === targetCateName) {
+                        sumData[s].sum += targetScore;
+                        break;
+                    }
+                }
+                // set bar data
+                for (let b = 0; b < dumyOverallBar.length; b++) {
+                    const currentBarName = dumyOverallBar[b].target;
+                    if (currentBarName === targetCateName) {
+                        
+                        if (targetUnitIdx === 1) {
+                            if (unitCount === 0) unitCount+=1;
+                            dumyOverallBar[b].unit1 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 2) {
+                            if (unitCount === 1) unitCount+=1;
+                            dumyOverallBar[b].unit2 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 3) {
+                            if (unitCount === 2) unitCount+=1;
+                            dumyOverallBar[b].unit3 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 4) {
+                            if (unitCount === 3) unitCount+=1;
+                            dumyOverallBar[b].unit4 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 5) {
+                            if (unitCount === 4) unitCount+=1;
+                            dumyOverallBar[b].unit5 = targetScore;
+                            break;
+                        }
+                    }
+                } // end category bar data
+
+            }
+        }
+        console.log('dumyOverallBar===',dumyOverallBar)
+        console.log('sumData ==',sumData)
+        console.log('unit count =',unitCount)
+        // set pie data
+        for (let p = 0; p < dumyOverallPie.length; p++) {
+            const currentPie = dumyOverallPie[p];
+
+            for (let s = 0; s < sumData.length; s++) {
+                if (sumData[s].name === currentPie.target) {
+                    const maxScore = unitCount*10;
+                    const percent = sumData[s].sum / maxScore * 100;
+                    console.log('percent ==',percent)
+                    dumyOverallPie[p].data[0].value = percent;
+                    // for (let r = 0; r < rubricScoreDataStates.hexagonChartData.length; r++) {
+                    //     if (rubricScoreDataStates.hexagonChartData[r].target === currentPie.target) {
+                    //         rubricScoreDataStates.hexagonChartData[r].data[0].value = percent;
+                            
+                    //     }
+                    // }
+                }
+            }
+        }
+        set(()=>({
+            reportSelectedOverallBarChart: dumyOverallBar,
+            reportSelectedOverallPieChart: dumyOverallPie,
+            reportModalRubricData: dumySelectReportRubricAllData,
+            unitReportsData: dumyUnitReportsData,
+            unitRubricScoresData: rubricScoreDataStates,
+            reportSelectBookName: dumyData.book_name,
         }))
-    }
+    },
+    reportSelectFinder: {
+        label: '', level: '', semester: 0, year: 0
+    },
+    setReportSelectedFinder: (data) => {
+        set(() => ({reportSelectFinder:data}))
+    },
+    reportByUnitMainTitle: '',
+    reportSelectUnit: 1,
+    setReportSelectUnit: (unit_index) => {
+        let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
+        let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
+
+        const getUnitReports = get().unitReportsData;
+        for (let i = 0; i < getUnitReports.length; i++) {
+            const targetUnit = getUnitReports[i].unit_index;
+            if (targetUnit === unit_index) {
+                const targetUnitReport = getUnitReports[i].report;
+                dumpUnitReportData=getUnitReports[i].report;
+                const rubricCategories = targetUnitReport.rubric.categories;
+                for (let j = 0; j < rubricCategories.length; j++) {
+
+                    for (let z = 0; z < rubricScoreDataStates.barChartData.length; z++) {
+                        const currentColumn = rubricScoreDataStates.barChartData[z];
+                        if (currentColumn.name === rubricCategories[j].category) {
+                            rubricScoreDataStates.barChartData[j].score = rubricCategories[j].score * 10;
+                            break;
+                        }
+                    }
+                    for (let k = 0; k < rubricScoreDataStates.hexagonChartData.length; k++) {
+                        const hexaColumn = rubricScoreDataStates.hexagonChartData[k];
+                        if (rubricCategories[j].category === hexaColumn.target) {
+                            rubricScoreDataStates.hexagonChartData[k].data[0].value = rubricCategories[j].score*10;
+                        }
+                    }
+                }; // set score percent
+                break;
+            }
+        }
+        const modalRubric = get().reportModalRubricData;
+        let title = '';
+        for (let m = 0; m < modalRubric.length; m++) {
+            if (modalRubric[m].unit_index === unit_index) {
+                const findTopic = modalRubric[m].rubric.name.split('_');
+                const topic = findTopic[1];
+                title = `Unit ${unit_index}. ${topic}`;
+            }
+        }
+        set(()=>({
+            reportSelectUnit: unit_index,
+            unitRubricScoresData: rubricScoreDataStates,
+            reportByUnitMainTitle: title,
+            unitReportData: dumpUnitReportData,
+        }))
+    },
+    reportModalRubricData: [],
+    unitReportsData:[],
+    unitReportData: {
+        is_completed: false, word_counts: [], 
+        grammar_correction: { 
+            grammar: {sentences:[],sentences_count:0},
+            punctuation: {sentences:[],sentences_count:0},
+            spelling: {sentences:[],sentences_count:0}
+        },
+        teacher_comments: [],
+        rubric: {
+            overall_score: 0,
+            categories: [],
+        },
+        completion_date: []
+    },
+    setUnitReportData: (data) => {
+        let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
+        const allScoreData = data.rubric.categories;
+        
+        for (let i = 0; i < allScoreData.length; i++) {
+            const currentScoreData = allScoreData[i];
+            for (let j = 0; j < rubricScoreDataStates.barChartData.length; j++) {
+                const rubricColumn = rubricScoreDataStates.barChartData[j];
+                if (currentScoreData.category === rubricColumn.name) {
+                    rubricScoreDataStates.barChartData[j].score = currentScoreData.score*10;
+                    break;
+                }
+            }
+            for (let z = 0; z < rubricScoreDataStates.hexagonChartData.length; z++) {
+                const hexaColumn = rubricScoreDataStates.hexagonChartData[z];
+                if (currentScoreData.category === hexaColumn.target) {
+                    rubricScoreDataStates.hexagonChartData[z].data[0].value = currentScoreData.score*10;
+                }
+            }
+        }
+        set(()=>({unitReportData: data, unitRubricScoresData: rubricScoreDataStates}))
+    },
+    reportSelectBookName:'',
 
 }))
 

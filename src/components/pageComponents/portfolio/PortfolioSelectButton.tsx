@@ -3,48 +3,46 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { progressIcons } from '../../../util/svgs/commonProgressIcons';
-import { styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import usePortfolioStore from '../../../store/usePortfolioStore';
 
-
-
-export default function ReportSelectButton(props:{
-  data:{
-    year: number, semester:number, level:string, label:string
-  }[],
-  selectDataFn:Function,
-  isLevel:boolean,
-  useDefaultEmptyValueFlag?:boolean,
-  disabledFlag?:boolean,
+export default function PortfolioSelectButton(props:{
+  isUse: "semester"|"level";
+  disabled:boolean;
 }) {
   const {
-    data,
-    useDefaultEmptyValueFlag,
-    disabledFlag,
-    isLevel, 
-    selectDataFn,
+    disabled, 
+    isUse,
   } = props;
-  const [value, setValue] = React.useState('');
+  
   const [open, setOpen] = React.useState<boolean>(false);
   
+  const selectValue = () => {
+    if (isUse==='level') {
+      return selectLevel;
+    } else if (isUse==='semester') {
+      return selectSemester
+    }
+  }
+  const setSelectValue = (value:string) => {
+    
+    if (isUse==='level') {
+      setSelectLevel(value)
+    } else if (isUse==='semester') {
+      setSelectSemester(value)
+    }
+  }
+  const {
+    semesters, selectSemester, setSelectSemester,
+    levels, selectLevel, setSelectLevel,
+  } = usePortfolioStore();
+  
   const handleChange = (event: SelectChangeEvent) => {
-    console.log('user info =',data)
-    const targetData = event.target.value;
-    console.log('target =',targetData);
-    if (targetData === '') {
-      selectDataFn(data[0], isLevel, true)
-      
-      setValue('');
-      return;
+    const targetValue = event.target.value;
+    console.log('portfolio select button targetValue =',targetValue)
+    if (targetValue === '') {
+      setSelectValue('')
     } else {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].label === targetData) {
-          selectDataFn(data[i], isLevel);
-          
-          setValue(event.target.value);
-          break;
-        }
-      }
+      setSelectValue(targetValue)
     }
   };
 
@@ -54,7 +52,7 @@ export default function ReportSelectButton(props:{
       <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1}} >
         <Select
             sx={{
-              color: value===''? '#aeaeae': '#222',
+              color: selectValue()===''? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
               borderRadius: '15px',
@@ -67,23 +65,20 @@ export default function ReportSelectButton(props:{
             }}
             
             placeholder='test'
-            value={value}
-            disabled={disabledFlag?true:false}
+            value={selectValue()}
+            disabled={disabled}
             onChange={handleChange}
             displayEmpty={true}
             open={open}
             renderValue={(selected) => {
               console.log('selected !!=',selected)
-              if (selected.length === 0) {
-                if (isLevel) {
+              if (selected==="") {
+                if (isUse==='level') {
                   return 'Please select a level'
                 } else {
                   return 'Please select a semester';
-                }
-                
-
+                };
               }else return selected
-
             }}
             
             onOpen={()=>setOpen(true)}
@@ -92,12 +87,12 @@ export default function ReportSelectButton(props:{
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
             
         >
-            {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
-            {isLevel && <MenuItem disabled sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
-
-            {data.map((dataItem, dataIndex)=>{
+            <MenuItem disabled={disabled} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
+            {isUse==='level' && levels.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>
-
+            })}
+            {isUse==='semester' && semesters.map((dataItem, dataIndex)=>{
+                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>
             })}
         </Select>
       </FormControl>

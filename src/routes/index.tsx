@@ -1,16 +1,16 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom';
-import { Home } from '../pages/Home';
+// import { Home } from '../pages/Home';
 import { Login } from '../pages/Login';
 import EssayWriting from '../pages/Student/EssayWriting';
-import { MyPage } from '../pages/Student/MyPage';
+// import { MyPage } from '../pages/Student/MyPage';
 import { Portfolio } from '../pages/Student/Portfolio';
 import WebViewWrap from '../pages/WebViewWrap';
 import useLoginStore from '../store/useLoginStore';
 import PrivateRoute from './PrivateRoute';
-import { Admin } from '../pages/Admin';
-import { Student } from '../pages/Student/Student';
-import { Teacher } from '../pages/Teacher';
+// import { Admin } from '../pages/Admin';
+// import { Student } from '../pages/Student/Student';
+// import { Teacher } from '../pages/Teacher';
 import {routeValues} from './routeValues';
 import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
 import SelectUnit from '../pages/Student/SelectUnit';
@@ -21,8 +21,9 @@ import NavAside from '../components/layoutComponents/Navs/NavAside';
 import CommonAlertModalComponent from '../components/toggleModalComponents/CommonAlertModalComponent';
 import StandbyScreen from '../components/commonComponents/standby/StandbyScreen';
 import Progress from '../pages/Student/Progress';
-import UnitReportModalComponent from '../components/toggleModalComponents/UnitReportModalComponent';
 import ReturnFeedbackModalComponent from '../components/toggleModalComponents/ReturnFeedbackModalComponent';
+import PortfolioModalComponent from '../components/toggleModalComponents/PortfolioModalComponent';
+
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
@@ -76,7 +77,7 @@ export default function Roter() {
                         <Route path='/student/WritingClinic/SparkWriting' element={ <SelectUnit />}></Route>
                         <Route path='/student/Progress' element={<Progress />}></Route>
                         <Route path='/student/Report' element={<Report />}></Route>
-                        <Route path='/student/MyPortfolio' element={<Portfolio />}></Route>
+                        <Route path='/student/Portfolio' element={<Portfolio />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
 
                     </Route>
@@ -87,7 +88,7 @@ export default function Roter() {
                 </Routes>
                 <CommonAlertModalComponent />
                 <StandbyScreen />
-                <UnitReportModalComponent />
+                <PortfolioModalComponent />
                 <ReturnFeedbackModalComponent />
             </div>
           

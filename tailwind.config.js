@@ -50,6 +50,39 @@ module.exports = {
         'draft-2nd-submit-button-readonly-svg': "url('/src/util/svgs/bt_submit_readonly.svg')",
 
         'modal-close-button-svg': "url('/src/util/svgs/bt_close.svg')",
+        // report tab bg 
+        'tab-title-active-bg-svg': "url('/src/util/svgs/report/active.svg')",
+        // report no data img
+        'tab-no-data-img-svg': "url('/src/util/svgs/report/img.svg')",
+        // report pie legend - overall
+        'tab-overall-pie-legend-img-svg': "url('/src/util/svgs/report/overallPieLegend.svg')",
+        // report bar legend - overall
+        'tab-overall-bar-legend-img-svg': "url('/src/util/svgs/report/overallBarLegend.svg')",
+        // in report, rubric button icon
+        'tab-overall-rubric-ic-svg': "url('/src/components/toggleModalComponents/img/bt_rubric_report.svg')",
+        // in rubric report modal left&right button
+        'tab-rubric-modal-left': "url('/src/components/toggleModalComponents/img/btn_prev.svg')",
+        'tab-rubric-modal-right': "url('/src/components/toggleModalComponents/img/btn_next.svg')",
+        // in report, report by unit left&right button
+        'tab-report-prev': "url('/src/components/toggleModalComponents/img/bt_prev.svg')",
+        'tab-report-next': "url('/src/components/toggleModalComponents/img/bt_next.svg')",
+        // in report, rubric left&right disabled button
+        'tab-prev-btn-disabled': "url('/src/components/toggleModalComponents/img/btn_prev_disabled.svg')",
+        'tab-next-btn-disabled': "url('/src/components/toggleModalComponents/img/btn_next_disabled.svg')",
+        // in report page, print button icon
+        'tab-print-btn-ic-svg': "url('/src/components/commonComponents/printComponent/report/svgs/bt_print.svg')",
+        // print report writing hub icon
+        'report-ic-wr': "url('/src/components/commonComponents/printComponent/report/svgs/ic_wr.svg')",
+        // in activity page, modal, btn rubric
+        'btn-rubric-modal-ic-svg': "url('/src/util/svgs/bt_rubric.svg')",
+        // in activity page, modal, print button icon
+        'btn-report-modal-print-ic-svg': "url('/src/components/commonComponents/printComponent/report/svgs/bt_print_pur.svg')",
+        'portfolio-unit-open-bg-svg': "url('/src/components/pageComponents/portfolio/svgs/unitBG.svg')",
+        'portfolio-unit-lock-bg-svg': "url('/src/components/pageComponents/portfolio/svgs/unitLock.svg')",
+        // portfolio crown
+        'portfolio-unit-crown-ic-svg': "url('/src/components/pageComponents/portfolio/svgs/ic_medal.svg')",
+        // portfolio modal small crown
+        'portfolio-unit-modal-crown-ic-svg':"url('/src/components/pageComponents/portfolio/svgs/smallCrown.svg')",
       }
     },
     borderWidth: {

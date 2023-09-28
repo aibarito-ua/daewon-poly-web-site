@@ -120,10 +120,18 @@ export default function App() {
     const [decText, setDecText] = useState<number>(0);
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
     const [average, setAverage] = useState<number>(0);
-    const {unitRubricScoresData} = useControlAlertStore();
-    const data = unitRubricScoresData.averageChartData.dataPayload
+    const {unitRubricScoresData, reportSelectUnit} = useControlAlertStore();
+    
+    
     React.useEffect(()=>{
-    },[])
+        let allScore = 0;
+        const data = unitRubricScoresData.hexagonChartData.map((item)=>{
+            allScore += item.data[0].value;
+            return item;
+        });
+        const avg = parseFloat((allScore/data.length).toFixed(1));
+        setAverage(avg);
+    },[reportSelectUnit])
     const radiusDatas = [
         { innerRadius: 44, outerRadius: 68 },
     ]
@@ -204,11 +212,14 @@ const textTooltip = () => {
     <PieChart width={140} height={140}>
         
             {/* const currentR = radiusDatas[dataIndex] */}
-            <Pie key={data.target}
+            <Pie key={'print-report-average'}
                 className="pie-button-effect-none"
               activeIndex={0}
               activeShape={renderActiveShape}
-              data={data.data}
+              data={[{
+                name: 'average',
+                value: average
+              }]}
               cx={cx}
               cy={cy}
               innerRadius={60}
@@ -219,7 +230,7 @@ const textTooltip = () => {
         <text x={cx} y={cy} dy={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={10} textAnchor="middle" style={text1Css}>
-                {Math.round(data.data[0].value*10)/10}
+                {Math.round(average*10)/10}
             </tspan>
             <tspan x={cx+30} y={cy} dy={10} style={text2Css}>%</tspan>
         </text>

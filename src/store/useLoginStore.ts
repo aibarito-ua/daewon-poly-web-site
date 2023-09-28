@@ -46,6 +46,9 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
         userCode: '',
         webId: '',
         userImagePath: '',
+        className:'',
+        semester:0,
+        year:0
     },
     setUserInfo: (userInfo:TSetUserInfoData) => {
         const targetData = JSON.parse(JSON.stringify(userInfo));
@@ -58,11 +61,14 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
         data.userCode= targetData.userCode? targetData.userCode:data.userCode;
         data.webId= targetData.webId? targetData.webId:data.webId;
         data.userImagePath= targetData.userImagePath? targetData.userImagePath:data.userImagePath;
+        data.className = targetData.className? targetData.className:data.className;
+        data.semester = targetData.semester? targetData.semester:data.semester;
+        data.year = targetData.year ? targetData.year: data.year;
 
         set(()=>({userInfo:data, role: 'student'}))
     },
     setLogoutUser: ()=>{
-        const userInfo = {
+        const userInfo:TUserInfoData = {
             accessToken:'',
             courseCode: '',
             courseName: '',
@@ -71,6 +77,9 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
             userCode: '',
             webId: '',
             userImagePath: '',
+            className:'',
+            semester:0,
+            year:0
         }
         set(()=>({userInfo, role: 'logout'}))
     }

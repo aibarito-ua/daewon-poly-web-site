@@ -1,6 +1,7 @@
 
 import React, { useCallback, useState } from "react";
 import { PieChart, Pie, Sector, Tooltip } from "recharts";
+import useControlAlertStore from "../../store/useControlAlertStore";
 
 
 const data1 = [
@@ -13,98 +14,98 @@ const data2 = [
   //   { name: "Group 1", value: 75 },
   //   { name: "Group 2", value: 40 },
   ];
-const data:TAllDoughnutDatas = [
-    {
-        target: 'conventions',
-        data: [
-            {
-                name: 'conventions',
-                value: 10,
-                selectName: '',
-                fillColor: '#db5757',
-                fillBorderColor: '#be1f1f'
-            }
-        ],
-        addWidth: 40,
-        fitText: 40,
-        toolLineColor: '#be1f1f',
-    },
-    {
-        target: 'sentence fluency',
-        data: [
-            {
-                name: 'sentence fluency',
-                value: 10,
-                selectName: '',
-                fillColor: '#6865cc',
-                fillBorderColor: '#433fa7'
-            }
-        ],
-        addWidth: 55,
-        fitText: 55,
-        toolLineColor: '#433fa7'
-    },
-    {
-        target: 'word choice',
-        data: [
-            {
-                name: 'word choice',
-                value: 10,
-                selectName: '',
-                fillColor: '#30c194',
-                fillBorderColor: '#12986f'
-            }
-        ],
-        addWidth: 40,
-        fitText: 40,
-        toolLineColor: '#12986f'
-    },
-    {
-        target: 'voice',
-        data: [
-            {
-                name: 'voice',
-                value: 10,
-                selectName: '',
-                fillColor: '#aa6bd4',
-                fillBorderColor: '#863fb5'
-            }
-        ],
-        addWidth: 10,
-        fitText: 14,
-        toolLineColor: '#863fb5'
-    },
-    {
-        target: 'organization',
-        data: [
-            {
-                name: 'organization',
-                value: 10,
-                selectName: '',
-                fillColor: '#f6914d',
-                fillBorderColor: '#ee711e'
-            }
-        ],
-        addWidth: 40,
-        fitText: 40,
-        toolLineColor: '#ee711e'
-    },
-    {
-        target: 'ideas',
-        data: [
-            {
-                name: 'ideas',
-                value: 90,
-                selectName: '',
-                fillColor: '#588ee1',
-                fillBorderColor: '#1f61c8'
-            }
-        ],
-        addWidth: 10,
-        fitText: 14,
-        toolLineColor: '#1f61c8'
-    },
-]
+// const data:TAllDoughnutDatas = [
+//     {
+//         target: 'conventions',
+//         data: [
+//             {
+//                 name: 'conventions',
+//                 value: 10,
+//                 selectName: '',
+//                 fillColor: '#db5757',
+//                 fillBorderColor: '#be1f1f'
+//             }
+//         ],
+//         addWidth: 40,
+//         fitText: 40,
+//         toolLineColor: '#be1f1f',
+//     },
+//     {
+//         target: 'sentence fluency',
+//         data: [
+//             {
+//                 name: 'sentence fluency',
+//                 value: 10,
+//                 selectName: '',
+//                 fillColor: '#6865cc',
+//                 fillBorderColor: '#433fa7'
+//             }
+//         ],
+//         addWidth: 55,
+//         fitText: 55,
+//         toolLineColor: '#433fa7'
+//     },
+//     {
+//         target: 'word choice',
+//         data: [
+//             {
+//                 name: 'word choice',
+//                 value: 10,
+//                 selectName: '',
+//                 fillColor: '#30c194',
+//                 fillBorderColor: '#12986f'
+//             }
+//         ],
+//         addWidth: 40,
+//         fitText: 40,
+//         toolLineColor: '#12986f'
+//     },
+//     {
+//         target: 'voice',
+//         data: [
+//             {
+//                 name: 'voice',
+//                 value: 10,
+//                 selectName: '',
+//                 fillColor: '#aa6bd4',
+//                 fillBorderColor: '#863fb5'
+//             }
+//         ],
+//         addWidth: 10,
+//         fitText: 14,
+//         toolLineColor: '#863fb5'
+//     },
+//     {
+//         target: 'organization',
+//         data: [
+//             {
+//                 name: 'organization',
+//                 value: 10,
+//                 selectName: '',
+//                 fillColor: '#f6914d',
+//                 fillBorderColor: '#ee711e'
+//             }
+//         ],
+//         addWidth: 40,
+//         fitText: 40,
+//         toolLineColor: '#ee711e'
+//     },
+//     {
+//         target: 'ideas',
+//         data: [
+//             {
+//                 name: 'ideas',
+//                 value: 90,
+//                 selectName: '',
+//                 fillColor: '#588ee1',
+//                 fillBorderColor: '#1f61c8'
+//             }
+//         ],
+//         addWidth: 10,
+//         fitText: 14,
+//         toolLineColor: '#1f61c8'
+//     },
+// ]
 const renderActiveShape = (props: any) => {
     // console.log('props: ',props)
   const RADIAN = Math.PI / 180;
@@ -125,15 +126,6 @@ const renderActiveShape = (props: any) => {
   const midAngle = 45;
   const startAngle = 90;
   const endAngle = 90-value/100*360;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
   const radiusMid = outerRadius-innerRadius;
 const cornerRadius = radiusMid/2;
 const trackRadius = innerRadius + cornerRadius;
@@ -143,53 +135,56 @@ const trackRadius = innerRadius + cornerRadius;
             r={trackRadius}
             fill="none"
             stroke="#f5f5f5"
-            strokeWidth={16}
+            strokeWidth={10}
         />
         {payload.selectName!=='' && (
             <Sector
                 cx={cx}
                 cy={cy}
-                innerRadius={innerRadius-2}
-                outerRadius={outerRadius+2}
+                innerRadius={innerRadius}
+                outerRadius={outerRadius}
                 startAngle={startAngle+0.5}
                 endAngle={endAngle-0.5}
                 fill={payload.fillBorderColor}
                 cornerRadius={cornerRadius}
             />
         )}
-        <Sector
-            cx={cx}
-            cy={cy}
-            innerRadius={innerRadius}
-            outerRadius={outerRadius}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            fill={fill}
-            cornerRadius={cornerRadius}
-        />
+        {payload.selectName!=='' && (
+            <Sector
+                cx={cx}
+                cy={cy}
+                innerRadius={innerRadius+2}
+                outerRadius={outerRadius-2}
+                startAngle={startAngle}
+                endAngle={endAngle}
+                fill={fill}
+                cornerRadius={cornerRadius}
+            />
+        )}
+        {payload.selectName==='' && (
+            <Sector
+                cx={cx}
+                cy={cy}
+                innerRadius={innerRadius}
+                outerRadius={outerRadius}
+                startAngle={startAngle}
+                endAngle={endAngle}
+                fill={fill}
+                cornerRadius={cornerRadius}
+            />  
+        )}
     </g>
   );
 };
-type TAllDoughnutDatas = {
-    target: string;
-    data: {
-        name: string;
-        value: number;
-        selectName: string;
-        fillColor: string;
-        fillBorderColor: string;
-    }[];
-    addWidth: number;
-    fitText: number;
-    toolLineColor: string;
-}[]
+
 export default function App() {
+    const {reportSelectedOverallPieChart} = useControlAlertStore();
     const [activeIndex, setActiveIndex] = useState(0);
     const [clickIndex, setClickIndex] = useState<string>('');
     const [tooltipData, setTooltipData] = useState<{value:number, outerRadius:number}>({
         value: 0, outerRadius: 0
     });
-    const [allData, setAllData] = useState<TAllDoughnutDatas>(data);
+    const [allData, setAllData] = useState<TAllDoughnutDatas>(reportSelectedOverallPieChart);
     const [addWidth, setAddWidth] = useState<number>(0);
     const [decText, setDecText] = useState<number>(0);
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
@@ -203,14 +198,14 @@ export default function App() {
         }
         const avr = sum_val/length;
         setAverage(avr)
-    },[])
+    },[reportSelectedOverallPieChart])
     const radiusDatas = [
-        { innerRadius: 44, outerRadius: 68 },
-        { innerRadius: 74, outerRadius: 98 },
-        { innerRadius: 104, outerRadius: 128 },
-        { innerRadius: 134, outerRadius: 158 },
-        { innerRadius: 164, outerRadius: 188 },
-        { innerRadius: 194, outerRadius: 218 }
+        { innerRadius: 60, outerRadius: 70 },
+        { innerRadius: 75, outerRadius: 85 },
+        { innerRadius: 90, outerRadius: 100 },
+        { innerRadius: 105, outerRadius: 115 },
+        { innerRadius: 120, outerRadius: 130 },
+        { innerRadius: 135, outerRadius: 145 }
     ]
     
     const labelNames = [
@@ -222,8 +217,8 @@ export default function App() {
         'conventions'
     ];
     // const avr = 90;
-    const cx = 250;
-    const cy = 250;
+    const cx = 145;
+    const cy = 145;
     const textmainCss:React.CSSProperties = {
         width: '80px',
         height: '80px',
@@ -272,7 +267,7 @@ const textTooltip = () => {
     const textAnchor = cos >= 0 ? "start" : "end";
     const pathX = sx-18;
     const pathY = sy-24;
-    const pathX_right = pathX + addDump;
+    const pathX_right = pathX + addDump + 10;
     const pathX_left = pathX - addDump;
     
     return (
@@ -288,7 +283,7 @@ const textTooltip = () => {
                 y={sy}
                 textAnchor={textAnchor}
                 fill="#333"
-            >{`${clickIndex}: ${tooltipData.value}`}</text>
+            >{`${clickIndex}: ${tooltipData.value}%`}</text>
         </g>
     )
 
@@ -330,7 +325,8 @@ const mouseOffEvent = (e:any) => {
 }
 
   return (
-    <PieChart width={500} height={500}>
+    <PieChart width={350} height={300}>
+
         <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={12} textAnchor="middle" style={text1Css}>
                 {Math.round(average*10)/10}

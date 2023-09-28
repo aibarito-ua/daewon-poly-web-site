@@ -111,3 +111,36 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData):Promise<b
         return false;
     })
 }
+
+export async function getReportsAPI(student_code: string): Promise<TReportByStudentResponse|null> {
+    console.log(student_code)
+    const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code);
+    return await axios.get(reqUrl, {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        }
+    }).then((response) => {
+        const rsp:TReportByStudentResponse = response.data.data;
+        return rsp;
+    }).catch((reject) => {
+        console.log('reject report api =',reject);
+        return null;
+    })
+}
+export async function getPortfoliosAPI (student_code:string) : Promise<TPortfolioAPIData|null> {
+    const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code);
+    return await axios.get(reqUrl, {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        }
+    }).then((response) => {
+        const rsp = response.data.data;
+        return rsp;
+    }).catch((reject) => {
+        console.log('reject ==',reject)
+        return null;
+    })
+}
+

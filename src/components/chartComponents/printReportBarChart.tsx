@@ -96,45 +96,45 @@ const changeDataForm = (unitRubricScoresData:TUnitScoreData) => {
         for (let j = 0; j < targetData.length; j++) {
             const unitTargetData = targetData[j];
             if (unitTargetData.unit_index===1) {
-                const rubricTarget = unitTargetData.rubric_scores;
+                const rubricTarget = unitTargetData.categories;
                 for (let z = 0; z < rubricTarget.length; z++) {
-                    const rubricTargetName = rubricTarget[z].name;
+                    const rubricTargetName = rubricTarget[z].category;
                     if (rubricTargetName === rubricName) {
                         rubricScore.unit1 = rubricTarget[z].score;
                         break;
                     }
                 }
             } else if (unitTargetData.unit_index===2) {
-                const rubricTarget = unitTargetData.rubric_scores;
+                const rubricTarget = unitTargetData.categories;
                 for (let z = 0; z < rubricTarget.length; z++) {
-                    const rubricTargetName = rubricTarget[z].name;
+                    const rubricTargetName = rubricTarget[z].category;
                     if (rubricTargetName === rubricName) {
                         rubricScore.unit2 = rubricTarget[z].score;
                         break;
                     }
                 }
             } else if (unitTargetData.unit_index===3) {
-                const rubricTarget = unitTargetData.rubric_scores;
+                const rubricTarget = unitTargetData.categories;
                 for (let z = 0; z < rubricTarget.length; z++) {
-                    const rubricTargetName = rubricTarget[z].name;
+                    const rubricTargetName = rubricTarget[z].category;
                     if (rubricTargetName === rubricName) {
                         rubricScore.unit3 = rubricTarget[z].score;
                         break;
                     }
                 }
             } else if (unitTargetData.unit_index===4) {
-                const rubricTarget = unitTargetData.rubric_scores;
+                const rubricTarget = unitTargetData.categories;
                 for (let z = 0; z < rubricTarget.length; z++) {
-                    const rubricTargetName = rubricTarget[z].name;
+                    const rubricTargetName = rubricTarget[z].category;
                     if (rubricTargetName === rubricName) {
                         rubricScore.unit4 = rubricTarget[z].score;
                         break;
                     }
                 }
             } else if (unitTargetData.unit_index===5) {
-                const rubricTarget = unitTargetData.rubric_scores;
+                const rubricTarget = unitTargetData.categories;
                 for (let z = 0; z < rubricTarget.length; z++) {
-                    const rubricTargetName = rubricTarget[z].name;
+                    const rubricTargetName = rubricTarget[z].category;
                     if (rubricTargetName === rubricName) {
                         rubricScore.unit5 = rubricTarget[z].score;
                         break;
@@ -228,10 +228,14 @@ const processChangeDataForm = (data: TBarChartData[]) => {
         >{value}%</text>
     }
 export default function App() {
-    const {unitRubricScoresData} = useControlAlertStore();
+    const {unitRubricScoresData, reportSelectUnit, unitReportData} = useControlAlertStore();
+    const [ data, setData] = React.useState<TBarChartsData[]>([]);
     // data form process 1
-    const dataAllProcess:TBarChartData[] = changeDataForm(unitRubricScoresData);
-    const data = unitRubricScoresData.barChartData;
+    // const dataAllProcess:TBarChartData[] = changeDataForm(unitRubricScoresData);
+    // const data = unitRubricScoresData.barChartData;
+    React.useEffect(()=>{
+       setData(unitRubricScoresData.barChartData) 
+    },[unitRubricScoresData, reportSelectUnit])
     // const data:TBarChartData[] = processChangeDataForm(dataAllProcess);
   return (
     <BarChart

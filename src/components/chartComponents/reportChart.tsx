@@ -88,12 +88,13 @@ const percentValue = Math.round(payload.value*10)/10;
 const percentDotCheck = Math.round(payload.value*10)%10 === 0;
 
 const titleName:string[] = payload.name.split(' ')
+console.log('test pie ===',props)
   return (
     <g>
         <circle cx={cx} cy={cy}
             r={trackRadius}
             fill="#fff"
-            stroke="#f5f5f5"
+            stroke={payload.circleBaseLineColor}
             strokeWidth={4}
         />
         <text x={cx} y={cy} textAnchor="middle" width={104} height={28} style={textLabelCss}
@@ -139,9 +140,9 @@ const CustomTooltipDIV = (props:any) => {
     if (active && payload && payload.length) {
         const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
         return (
-          <div className={`${classNameStr}`}>
-            <p className="custom-tooltip-title z-20">{`${payload[0].payload.tooltip.title}`}</p>
-            <p className="custom-tooltip-content z-20">{`${payload[0].payload.tooltip.content}`}</p>
+          <div className={`${classNameStr} z-[1302]`} >
+            <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
+            <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
             
           </div>
         );
@@ -161,15 +162,20 @@ export default function App() {
 
     const [tooltipContents, setTooltipContents] = useState<{title:string, content:string}>({title:'',content: ''});
     const [tooltipPosition, setTooltipPosition] = useState<{x:number, y:number}>({x:0,y:0});
-    const {unitRubricScoresData} = useControlAlertStore();
+    const {unitRubricScoresData, reportSelectUnit} = useControlAlertStore();
     
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
     React.useEffect(()=>{
         const data = unitRubricScoresData.hexagonChartData;
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
-        setAverage(unitRubricScoresData.averageChartData.dataPayload.data[0].value)
-    },[])
+        let dumpAvr = 0;
+        for (let i =0; i < dumpData.length; i++) {
+            dumpAvr += dumpData[i].data[0].value;
+        }
+        const avg = parseFloat((dumpAvr/dumpData.length).toFixed(1));
+        setAverage(avg)
+    },[reportSelectUnit])
     const radiusDatas = [
         { innerRadius: 44, outerRadius: 68 },
         { innerRadius: 74, outerRadius: 98 },
@@ -245,7 +251,7 @@ const mouseOffEvent = (e:any) => {
         {cx:stDotX-radAddY, cy:stDotY-radAddX},
     ]
   return (
-    <PieChart width={330} height={360} className="flex flex-1">
+    <PieChart width={330} height={360} className="flex flex-1 z-[1302]">
         <circle cx={stDotX} cy={stDotY}
             r={117.5}
             fill="none"
@@ -265,8 +271,10 @@ const mouseOffEvent = (e:any) => {
               outerRadius={56}
               fill={dataItem.data[0].fillColor}
               dataKey="value"
-              onMouseEnter={mouseOnEvent}
-              onMouseOut={mouseOffEvent}
+            //   onMouseEnter={mouseOnEvent}
+            //   onMouseOut={mouseOffEvent}
+              onMouseOver={mouseOnEvent}
+              onMouseLeave={mouseOffEvent}
             />
         })}
         <text x={stDotX} y={stDotY}
@@ -276,7 +284,7 @@ const mouseOffEvent = (e:any) => {
         fontWeight={500}
         fontSize={17}
         fill="#222"
-        >{`unit ${unitRubricScoresData.reportByUnit.selectUnitInfo.unit_index}`}</text>
+        >{`unit ${reportSelectUnit}`}</text>
         <text x={stDotX} y={stDotY}
         dy={-5}
         fontFamily="GothamRounded"
@@ -292,7 +300,7 @@ const mouseOffEvent = (e:any) => {
         fontWeight={700}
         fontSize={35}
         fill="#333"
-        >{unitRubricScoresData.averageChartData.dataPayload.data[0].value}
+        >{average}
         <tspan 
         fontSize={28}
         >%</tspan>

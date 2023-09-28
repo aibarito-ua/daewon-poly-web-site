@@ -1,0 +1,17 @@
+<svg id="bt_plus" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke: #333;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+  </defs>
+  <rect id="guide" class="cls-1" width="18" height="18"/>
+  <path id="패스_13441" data-name="패스 13441" class="cls-2" d="M0,3.312,3.088,0,6,3.312" transform="translate(12 10.812) rotate(180)"/>
+</svg>

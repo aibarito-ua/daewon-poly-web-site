@@ -35,6 +35,9 @@ type TUserInfoData = {
     userCode: string;
     webId: string;
     userImagePath:string;
+    className: string;
+    year: number;
+    semester: number;
 }
 type TSetUserInfoData = {
     accessToken?: string;
@@ -45,6 +48,9 @@ type TSetUserInfoData = {
     userCode?: string;
     webId?: string;
     userImagePath?:string;
+    className?: string;
+    year?: number;
+    semester?: number;
 }
 
 type TRole = "student" | "teacher" | "admin" | "logout";

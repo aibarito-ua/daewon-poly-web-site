@@ -9,9 +9,10 @@ import { SvgIconCheck } from '../../util/svgs/svgCheck';
 import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
-import { callUnitInfobyStudent } from './api/EssayWriting.api';
+import { callUnitInfobyStudent, getReportsAPI } from './api/EssayWriting.api';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
+import UnitReportModalComponent from '../../components/toggleModalComponents/UnitReportModalComponent';
 
 export default function SelectUnit () {
     const navigate = useNavigate();
@@ -20,7 +21,15 @@ export default function SelectUnit () {
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
     const {sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI} = useSparkWritingStore();
     const {
-        setCommonStandbyScreen
+        setCommonStandbyScreen,
+        // report modal
+        reportAPIData, setReportAPIData,
+        setSelectReportData,
+        reportSelectFinder, setReportSelectedFinder,
+        reportSelectUnit, setReportSelectUnit,
+        reportSelectBookName,
+
+        setUnitReportModal
     } = useControlAlertStore();
 
     React.useEffect(()=>{
@@ -40,19 +49,47 @@ export default function SelectUnit () {
     ])
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
-        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
             
-            setSparkWritingDataFromAPI(response.units, response.book_name)
-            setCommonStandbyScreen({openFlag:false})
+            
+            
             return response;
         });
-    }
-    useComponentWillMount(()=>{
-        beforeRenderedFn();
-    })
 
+        // report
+        const student_code = userInfo.userCode;
+        
+        const getReportAll = await getReportsAPI(student_code);
+        if (getReportAll && allUnitsDataFromAPI) {
+            console.log('getReportAll ==',getReportAll)
+            let dumyFinderData = {label:'init', level:userInfo.courseName, semester:userInfo.semester, year:userInfo.year};
+            dumyFinderData.level = userInfo.courseName;
+            setReportSelectedFinder(dumyFinderData);
+            setReportAPIData(getReportAll);
+            setSparkWritingDataFromAPI(allUnitsDataFromAPI.units, allUnitsDataFromAPI.book_name)
+            setSelectReportData(getReportAll,userInfo.year,userInfo.semester,userInfo.courseName);
+            setReportSelectUnit(1)
+        }
+    }
+    useComponentWillMount(async ()=>{
+        await beforeRenderedFn().then(()=>{
+            
+            setCommonStandbyScreen({openFlag:false})
+        });
+    })
     
-    
+
+    const reportOpen = async (data:TSparkWritingData) => {
+        const student_code = userInfo.userCode;
+        const getAllReport = await getReportsAPI(student_code);
+        if (getAllReport) {
+            const reportByYears = getAllReport.periods;
+            for (let i = 0; i < reportByYears.length; i++) {
+                
+            }
+        }
+    }
+
     const SelectBoxUnitMapLoop = (props: {items:TSparkWritingDatas}) => {
 
         const selectWritingTopic = async (unitNum:string, unitTitle:string, draftNum: string ) => {
@@ -154,6 +191,9 @@ export default function SelectUnit () {
                             }
                         } else if (firstFeedback && secondFeedback) {
                             // 100% -> final feedback
+                            // open modal
+                            setReportSelectUnit(item.unit_index)
+                            setUnitReportModal({open:true})
                         }
                     }}
                     >
@@ -192,7 +232,7 @@ export default function SelectUnit () {
                             <div className='unit-complete-flower-icon'></div>
                         )}
                         </div>
-                        <span className='absolute top-0 right-0'>{(firstDraft && secondFeedback) ? SvgIconCheck: ''}</span>
+                        {/* <span className='absolute top-0 right-0'>{(firstDraft && secondFeedback) ? SvgIconCheck: ''}</span> */}
                     </div>
                     )
                     
@@ -222,7 +262,7 @@ export default function SelectUnit () {
                     <SelectBoxUnitMapLoop items={sparkWritingData} />
                 {/* </div> */}
             </div>
-
+            <UnitReportModalComponent />
         </section>
     )
 }

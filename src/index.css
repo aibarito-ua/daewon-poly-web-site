@@ -1552,6 +1552,7 @@ bg-[#ffea2c]
   font-size: 14px;
   line-height: normal;
   letter-spacing: normal;
+  text-align: start;
   @apply
   text-[#333333]
   
@@ -1562,6 +1563,7 @@ bg-[#ffea2c]
   font-weight: 400;
   line-height: 1.33;
   letter-spacing: normal;
+  text-align: start;
   @apply
   text-[#222222]
   h-full 
@@ -1577,23 +1579,38 @@ bg-[#ffea2c]
   @apply
   flex flex-col
   w-[500px]
-  items-center
   justify-center
 }
 .report-chart-righ-word-count-title {
-  font-family: 'GothamRounded';
-  font-size: 12px;
-  font-weight: 300;
+  
   @apply
   capitalize
   flex flex-row
   justify-center
   items-center
-  bg-[#21c39a]
   rounded-t-[15px]
-  text-white
+  text-[#222]
+  w-[500px]
+  h-[26px]
+}
+.report-chart-righ-word-count-title-span {
+  font-family: 'GothamRounded';
+  font-size: 12px;
+  font-weight: 500;
+  font-stretch: 'normal';
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  @apply
+  capitalize
+  flex flex-row
+  justify-center
+  items-center
+  rounded-t-[15px]
+  text-[#fff]
   w-[160px]
   h-[26px]
+  bg-[#21c39a]
 }
 .report-chart-righ-word-count-content {
   @apply
@@ -1608,7 +1625,13 @@ bg-[#ffea2c]
 .report-chart-righ-word-count-content-wrap {
   @apply
   flex flex-1
+  flex-row
+  w-full
+  h-full
+  justify-center
+  items-center
   pl-[15px]
+  gap-[10px]
 }
 .report-chart-righ-word-count-content-divide-line {
   @apply
@@ -1622,16 +1645,23 @@ bg-[#ffea2c]
   font-weight: 700;
   font-size: 12px;
   line-height: 1.5;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  text-align: left;
+  white-space: nowrap;
   @apply
   text-[#222]
   flex flex-row
   items-center
   justify-center
+  h-full
 }
 .report-chart-righ-word-count-content-items {
   @apply
   flex flex-col
-  pl-[10px]
+  w-full
+  h-[50px]
 }
 .report-chart-righ-word-count-content-item {
   @apply
@@ -1640,17 +1670,25 @@ bg-[#ffea2c]
 }
 .report-chart-righ-word-count-content-item-title {
   font-family: 'Roboto';
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
   font-size: 12px;
-  font-weight: 400;
   line-height: 1.5;
+  text-align: left;
   @apply
-  flex flex-row w-[115px]
+  flex flex-row w-[114px]
   capitalize
 }
 .report-chart-righ-word-count-content-item-value {
   font-family: 'GothamRounded';
   font-size: 12px;
   text-align: left;
+  font-weight: 700;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
   line-height: 1.5;
   @apply
   text-[#21c39a]
@@ -1658,6 +1696,41 @@ bg-[#ffea2c]
   pl-[10px]
 }
 
+.report-chart-teacher-comment-content-box {
+  @apply
+  flex flex-row
+  border-[1px]
+  border-[#21c39a]
+  rounded-[15px]
+  w-[500px]
+  h-[50px]
+  items-center
+  overflow-y-auto
+}
+.report-chart-teacher-comment-content-box-span {
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.33;
+  text-align: left;
+  @apply
+  p-[10px]
+  h-full
+  flex flex-col
+}
+.report-chart-right-complete-date-title {
+  font-family: 'Roboto';
+  font-size: 13px;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: normal;
+  text-align: right;
+  color: '#666'
+}
 .report-chart-righ-correction-content {
   @apply
   flex flex-row
@@ -1668,13 +1741,19 @@ bg-[#ffea2c]
   h-[106px]
   py-[10px]
   pr-[10px]
+  pl-[15px]
   items-center
 }
 .report-chart-righ-correction-content-item-title {
   font-family: 'Roboto';
   font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 2.33;
+  text-align: left;
+
   @apply
   flex flex-row w-[71px]
   capitalize
@@ -1682,8 +1761,12 @@ bg-[#ffea2c]
 .report-chart-righ-correction-content-item-value {
   font-family: 'GothamRounded';
   font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
   text-align: left;
-  line-height: 1.5;
+  line-height: 2.33;
   @apply
   text-[#21c39a]
   flex flex-row
@@ -1698,18 +1781,22 @@ bg-[#ffea2c]
 }
 .report-chart-righ-correction-content-wrap-1 {
   @apply
-  flex
-  pl-[15px]
-  w-[190px]
+  flex flex-row
+  justify-center
+  items-center
+  w-full
 }
 .report-chart-righ-correction-content-wrap-2 {
   @apply
-  flex flex-1
+  flex flex-col
+  justify-start
+  items-start
   border-[1px]
   border-[#ddd]
   bg-[#f9f9f9]
   rounded-[10px]
-  h-full
+  w-[300px]
+  h-[86px]
   p-[10px]
   overflow-y-auto
 }
@@ -1722,7 +1809,6 @@ bg-[#ffea2c]
 .report-chart-righ-correction-content-items {
   @apply
   flex flex-col
-  pl-[10px]
   min-w-[128]
 }
 .report-chart-correction-content-wrap {
@@ -2296,4 +2382,480 @@ bg-[#ffea2c]
   @apply
   draft-2nd-button-wrap
   bg-draft-2nd-submit-button-readonly-svg
+}
+.report-no-data-font {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 26px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  @apply
+  text-[#ccc]
+}
+
+.rubric-modal-head-font {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 13px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.54;
+  letter-spacing: normal;
+  text-align: center;
+  @apply
+  text-[#222]
+}
+.rubric-modal-body-font {
+  font-family: 'Roboto';
+  font-weight: normal;
+  font-size: 12px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  vertical-align: top;
+  @apply
+  text-[#333]
+}
+.report-by-unit-page-title-font {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 20px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  vertical-align: top;
+  @apply
+  text-[#333]
+}
+
+.export-lm-wh-draft-info-div {
+  box-shadow: 0 0.79375mm 1.5875mm 0 rgba(0, 0, 0, 0.16);
+  @apply
+  flex
+  flex-row
+  border-[0.3mm]
+  border-[#0fa9cb]
+  rounded-[7.9375mm]
+  bg-white
+  justify-center
+}
+.export-lm-wh-font-gothamrounded {
+  font-family: 'GothamRounded';
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color:#222;
+  @apply
+  flex
+  capitalize
+}
+.export-lm-wh-font-sub-title {
+  font-family: 'NotoSansCJKKR';
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #222;
+  @apply
+  flex
+  capitalize
+}
+.export-lm-wh-font-step-span {
+  font-family: 'NotoSansCJKKR';
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  
+  @apply
+  flex
+  
+  capitalize
+  text-white
+}
+.export-lm-wh-font-label {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #999;
+  @apply
+  capitalize
+}
+.export-report-wr-userinfo-font-label {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+  @apply
+  capitalize
+}
+.export-portfolio-wr-userinfo-font-label {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.67;
+  letter-spacing: normal;
+  text-align: left;
+  color: #999;
+  @apply
+  capitalize
+}
+.export-portfolio-wr-userinfo-font-value {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.67;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+.export-report-wr-userinfo-font-value {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+.export-report-wr-big-title-font {
+  font-family: 'GothamRounded';
+  font-size: 3.870mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.595mm;
+  letter-spacing: normal;
+  text-align: center;
+  color: #222;
+}
+.export-report-wr-bar-titles {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 5.321mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+  @apply
+  capitalize
+}
+.export-report-wr-sa-title-font {
+  font-family: 'GothamRounded';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+  @apply
+  capitalize
+}
+.export-report-wr-sa-ar-title {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.660mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 8.465mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+.export-report-wr-sa-ar-value {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.660mm;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.55;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+.export-report-wr-oc-input {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+
+.export-lm-wh-font-value {
+  font-family: 'NotoSansCJKKR';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+.export-report-wr-multi-values {
+  font-family: 'GothamRounded';
+  font-size: 2.660mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.82;
+  letter-spacing: normal;
+  text-align: left;
+  color: #555;
+}
+
+.export-lm-wh-content-title {
+  @apply
+  bg-[#0fa9cb]
+  absolute
+  -left-[6mm]
+  top-[10.583333333mm]
+  w-fit
+  h-[13.06mm]
+  text-white
+  rounded-r-[6.503mm]
+  flex items-center
+  pl-[4.7625mm]
+  pr-[7.9375mm]
+}
+.export-lm-wh-content-title-deco {
+  border-top: 3mm solid #177a8f;
+  border-right: 2.8mm solid #177a8f;
+  border-bottom: 3mm solid transparent;
+  border-left: 2.8mm solid transparent;
+  @apply
+  absolute
+  -left-[5.8mm]
+  top-[23.7mm]
+  w-0
+  h-0
+}
+.export-portfolio-content-title-deco {
+  border-top: 2.6mm solid #177a8f;
+  border-right: 2.6mm solid #177a8f;
+  border-bottom: 2.6mm solid transparent;
+  border-left: 2.6mm solid transparent;
+  @apply
+  w-0
+  h-0
+}
+.export-lm-wh-content-title-value {
+  font-family: 'GothamRounded';
+  font-size: 3.628mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 4.353mm;
+  letter-spacing: normal;
+  text-align: left;
+  vertical-align: middle;
+  @apply
+  h-[4.353mm]
+}
+.export-lm-wh-content-body {
+  font-family: 'NotoSansCJKKR';
+  font-size: 3.7041666667mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 7.9375mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #555;
+  @apply
+  mt-[31.2mm]
+  mx-[13.229166667mm]
+  mb-[9.674mm]
+  flex flex-col
+  w-[160.588mm]
+  h-[195.662mm]
+}
+.export-lm-wh-content-pre-body {
+  font-family: 'NotoSansCJKKR';
+  font-size: 3.7041666667mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 7.9375mm;
+  letter-spacing: normal;
+  text-align: left;
+  color: #555;
+  @apply
+  mx-[13.229166667mm]
+  flex flex-col
+  w-[160.588mm]
+  h-[195.662mm]
+}
+.print-container {
+  break-after: page;
+}
+/* .print-container + .print-container {
+  margin-top:0;
+} */
+@page {
+  /* margin: 0; */
+  width: 210mm;
+  height: 297mm;
+}
+@media print {
+  /* .print-container + .print-container {
+    margin-top:0;
+  } */
+  @page {
+    /* margin: 0; */
+    width: 210mm;
+    height: 297mm;
+  }
+  /* .print-container {
+  } */
+}
+
+/* .export-bt-print {
+  @apply
+  bg-svg-bt-print
+  bg-no-repeat
+  w-[36px]
+  h-[36px]
+}
+.export-bt-pdf {
+  @apply
+  bg-svg-bt-pdf
+  bg-no-repeat
+  w-[36px]
+  h-[36px]
+} */
+
+.export-lm-wh-draft-info-numbering-div {
+  font-family: 'GothamRounded';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 3.628mm;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+  background-color: #0fa9cb;
+  @apply
+  h-[9.674mm]
+  w-[27.176mm]
+  rounded-t-[7.256mm]
+  flex items-center justify-center
+  absolute
+  bottom-0
+}
+.export-portfolio-paging-box {
+  font-family: 'GothamRounded';
+  font-size: 2.902mm;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 3.628mm;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+  background-color: #0fa9cb;
+  @apply
+  h-[9.674mm]
+  w-[27.176mm]
+  rounded-t-[7.256mm]
+  flex items-center justify-center
+}
+.export-portfolio-body-content-font {
+  font-family: 'NotoSansCJKKR';
+  font-size: 3.386mm;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.14;
+  letter-spacing: normal;
+  text-align: left;
+  color: #555
+}
+.portfolio-contents-date-font {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 700;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #3e61aa;
+}
+.portfolio-contents-label-font {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #3e61aa;
+}
+.portfolio-contents-null-font {
+  font-family: 'GothamRounded';
+  font-size: 20px;
+  font-weight: 700;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-align: center;
+  color: #999;
+}
+.portfolio-modal-unit-box-content-title {
+  font-family: 'GothamRounded';
+  font-size: 17px;
+  font-weight: 700;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #3e61aa;
+}
+.portfolio-modal-unit-box-content-body {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #333;
 }
