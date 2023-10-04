@@ -133,8 +133,10 @@ const PreviewSparkWriting = (props:any) => {
         if (reloadData) {
             const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
             // check submit?
-            const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.submit_date;
-            if (checkSubmitted!==null) {
+            const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.status;
+            console.log('checkTarget =',checkTarget,'\ncheckSubmitted=',checkSubmitted)
+            console.log(`sparkWritingData[${unitIndex}]=`,sparkWritingData[unitIndex])
+            if (checkSubmitted > 1) {
                 console.log('test 11')
                 setIsSubmitted(true);
             } else {
