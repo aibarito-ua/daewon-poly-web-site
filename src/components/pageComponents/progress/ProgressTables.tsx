@@ -125,39 +125,37 @@ const ProgressTable = (props:any) => {
                     } else {} // 0 values
 
                     return (
-                        <tr key={unitItem.unit_id} style={{
-                            height: '60px', 
-                        }} className='progress-page-view-box-table-body-row bg-white'>
-                            <td className='text-start pl-[20px] h-[60px] max-h-[60px] py-0 my-0'>
+                        <tr key={unitItem.unit_id} className='progress-page-view-box-table-body-row'>
+                            <td className='text-start pl-[20px] h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='inline-flex gap-[10px] h-[60px] items-center'>
                                     <span className='progress-page-view-box-list-icon'>unit {unitItem.unit_index}</span>
                                     <span className=''>{unitItem.topic}</span>
                                 </span>
                             </td>
-                            <td className='h-[60px] max-h-[60px] py-0 my-0'>
+                            <td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {firstDraftState}
                                     <DateText dateString={firstDraftStateData}/>
                                 </span>
                             </td>
-                            <td className='h-[60px] max-h-[60px] py-0 my-0'>
+                            <td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {firstDraftFeedbackState}
                                     <DateText dateString={firstDraftFeedbackStateData}/>
                                 </span>
-                            </td><td className='h-[60px] max-h-[60px] py-0 my-0'>
+                            </td><td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {secondDrafteState}
                                     <DateText dateString={secondDrafteStateData}/>
                                 </span>
-                            </td><td className='h-[60px] max-h-[60px] py-0 my-0'>
+                            </td><td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {finalEvaluationState}
                                     <DateText dateString={finalEvaluationStateData}/>
                                 </span>
                             </td>
-                            <td className='w-[140px] py-[5px] h-[60px]'>
-                                <span className='inline-flex items-center justify-center w-[50px] h-[50px]'>
+                            <td className='w-[140px] h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                                <span className='inline-flex items-center justify-center h-[60px]'>
                                 <ProgressPercent itemName={'unit1'} value={progressPercentValue}/>
                                 </span>
                             </td>

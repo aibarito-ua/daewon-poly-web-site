@@ -471,7 +471,17 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     draft2ndPageSet:'',
     setDraft2ndPageSet:(draft2ndPageSet) => set(()=>({draft2ndPageSet})),
     commentFocusId: '',
-    setCommentFocusId: (commentFocusId) => set(()=>({commentFocusId}))
+    setCommentFocusId: (commentFocusId) => set(()=>({commentFocusId})),
+
+    // progress select box
+    progressAllLevelsValue: [],
+    progressLevelBoxValue: '',
+    setProgressAllLevelBoxValues: (data) => {
+        set(()=>({progressAllLevelsValue:data}))
+    },
+    setProgressLevelBoxValue: (level) => {
+        set(()=>({progressLevelBoxValue:level}))
+    }
 }))
 
 export default useSparkWritingStore;

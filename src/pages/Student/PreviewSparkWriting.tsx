@@ -140,27 +140,36 @@ const PreviewSparkWriting = (props:any) => {
                 console.log('test 11')
                 setIsSubmitted(true);
             } else {
-                let titleGrammarData:TTitleHistory = [];
-                let bodyGrammarData:TbodyHistory = [];
+                let titleGrammarData:{
+                    past: TTitleHistory[];
+                    present: TTitleHistory;
+                    future: TTitleHistory[];
+                } = {past:[], present:[], future: []};
+                let bodyGrammarData:{
+                    past: TbodyHistory[];
+                    present: TbodyHistory;
+                    future: TbodyHistory[];
+                } = {past:[], present:[], future: []};
+
                 for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
                     const targetValue = checkTarget[unitsIdx];
                     if (targetValue.grammar_correction_content_student&&targetValue.grammar_correction_content_student!=='') {
                         if (targetValue.name==='Title') {
                             titleGrammarData = JSON.parse(targetValue.grammar_correction_content_student);
-                        } else {
+                        } else if (targetValue.order_index===2) {
                             const targetDataParsing = JSON.parse(targetValue.grammar_correction_content_student)
-                            bodyGrammarData.push(targetDataParsing)
+                            bodyGrammarData = targetDataParsing;
                         }
                     }
                 }
-                if (bodyGrammarData.length > 0) {
+                if (bodyGrammarData.present.length > 0) {
         
                     setBodyHistory({
-                        title: {past: [], future: [], present: titleGrammarData},
-                        body: {past:[], future: [], present: bodyGrammarData}
+                        title: titleGrammarData,
+                        body: bodyGrammarData
                     })
-                    // setIsGrammarProceed(true);
-                    // setGuideFlag(1)
+                    setIsGrammarProceed(true);
+                    setGuideFlag(1)
                 }
             }
             setCommonStandbyScreen({openFlag:false})
@@ -211,6 +220,7 @@ const PreviewSparkWriting = (props:any) => {
                     setProofreadingCount(unitId)
                     setCommonStandbyScreen({openFlag:false})
                     setIsGrammarProceed(true);
+                    console.log('res grammar =',res)
                     setInitHistorys({
                         title: res.result_title,
                         body: res.result_body
@@ -258,7 +268,6 @@ const PreviewSparkWriting = (props:any) => {
                                 break;
                         }
                     }
-    
                     if ((checkType1 || checkTypeMinus1) && !checkType2) {
                         return true; // 조건 충족 시 함수 종료
                     } else {
@@ -560,7 +569,7 @@ const PreviewSparkWriting = (props:any) => {
         const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
             const historyMinusIndex = targetData.draft_1_outline[0].name==='Title' ? 2:1;
             const currentGrammarIndex = item.order_index-historyMinusIndex;
-            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex])
+            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title): (item.order_index===2 ? JSON.stringify(bodyHistory.body) : '')
             return {
                 heading_name: item.name,
                 input_content: item.input_content,
@@ -709,7 +718,7 @@ const PreviewSparkWriting = (props:any) => {
                     // grammar 진행중
                     console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
-                    setOpenSubmitButton(false)
+                    setOpenSubmitButton(false);
                 } else {
                     // grammar 종료
                     console.log('grammar 진행 종료')
@@ -932,7 +941,7 @@ const PreviewSparkWriting = (props:any) => {
                     }
 
                     {!isSubmitted &&
-                        <button className={ !isSubmitted ?`${(openSubmitButton)?'save-button-active div-to-button-hover-effect': (countofUseAIProofreading>0 ?'save-button-active div-to-button-hover-effect':'hidden')}`:'hidden'} onClick={()=>{
+                        <button className={ !isSubmitted ?`${(openSubmitButton && countofUseAIProofreading>0)?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
                             const checkGrammarsSelectAll = checkSelectedGrammarModals();
                             console.log('select all =',checkGrammarsSelectAll)
                             // grammar 시작 후
@@ -942,6 +951,7 @@ const PreviewSparkWriting = (props:any) => {
                                 replaceUpdateSparkWritingTitle();
                                 replaceUpdateSparkWritingBody();
                             }
+                            console.log('openSubmitButton =',openSubmitButton)
                             if (openSubmitButton&&countofUseAIProofreading>0) {
                                 // submit date check
                                 const currentSparkWritingData = sparkWritingData[unitIndex]
@@ -969,7 +979,7 @@ const PreviewSparkWriting = (props:any) => {
                                             const currentGrammarIndex = item.order_index-historyMinusIndex;
                                             console.log('historyMinusIndex ==',historyMinusIndex)
                                             console.log('currentGrammarIndex =',currentGrammarIndex)
-                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
+                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title): (item.order_index === 2 ? JSON.stringify(bodyHistory.body) : '');
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,
@@ -1007,16 +1017,17 @@ const PreviewSparkWriting = (props:any) => {
                                         }
                                     },
                                     closeEvent: async() => {
-                                        if (noMessages!=='') {
-                                            commonAlertOpen({
-                                                messages: [noMessages],
-                                                useOneButton: true,
-                                                yesButtonLabel: 'OK',
-                                                yesEvent: ()=> commonAlertClose(),
-                                            })
-                                        } else {
-                                            commonAlertClose();
-                                        }
+                                        commonAlertClose();
+                                        // if (noMessages!=='') {
+                                        //     commonAlertOpen({
+                                        //         messages: [noMessages],
+                                        //         useOneButton: true,
+                                        //         yesButtonLabel: 'OK',
+                                        //         yesEvent: ()=> commonAlertClose(),
+                                        //     })
+                                        // } else {
+                                        //     commonAlertClose();
+                                        // }
                                     }
                                 })
                             }

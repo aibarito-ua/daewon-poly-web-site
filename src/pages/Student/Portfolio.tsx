@@ -43,12 +43,7 @@ export const Portfolio = () => {
     useComponentWillMount(async()=>{
         await beforeRenderedFn();
     })
-    // React.useEffect(()=>{
-    //     beforeRenderedFn();
-    // },[])
-    const handleChange = () => {
-        
-    }
+    
     return (
         <section className="section-common-layout use-nav-aside min-w-[1060px]" >
             <SmallHead mainTitle='Portfolio'/>

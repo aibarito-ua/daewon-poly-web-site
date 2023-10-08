@@ -5,82 +5,9 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend
 } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
-const DotIcon = (props:React.SVGAttributes<SVGElement>) => {
-return (<svg {...props} viewBox="0 0 20 20" width={14} height={14}>
-    
-        <path d="M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z"></path>
-    
-    </svg>)
-}
 
-// const data:TOverallBarChartDataItem[] = [
-//   {
-//     name: "idea",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 10
-//   },
-//   {
-//     name: "organization",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 10
-//   },
-//   {
-//     name: "voice",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 10
-//   },
-//   {
-//     name: "word choice",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 10
-//   },
-//   {
-//     name: "sentence",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 10
-//   },
-//   {
-//     name: "conventions",
-//     unit1: 6,
-//     unit2: 4,
-//     unit3: 4,
-//     unit4: 8,
-//     unit5: 10,
-//     amt: 1
-//   },
-// ];
-const legendFormJSX = (text:string) => {
-  const textSplit = text.split(' ');
-  if (textSplit.length === 1) {
-    return <span className="capitalize pr-[40px]" style={{color: '#555', fontSize: '13px',lineHeight:'20px',fontFamily:'Noto Sans CJK KR'}}>{text}</span>
-  } else {
-
-  }
-}
 const CustomXAxisTick = (props:any) => {
   
   const { x, y, payload } = props;
@@ -106,7 +33,22 @@ const CustomXAxisTick = (props:any) => {
 export default function App() {
 
   const {reportSelectedOverallBarChart} = useControlAlertStore();
-    
+  
+  let check = {
+    unit1:false,
+    unit2:false,
+    unit3:false,
+    unit4:false,
+    unit5:false,
+  }
+  for (let i =0; i < reportSelectedOverallBarChart.length; i++) {
+    const target = reportSelectedOverallBarChart[i];
+    if (target.unit1>0) check.unit1=true;
+    if (target.unit2>0) check.unit2=true;
+    if (target.unit3>0) check.unit3=true;
+    if (target.unit4>0) check.unit4=true;
+    if (target.unit5>0) check.unit5=true;
+  }
   return (
     <BarChart
       width={530}
@@ -127,11 +69,11 @@ export default function App() {
         tickLine={false} tickMargin={10} axisLine={false} 
       />
       <YAxis tickCount={5} ticks={[0,1,2,3,4,5,6,7,8,9,10,11]} tickLine={false} axisLine={false} tickFormatter={()=>''} />
-      <Bar dataKey="unit1" fill="#3dbcbf" label={{position:'top'}} barSize={10} radius={[5,5,0,0]} />
-      <Bar dataKey="unit2" fill="#f77488" label={{position:'top'}} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit3" fill="#f9a77c" label={{position:'top'}} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit4" fill="#43d39a" label={{position:'top'}} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit5" fill="#5a91c8" label={{position:'top'}} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit1" fill="#3dbcbf" label={check.unit1?{position:'top'}:''} barSize={10} radius={[5,5,0,0]} />
+      <Bar dataKey="unit2" fill="#f77488" label={check.unit2?{position:'top'}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit3" fill="#f9a77c" label={check.unit3?{position:'top'}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit4" fill="#43d39a" label={check.unit4?{position:'top'}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit5" fill="#5a91c8" label={check.unit5?{position:'top'}:''} barSize={10} radius={[5,5,0,0]}/>
     </BarChart>
   );
 }

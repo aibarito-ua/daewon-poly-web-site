@@ -20,6 +20,7 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
         let selectTargetData:TDropdownSelectBoxDataTypes = {
             label:'',level:'',semester:0,year:0
         }
+        let dumpSelectLevel = '';
         let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
         if (semesterLabel==='') {
             dumpDisplayPortfolioData={
@@ -38,6 +39,7 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
                             for (let l = 0; l < currentPeriod.levels.length; l++) {
                                 if (currentPeriod.levels[l].level_name === selectTargetData.level) {
                                     dumpDisplayPortfolioData = currentPeriod.levels[l];
+                                    dumpSelectLevel=currentPeriod.levels[l].level_name;
                                     break;
                                 }
                             }
@@ -51,6 +53,8 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
         }
         set(()=>({
             selectSemester:semesterLabel,
+            selectLevel: dumpSelectLevel,
+            
             displayPortfolioData: dumpDisplayPortfolioData,
         }))
     },
@@ -186,6 +190,7 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
             semesters: dumpSemester,
             levels: dumpLevel,
             selectSemester: dumpSemester[0].label,
+            selectLevel: dumpSemester[0].level,
         }))
     }
 }))

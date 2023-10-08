@@ -15,7 +15,22 @@ export default function PortfolioSelectButton(props:{
   } = props;
   
   const [open, setOpen] = React.useState<boolean>(false);
-  
+  const [isReadOnly, setIsReadOnly] = React.useState<boolean>(false);
+  const {
+    semesters, selectSemester, setSelectSemester,
+    levels, selectLevel, setSelectLevel,
+  } = usePortfolioStore();
+  React.useEffect(()=>{
+    if (levels.length>0) {
+      if (levels.length===1) {
+        setIsReadOnly(true);
+      } else {
+        setIsReadOnly(false)
+      }
+    } else {
+      setIsReadOnly(true);
+    }
+  }, [selectLevel, selectSemester])
   const selectValue = () => {
     if (isUse==='level') {
       return selectLevel;
@@ -31,10 +46,6 @@ export default function PortfolioSelectButton(props:{
       setSelectSemester(value)
     }
   }
-  const {
-    semesters, selectSemester, setSelectSemester,
-    levels, selectLevel, setSelectLevel,
-  } = usePortfolioStore();
   
   const handleChange = (event: SelectChangeEvent) => {
     const targetValue = event.target.value;
@@ -89,7 +100,7 @@ export default function PortfolioSelectButton(props:{
         >
             <MenuItem disabled={disabled} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
             {isUse==='level' && levels.map((dataItem, dataIndex)=>{
-                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>
+                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.level}>{dataItem.level}</MenuItem>
             })}
             {isUse==='semester' && semesters.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>

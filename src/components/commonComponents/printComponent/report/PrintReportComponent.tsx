@@ -77,7 +77,7 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
                 <div className='flex export-report-wr-sa-ar-title uppercase ml-[4.941mm] mt-[1.451mm]'>{'aimed result'}</div>
                 <ul className='list-disc list-inside export-report-wr-sa-ar-value ml-[4.941mm] h-[12.335mm]'>
                     {aimed_result.map((aimedResult, aimedResultIdx) => {
-                        return <li className=''>{aimedResult}</li>
+                        return <li className='' key={'print-aimed-result-'+aimedResultIdx}>{aimedResult}</li>
                     })}
                 </ul>
                 {/* score */}

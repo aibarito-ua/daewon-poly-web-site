@@ -67,7 +67,8 @@ class PortfolioComponentToPrint extends React.PureComponent<IPortfolioComponentT
     setTitleJSX = (data:TUnitPortfolioContent[]) => {
         return data.map((item, itemIdx) => {
             if (item.name === 'Title') {
-                const key = item.name+':'+item.order_index+':'+itemIdx+'-portfolio-print';
+                
+                const key = 'portfolio-print-span-'+item.name.toLowerCase()+item.order_index+'-'+itemIdx;
                return <span key={key} className='export-lm-wh-content-title-value'>{`Title : ${item.content}`}</span>;
             } else return null;
         })

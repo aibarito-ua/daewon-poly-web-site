@@ -48,6 +48,17 @@ interface IUseControlAlertStore {
     reportSelectedOverallPieChart: TAllDoughnutDatas;
     // select datas
     reportSelectFinder: TDropdownSelectBoxDataTypes;
+    reportSelectBoxDatas: TDropdownSelectBoxDataTypes[];
+    // report semester
+    reportSemester: string;
+    reportLevel: string;
+    setReportSelectBoxValue: (data:{
+        data:TDropdownSelectBoxDataTypes;
+        semester?:string;
+        level?:string;
+        init?:boolean;
+    })=>void;
+    setReportSelectBoxDatas: (data: TDropdownSelectBoxDataTypes[])=>void;
     setReportSelectedFinder: (data:TDropdownSelectBoxDataTypes)=>void;
     // report select unit
     reportSelectUnit: number;
@@ -62,6 +73,12 @@ interface IUseControlAlertStore {
 
     reportByUnitMainTitle: string;
     // setReportByUnitMainTitle: (title:string) => void;
+
+    // filter된 report data
+    reportSelectData: TReportByStudentPeriodLevel;
+    // report control. prev&next
+    // unit index array value
+    reportCompletedUnitIndexArray: number[];
     
     
 }

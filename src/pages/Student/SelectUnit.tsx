@@ -29,7 +29,10 @@ export default function SelectUnit () {
         reportSelectUnit, setReportSelectUnit,
         reportSelectBookName,
 
-        setUnitReportModal
+        setUnitReportModal,
+        // test
+        unitReportsData, unitReportData, unitRubricScoresData, reportModalRubricData
+        ,reportSelectedOverallBarChart, reportSelectedOverallPieChart
     } = useControlAlertStore();
 
     React.useEffect(()=>{
@@ -67,8 +70,10 @@ export default function SelectUnit () {
             setReportSelectedFinder(dumyFinderData);
             setReportAPIData(getReportAll);
             setSparkWritingDataFromAPI(allUnitsDataFromAPI.units, allUnitsDataFromAPI.book_name)
+            console.log('userInfo ==',userInfo)
             setSelectReportData(getReportAll,userInfo.year,userInfo.semester,userInfo.courseName);
-            setReportSelectUnit(1)
+            test(getReportAll,userInfo.year,userInfo.semester,userInfo.courseName);
+            // setReportSelectUnit(1)
         }
     }
     useComponentWillMount(async ()=>{
@@ -89,6 +94,114 @@ export default function SelectUnit () {
             }
         }
     }
+    const test = (data:TReportByStudentResponse,
+        year:number,
+        semester:number,
+        level:string ) => {
+        let dumyData:TReportByStudentPeriodLevel= {
+            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+        }
+
+        let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(unitRubricScoresData));
+        let dumyUnitReportsData:TUnitReportsData[] = JSON.parse(JSON.stringify(unitReportsData));
+        let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(reportModalRubricData));
+        let dumyOverallBar:TOverallBarChartDataItem[] = JSON.parse(JSON.stringify(reportSelectedOverallBarChart));
+        let dumyOverallPie:TAllDoughnutDatas = JSON.parse(JSON.stringify(reportSelectedOverallPieChart));
+
+        for (let i = 0; i < data.periods.length; i++) {
+            const currentPeriod = data.periods[i];
+            console.log('currentPeriod ==',currentPeriod)
+            // find year & semester
+            if (currentPeriod.year === year && currentPeriod.semester === semester) {
+                for (let j = 0; j < currentPeriod.levels.length; j++) {
+                    // find level
+                    const currentData = currentPeriod.levels[j];
+                    if (currentData.level_name === level) {
+                        dumyData = currentData;
+                        
+                        dumySelectReportRubricAllData = currentData.rubric_info;
+                        dumyUnitReportsData = currentData.unit_reports;
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
+        let sumData = [
+            {name:'conventions', sum: 0},
+            {name:'sentence fluency', sum: 0},
+            {name:'word choice', sum: 0},
+            {name:'voice', sum: 0},
+            {name:'organization', sum: 0},
+            {name:'ideas', sum: 0},
+        ]
+        for (let z = 0; z < dumyData.overall_report.length; z++) {
+            const targetOverall = dumyData.overall_report[z];
+            const targetUnitIdx = targetOverall.unit_index;
+            const targetCate = targetOverall.categories;
+
+            for (let k = 0; k < targetCate.length; k++) {
+                const targetCateName = targetCate[k].category;
+                const targetScore = targetCate[k].score;
+                for (let j = 0; j < rubricScoreDataStates.hexagonChartData.length; j++) {
+                    if (rubricScoreDataStates.hexagonChartData[j].target === targetCateName) {
+                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = targetCate[k].description
+                    }
+                }
+                for (let s = 0; s < sumData.length; s++) {
+                    if (sumData[s].name === targetCateName) {
+                        sumData[s].sum += targetScore;
+                        break;
+                    }
+                }
+                // set bar data
+                for (let b = 0; b < dumyOverallBar.length; b++) {
+                    const currentBarName = dumyOverallBar[b].target;
+                    if (currentBarName === targetCateName) {
+                        
+                        if (targetUnitIdx === 1) {
+                            dumyOverallBar[b].unit1 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 2) {
+                            dumyOverallBar[b].unit2 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 3) {
+                            dumyOverallBar[b].unit3 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 4) {
+                            dumyOverallBar[b].unit4 = targetScore;
+                            break;
+                        } else if (targetUnitIdx === 5) {
+                            dumyOverallBar[b].unit5 = targetScore;
+                            break;
+                        }
+                    }
+                } // end category bar data
+
+            }
+        }
+        console.log('dumyOverallBar===',dumyOverallBar)
+        console.log('sumData ==',sumData)
+        
+        console.log('dumyData =',dumyData)
+        const completeUnitCount = dumyData.overall_report.length;
+        console.log('unit count ==',completeUnitCount)
+        // set pie data
+        for (let p = 0; p < dumyOverallPie.length; p++) {
+            const currentPie = dumyOverallPie[p];
+            for (let s = 0; s < sumData.length; s++) {
+                if (sumData[s].name === currentPie.target) {
+                    const maxScore = completeUnitCount*10;
+                    const percent = sumData[s].sum / maxScore * 100;
+                    console.log('percent ==',percent)
+                    dumyOverallPie[p].data[0].value = percent;
+                }
+            }
+        }
+        console.log('dumyOverallPie ==',dumyOverallPie)
+    }
 
     const SelectBoxUnitMapLoop = (props: {items:TSparkWritingDatas}) => {
 
@@ -97,6 +210,10 @@ export default function SelectUnit () {
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
             CommonFunctions.goLink(path, navigate, role);
+        }
+        const selectTemporaryPreview = async (unitNum:string, draftNum: string) => {
+            const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview`
+            CommonFunctions.goLink(path, navigate, role)
         }
         const draftIcons = (firstProgress:number, secondProgress:number, currentStep:number) => {
             const currentlyInProgress = currentStep===1 ? (
@@ -163,7 +280,8 @@ export default function SelectUnit () {
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                // await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                await selectTemporaryPreview(selectUnitIndex, '1');
                             } else if (firstDraft === 2|| firstDraft === 3) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
                             } else if (firstDraft === 5) {

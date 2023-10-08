@@ -1,19 +1,9 @@
 import * as React from 'react';
-import Backdrop from '@mui/material/Backdrop';
 
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled } from '@mui/material';
 import useControlAlertStore from '../../store/useControlAlertStore';
-import ReportChart from '../chartComponents/reportChart';
 import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
 
-import { ReactComponent as ReportPrint } from './img/reportPrintButton.svg';
-import ReactToPrint,{useReactToPrint} from 'react-to-print';
-import { useComponentWillMount } from '../../hooks/useEffectOnce';
-
-import {ReactComponent as PrintWritingHubIcon} from './img/printReportMemoIcon.svg';
-import PrintReportDoughnutChart from '../chartComponents/printReportDoughnutChart';
-import PrintReportBarChart from '../chartComponents/printReportBarChart';
-import CustomizedReportTabsActivity from '../pageComponents/report/SPReportTabComponent';
 import ReportByUnitComponent from '../chartComponents/reportByUnit/ReportByUnitComponent';
 import ReportItemComponents from '../chartComponents/reportByUnit/ItemComponents/ReportItemComponents';
 
@@ -34,15 +24,14 @@ export default function UnitReportModalComponent() {
         reportSelectUnit, setReportSelectUnit,
         unitReportsData,
         reportSelectFinder,
+        reportCompletedUnitIndexArray
     } = useControlAlertStore();
     const [menuControll, setMenuControl] = React.useState<number>(0);
-    const [printPreviewer, setPrintPreviewer] = React.useState<boolean>(false);
-    const printComponentRef = React.useRef<HTMLDivElement>(null);
     const [isPrev, setIsPrev] = React.useState<boolean>(false);
     const [isNext, setIsNext] = React.useState<boolean>(false);
     React.useEffect(()=>{
         if ( unitReportModal.open) {
-            
+            console.log()
         } else {
             setMenuControl(0);
         }
@@ -52,15 +41,15 @@ export default function UnitReportModalComponent() {
             let currentUnit = 0;
             let nextUnits = [];
             let prevUnits = [];
-            for (let j = 0; j < unitReportsData.length; j++) {
-                if (unitReportsData[j].unit_index === reportSelectUnit) {
-                    currentUnit = reportSelectUnit;
-                } else if (unitReportsData[j].unit_index > reportSelectUnit) {
-                    nextUnits.push(unitReportsData[j].unit_index)
-                } else {
-                    prevUnits.push(unitReportsData[j].unit_index)
+            for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+                if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
+                    currentUnit = reportCompletedUnitIndexArray[i];
+                } else if (reportCompletedUnitIndexArray[i] > reportSelectUnit) {
+                    nextUnits.push(reportCompletedUnitIndexArray[i]);
+                } else if (reportCompletedUnitIndexArray[i] < reportSelectUnit) {
+                    prevUnits.push(reportCompletedUnitIndexArray[i])
                 }
-            };
+            }
             if (currentUnit === 1) {
                 if (nextUnits.length > 0) {
                     setIsNext(true);
@@ -91,18 +80,33 @@ export default function UnitReportModalComponent() {
             }
         }
         
-    },[unitReportsData, reportSelectUnit, reportSelectFinder])
+    },[unitReportsData, reportCompletedUnitIndexArray, reportSelectUnit, reportSelectFinder])
     const handlePrev = (currentIndex:number) => {
-
         if (isPrev && currentIndex!==1) {
-            const prevIndex = currentIndex-1;
-            setReportSelectUnit(prevIndex);
+            for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+                if (reportCompletedUnitIndexArray[i]===currentIndex) {
+                    const prevValue = reportCompletedUnitIndexArray[i-1];
+                    if (prevValue) {
+                        const prevIndex = prevValue;
+                        setReportSelectUnit(prevIndex);
+                    }
+                }
+            }
+            
         }
     }
     const handleNext = (currentIndex:number) => {
         if (isNext && currentIndex!==5) {
-            const nextIndex = currentIndex+1;
-            setReportSelectUnit(nextIndex)
+            for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+                if (reportCompletedUnitIndexArray[i]===currentIndex) {
+                    const nextValue = reportCompletedUnitIndexArray[i+1];
+                    if (nextValue) {
+                        const nextIndex = nextValue;
+                        setReportSelectUnit(nextIndex)
+                    }
+                }
+            }
+            
         }
     }
   
@@ -137,8 +141,8 @@ export default function UnitReportModalComponent() {
 
             <div className='flex flex-row w-full'>
                 
-                <IconButton 
-                    sx={{
+                <button 
+                    style={{
                         width: '50px',
                         height: '50px',
                         padding: 0,
@@ -150,7 +154,7 @@ export default function UnitReportModalComponent() {
                 >
                     <ReportClose className='w-[50px] h-[50px] m-0 p-0'
                     onClick={()=>setUnitReportModal(initializeUnitReportModal)}/>
-                </IconButton>
+                </button>
             </div>
         </DialogTitle>
         <DialogContent
@@ -188,7 +192,7 @@ export default function UnitReportModalComponent() {
                     )}
                     {menuControll===1 && (
                         <div className='absolute top-[0px] right-[25px]'>
-                            <PrintReportExportButton isActivityPage={true}/>
+                            <PrintReportExportButton isActivityPage={false}/>
                         </div>
                     )}
                 </div>

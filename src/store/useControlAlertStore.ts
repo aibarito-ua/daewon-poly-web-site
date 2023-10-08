@@ -719,6 +719,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             toolLineColor: '#1f61c8'
         },
     ],
+    reportSelectData: {
+        book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+    },
     setSelectReportData: (data, year, semester, level) => {
         // find data
         let dumyData:TReportByStudentPeriodLevel= {
@@ -759,12 +762,13 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             {name:'organization', sum: 0},
             {name:'ideas', sum: 0},
         ]
-        let unitCount = 0;
-        for (let z = 0; z < dumyData.overall_report.length; z++) {
+        let unitCount = dumyData.overall_report.length;
+        let reportCompletedUnitIndexArray:number[] = [];
+        for (let z = 0; z < unitCount; z++) {
             const targetOverall = dumyData.overall_report[z];
             const targetUnitIdx = targetOverall.unit_index;
             const targetCate = targetOverall.categories;
-
+            reportCompletedUnitIndexArray.push(targetUnitIdx);
             for (let k = 0; k < targetCate.length; k++) {
                 const targetCateName = targetCate[k].category;
                 const targetScore = targetCate[k].score;
@@ -785,23 +789,18 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                     if (currentBarName === targetCateName) {
                         
                         if (targetUnitIdx === 1) {
-                            if (unitCount === 0) unitCount+=1;
                             dumyOverallBar[b].unit1 = targetScore;
                             break;
                         } else if (targetUnitIdx === 2) {
-                            if (unitCount === 1) unitCount+=1;
                             dumyOverallBar[b].unit2 = targetScore;
                             break;
                         } else if (targetUnitIdx === 3) {
-                            if (unitCount === 2) unitCount+=1;
                             dumyOverallBar[b].unit3 = targetScore;
                             break;
                         } else if (targetUnitIdx === 4) {
-                            if (unitCount === 3) unitCount+=1;
                             dumyOverallBar[b].unit4 = targetScore;
                             break;
                         } else if (targetUnitIdx === 5) {
-                            if (unitCount === 4) unitCount+=1;
                             dumyOverallBar[b].unit5 = targetScore;
                             break;
                         }
@@ -823,14 +822,11 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                     const percent = sumData[s].sum / maxScore * 100;
                     console.log('percent ==',percent)
                     dumyOverallPie[p].data[0].value = percent;
-                    // for (let r = 0; r < rubricScoreDataStates.hexagonChartData.length; r++) {
-                    //     if (rubricScoreDataStates.hexagonChartData[r].target === currentPie.target) {
-                    //         rubricScoreDataStates.hexagonChartData[r].data[0].value = percent;
-                            
-                    //     }
-                    // }
                 }
             }
+        }
+        if (reportCompletedUnitIndexArray.length > 0) {
+            reportCompletedUnitIndexArray.sort((a,b) => {return a-b});
         }
         set(()=>({
             reportSelectedOverallBarChart: dumyOverallBar,
@@ -839,11 +835,81 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             unitReportsData: dumyUnitReportsData,
             unitRubricScoresData: rubricScoreDataStates,
             reportSelectBookName: dumyData.book_name,
+            reportSelectData:dumyData,
+            reportCompletedUnitIndexArray,
         }))
     },
     reportSelectFinder: {
         label: '', level: '', semester: 0, year: 0
     },
+    reportSelectBoxDatas: [],
+    reportLevel:'',
+    reportSemester:'',
+    setReportSelectBoxValue: (data) => {
+        const boxData = get().reportSelectBoxDatas;
+        let dumpReportSelectFinder:TDropdownSelectBoxDataTypes = get().reportSelectFinder;
+        
+        if (data.init) {
+            dumpReportSelectFinder.label='';
+            dumpReportSelectFinder.semester=0;
+            dumpReportSelectFinder.level='';
+            dumpReportSelectFinder.year=0;
+            set(()=>({
+                reportSelectFinder: dumpReportSelectFinder,
+                reportSemester: '',
+                reportLevel: '',
+            }))
+        } else {
+            if (data.level) {
+                let semester = '';
+                if(get().reportSemester==='') {
+                    if (data.level==='') {
+                        semester='';
+                        dumpReportSelectFinder={label:'',semester:0,level:'',year:0};
+                    } else {
+                        for (let i = 0; i < boxData.length; i++) {
+                            if (boxData[i].level === data.level) {
+                                semester = boxData[i].label;
+                                dumpReportSelectFinder.label=boxData[i].label;
+                                dumpReportSelectFinder.semester=boxData[i].semester;
+                                dumpReportSelectFinder.level=boxData[i].level;
+                                dumpReportSelectFinder.year=boxData[i].year;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    semester = get().reportSemester;
+                }
+                set(()=>({reportLevel: data.level, reportSemester: semester, reportSelectFinder:dumpReportSelectFinder}))
+            } else if (data.semester) {
+                let level = '';
+                if (get().reportLevel === '') {
+                    if (data.semester === '') {
+                        level='';
+                    } else {
+                        for (let i = 0; i < boxData.length; i++) {
+                            if (boxData[i].label === data.semester) {
+                                level = boxData[i].level;
+                                dumpReportSelectFinder.label=boxData[i].label;
+                                dumpReportSelectFinder.semester=boxData[i].semester;
+                                dumpReportSelectFinder.level=boxData[i].level;
+                                dumpReportSelectFinder.year=boxData[i].year;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    level = get().reportLevel;
+                }
+                set(()=>({reportSemester: data.semester, reportLevel: level,reportSelectFinder:dumpReportSelectFinder}))
+            }
+        }
+    },
+    setReportSelectBoxDatas: (data) => {
+        set(()=>({reportSelectBoxDatas:data}))
+    },
+    reportCompletedUnitIndexArray: [],
     setReportSelectedFinder: (data) => {
         set(() => ({reportSelectFinder:data}))
     },

@@ -111,6 +111,8 @@ export default function CustomizedReportTabs(
     unitReportData,
     reportByUnitMainTitle,
     reportSelectFinder,
+    // 
+    reportCompletedUnitIndexArray
   } = useControlAlertStore();
 
   React.useEffect(()=>{
@@ -124,15 +126,15 @@ export default function CustomizedReportTabs(
         let currentUnit = 0;
         let nextUnits = [];
         let prevUnits = [];
-        for (let j = 0; j < unitReportsData.length; j++) {
-            if (unitReportsData[j].unit_index === reportSelectUnit) {
-                currentUnit = reportSelectUnit;
-            } else if (unitReportsData[j].unit_index > reportSelectUnit) {
-                nextUnits.push(unitReportsData[j].unit_index)
-            } else {
-                prevUnits.push(unitReportsData[j].unit_index)
-            }
-        };
+        for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+          if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
+              currentUnit = reportCompletedUnitIndexArray[i];
+          } else if (reportCompletedUnitIndexArray[i] > reportSelectUnit) {
+              nextUnits.push(reportCompletedUnitIndexArray[i]);
+          } else if (reportCompletedUnitIndexArray[i] < reportSelectUnit) {
+              prevUnits.push(reportCompletedUnitIndexArray[i])
+          }
+        }
         if (currentUnit === 1) {
             if (nextUnits.length > 0) {
                 setIsNext(true);
@@ -163,7 +165,7 @@ export default function CustomizedReportTabs(
         }
     }
     
-  },[unitReportsData, reportSelectUnit, reportSelectFinder])
+  },[unitReportsData, reportCompletedUnitIndexArray, reportSelectUnit, reportSelectFinder])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -179,14 +181,26 @@ export default function CustomizedReportTabs(
   const handlePrev = (currentIndex:number) => {
 
     if (isPrev && currentIndex!==1) {
-        const prevIndex = currentIndex-1;
-        setReportSelectUnit(prevIndex);
+      for (let i =0; i < reportCompletedUnitIndexArray.length; i++) {
+        if (reportCompletedUnitIndexArray[i]===currentIndex) {
+          const prevValue = reportCompletedUnitIndexArray[i-1];
+          if (prevValue) {
+            setReportSelectUnit(prevValue);
+          }
+        }
+      }
     }
 }
 const handleNext = (currentIndex:number) => {
     if (isNext && currentIndex!==5) {
-        const nextIndex = currentIndex+1;
-        setReportSelectUnit(nextIndex)
+      for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+        if (reportCompletedUnitIndexArray[i]===currentIndex) {
+          const nextValue = reportCompletedUnitIndexArray[i+1];
+          if (nextValue) {
+            setReportSelectUnit(nextValue)
+          }
+        }
+      }
     }
 }
   

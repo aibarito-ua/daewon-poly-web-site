@@ -3,19 +3,16 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { progressIcons } from '../../../util/svgs/commonProgressIcons';
-import { styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-
-
+import useControlAlertStore from '../../../store/useControlAlertStore';
 
 export default function ReportSelectButton(props:{
   data:{
     year: number, semester:number, level:string, label:string
-  }[],
-  selectDataFn:Function,
-  isLevel:boolean,
-  useDefaultEmptyValueFlag?:boolean,
-  disabledFlag?:boolean,
+  }[];
+  selectDataFn:Function;
+  isLevel:boolean;
+  useDefaultEmptyValueFlag?:boolean;
+  disabledFlag?:boolean;
 }) {
   const {
     data,
@@ -24,24 +21,47 @@ export default function ReportSelectButton(props:{
     isLevel, 
     selectDataFn,
   } = props;
-  const [value, setValue] = React.useState('');
+  // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
+
+  const {
+    reportSelectFinder,
+    // value & setValue
+    reportLevel,
+    reportSemester,
+    setReportSelectBoxValue,
+    reportAPIData,
+  } = useControlAlertStore();
+
+  const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
+    console.log('value ==',value)
+    if (value==='') {
+      setReportSelectBoxValue({data, init:true})
+    } else {
+      if (isLevel) {
+        setReportSelectBoxValue({data,level:value})
+      } else {
+        setReportSelectBoxValue({data,semester:value})
+      }
+    }
+  }
   
   const handleChange = (event: SelectChangeEvent) => {
+    console.log('reportSelectFinder ch =',reportSelectFinder)
     console.log('user info =',data)
     const targetData = event.target.value;
     console.log('target =',targetData);
     if (targetData === '') {
-      selectDataFn(data[0], isLevel, true)
       
-      setValue('');
+      selectDataFn('', reportAPIData, data[0], isLevel, true);
+      // setValue('', data[0])
       return;
     } else {
       for (let i = 0; i < data.length; i++) {
         if (data[i].label === targetData) {
-          selectDataFn(data[i], isLevel);
-          
-          setValue(event.target.value);
+          selectDataFn(event.target.value, reportAPIData, data[i], isLevel);
+           
+          // setValue(event.target.value, data[i]);
           break;
         }
       }
@@ -54,7 +74,7 @@ export default function ReportSelectButton(props:{
       <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1}} >
         <Select
             sx={{
-              color: value===''? '#aeaeae': '#222',
+              color: (isLevel? reportLevel: reportSemester)===''? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
               borderRadius: '15px',
@@ -67,8 +87,8 @@ export default function ReportSelectButton(props:{
             }}
             
             placeholder='test'
-            value={value}
-            disabled={disabledFlag?true:false}
+            value={isLevel? reportLevel: reportSemester}
+            disabled={isLevel? (reportSemester===''?true:false):false}
             onChange={handleChange}
             displayEmpty={true}
             open={open}
@@ -93,10 +113,10 @@ export default function ReportSelectButton(props:{
             
         >
             {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
-            {isLevel && <MenuItem disabled sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
+            {isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
 
             {data.map((dataItem, dataIndex)=>{
-                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>
+                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={isLevel?dataItem.level:dataItem.label}>{isLevel?dataItem.level:dataItem.label}</MenuItem>
 
             })}
         </Select>

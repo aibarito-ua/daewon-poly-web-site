@@ -88,7 +88,7 @@ const percentValue = Math.round(payload.value*10)/10;
 const percentDotCheck = Math.round(payload.value*10)%10 === 0;
 
 const titleName:string[] = payload.name.split(' ')
-console.log('test pie ===',props)
+// console.log('test pie ===',props)
   return (
     <g>
         <circle cx={cx} cy={cy}
@@ -198,12 +198,12 @@ export default function App() {
     const cy = 100;
     
 const mouseOnEvent = (e:any)=>{
-    console.log('click =',e)
-    console.log('active',activeIndex)
+    // console.log('click =',e)
+    // console.log('active',activeIndex)
     setClickIndex(e.name)
     let value= e.value;
     const tooltipContentsFromPayload = e.payload.tooltip;
-    console.log('tooltipContentsFromPayload =',tooltipContentsFromPayload)
+    // console.log('tooltipContentsFromPayload =',tooltipContentsFromPayload)
     //   let outerR = e.outerRadius;
     let outerR = e.innerRadius;
       let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));

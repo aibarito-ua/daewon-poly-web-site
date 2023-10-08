@@ -32,6 +32,12 @@ interface ISparkWritingStore {
     // control modal
     commentFocusId: string;
     setCommentFocusId: (setCommentFocusId:string) => void;
+
+    // progress select box
+    progressLevelBoxValue: string;
+    progressAllLevelsValue: string[];
+    setProgressAllLevelBoxValues: (data: string[]) => void;
+    setProgressLevelBoxValue: (level:string) => void;
 }
 type TDraft2ndPageSet = 'fresh'|'revise'|'';
 type TSparkWritingDatas = TSparkWritingData[]

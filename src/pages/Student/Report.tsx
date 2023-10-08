@@ -13,9 +13,8 @@ const Report = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [isNoData, setIsNoData] = React.useState<boolean>(true);
 
-    const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
-    const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
-    // const [reportSelectFinder, setReportSelectedFinder] = React.useState<TDropdownSelectBoxDataTypes>({label:'', level:'', semester:0, year:0});
+    // const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
+    // const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
 
     const {role, userInfo} = useLoginStore();
     const {
@@ -26,6 +25,8 @@ const Report = () => {
 
         // selectFinder
         reportSelectFinder, setReportSelectedFinder,
+        reportSelectBoxDatas, setReportSelectBoxDatas,
+        setReportSelectBoxValue,
         // select unit index
         reportSelectUnit, setReportSelectUnit,
         reportSelectBookName
@@ -42,67 +43,61 @@ const Report = () => {
             if (getAPIs) getReportAll = getAPIs;
         }
         if (getReportAll) {
+            let dumpReportSelectBoxDatas=[];
             for (let i = 0; i < getReportAll.periods.length; i++) {
                 // find year and semesters
                 const currentReportAll = getReportAll.periods[i];
                 const currentYearData = currentReportAll.year;
                 const currentSemester = currentReportAll.semester===1? '1st': '2nd';
                 const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
-                const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
-                semesters.push(pushSemesterData);
+                // const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
+                // dumpReportSelectBoxDatas.push(pushSemesterData);
                 for ( let j = 0; j < currentReportAll.levels.length; j++) {
                     // find levels
                     const level = currentReportAll.levels[j].level_name;
-                    const pushLevelsData = {label: level, year: currentYearData, semester:currentReportAll.semester, level:level}
-                    levels.push(pushLevelsData);
+                    const pushLevelsData = {label: pushSemesterString, year: currentYearData, semester:currentReportAll.semester, level:level}
+                    dumpReportSelectBoxDatas.push(pushLevelsData);
                 };
             };
             console.log('get report all =', getReportAll)
 
             let dumyFinderData = {label:'', level:'', semester:0, year:0};
             dumyFinderData.level = userInfo.courseName;
+            setReportSelectBoxDatas(dumpReportSelectBoxDatas);
             setReportSelectedFinder(dumyFinderData);
             setReportAPIData(getReportAll);
+            setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
             setCommonStandbyScreen({openFlag: false})
         }
     }
     useComponentWillMount(async()=>{
         await beforeRenderedFn();
-        
-        
     })
     React.useEffect(()=>{
     },[])
     
-    const handleChange = (data:TDropdownSelectBoxDataTypes, isLevel:boolean, isInit?:boolean) => {
+    const handleChange = (selectValue:string, data: TReportByStudentResponse, selectData:TDropdownSelectBoxDataTypes, isLevel:boolean , isInit?:boolean) => {
+        const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
+            if (value==='') {
+                setReportSelectBoxValue({data, init:true})
+              } else {
+                if (isLevel) {
+                  setReportSelectBoxValue({data,level:value})
+                } else {
+                  setReportSelectBoxValue({data,semester:value})
+                }
+              }
+        }
         if (isInit) {
-            let dumyData = reportSelectFinder;
-            dumyData.label='';
-            dumyData.semester=0;
-            dumyData.year=0;
-            dumyData.level=reportSelectFinder.level;
-            setReportSelectedFinder(dumyData);
+            console.log('init values')
+            setValue(selectValue, selectData)
             setIsNoData(true);
         } else {
-
-            if (isLevel) {
-                // level change
-                let dumyData = reportSelectFinder;
-                dumyData.level = data.level;
-                setReportSelectedFinder(dumyData);
-            } else {
-                // year & semester change
-                let dumyData = reportSelectFinder;
-                dumyData.year= data.year;
-                dumyData.semester = data.semester;
-                if (dumyData.year !==0 && dumyData.level!=='' && dumyData.semester!==0) {
-                    console.log('selected all')
-                    setSelectReportData(reportAPIData, dumyData.year, dumyData.semester, dumyData.level)
-                    setReportSelectUnit(1)
-                    setIsNoData(false);
-                }
-                setReportSelectedFinder(dumyData)
-            }
+            console.log('set values')
+            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
+            setValue(selectValue, selectData)
+            setReportSelectUnit(1)
+            setIsNoData(false);
         }
     }
     
@@ -120,8 +115,8 @@ const Report = () => {
                         <span className='writing-activity-page-title-text' >{reportSelectBookName}</span>
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
-                        <ReportSelectButton data={semesters} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>
-                        <ReportSelectButton data={levels} disabledFlag={true} useDefaultEmptyValueFlag={true} selectDataFn={handleChange} isLevel={true}/>
+                        <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>
+                        <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={true} useDefaultEmptyValueFlag={true} selectDataFn={handleChange} isLevel={true}/>
                     </div>
                 </div>
                 {/* Tab */}

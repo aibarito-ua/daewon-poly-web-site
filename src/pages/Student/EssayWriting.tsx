@@ -370,7 +370,11 @@ const EssayWriting = () => {
                 commonAlertOpen({
                     useOneButton: true,
                     yesButtonLabel: 'OK',
-                    messages: ['Temporary saving is complete.']
+                    messages: ['Temporary saving is complete.'],
+                    yesEvent: ()=>{
+                        commonAlertClose();
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    }
                 })
             } else {
                 commonAlertOpen({
@@ -541,8 +545,8 @@ const EssayWriting = () => {
                         <div className={`${foldFlag[i]? 'pt-[5px] pb-[20px]': 'hidden'}`} id={`fold-div-${i}`}>
                             { manufactureItem[i].map((item, itemIndex) => {
                                 // console.log('manufacture item [',itemIndex,'] =',item, )
-                                
-                                return <div>
+                                const manuKey = 'menufactureItem-'+item.name+item.order_index+itemIndex;
+                                return <div key={manuKey}>
                                     <div className='outline-content-box-item'
                                     key={i+'-'+itemIndex+'-body-'+item.order_index}><span className=''></span>{item.heading_content}</div>
                                     <div 
@@ -591,7 +595,7 @@ const EssayWriting = () => {
                             // setShowSaveModal(true)
                             callbackCheckValues()
                             commonAlertOpen({
-                                messages: ['Do you want to save?'],
+                                messages: ['Do you want to save your current progress and return to the main menu?'],
                                 yesButtonLabel: `Yes, I'm sure.`,
                                 noButtonLabel: `No, Cancel.`,
                                 yesEvent: async ()=> await temporarySaveFunction()

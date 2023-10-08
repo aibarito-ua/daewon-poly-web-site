@@ -1,6 +1,6 @@
 import React from 'react';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
-import { callUnitInfobyStudent } from './api/EssayWriting.api';
+import { callUnitInfobyStudent, getReportsAPI } from './api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
 import useNavStore from '../../store/useNavStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
@@ -12,148 +12,92 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { progressIcons } from '../../util/svgs/commonProgressIcons';
 import ProgressTable from '../../components/pageComponents/progress/ProgressTables';
 import SelectLabels from '../../components/pageComponents/progress/ProgressSelectButton';
-const dumyUnitRubricData:TUnitRubricScore[]=[
-    {
-        unit_index:1,
-        rubric_scores: [
-            {
-                name: 'ideas',
-                score: 4
-            }, {
-                name: 'organization',
-                score: 4
-            }, {
-                name: 'voice',
-                score: 6
-            }, {
-                name: 'word choice',
-                score: 8
-            }, {
-                name: 'sentence fluency',
-                score: 10
-            }, {
-                name: 'conventions',
-                score: 6
-            }
-            
-        ]
-    }, {
-        unit_index:2,
-        rubric_scores: [
-            {
-                name: 'ideas',
-                score: 4
-            }, {
-                name: 'organization',
-                score: 6
-            }, {
-                name: 'voice',
-                score: 8
-            }, {
-                name: 'word choice',
-                score: 10
-            }, {
-                name: 'sentence fluency',
-                score: 8
-            }, {
-                name: 'conventions',
-                score: 6
-            }
-            
-        ]
-    }, {
-        unit_index:3,
-        rubric_scores: [
-            {
-                name: 'ideas',
-                score: 6
-            }, {
-                name: 'organization',
-                score: 8
-            }, {
-                name: 'voice',
-                score: 10
-            }, {
-                name: 'word choice',
-                score: 8
-            }, {
-                name: 'sentence fluency',
-                score: 6
-            }, {
-                name: 'conventions',
-                score: 4
-            }
-            
-        ]
-    }, {
-        unit_index:4,
-        rubric_scores: [
-            {
-                name: 'ideas',
-                score: 8
-            }, {
-                name: 'organization',
-                score: 10
-            }, {
-                name: 'voice',
-                score: 10
-            }, {
-                name: 'word choice',
-                score: 10
-            }, {
-                name: 'sentence fluency',
-                score: 8
-            }, {
-                name: 'conventions',
-                score: 8
-            }
-            
-        ]
-    }, {
-        unit_index:5,
-        rubric_scores: [
-            {
-                name: 'ideas',
-                score: 2
-            }, {
-                name: 'organization',
-                score: 2
-            }, {
-                name: 'voice',
-                score: 2
-            }, {
-                name: 'word choice',
-                score: 8
-            }, {
-                name: 'sentence fluency',
-                score: 6
-            }, {
-                name: 'conventions',
-                score: 10
-            }
-            
-        ]
-    }
-]
+
 const Progress = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const {role, userInfo} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
     const {
-        unitReportModal, setUnitReportModal,
-        setUnitRubricScoresData,
+        setCommonStandbyScreen,
+        reportAPIData,
+        setReportSelectBoxDatas,
+        setReportSelectedFinder,
+        setReportAPIData,
+        setReportSelectBoxValue
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI, 
         sparkWritingBookName,
-        sparkWritingData
+        sparkWritingData,
+        setProgressAllLevelBoxValues,
+        setProgressLevelBoxValue,
     } = useSparkWritingStore();
     const {
         progressTabActiveIndex,
     } = useProgressPageStore();
 
+    const getReportsData = async () => {
+        const student_code = userInfo.userCode;
+        
+        let getReportAll:TReportByStudentResponse = {periods:[]};
+        if (reportAPIData.periods.length > 0) {
+            getReportAll=reportAPIData;
+        } else {
+            const getAPIs = await getReportsAPI(student_code);
+            if (getAPIs) getReportAll = getAPIs;
+        }
+        
+        if (getReportAll) {
+            let dumpReportSelectBoxDatas=[];
+            for (let i = 0; i < getReportAll.periods.length; i++) {
+                // find year and semesters
+                const currentReportAll = getReportAll.periods[i];
+                const currentYearData = currentReportAll.year;
+                const currentSemester = currentReportAll.semester===1? '1st': '2nd';
+                const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
+                // const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
+                // dumpReportSelectBoxDatas.push(pushSemesterData);
+                for ( let j = 0; j < currentReportAll.levels.length; j++) {
+                    // find levels
+                    const level = currentReportAll.levels[j].level_name;
+                    const pushLevelsData = {label: pushSemesterString, year: currentYearData, semester:currentReportAll.semester, level:level}
+                    dumpReportSelectBoxDatas.push(pushLevelsData);
+                };
+            };
+            console.log('get report all =', getReportAll)
+// 1
+            let allLevels:string[] = [];
+            for (let i = 0; getReportAll.periods.length; i++) {
+                if (getReportAll.periods[i].year === userInfo.year && getReportAll.periods[i].semester === userInfo.semester) {
+                    const target = getReportAll.periods[i].levels;
+                    for (let j = 0; j < target.length; j++) {
+                        allLevels.push(target[j].level_name);
+                    };
+                    break;
+                };
+            };
+            if (allLevels.length!==0) {
+                setProgressLevelBoxValue(allLevels[0])
+            } else {
+                setProgressLevelBoxValue('');
+            }
+            setProgressAllLevelBoxValues(allLevels);
+// 2
+
+
+            let dumyFinderData = {label:'', level:'', semester:0, year:0};
+            dumyFinderData.level = userInfo.courseName;
+            setReportSelectBoxDatas(dumpReportSelectBoxDatas);
+            setReportSelectedFinder(dumyFinderData);
+            setReportAPIData(getReportAll);
+            setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
+            setCommonStandbyScreen({openFlag: false})
+        }
+    }
+    
     const beforeRenderedFn = async () => {
-        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        setCommonStandbyScreen({openFlag: true})
+        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
             
             if (response.book_name!=='') {
                 setLoading(true)
@@ -164,8 +108,13 @@ const Progress = () => {
         });
     }
     useComponentWillMount(async()=>{
+        
         await beforeRenderedFn();
+        await getReportsData();
+        
     })
+    React.useEffect(()=>{
+    },[])
     return (
         <section className="section-common-layout use-nav-aside" >
             <SmallHead mainTitle='Progress'/>

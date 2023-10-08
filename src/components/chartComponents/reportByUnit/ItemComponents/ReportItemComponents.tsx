@@ -2,7 +2,7 @@ import React from 'react';
 
 const ReportWordCountSummaryComponent = (props:{item: TReportByStudent}) => {
     const {item } = props;
-    console.log('ReportWordCountSummaryComponent =',item)
+    // console.log('ReportWordCountSummaryComponent =',item)
     return (
         <div className='report-chart-righ-word-count-div'>
             <div className='report-chart-righ-word-count-title'>
@@ -50,15 +50,17 @@ const ReportCorrectionSummaryComponent = (
         const grammar = item.grammar_correction.grammar;
         let correctionDiv:JSX.Element[]=[];
         correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
-            return <div className='flow-root indent-[5px]'>{sentenceItem.map((wordItem , wordIndex) => {
-                console.log('word ==',wordItem)
-                const key = 'grammar-init-'+sentenceIndex+'-'+wordIndex+'-'+wordItem.type;
+            const key1 = 'report-correction-summary-init-'+sentenceIndex+'-div';
+            return <div className='flow-root indent-[5px]' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
+                // console.log('word ==',wordItem)
+                
+                const key2 = key1+'-wordItem-'+wordIndex+'-'+wordItem.type;
                 if (wordItem.type === 1) {
-                    return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                    return <span key={key2} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
                 } else if (wordItem.type === -1 ) {
-                    return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                    return <span key={key2} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
                 } else {
-                    return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
+                    return <span key={key2} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                 }
             })}</div>
         })
@@ -78,9 +80,10 @@ const ReportCorrectionSummaryComponent = (
             onClick={()=>{
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
-                    return <div className='flow-root indent-[5px]'>{sentenceItem.map((wordItem , wordIndex) => {
+                    const key1 = 'report-correction-summary-grammar-'+sentenceIndex+'-div';
+                    return <div className='flow-root indent-[5px]' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
                         console.log('word ==',wordItem)
-                        const key = 'grammar-'+sentenceIndex+'-'+wordIndex+'-'+wordItem.type;
+                        const key = key1+'wordItem-'+wordIndex+'-'+wordItem.type;
                         if (wordItem.type === 1) {
                             return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
                         } else if (wordItem.type === -1 ) {
@@ -99,9 +102,6 @@ const ReportCorrectionSummaryComponent = (
                     <span className='report-chart-righ-correction-content-item-value'>{grammar.sentences_count}</span>
                     { selectReason === 'grammar' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
-                {/* <div className={ selectReason === 'grammar' ? 'report-chart-righ-correction-content-wrap-2':'hidden'}>
-                    {correctionDiv}
-                </div> */}
             </div>
         )   
     }
@@ -112,9 +112,10 @@ const ReportCorrectionSummaryComponent = (
             onClick={()=>{
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
-                    return <div className='flow-root indent-[5px]'>{sentenceItem.map((wordItem , wordIndex) => {
+                    const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
+                    return <div className='flow-root indent-[5px]' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
                         console.log('word ==',wordItem)
-                        const key = 'punctuation-'+sentenceIndex+'-'+wordIndex+'-'+wordItem.type;
+                        const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                         if (wordItem.type === 1) {
                             return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
                         } else if (wordItem.type === -1 ) {
@@ -147,9 +148,10 @@ const ReportCorrectionSummaryComponent = (
                 let correctionDiv:JSX.Element[]=[];
                 
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
-                    return <div className='flow-root indent-[5px]'>{sentenceItem.map((wordItem , wordIndex) => {
+                    const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
+                    return <div className='flow-root indent-[5px]' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
                         console.log('word ==',wordItem)
-                        const key = 'spelling-'+sentenceIndex+'-'+wordIndex+'-'+wordItem.type;
+                        const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                         if (wordItem.type === 1) {
                             return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
                         } else if (wordItem.type === -1 ) {
@@ -218,7 +220,7 @@ const ReportTeachersComments = (
                     for (let j = 0; j < targetComment.length; j++) {
                         const key = '2-tcp-item-'+i+'-'+j
                         const viewItem = <span key={key}>{targetComment[j]}</span>
-                        console.log('test ==',targetComment[j])
+                        // console.log('test ==',targetComment[j])
                         dumpVC.push(viewItem);
                     }
                 }

@@ -190,6 +190,7 @@ export default function App() {
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
     const [average, setAverage] = useState<number>(0);
     React.useEffect(()=>{
+        console.log('pie chart reportSelectedOverallPieChart =',reportSelectedOverallPieChart)
         const dumpData:TAllDoughnutDatas = JSON.parse(JSON.stringify(allData));
         const length = dumpData.length
         let sum_val = 0;
@@ -197,6 +198,7 @@ export default function App() {
             sum_val += dumpData[i].data[0].value;
         }
         const avr = sum_val/length;
+        console.log('avr =',avr)
         setAverage(avr)
     },[reportSelectedOverallPieChart])
     const radiusDatas = [

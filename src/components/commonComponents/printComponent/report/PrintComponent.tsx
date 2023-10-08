@@ -27,7 +27,8 @@ const PrintReportExportButton = (props: {
         reportByUnitMainTitle,
     } = useControlAlertStore();
     React.useEffect(() => {
-        if (!isReplace) {
+        console.log('isActi',isReplace)
+        // if (!isReplace) {
             if (divRef.current) {
                 const checkRef = divRef.current;
                 checkRef.style.display='block';
@@ -36,9 +37,9 @@ const PrintReportExportButton = (props: {
                 const offsetHeight = checkRef.offsetHeight;
                 
                 const scrollHeight = checkRef.scrollHeight;
-                console.log('clientHeight =',clientHeight)
-                console.log('offsetHeight =',offsetHeight)
-                console.log('scrollHeight =',scrollHeight)
+                // console.log('clientHeight =',clientHeight)
+                // console.log('offsetHeight =',offsetHeight)
+                // console.log('scrollHeight =',scrollHeight)
                 
                 let newHeight = oneRowHeight;
                 let newTags:JSX.Element[][]=[];
@@ -47,16 +48,20 @@ const PrintReportExportButton = (props: {
                     const childRow = childRef[i].children;
                     for (let j = 0; j< childRow.length; j++) {
                         const childSpanText = childRow[j].textContent;
+                        // console.log('child span text =',childSpanText)
                         const spanHeight = childRow[j].clientHeight;
-                        console.log('span height =',spanHeight)
+                        // console.log('span height =',spanHeight)
                         newHeight += spanHeight;
                         const newtagsLength = newTags.length;
+                        // console.log('new tags leng =',newtagsLength)
                         const jsxChildSpan = <span key={childSpanText+'print-'+i+j} className='export-report-wr-oc-input'>{childSpanText}</span>;
                         if (newtagsLength === 0) {
-                            if (clientHeight > newHeight) {
+                            // console.log('clientHeight =',clientHeight)
+                            // console.log('newHeight =',newHeight)
+                            // if (clientHeight > newHeight) {
                                 newTags.push([])
                                 newTags[0].push(jsxChildSpan);
-                            }
+                            // }
                         } else if (newtagsLength===1) {
                             const lastIdx = newtagsLength-1;
 
@@ -86,9 +91,10 @@ const PrintReportExportButton = (props: {
                     setIsMulti(false);
                 }
                 setIsReplace(true);
+                console.log('new tags =',newTags)
                 setReplaceBody(newTags);
             }
-        }
+        // }
     }, [reportSelectUnit])
 
     const handlePrint = useReactToPrint({
@@ -102,7 +108,7 @@ const PrintReportExportButton = (props: {
             <div style={{display: 'none'}}>
                 <div ref={componentRef} className="block w-full h-full">
                     {replaceBody.length> 0 && replaceBody.map((bodyItem, bodyIndex) => {
-                        const key = 'print-ref-component-report-'+bodyIndex
+                        const key = 'print-ref-component-report-'+bodyItem[0].key+bodyIndex
                         const maxCount = replaceBody.length;
                         const currentCount = bodyIndex+1;
                         return <ReportComponentToPrint 

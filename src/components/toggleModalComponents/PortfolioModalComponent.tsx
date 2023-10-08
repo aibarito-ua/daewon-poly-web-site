@@ -132,8 +132,8 @@ export default function PortfolioModalComponent() {
 
             <div className='flex flex-row w-full'>
                 
-                <IconButton 
-                    sx={{
+                <button
+                    style={{
                         width: '50px',
                         height: '50px',
                         padding: 0,
@@ -145,7 +145,7 @@ export default function PortfolioModalComponent() {
                 >
                     <ReportClose className='w-[50px] h-[50px] m-0 p-0'
                     onClick={()=>setPortfolioModalClose()}/>
-                </IconButton>
+                </button>
             </div>
         </DialogTitle>
         <DialogContent
