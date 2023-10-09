@@ -276,7 +276,11 @@ export const Login = () => {
             <div className='absolute right-[24px] top-[24px] w-[65px] h-[65px] bg-app-close-button-svg bg-no-repeat bg-contain hover:cursor-pointer' 
                 onClick={()=>{
                     // exit application event is here.
-                    
+                    if(isMobile)
+                        window.ReactNativeWebView.postMessage(JSON.stringify('quit'))
+                    else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+                        (window as any).api.toElectron.send('quit')
+                    }
                 }}
             />
             {/* content */}
