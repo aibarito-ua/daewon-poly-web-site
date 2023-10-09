@@ -212,13 +212,13 @@ const PreviewSparkWriting = (props:any) => {
         if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline);
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken);
             console.log('res ====',res)
             if (res.result_body.length>0) {
                 const unitId = sparkWritingData[unitIndex].unit_id
                 const proofReadingCountUpdateValue = ProofReadingCountValue+1;
                 // const proofReadingCountUpdateValue = 1;
-                const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue);
+                const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue, userInfo.accessToken);
                 if (updateCountAPI.statusCode === 200) {
                     setProofreadingCount(unitId)
                     setCommonStandbyScreen({openFlag:false})
@@ -938,7 +938,7 @@ const PreviewSparkWriting = (props:any) => {
                                             "proofreading_count": 0
                                         }
                                         console.log('data =',data)
-                                        const reset = await grammarReset(data);
+                                        const reset = await grammarReset(data, userInfo.accessToken);
                                         console.log('reset =',reset)
                                         if (reset.statusCode === 200) {
                                             setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);

@@ -58,6 +58,7 @@ const loadFeedbackDraftTitle = (
                 if (af_item?.comment_index !== currentCommentIdx) {
                     if (currentCommentIdx===-1) {
                         jsxElements.push(...returnValue)
+                        returnValue=[];
                     } else {
                         const currentCommentItem = findCommentByCommentIndex(currentCommentIdx);
                         const createSpan = <span className={'hover:border-[2px] hover:border-[#f1b02e]'}

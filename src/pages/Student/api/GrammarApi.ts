@@ -2,7 +2,7 @@ import React from 'react';
 import { CONFIG } from '../../../config';
 import axios from 'axios';
 
-export async function grammarCheck(grammarData:TSparkWritingDataOutline[]):Promise<TGrammarResponse>{
+export async function grammarCheck(grammarData:TSparkWritingDataOutline[], accessToken:string):Promise<TGrammarResponse>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
         data: grammarData
@@ -10,7 +10,8 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[]):Promi
     return await axios.post(reqUrl,data, {
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
         },
     }).then((result)=>{
         console.log('result: ',result.data.data)
@@ -25,13 +26,14 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[]):Promi
     })
     
 }
-export async function proofReadingCountUpdate(student_code:string, unit_id: number, proofreading_count: number):Promise<TProofReadingCountUpdateResponse|TProofReadingCountUpdateReject> {
+export async function proofReadingCountUpdate(student_code:string, unit_id: number, proofreading_count: number, accessToken:string):Promise<TProofReadingCountUpdateResponse|TProofReadingCountUpdateReject> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     const data = { student_code, unit_id, proofreading_count };
     return await axios.put(reqUrl, data, {
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
         },
     }).then(( result ) => {
         const response:TProofReadingCountUpdateResponse = result.data;
@@ -42,12 +44,13 @@ export async function proofReadingCountUpdate(student_code:string, unit_id: numb
         return returnReject;
     })
 }
-export async function grammarReset(data:{student_code:string, unit_id:number, proofreading_count:number}):Promise<any> {
+export async function grammarReset(data:{student_code:string, unit_id:number, proofreading_count:number},accessToken:string):Promise<any> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     return await axios.put(reqUrl,data,{
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
         },
     }).then(( result ) => {
         const response:TProofReadingCountUpdateResponse = result.data;
