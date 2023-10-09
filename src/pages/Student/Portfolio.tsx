@@ -33,7 +33,7 @@ export const Portfolio = () => {
     const beforeRenderedFn = async () => {
         const student_code = userInfo.userCode;
         setCommonStandbyScreen({openFlag:true});
-        await getPortfoliosAPI(student_code).then((response) => {
+        await getPortfoliosAPI(student_code, userInfo.accessToken).then((response) => {
             if (response) {
                 setPortfolioApiData(response, userInfo);
                 setCommonStandbyScreen({openFlag:false});

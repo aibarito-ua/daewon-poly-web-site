@@ -24,7 +24,7 @@ const SelectWritingClinic = () => {
     const navigate = useNavigate();
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
-        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             if (response.book_name!=='') {
                 setButtonActive(true)
             }

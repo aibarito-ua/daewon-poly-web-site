@@ -4,6 +4,7 @@ import axios from 'axios';
 import { url } from 'inspector';
 
 export async function callDialogAPI(ai_name:string, user_name:string, history: string[][]):Promise<string[][]> {
+    
     return await axios.post(
         CONFIG.CHATBOT.URL, {
             ai_name, user_name, history
@@ -31,6 +32,7 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
 export async function callUnitInfobyStudent (
     studentCode: string,
     courseName: string,
+    accessToken: string,
 ):Promise<{
     book_name: string,
     units: TSparkWritingDatas,
@@ -42,7 +44,8 @@ export async function callUnitInfobyStudent (
         {
             headers: {
                 'Content-Type': 'application/json',
-                Accept: 'application/json'
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`
             }
         }
     ).then((response) => {
@@ -63,6 +66,7 @@ export async function callUnitInfobyStudent (
 
 export async function draftSaveTemporary(
     data:TSparkWritingTemporarySaveData,
+    accessToken: string,
 ):Promise<boolean> {
     return await axios.post(
         CONFIG.DRAFT.POST.SAVE_TEMPORARY,
@@ -70,7 +74,8 @@ export async function draftSaveTemporary(
         {
             headers: {
                 'Content-Type': 'application/json',
-                Accept: 'application/json'
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`
             }
         }
     ).then((response) => {
@@ -81,12 +86,13 @@ export async function draftSaveTemporary(
     })
 }
 
-export async function draft1stSubmit (data:TSubmit1stDraftRequestData):Promise<boolean>{
+export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessToken: string,):Promise<boolean>{
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json'
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`
         }
     }).then((response)=>{
         const rsp:TProofReadingCountUpdateResponse = response.data;
@@ -96,12 +102,13 @@ export async function draft1stSubmit (data:TSubmit1stDraftRequestData):Promise<b
         return false;
     })
 }
-export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData):Promise<boolean> {
+export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessToken: string):Promise<boolean> {
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json'
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`
         }
     }).then((response)=>{
         const rsp:TProofReadingCountUpdateResponse = response.data;
@@ -112,13 +119,14 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData):Promise<b
     })
 }
 
-export async function getReportsAPI(student_code: string): Promise<TReportByStudentResponse|null> {
+export async function getReportsAPI(student_code: string, accessToken: string): Promise<TReportByStudentResponse|null> {
     console.log(student_code)
     const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code);
     return await axios.get(reqUrl, {
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json'
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`
         }
     }).then((response) => {
         const rsp:TReportByStudentResponse = response.data.data;
@@ -128,12 +136,13 @@ export async function getReportsAPI(student_code: string): Promise<TReportByStud
         return null;
     })
 }
-export async function getPortfoliosAPI (student_code:string) : Promise<TPortfolioAPIData|null> {
+export async function getPortfoliosAPI (student_code:string, accessToken: string) : Promise<TPortfolioAPIData|null> {
     const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code);
     return await axios.get(reqUrl, {
         headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json'
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`
         }
     }).then((response) => {
         const rsp = response.data.data;

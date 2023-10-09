@@ -122,7 +122,7 @@ const PreviewSparkWriting = (props:any) => {
      const beforeRenderedFn = async () => {
         
         // data reload 
-        const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response)=>{
+        const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
             if (response.book_name!=='') {
                 setSparkWritingDataFromAPI(response.units, response.book_name);
                 setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
@@ -597,7 +597,7 @@ const PreviewSparkWriting = (props:any) => {
             alertType: 'continue',
             messages: ['Please temporary saving your data.'],
             yesEvent: async () => {
-                const isSaveTemporary = await draftSaveTemporary(data);
+                const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
                 if (isSaveTemporary) {
                     if (isGrammarSave) {
                         commonAlertOpen({
@@ -942,11 +942,6 @@ const PreviewSparkWriting = (props:any) => {
                                         console.log('reset =',reset)
                                         if (reset.statusCode === 200) {
                                             setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);
-                                            
-                                            // setBodyHistory({
-                                            //     title: { past: [], present: [], future: [] },
-                                            //     body:{ past: [], present: [], future: [] }
-                                            // })
                                             await beforeRenderedFn();
                                         } 
                                         
@@ -1016,7 +1011,7 @@ const PreviewSparkWriting = (props:any) => {
                                         console.log('submit item = ',submitData)
                                         commonAlertClose();
                                         setCommonStandbyScreen({openFlag:true})
-                                        const submit = await draft1stSubmit(submitData);
+                                        const submit = await draft1stSubmit(submitData, userInfo.accessToken);
                                         
                                         console.log('submit return data =',submit)
                                         if (submit) {

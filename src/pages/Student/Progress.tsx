@@ -43,7 +43,7 @@ const Progress = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken);
             if (getAPIs) getReportAll = getAPIs;
         }
         
@@ -97,7 +97,7 @@ const Progress = () => {
     
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag: true})
-        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             
             if (response.book_name!=='') {
                 setLoading(true)

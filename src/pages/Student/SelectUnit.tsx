@@ -52,7 +52,7 @@ export default function SelectUnit () {
     ])
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
-        const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             
             
             
@@ -62,7 +62,7 @@ export default function SelectUnit () {
         // report
         const student_code = userInfo.userCode;
         
-        const getReportAll = await getReportsAPI(student_code);
+        const getReportAll = await getReportsAPI(student_code, userInfo.accessToken);
         if (getReportAll && allUnitsDataFromAPI) {
             console.log('getReportAll ==',getReportAll)
             let dumyFinderData = {label:'init', level:userInfo.courseName, semester:userInfo.semester, year:userInfo.year};
@@ -86,7 +86,7 @@ export default function SelectUnit () {
 
     const reportOpen = async (data:TSparkWritingData) => {
         const student_code = userInfo.userCode;
-        const getAllReport = await getReportsAPI(student_code);
+        const getAllReport = await getReportsAPI(student_code,userInfo.accessToken);
         if (getAllReport) {
             const reportByYears = getAllReport.periods;
             for (let i = 0; i < reportByYears.length; i++) {

@@ -89,7 +89,7 @@ const EssayWriting = () => {
     const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen} = useControlAlertStore();
 
     const pageInitSetting = async () => {
-        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName).then((response) => {
+        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             const data = response.units
             
             setOriginalTargetData(data);
@@ -378,7 +378,7 @@ const EssayWriting = () => {
                 draft_init_page_flag:''
             }
             // console.log('data ==',data)
-            const isSaveTemporary = await draftSaveTemporary(data);
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
             if (isSaveTemporary) {
                 setIsSaved(true);
                 commonAlertOpen({
@@ -421,7 +421,7 @@ const EssayWriting = () => {
                 contents: contentsData,
                 draft_init_page_flag: draft2ndPageSet
             };
-            const isSaveTemporary = await draftSaveTemporary(data);
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
             if (isSaveTemporary) {
                 setCommonStandbyScreen({openFlag:false});
                 setIsSaved(true);
@@ -471,7 +471,7 @@ const EssayWriting = () => {
         }
         commonAlertClose();
         setCommonStandbyScreen({openFlag:true});
-        const submit = await draft2ndSubmit(submitData);
+        const submit = await draft2ndSubmit(submitData, userInfo.accessToken);
         if (submit) {
             setCommonStandbyScreen({openFlag:false})
             commonAlertOpen({

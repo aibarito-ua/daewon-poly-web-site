@@ -39,7 +39,7 @@ const Report = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken);
             if (getAPIs) getReportAll = getAPIs;
         }
         if (getReportAll) {
