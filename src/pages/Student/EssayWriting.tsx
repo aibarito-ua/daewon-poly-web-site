@@ -29,6 +29,7 @@ const EssayWriting = () => {
     
     // fold flag
     const [foldFlag, setFoldFlag] = React.useState<boolean[]>([]);
+    const draft1stRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
     const [updateFoldIndex, setUpdateFoldIndex] = React.useState<number>();
 
     // check open  Buttons
@@ -151,8 +152,20 @@ const EssayWriting = () => {
             setFoldFlag(foldInit)
         } else {
             if (updateFoldIndex !== undefined) {
-                const target = document.getElementById(`fold-div-${updateFoldIndex}`)
-                target?.scrollIntoView({behavior: 'auto', block: 'end'})
+                const controllClass = `foldFlag:::[${updateFoldIndex}]`;
+                for (let i = 0; i < foldFlag.length; i++) {
+                    const target = draft1stRefs.current[i];
+                    if (target) {
+                        if (target.className.includes(controllClass)) {
+                            target.style.height='auto';
+                            target.style.height = target.scrollHeight+'px';
+                            
+                        }
+                        if (updateFoldIndex === i) {
+                            target.scrollIntoView({behavior:'auto', block: 'end'})
+                        }
+                    }
+                }
             }
         }
 
@@ -352,11 +365,12 @@ const EssayWriting = () => {
                     order_index: item.order_index,
                 }
             })
-            // console.log('content =',contensData)
+
             const data:TSparkWritingTemporarySaveData = {
                 student_code: userInfo.userCode,
                 student_name_en: userInfo.memberNameEn,
                 student_name_kr: userInfo.memberNameKr,
+                class_name: userInfo.className,
                 unit_id: targetData.unit_id,
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
@@ -400,6 +414,7 @@ const EssayWriting = () => {
                 student_code: userInfo.userCode,
                 student_name_en: userInfo.memberNameEn,
                 student_name_kr: userInfo.memberNameKr,
+                class_name: userInfo.className,
                 unit_id: targetData.unit_id,
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
@@ -484,7 +499,15 @@ const EssayWriting = () => {
             })
         }
     }
-    
+    /*
+     e.currentTarget.style.height = 'auto';
+    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+    const unitId = outlineItem.unit_id
+    const unitIndex = outlineItem.unit_index
+    const orderIndex = item.order_index
+    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+    callbackCheckValues()
+    */
     const foldFlagFunction = (i:number) => {
         // console.log('fold settings ==',foldFlag)
         const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
@@ -528,7 +551,7 @@ const EssayWriting = () => {
         let manufactureItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(allNames, outlineOrigin);
         // console.log('data =',manufactureItem)
         return allNames.map((title, i) => {
-            
+            const controllClass = `foldFlag:::[${i}]`
             return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} 
             key={i} id={title+i}>
                 <div className='outline-accordion-div-wrap'>
@@ -552,23 +575,25 @@ const EssayWriting = () => {
                                     <div 
                                         className='outline-content-box-item'>
                                             
-                                            <textarea rows={1} style={{'resize':'none'}} 
-                                            id={item.name+item.order_index}
-                                            className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" 
-                                            // placeholder={`Start typing in your ${item.name}...`}
-                                            placeholder={`Write here.`}
-                                            onChange={(e)=>{
-                                                e.currentTarget.style.height = 'auto';
-                                                e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                const unitId = outlineItem.unit_id
-                                                const unitIndex = outlineItem.unit_index
-                                                const orderIndex = item.order_index
-                                                setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-                                                callbackCheckValues()
-                                            }}
-                                            
-                                            value={item.input_content}
-                                            ></textarea>
+                                            <textarea rows={1} style={{'resize':'none'}}
+                                                ref={(el) => {
+                                                    draft1stRefs.current[i]= el
+                                                }}
+                                                id={item.name+item.order_index}
+                                                className={`${controllClass} block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`} 
+                                                // placeholder={`Start typing in your ${item.name}...`}
+                                                placeholder={`Write here.`}
+                                                onChange={(e)=>{
+                                                    e.currentTarget.style.height = 'auto';
+                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    const unitId = outlineItem.unit_id
+                                                    const unitIndex = outlineItem.unit_index
+                                                    const orderIndex = item.order_index
+                                                    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                    callbackCheckValues()
+                                                }}
+                                                value={item.input_content}
+                                            />
                                         </div>
                                     </div>
                             })}

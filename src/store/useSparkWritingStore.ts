@@ -351,7 +351,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     },
     sparkWritingTemporarySaveData: {
         student_code:'', student_name_en:'',
-        student_name_kr:'',
+        student_name_kr:'', class_name: '',
         unit_id: 0, proofreading_count:0,
         draft_index: 0, contents: []
     },

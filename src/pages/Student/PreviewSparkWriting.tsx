@@ -113,6 +113,8 @@ const PreviewSparkWriting = (props:any) => {
     const params = useParams();
     // path param to number
     const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+    // after submit standby feedback
+    const isStandbyFeedback:string= params.status?params.status:''; 
     // Navigate hook
     const navigate = useNavigate();
 
@@ -139,6 +141,7 @@ const PreviewSparkWriting = (props:any) => {
             if (checkSubmitted > 1) {
                 console.log('test 11')
                 setIsSubmitted(true);
+                
             } else {
                 let titleGrammarData:{
                     past: TTitleHistory[];
@@ -581,6 +584,7 @@ const PreviewSparkWriting = (props:any) => {
             student_code: userInfo.userCode,
             student_name_en: userInfo.memberNameEn,
             student_name_kr: userInfo.memberNameKr,
+            class_name: userInfo.className,
             unit_id: targetData.unit_id,
             draft_index: 1,
             proofreading_count: targetData.proofreading_count,
@@ -760,14 +764,26 @@ const PreviewSparkWriting = (props:any) => {
             const checkSubmit = sparkWritingData[unitIndex].draft_1_status.submit_date;
             console.log('check submit ==',checkSubmit)
             if (checkSubmit===null||checkSubmit===undefined||checkSubmit==='') {
-                setIsSubmitted(false)
+                if (isStandbyFeedback!=='') {
+                    setIsSubmitted(true)
+                } else {
+                    setIsSubmitted(false)
+                }
             }
             if (countofUseAIProofreading > 0) {
-                setIsSubmitted(false)
+                if (isStandbyFeedback!=='') {
+                    setIsSubmitted(true)
+                } else {
+                    setIsSubmitted(false)
+                }
             }
         } else {
             if (sparkWritingData[unitIndex].draft_1_status.status===5) {
-                setIsSubmitted(false)
+                if (isStandbyFeedback!=='') {
+                    setIsSubmitted(true)
+                } else {
+                    setIsSubmitted(false)
+                }
             }
         }
         console.log('submit ==',isSubmitted)
@@ -927,10 +943,10 @@ const PreviewSparkWriting = (props:any) => {
                                         if (reset.statusCode === 200) {
                                             setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);
                                             
-                                            setBodyHistory({
-                                                title: { past: [], present: [], future: [] },
-                                                body:{ past: [], present: [], future: [] }
-                                            })
+                                            // setBodyHistory({
+                                            //     title: { past: [], present: [], future: [] },
+                                            //     body:{ past: [], present: [], future: [] }
+                                            // })
                                             await beforeRenderedFn();
                                         } 
                                         
@@ -991,6 +1007,7 @@ const PreviewSparkWriting = (props:any) => {
                                             student_code: userInfo.userCode,
                                             student_name_en: userInfo.memberNameEn,
                                             student_name_kr: userInfo.memberNameKr,
+                                            class_name: userInfo.className,
                                             unit_id: currentSparkWritingData.unit_id,
                                             draft_index: 1,
                                             contents: contentsData,

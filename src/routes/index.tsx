@@ -79,6 +79,7 @@ export default function Roter() {
                         <Route path='/student/Report' element={<Report />}></Route>
                         <Route path='/student/Portfolio' element={<Portfolio />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
+                        <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview/:status' element={<PreviewSparkWriting />}></Route>
 
                     </Route>
                     {/* <Route path='' element={ }></Route> */}

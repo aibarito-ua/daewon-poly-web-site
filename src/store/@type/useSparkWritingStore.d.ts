@@ -85,6 +85,7 @@ type TSparkWritingTemporarySaveData = {
     student_code: string;
     student_name_en: string;
     student_name_kr: string;
+    class_name: string;
     unit_id: number;
     draft_index: number;
     proofreading_count: number;
@@ -158,6 +159,7 @@ type TSubmit1stDraftRequestData = {
     student_code: string;
     student_name_en: string;
     student_name_kr: string;
+    class_name: string;
     unit_id: number;
     draft_index: number;
     contents: TSubmit1stDraftReqDataContent[];
