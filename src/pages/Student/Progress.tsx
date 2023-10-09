@@ -118,7 +118,7 @@ const Progress = () => {
     return (
         <section className="section-common-layout use-nav-aside" >
             <SmallHead mainTitle='Progress'/>
-            <div className='flex flex-1 flex-col w-full h-full px-[25px] pb-[25px]'>
+            <div className='flex flex-1 flex-col w-full h-fit px-[25px] pb-[25px]'>
             
                 {/* page titles */}
                 <div className='flex flex-row font-bold w-full justify-start pt-[93.4px] text-black h-1/5 pb-[15px]'>

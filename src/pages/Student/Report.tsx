@@ -121,7 +121,7 @@ const Report = () => {
     return (
         <section className="section-common-layout use-nav-aside min-w-[1060px] over" >
             <SmallHead mainTitle='Report'/>
-            <div className='flex flex-1 flex-col w-full h-full px-[25px] pb-[25px]'>
+            <div className='flex flex-1 flex-col w-full h-fit px-[25px] pb-[25px]'>
             
                 {/* page titles */}
                 <div className='flex flex-row font-bold w-full justify-start pt-[30px] text-black h-[90px] pb-[15px]'>
