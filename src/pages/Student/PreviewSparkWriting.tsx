@@ -274,6 +274,11 @@ const PreviewSparkWriting = (props:any) => {
                         }
                     }
                     if ((checkType1 || checkTypeMinus1) && !checkType2) {
+                        console.log('check body true ==',wordTitleValue)
+                        console.log('checkType1::',checkType1)
+                        console.log('checkTypeMinus1::',checkTypeMinus1)
+                        console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
+                        console.log('checkType2::',checkType2)
                         return true; // 조건 충족 시 함수 종료
                     } else {
                         checkType0 = false;
@@ -300,20 +305,10 @@ const PreviewSparkWriting = (props:any) => {
                 for (const iPresentBodyValue of presentBody) {
                     for (const wordBodyValue of iPresentBodyValue) {
                         for (const checkBodyTarget of wordBodyValue) {
-                            switch (checkBodyTarget.type) {
-                                case 0:
-                                    checkType0 = true;
-                                    continue;
-                                case 1:
-                                    checkType1 = true;
-                                    continue;
-                                case -1:
-                                    checkTypeMinus1 = true;
-                                    continue;
-                                case 2:
-                                    checkType2 = true;
-                                    break;
-                            }
+                            if (checkBodyTarget.type === 0)checkType0 = true;
+                            if (checkBodyTarget.type === 1) checkType1 = true;
+                            if (checkBodyTarget.type === -1) checkTypeMinus1 = true;
+                            if (checkBodyTarget.type === 2)checkType2 = true;
                         }
     
                         if ((checkType1 || checkTypeMinus1) && !checkType2) {

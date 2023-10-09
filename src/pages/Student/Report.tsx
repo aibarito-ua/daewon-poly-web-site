@@ -47,6 +47,7 @@ const Report = () => {
             for (let i = 0; i < getReportAll.periods.length; i++) {
                 // find year and semesters
                 const currentReportAll = getReportAll.periods[i];
+                
                 const currentYearData = currentReportAll.year;
                 const currentSemester = currentReportAll.semester===1? '1st': '2nd';
                 const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
@@ -94,15 +95,31 @@ const Report = () => {
             setIsNoData(true);
         } else {
             console.log('set values')
-            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
-            setValue(selectValue, selectData)
-            setReportSelectUnit(1)
-            setIsNoData(false);
+            for (let i = 0; i < reportAPIData.periods.length; i++) {
+                const currentPeriod = reportAPIData.periods[i];
+                if (currentPeriod.year === selectData.year && currentPeriod.semester === selectData.semester) {
+                    for (let j = 0; j < currentPeriod.levels.length; j++) {
+                        const currentLevelInPeriod = currentPeriod.levels[j];
+                        if (currentLevelInPeriod.overall_report.length > 0) {
+                            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
+                            setValue(selectValue, selectData)
+                            setReportSelectUnit(1)
+                            setIsNoData(false);
+                        } else {
+                            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
+                            setValue(selectValue, selectData)
+                            setReportSelectUnit(1)
+                            setIsNoData(true);
+                        }
+                    }
+                }
+            }
+            
         }
     }
     
     return (
-        <section className="section-common-layout use-nav-aside min-w-[1060px]" >
+        <section className="section-common-layout use-nav-aside min-w-[1060px] over" >
             <SmallHead mainTitle='Report'/>
             <div className='flex flex-1 flex-col w-full h-full px-[25px] pb-[25px]'>
             
@@ -112,7 +129,7 @@ const Report = () => {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >{reportSelectBookName}</span>
+                        <span className='writing-activity-page-title-text' >{!isNoData ? reportSelectBookName:''}</span>
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
                         <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>

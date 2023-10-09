@@ -369,7 +369,7 @@ export default function SelectUnit () {
         <section className='section-common-layout use-nav-aside'>
             {/* page inline header */}
             <SmallHead mainTitle='Writing Activity' subTitle='Spark Writing'/>
-            <div className='flex flex-1 flex-col w-full h-full px-[25px] pb-[25px]'>
+            <div className='flex flex-1 flex-col w-full h-fit px-[25px] pb-[25px]'>
             
                 {/* page titles */}
                 <div className='flex flex-col font-bold w-full justify-start pt-[93.4px] text-black h-1/5'>

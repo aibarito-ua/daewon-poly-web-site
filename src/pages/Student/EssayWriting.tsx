@@ -118,8 +118,10 @@ const EssayWriting = () => {
         } else if (draft1stStatus.status===4) {
             // 1차 완료 , 2차 시작 init 
             setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+            const targetPageFlag = sparkWritingData[parseInt(UnitIndex)-1].draft_2_init_page_flag;
+            console.log(' == targetPageFlag==',targetPageFlag)
+            setDraft2ndPageSet(targetPageFlag);
         }
-        
         const init = await pageInitSetting()
         if (init) {
             setCommonStandbyScreen({openFlag:false})
@@ -129,7 +131,8 @@ const EssayWriting = () => {
         
         return ()=>{
             setIsSaved(false);
-            setDraft2ndPageSet('')
+            console.log('is did un mout?')
+            // setDraft2ndPageSet('')
         }
     })
 
@@ -190,6 +193,7 @@ const EssayWriting = () => {
             setSubRightNavTitleString('')
             setIsPreviewButtonOpen(false);
             setIsSaveButtonOpen(false);
+            
         }
     },[
         // page state
@@ -222,6 +226,70 @@ const EssayWriting = () => {
             setDraft2ndSubmitActive(false);
             setDraft2ndSaveActive(false);
         }
+        if (params.draft && params.draft==='1') {
+
+            if (sparkWritingData !== undefined) {
+                if (DraftIndex==='1') {
+                    const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+                    const max_leng = targetDataOutline.length;
+                    let titleMaxLengthCheck = false;
+    
+                    let orderIndex = -1;
+                    let unitId = -1;
+                    let unitIndex = -1;
+                    let redoTitleText = '';
+    
+                    let targetFlags = Array.from({length:max_leng},()=>1)
+                    targetFlags = targetDataOutline.map((v,i) => {
+                        const target_leng = v.input_content.replaceAll(' ','').length;
+                        if (v.name === 'Title') {
+                            console.log('input =',target_leng,', ',v.input_content,)
+                            const lengthTitle = v.input_content.length;
+                            orderIndex = v.order_index;
+                            unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
+                            unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
+                            if (lengthTitle > 120) {
+                                redoTitleText = v.input_content.substring(0, 120);
+                                titleMaxLengthCheck = true;
+                            }
+                        }
+                        if (target_leng >= 10) {
+                            // 10자 이상
+                            return 0;
+                        } else {
+                            // 10자 미만
+                            return 1;
+                        }
+                    })
+                    if (titleMaxLengthCheck) {
+                        commonAlertOpen({
+                            messages:['“Title” can be up to 120 characters including spaces.'],
+                            useOneButton: true,
+                            yesButtonLabel: 'OK',
+                            yesEvent: () => {
+                                setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
+                            }
+                        })
+                        return;
+                    }
+                    const sum = targetFlags.reduce((a,b) => (a+b));
+                    // sum === 0 => Preview && save 활성화
+                    // sum >0, sum < targetFlags.length; -> save 활성화
+                    // else -> 모든 버튼 비활성화
+                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags)
+                    if (sum === 0) {
+    
+                        setIsSaveButtonOpen(true)
+                        setIsPreviewButtonOpen(true);
+                    } else if (sum > 0 && sum < targetFlags.length) {
+                        setIsSaveButtonOpen(true)
+                    } else {
+                        setIsPreviewButtonOpen(false);
+                        setIsSaveButtonOpen(false)
+                    }
+                }
+            }
+        }
     }, [sparkWritingData])
     React.useEffect(()=>{
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
@@ -234,18 +302,20 @@ const EssayWriting = () => {
                 if (draft2ndPageSet==='revise') {
                     console.log('revise')
                     const target1st = target.draft_1_outline;
-            
+                    console.log('==target1st=',target1st)
                     let titleInput = '';
                     let bodyInput = '';
                     for (let i = 0; i < target1st.length; i++) {
                         const current1stTarget = target1st[i];
+                        console.log('==current1stTarget=',current1stTarget)
                         if (current1stTarget.name === 'Title') {
                             titleInput = current1stTarget.input_content
                         } else {
                             bodyInput += current1stTarget.input_content+'\n\n';
                         }
                     }
-            
+                    console.log('titleInput =',titleInput)
+                    console.log('bodyInput =',bodyInput)
                     setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
                     setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
                 } else if (draft2ndPageSet==='fresh') {
@@ -266,17 +336,20 @@ const EssayWriting = () => {
                 if (draft2ndPageSet==='revise') {
                     console.log('revise')
                     const target1st = target.draft_1_outline;
-            
+                    console.log(' target =',target)
                     let titleInput = '';
                     let bodyInput = '';
                     for (let i = 0; i < target1st.length; i++) {
                         const current1stTarget = target1st[i];
+                        console.log(' current1stTarget = ',current1stTarget)
                         if (current1stTarget.name === 'Title') {
                             titleInput = current1stTarget.input_content
                         } else {
                             bodyInput += current1stTarget.input_content+'\n\n';
                         }
                     }
+                    console.log('titleInput =',titleInput)
+                    console.log('bodyInput =',bodyInput)
             
                     setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
                     setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
@@ -290,7 +363,7 @@ const EssayWriting = () => {
             
         }
     }, [draft2ndPageSet])
-
+    
     const callbackCheckValues = React.useCallback( ()=>{
         if (sparkWritingData !== undefined) {
             if (DraftIndex==='1') {
@@ -307,6 +380,7 @@ const EssayWriting = () => {
                 targetFlags = targetDataOutline.map((v,i) => {
                     const target_leng = v.input_content.replaceAll(' ','').length;
                     if (v.name === 'Title') {
+                        console.log('input =',target_leng,', ',v.input_content,)
                         const lengthTitle = v.input_content.length;
                         orderIndex = v.order_index;
                         unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
@@ -339,7 +413,9 @@ const EssayWriting = () => {
                 // sum === 0 => Preview && save 활성화
                 // sum >0, sum < targetFlags.length; -> save 활성화
                 // else -> 모든 버튼 비활성화
+                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags)
                 if (sum === 0) {
+
                     setIsSaveButtonOpen(true)
                     setIsPreviewButtonOpen(true);
                 } else if (sum > 0 && sum < targetFlags.length) {
@@ -350,7 +426,7 @@ const EssayWriting = () => {
                 }
             }
         }
-    },[])
+    },[]);
 
     const temporarySaveFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
@@ -500,15 +576,6 @@ const EssayWriting = () => {
             })
         }
     }
-    /*
-     e.currentTarget.style.height = 'auto';
-    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-    const unitId = outlineItem.unit_id
-    const unitIndex = outlineItem.unit_index
-    const orderIndex = item.order_index
-    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-    callbackCheckValues()
-    */
     const foldFlagFunction = (i:number) => {
         // console.log('fold settings ==',foldFlag)
         const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
@@ -617,6 +684,7 @@ const EssayWriting = () => {
                 </div>
                 <div className={`buttons-div ${(isPreviewButtonOpen||isSaveButtonOpen)? '': ''}`}>
                     <div className={`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
+                        console.log('isSaveButtonOpen =',isSaveButtonOpen)
                         if (isSaveButtonOpen) {
                             // setShowSaveModal(true)
                             callbackCheckValues()
@@ -674,7 +742,7 @@ const EssayWriting = () => {
 
     const Draft2ndWritingPage = () => {
         const draftItem = sparkWritingData[parseInt(UnitIndex)-1];
-        
+        console.log(' 2ND DRAFT draftItem :',draftItem)
         return (
             <div className='wrap-contain-2nd-spark-writing'>
                 <div className='wrap-guide-2nd-top-text-spark-writing'>{'Check your teacher’s feedback and work on your 2nd draft.'}</div>
@@ -786,7 +854,6 @@ const EssayWriting = () => {
                             </div>
                         }
                     </div>
-
                 </div>
                 <div className='absolute right-[30px] bottom-[25px] flex flex-row gap-[10px]'>
                     {/* <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div> */}
