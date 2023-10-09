@@ -148,6 +148,7 @@ const loadFeedbackDraftBody = (
                 if (af_item?.comment_index !== currentCommentIdx) {
                     if (currentCommentIdx===-1) {
                         jsxElements.push(...returnValue)
+                        returnValue=[];
                     } else {
                         const currentCommentItem = findCommentByCommentIndex(currentCommentIdx);
 

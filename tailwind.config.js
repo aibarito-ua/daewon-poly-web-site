@@ -49,6 +49,7 @@ module.exports = {
         'draft-2nd-submit-button-svg': "url('/src/util/svgs/bt_submit.svg')",
         'draft-2nd-submit-button-readonly-svg': "url('/src/util/svgs/bt_submit_readonly.svg')",
 
+        'app-close-button-svg': "url('/src/util/svgs/bt_exit_login.svg')",
         'modal-close-button-svg': "url('/src/util/svgs/bt_close.svg')",
         // report tab bg 
         'tab-title-active-bg-svg': "url('/src/util/svgs/report/active.svg')",

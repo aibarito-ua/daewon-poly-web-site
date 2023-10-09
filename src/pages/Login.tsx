@@ -271,7 +271,15 @@ export const Login = () => {
 
 
     return (
-        <section className='flex w-full h-full bg-no-repeat bg-right justify-center items-center bg-login-img'>
+        <section className='flex w-full h-full bg-no-repeat bg-right justify-center items-center bg-login-img relative'>
+            {/* close button */}
+            <div className='absolute right-[24px] top-[24px] w-[65px] h-[65px] bg-app-close-button-svg bg-no-repeat bg-contain hover:cursor-pointer' 
+                onClick={()=>{
+                    // exit application event is here.
+                    
+                }}
+            />
+            {/* content */}
             <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>

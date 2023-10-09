@@ -180,6 +180,7 @@ type TSubmit2ndDraftRequestData = {
     student_code: string;
     student_name_en: string;
     student_name_kr: string;
+    class_name:string;
     unit_id: number;
     draft_index: number;
     contents: TSubmit2ndDraftReqDataContent[];

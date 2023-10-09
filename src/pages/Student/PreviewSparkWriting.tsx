@@ -113,8 +113,10 @@ const PreviewSparkWriting = (props:any) => {
     const params = useParams();
     // path param to number
     const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+    const draftIndex:number = parseInt(params.draft!==undefined? params.draft: '0');
     // after submit standby feedback
-    const isStandbyFeedback:string= params.status?params.status:''; 
+    const isStandbyFeedback:string= params.status?params.status:'';
+    
     // Navigate hook
     const navigate = useNavigate();
 
@@ -837,7 +839,7 @@ const PreviewSparkWriting = (props:any) => {
                                 </div>
                             )}
                             <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
-                            {bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
+                            {(draftIndex!==2 && isStandbyFeedback==='') && bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
                                 return <span className='pb-[20px]' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
@@ -846,6 +848,13 @@ const PreviewSparkWriting = (props:any) => {
                                     })}
                                 </span>
                             } )}
+                            {/* {(draftIndex===2 && isStandbyFeedback!=='') && (
+                                sparkWritingData[unitIndex].draft_2_outline.map((bodyItem, bodyIndex) => {
+                                    if (bodyItem.name==='Body') {
+                                        return <div></div>
+                                    } else return null;
+                                })
+                            )} */}
                             </div>
                         </div>
                     )}

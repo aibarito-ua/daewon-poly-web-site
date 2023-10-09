@@ -464,6 +464,7 @@ const EssayWriting = () => {
             student_code: userInfo.userCode,
             student_name_en: userInfo.memberNameEn,
             student_name_kr: userInfo.memberNameKr,
+            class_name: userInfo.className,
             unit_id: targetData.unit_id,
             draft_index: draftIndex,
             contents,
