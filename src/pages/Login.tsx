@@ -273,7 +273,7 @@ export const Login = () => {
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right justify-center items-center bg-login-img relative'>
             {/* close button */}
-            <div className='absolute right-[24px] top-[24px] w-[65px] h-[65px] bg-app-close-button-svg bg-no-repeat bg-contain hover:cursor-pointer' 
+            <div className={`${isMobile && 'hidden'} absolute right-[24px] top-[24px] w-[65px] h-[65px] bg-app-close-button-svg bg-no-repeat bg-contain hover:cursor-pointer`} 
                 onClick={()=>{
                     // exit application event is here.
                     if(isMobile)
