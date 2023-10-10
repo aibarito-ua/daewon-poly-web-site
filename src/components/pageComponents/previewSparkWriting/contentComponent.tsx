@@ -9,7 +9,7 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     const bodyItemDump = manufactureItem.splice(0);
     const bodyItemNames = CommonFunctions.outlineNameLists(bodyItemDump)
     const bodyItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(bodyItemNames, bodyItemDump);
-    // console.log('bodyItemNames =',bodyItem)
+    console.log('bodyItemNames =',bodyItem)
     
     // Title
     const contentTitleComponent = (titleText:string, keyVal:any) => {
@@ -29,12 +29,21 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
             <pre className='preview-body-text-pre'>{text}</pre>
         </span>)
     }
+    // draft 2 body
+    const contentBodyComponent2 = (itemIndex:number, text:string, paddingStr:string) => {
+        const textArr = text.split('\n');
+        return textArr.map((textItem, textItemIndex)=>(
+            <span className={`flex indent-[15px] pb-[20px] ${paddingStr}`} key={itemIndex+'-draft-2-'+textItemIndex}><span className=''></span>
+                <pre className='preview-body-text-pre'>{textItem}</pre>
+            </span>
+        ));
+    }
     return (
         <div className='flex flex-1 flex-col w-full h-full pt-[24px] px-[12px] z-0 overflow-y-auto'>
             
             {titleItem[0].name.toLocaleLowerCase()==='title' && contentTitleComponent(titleItem[0].input_content, titleItem[0].name+titleItem[0].order_index)}
             <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
-                {bodyItem.map((item, itemIndex) => {
+                {draftStatus==='1' && bodyItem.map((item, itemIndex) => {
                     return (
                         <div key={itemIndex} className='pb-[20px]'>
                             {item.map((innerItem, innerItemIndex)=>{
@@ -43,6 +52,11 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
                         </div>
                     )
                 })}
+                {draftStatus==='2' && bodyItem.map((item, itemIndex) => (
+                    <div key={itemIndex} className='pb-[20px]'>
+                        {item.map((innerItem, innerItemIndex)=> contentBodyComponent2(innerItemIndex, innerItem.input_content, '') )}
+                    </div>
+                ))}
             </div>
         </div>
     )

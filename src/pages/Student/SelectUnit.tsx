@@ -211,11 +211,13 @@ export default function SelectUnit () {
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
             CommonFunctions.goLink(path, navigate, role);
         }
-        const selectTemporaryPreview = async (unitNum:string, draftNum: string) => {
+        const selectTemporaryPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
+            setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview`
             CommonFunctions.goLink(path, navigate, role)
         }
-        const selectPreview = async (unitNum:string, draftNum: string) => {
+        const selectPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
+            setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview/submit`
             CommonFunctions.goLink(path, navigate, role)
         }
@@ -284,10 +286,10 @@ export default function SelectUnit () {
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
-                                await selectTemporaryPreview(selectUnitIndex, '1');
+                                await selectTemporaryPreview(selectUnitIndex, selectUnitSubTitle, '1');
                             } else if (firstDraft === 2|| firstDraft === 3) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
-                                await selectPreview(selectUnitIndex, '1')
+                                await selectPreview(selectUnitIndex, selectUnitSubTitle, '1')
                             } else if (firstDraft === 5) {
                                 // 1차 재학습 -> 편집 가능
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
@@ -305,7 +307,7 @@ export default function SelectUnit () {
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
                             } else if (secondDraft === 2 || secondDraft === 3) {
                                 // 2차 완료(submit) -> 편집 x, 뷰잉만
-                                await selectPreview(selectUnitIndex, '2')
+                                await selectPreview(selectUnitIndex, selectUnitSubTitle, '2')
                             } else if (secondDraft === 5) {
                                 // 2차 재학습 -> 편집 가능
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');

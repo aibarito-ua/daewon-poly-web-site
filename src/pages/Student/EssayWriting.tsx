@@ -91,39 +91,76 @@ const EssayWriting = () => {
     const pageInitSetting = async () => {
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             const data = response.units
-            
+            console.log('response page init set api =',response)
             setOriginalTargetData(data);
             setIsSaved(false);
             return true;
         })
     }
     useComponentWillMount(async ()=>{
+        const currentDraft = params.draft ? params.draft : '';
         console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
-        const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
+        console.log('essay writing 102 | draft test =',)
         setCommonStandbyScreen({openFlag:true})
-        if (draft1stStatus.status === 5) {
-            setCommonStandbyScreen({openFlag:false})
-            // return submit
-            setReturn1stDraftReasonAlertOpen({
-                openFlag:true, 
-                returnReason: draft1stStatus.return_reason,
-                returnTeacherComment: draft1stStatus.return_teacher_comment,
-                NoEvent:()=>{
-                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                },
-                yesEvent:()=>{
-
-                }
-            })
-        } else if (draft1stStatus.status===4) {
-            // 1차 완료 , 2차 시작 init 
-            setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
-            const targetPageFlag = sparkWritingData[parseInt(UnitIndex)-1].draft_2_init_page_flag;
-            console.log(' == targetPageFlag==',targetPageFlag)
-            setDraft2ndPageSet(targetPageFlag);
-        }
         const init = await pageInitSetting()
         if (init) {
+            if (currentDraft === '1') {
+                const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
+                if (draft1stStatus.status === 5) {
+                    setCommonStandbyScreen({openFlag:false})
+                    // return submit
+                    setReturn1stDraftReasonAlertOpen({
+                        openFlag:true, 
+                        returnReason: draft1stStatus.return_reason,
+                        returnTeacherComment: draft1stStatus.return_teacher_comment,
+                        NoEvent:()=>{
+                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                        },
+                        yesEvent:()=>{
+        
+                        }
+                    })
+                } else if (draft1stStatus.status===4) {
+                    // 1차 완료 , 2차 시작 init 
+                    setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+                    const targetPageFlag = sparkWritingData[parseInt(UnitIndex)-1].draft_2_init_page_flag;
+                    console.log(' == targetPageFlag=1=',targetPageFlag)
+                    setDraft2ndPageSet(targetPageFlag);
+                }
+            } else if (currentDraft === '2') {
+                const currentData = sparkWritingData[parseInt(UnitIndex)-1];
+                if (currentData) {
+                    console.log('currentData =',currentData)
+                    const draft2ndStatus = currentData.draft_2_status;
+                    const draft1stStatus = currentData.draft_1_status;
+                    const targetPageFlag = currentData.draft_2_init_page_flag;
+                    console.log('test data =',draft2ndStatus, ', ',draft1stStatus,', ',targetPageFlag)
+                    
+                    if (draft2ndStatus.status === 5) {
+                        console.log(' == targetPageFlag=2=',targetPageFlag)
+                        setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+                        setDraft2ndPageSet(targetPageFlag);
+                        setCommonStandbyScreen({openFlag:false})
+                        // return submit
+                        setReturn1stDraftReasonAlertOpen({
+                            openFlag:true, 
+                            returnReason: draft2ndStatus.return_reason,
+                            returnTeacherComment: draft2ndStatus.return_teacher_comment,
+                            NoEvent:()=>{
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            yesEvent:()=>{
+                            }
+                        })
+                    } else if (draft2ndStatus.status===4) {
+                        // 1차 완료 , 2차 시작 init 
+                        console.log(' == targetPageFlag=3=',targetPageFlag)
+                        setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+                        setDraft2ndPageSet(targetPageFlag);
+                    }
+                }
+            }
+        
             setCommonStandbyScreen({openFlag:false})
         }
         

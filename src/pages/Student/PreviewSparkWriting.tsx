@@ -27,7 +27,10 @@ const PreviewSparkWriting = (props:any) => {
         setProofreadingCountReset
     } = useSparkWritingStore();
     // Nav Store
-    const {setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString} = useNavStore();
+    const {
+        setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString,
+        setSelectUnitInfo,
+    } = useNavStore();
     
     // WritingCenter Store
     const {} = useEssayWritingCenterDTStore();
@@ -41,6 +44,7 @@ const PreviewSparkWriting = (props:any) => {
     const {
         commonAlertOpen, setCommonStandbyScreen, commonAlertClose,
     } = useControlAlertStore();
+    
 
     // page States
     const [bodyHistory, setBodyHistory] = React.useState<TBodyHistorys>(
@@ -666,7 +670,11 @@ const PreviewSparkWriting = (props:any) => {
         }
 // setCountofUseAIProofreading, countofUseAIProofreading 
         if (countofUseAIProofreading !== undefined || countofUseAIProofreading !== -1) {
-            setCountofUseAIProofreading(sparkWritingData[unitIndex].proofreading_count);
+            const proofreadingCount = sparkWritingData[unitIndex].proofreading_count;
+            if (proofreadingCount > 0) {
+                setOpenSubmitButton(true);
+            };
+            setCountofUseAIProofreading(proofreadingCount);
         } else {
             if (countofUseAIProofreading < 2) {
                 if (countofUseAIProofreading > 0) setOpenSubmitButton(true);
@@ -838,6 +846,7 @@ const PreviewSparkWriting = (props:any) => {
                                 return <span className='pb-[20px]' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
+                                        console.log('==test draft jsx ===',v)
                                         return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip)
                                         // return <></>
                                     })}
@@ -857,31 +866,26 @@ const PreviewSparkWriting = (props:any) => {
                 
                 <div className={`buttons-div`}>
                     {!isSubmitted &&
-                        <button className={!isSubmitted ?(sparkWritingData[unitIndex].proofreading_count===2?'hidden':`save-button-active`):'hidden'} onClick={()=>{
+                        <button className={`save-button-active`} onClick={()=>{
                             commonAlertOpen({
                                 messages: ['Do you want to return to edit your writing?'],
                                 yesButtonLabel: "Yes",
                                 alertType: 'continue',
                                 yesEvent: async ()=>{
-                                    // grammar 시작 후
-                                    // if (bodyHistory.body.present.length > 0) {
-                                    //     // select 완료 여부
-                                    //     if (isGrammarProceed) {
-                                    //         // 진행 중
-                                    //         await forcedTemporarySave();
-                                    //         // commonAlertClose();
-                                    //         // grammar data 저장
-                                    //     } else {
-                                    //         // 진행 종료
-                                    //         // data 저장
-                                    //         await forcedTemporarySave();
-
-                                    //     }
-                                    // } else {
-                                        // grammar 시작 전
-                                        commonAlertClose();
-                                        navigate(-1);
-                                    // }
+                                    
+                                    // grammar 시작 전
+                                    commonAlertClose();
+                                    // go to edit page
+                                    const targetData = sparkWritingData[unitIndex];
+                                    // console.log('targetData =',targetData)
+                                    const unitTitle = targetData.topic;
+                                    const unitNum = targetData.unit_index;
+                                    const draftNum = params.draft;
+                                    // console.log('unitNum: ',targetData.topic)
+                                    setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
+                                    const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
+                                    // console.log('path =',path)
+                                    CommonFunctions.goLink(path, navigate, role);
                                     
                                 },
                                 noButtonLabel: "No"
@@ -994,7 +998,7 @@ const PreviewSparkWriting = (props:any) => {
                                             const currentGrammarIndex = item.order_index-historyMinusIndex;
                                             console.log('historyMinusIndex ==',historyMinusIndex)
                                             console.log('currentGrammarIndex =',currentGrammarIndex)
-                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title): (item.order_index === 2 ? JSON.stringify(bodyHistory.body) : '');
+                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present);
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,
