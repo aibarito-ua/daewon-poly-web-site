@@ -998,7 +998,7 @@ const PreviewSparkWriting = (props:any) => {
                                             const currentGrammarIndex = item.order_index-historyMinusIndex;
                                             console.log('historyMinusIndex ==',historyMinusIndex)
                                             console.log('currentGrammarIndex =',currentGrammarIndex)
-                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present);
+                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data);
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,
