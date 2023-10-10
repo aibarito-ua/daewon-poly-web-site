@@ -359,7 +359,7 @@ body {
 .top-right-user-info {
   @apply
   flex
-  absolute
+  relative
   top-[20px]
   right-[-12px]
 }

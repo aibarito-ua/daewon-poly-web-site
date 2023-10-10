@@ -15,7 +15,7 @@ export default function SmallHead (props: {
     ];
     // console.log('subTitle ==',props.subTitle)
     return (
-        <div className='flex flex-row'>
+        <div className='flex flex-row justify-between'>
             <div className="flex flex-col">
                 <div className='flex flex-row items-center gap-[9px] pl-[30px] pt-[40px]'>
                     <span className='w-[5px] h-[25px]'><commonIconSvgs.ClinicTitleRectIcon/></span>
