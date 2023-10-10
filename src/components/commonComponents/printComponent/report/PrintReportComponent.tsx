@@ -64,6 +64,9 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
         score_desc: string,
     ) => {
         const colors = this.getCategoryColor(category);
+        
+        score_name = score_name.replace('_', ' ')
+        
         // 52.483
         return <div key={key} className={`flex w-[98.824mm] h-[52.483mm]`}>
             <div className={`flex flex-col w-[98.824mm] h-[49.339mm] mt-[3.144mm] border-[0.24mm] rounded-[4.89mm] relative`} style={{
@@ -226,7 +229,7 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
                                 </div>
                             </div>
                             <div className='flex flex-row border-b-[0.242mm] border-b-[#ddd]'>
-                                <div className='flex items-center pl-[2.471mm] w-[27.671mm] h-[7.256mm] bg-[#f2f9ff] export-report-wr-userinfo-font-label'>{'dete completed'}</div>
+                                <div className='flex items-center pl-[2.471mm] w-[27.671mm] h-[7.256mm] bg-[#f2f9ff] export-report-wr-userinfo-font-label'>{'date completed'}</div>
                                 <div className='flex items-center justify-start pl-[2.471mm] flex-row export-report-wr-userinfo-font-value gap-[1.235mm]'>
                                     <span>{`1st : ${completeDate1st}`}</span>
                                     <span className='w-[0.247mm] h-[1.935mm] bg-[#aaa]'></span>
