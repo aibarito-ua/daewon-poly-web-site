@@ -31,7 +31,6 @@ fontWeight: 'bold',
 fontStyle: 'normal',
 lineHeight: 1.2,
 letterSpacing: 'normal',
-
 }
 const text2Css:React.CSSProperties = {
 width: '54px',
@@ -105,7 +104,7 @@ const titleName:string[] = payload.name.split(' ')
         })}</text>
         <text x={cx} y={cy} dy={0} dx={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
-            <tspan x={cx} y={cy} dy={15} dx={-5} textAnchor="middle" style={text1Css}>
+            <tspan x={percentValue===100?cx-6:cx} y={cy} dy={15} dx={-5} textAnchor="middle" style={text1Css}>
                 {percentValue}
             </tspan>
             <tspan x={percentDotCheck ? cx+20: cx+30} y={cy} dy={15} dx={-5} style={text2Css}>%</tspan>

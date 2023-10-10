@@ -101,9 +101,12 @@ const Report = () => {
                     for (let j = 0; j < currentPeriod.levels.length; j++) {
                         const currentLevelInPeriod = currentPeriod.levels[j];
                         if (currentLevelInPeriod.overall_report.length > 0) {
+                            console.log('currentLevelInPeriod.overall_report =104=',currentLevelInPeriod.overall_report)
+                            const initializeUnitIndex = currentLevelInPeriod.overall_report[0].unit_index
                             setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
                             setValue(selectValue, selectData)
-                            setReportSelectUnit(1)
+
+                            setReportSelectUnit(initializeUnitIndex)
                             setIsNoData(false);
                         } else {
                             setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
