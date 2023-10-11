@@ -333,10 +333,16 @@ export default function SelectUnit () {
                                     <div className='flex unit-select-button-item-dotted z-0'></div>
                                     <div className='flex flex-row z-10 relative items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 1)
-                                    }</span><span className='ordinal pl-[6px]'>{'1st'}</span>{' Draft'}</div>
+                                    }</span>
+                                        <div className='ordinal pl-[6px]'>{'1st'}</div>
+                                        <div className='whitespace-pre'>{' Draft'}</div>
+                                    </div>
                                     <div className='flex flex-row z-10 relative mt-[22px] items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 2)
-                                    }</span><span className='ordinal pl-[6px]'>{'2nd'}</span>{' Draft'}</div>
+                                    }</span>
+                                        <span className='ordinal pl-[6px]'>{'2nd'}</span>
+                                        <div className='whitespace-pre'>{' Draft'}</div>
+                                    </div>
                                 </div>
                             )}
                             {(firstDraft === 4 && secondDraft === 4) && (
@@ -344,10 +350,16 @@ export default function SelectUnit () {
                                     <div className='flex unit-select-button-item-dotted z-0'></div>
                                     <div className='flex flex-row z-10 relative items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 1)
-                                    }</span><span className='ordinal pl-[6px]'>{'1st'}</span>{' Draft'}</div>
+                                    }</span>
+                                        <div className='ordinal pl-[6px]'>{'1st'}</div>
+                                        <div className='whitespace-pre'>{' Draft'}</div>
+                                    </div>
                                     <div className='flex flex-row z-10 relative mt-[22px] items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 2)
-                                    }</span><span className='ordinal pl-[6px]'>{'2nd'}</span>{' Draft'}</div>
+                                    }</span>
+                                        <span className='ordinal pl-[6px]'>{'2nd'}</span>
+                                        <div className='whitespace-pre'>{' Draft'}</div>
+                                    </div>
                                     <div className='absolute w-[150px] h-[140px] top-0 left-0 rounded-[22px] bg-[#000] opacity-[0.7] z-20'>
                                     </div>
                                     <div className='unit-complete-report-icon'></div>
