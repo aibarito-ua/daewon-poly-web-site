@@ -54,7 +54,17 @@ export default function SelectUnit () {
         setCommonStandbyScreen({openFlag:true})
         const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             
-            
+            response.units = response.units.map((item)=>{
+                item.draft_1_outline = item.draft_1_outline.sort((a,b) => {
+                    return a.order_index - b.order_index;
+                });
+                if (item.draft_1_status.status===4) {
+                    item.draft_2_outline = item.draft_2_outline.sort((a,b) => {
+                        return a.order_index - b.order_index;
+                    })
+                }
+                return item;
+            })
             
             return response;
         });
