@@ -183,14 +183,15 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
                 break;
             }
         }
+        const checkSemester = dumpSemester.length === 0 ? false:true;
 
         set(()=>({
             portfolioApiData:data,
             displayPortfolioData: dumpDisplayPortfolioData,
             semesters: dumpSemester,
             levels: dumpLevel,
-            selectSemester: dumpSemester[0].label,
-            selectLevel: dumpSemester[0].level,
+            selectSemester: checkSemester ? dumpSemester[0].label:'',
+            selectLevel: checkSemester ? dumpSemester[0].level:'',
         }))
     }
 }))
