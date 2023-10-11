@@ -150,11 +150,11 @@ const Progress = () => {
                     }}>test button</button> */}
                 <div className='progress-page-view-box-wrap'>
                     <div className='progress-page-view-box-header justify-end h-[45px] px-[20px] pt-[20px] pb-[5px]'>
-                        <div className='row-div items-center pb-[5px] gap-[4px]'>
+                        <div className='row-div items-center pb-[5px] gap-[4px] w-fit'>
                             <progressIcons.CheckGreenCircleIcon className='flex w-[18px]'/>
                             <progressIcons.CheckBlueRectIcon className='flex w-[18px]'/>
                             <span style={{
-                                width: '359px',
+                                width: 'fit-content',
                                 height: '19px',
                                 flexGrow: 0,
                                 fontFamily: 'Roboto',
