@@ -17,6 +17,9 @@ export default function FormDialog() {
   const [inputText, setInputText] = React.useState('');
   const [chatHistory, setChatHistory] = React.useState<(string | string[])[][]>([]);
   const [dataHist, setDataHist] = React.useState<string[][]>([]);
+
+  // input max length
+  const [inputLength, setInputLength] = React.useState<number>(0);
   // 매 회 completionToken 누적
   const [historyTokens, setHistoryTokens] = React.useState<number[]>([]);
   // before total token
@@ -87,7 +90,7 @@ export default function FormDialog() {
 
       let targetTotalToken = res.usages.total_tokens;
       for await (const target of chatHistory) {
-        if (targetTotalToken > 300) {
+        if (targetTotalToken > 3000) {
           // delete
           // console.log('target ==',target)
           const deleteToken = dumyHistAllTokens.splice(0,1);
@@ -122,7 +125,10 @@ export default function FormDialog() {
     e.currentTarget.style.height = 'auto';
     e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
     const value = e.currentTarget.value;
+    
     const inputValue = value.replace(/\n{2,}/gm, '\n')
+    const countInputLength = inputValue.length
+    setInputLength(countInputLength)
     setInputText(inputValue)
   }
 
@@ -194,17 +200,23 @@ export default function FormDialog() {
           padding: '19px 20px',
           minHeight: '94px'
         }}>
-          <textarea 
-            id='chatbot-modal-input-textarea'
-            className='chatbot-chat-textarea'
-            style={{resize:'none'}}
-            autoFocus
-            rows={1}
-            placeholder='Type your question here.'
-            onChange={(e)=>onChangeValue(e)}
-            onKeyUp={async (e)=>await onKeyUpEvent(e)}
-            value={inputText}
-          />
+          <div className='flex flex-col w-full'>
+            <textarea 
+              id='chatbot-modal-input-textarea'
+              className='chatbot-chat-textarea'
+              style={{resize:'none'}}
+              autoFocus
+              maxLength={1000}
+              rows={1}
+              placeholder='Type your question here.'
+              onChange={(e)=>onChangeValue(e)}
+              onKeyUp={async (e)=>await onKeyUpEvent(e)}
+              value={inputText}
+            />
+            <div className='flex w-full justify-center'>{`Number of characters: ${inputLength} / 1000`}</div>
+            <div className='flex w-full justify-center'>{`* copy&past max character 998`}</div>
+
+          </div>
         </DialogActions>
       </Dialog>
     </div>
