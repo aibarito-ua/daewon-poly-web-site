@@ -19,7 +19,11 @@ export default function SelectUnit () {
     const {role, userInfo} = useLoginStore();
     const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen} = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
-    const {sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI} = useSparkWritingStore();
+    const {
+        sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI,
+        // hover event
+        lastUnitIndex, setLastUnitIndex
+    } = useSparkWritingStore();
     const {
         setCommonStandbyScreen,
         // report modal
@@ -36,6 +40,9 @@ export default function SelectUnit () {
     } = useControlAlertStore();
 
     React.useEffect(()=>{
+        if (lastUnitIndex===0) {
+            setLastUnitIndex(1);
+        }
         setSubNavTitleString('Spark Writing')
         setSubRightNavTitleString('');
         setCompleteTopicIndex(proceedingTopicIndex,1)
@@ -217,6 +224,7 @@ export default function SelectUnit () {
 
         const selectWritingTopic = async (unitNum:string, unitTitle:string, draftNum: string ) => {
             console.log('unitNum: ',unitTitle)
+            setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
             CommonFunctions.goLink(path, navigate, role);
@@ -286,7 +294,7 @@ export default function SelectUnit () {
                     return (
                         
                     <div key={topicsIndex} 
-                    className={`select-none select-writing-topic-item-button group/unit`}
+                    className={lastUnitIndex === item.unit_index ? 'select-none select-writing-topic-item-button-last':`select-none select-writing-topic-item-button`}
                     onClick={async ()=>{
                         
                         if ( !firstFeedback && !secondFeedback ) {
@@ -327,16 +335,17 @@ export default function SelectUnit () {
                         } else if (firstFeedback && secondFeedback) {
                             // 100% -> final feedback
                             // open modal
+                            setLastUnitIndex(item.unit_index)
                             setReportSelectUnit(item.unit_index)
                             setUnitReportModal({open:true})
                         }
                     }}
                     >
                         <div className='unit-select-button-item'>
-                            <div className='unit-select-button-item-unit group-hover/unit:bg-[#21c39a]'>
+                            <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-unit-last': 'unit-select-button-item-unit'}>
                                 {selectUnitMainTitle}
                             </div>
-                            <div className='unit-select-button-item-title group-hover/unit:text-[#21c39a]'>{selectUnitSubTitle}</div>
+                            <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-title-last ': 'unit-select-button-item-title'}>{selectUnitSubTitle}</div>
                         
                             {(firstDraft !== 4 || secondDraft !== 4) && (
                                 <div className='unit-select-button-item-drafts z-0 mt-[36px]'>

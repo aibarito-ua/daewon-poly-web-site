@@ -1,15 +1,15 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+// import Button from '@mui/material/Button';
+// import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+// import DialogContentText from '@mui/material/DialogContentText';
+// import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
 // import buttonImage from './img/buttonEllaImg.png'
-import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
+// import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
 
 export default function FormDialog() {
     
@@ -17,6 +17,10 @@ export default function FormDialog() {
   const [inputText, setInputText] = React.useState('');
   const [chatHistory, setChatHistory] = React.useState<(string | string[])[][]>([]);
   const [dataHist, setDataHist] = React.useState<string[][]>([]);
+  // 매 회 completionToken 누적
+  const [historyTokens, setHistoryTokens] = React.useState<number[]>([]);
+  // before total token
+  const [beforeTurnTotalToken, setBeforeTurnTotalToken] = React.useState<number>(217);
   const {
     name
   } = useLoginStore();
@@ -28,6 +32,8 @@ export default function FormDialog() {
         setInputText('')
         setChatHistory([])
         setDataHist([])
+        setHistoryTokens([])
+        setBeforeTurnTotalToken(217)
     }
   }, [open])
   React.useEffect(()=>{
@@ -44,28 +50,64 @@ export default function FormDialog() {
   },[chatHistory])
 
   const callDialogAPIFN = async (txt:string) => {
-    console.log('chat history before api =',chatHistory)
+    // console.log('chat history before api =',chatHistory,'\n',dataHist)
+    // api 용 data
     let dumyDataHist = JSON.parse(JSON.stringify(dataHist))
     dumyDataHist.push(["{CHILDNAME}", txt])
-    let dumyHist = JSON.parse(JSON.stringify(chatHistory));
-    dumyHist.push(["{CHILDNAME}", txt])
-    setChatHistory(dumyHist);
+
+    // 채팅용 data
+    let dumyChatHist = JSON.parse(JSON.stringify(chatHistory));
+    dumyChatHist.push(["{CHILDNAME}", txt])
+
+    let dumyHistAllTokens:number[] = JSON.parse(JSON.stringify(historyTokens))
+    setChatHistory(dumyChatHist);
     // let dumyHist = [...chatHistory, ]
     setInputText('')
+    // let pushValue:any = []
+    // let resultData:string[] = [];
+    // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
+
     return await callDialogAPI(ai_name, user_name, dumyDataHist).then(async (res)=>{
-        let name = res[0][0];
-        console.log('name ==',name)
-        let pushValue:any = [name]
-        let resultData:string[] = []
-        for await (const value of res) {
-            resultData.push(value[1])
-            dumyDataHist.push(value);
+
+      let pushValue:any = [ai_name]
+      let resultData:string[] = []
+      const userUseToken:number = res.usages.prompt_tokens-beforeTurnTotalToken;
+      const createdToken:number = res.usages.completion_tokens;
+      const dumyHistAllTokensMaxIndex = historyTokens.length;
+
+      const totalUseToken:number = res.usages.total_tokens;
+      
+      dumyHistAllTokens.splice(dumyHistAllTokensMaxIndex, 0, userUseToken, createdToken);
+      for await (const value of res.text) {
+          resultData.push(value[1])
+          dumyDataHist.push(value);
+      }
+      // console.log('after dumyDataHist : ',dumyDataHist)
+      // console.log('after dumyHistAllToken =',dumyHistAllTokens)
+
+      let targetTotalToken = res.usages.total_tokens;
+      for await (const target of chatHistory) {
+        if (targetTotalToken > 300) {
+          // delete
+          // console.log('target ==',target)
+          const deleteToken = dumyHistAllTokens.splice(0,1);
+          targetTotalToken = targetTotalToken - deleteToken[0];
+          dumyDataHist.splice(0,1);
         }
-        pushValue.push(resultData);
-        dumyHist.push(pushValue);
-        setChatHistory(dumyHist);
-        setDataHist(dumyDataHist);
-    });
+      }
+      // console.log('after api용',dumyDataHist.length,' : ',dumyDataHist)
+      // console.log('after 채팅용',dumyChatHist.length,' : ',dumyChatHist)
+      // console.log('after dumyHistAllToken =',dumyHistAllTokens)
+      pushValue.push(resultData);
+      dumyChatHist.push(pushValue);
+
+      setBeforeTurnTotalToken(totalUseToken)
+      setHistoryTokens(dumyHistAllTokens);
+      setChatHistory(dumyChatHist);
+      setDataHist(dumyDataHist);
+      
+    })
+
   }
 
   const handleClickOpen = () => {

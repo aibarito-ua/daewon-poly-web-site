@@ -1,4 +1,9 @@
 interface ISparkWritingStore {
+
+    // unit select box event value
+    lastUnitIndex: number;
+    setLastUnitIndex: (unit_index:number) => void;
+
     selectBoxUnit : TSelectBoxUnit;
     setSelectBoxUnit: (unitIndex:number, count: number)=>void;
     

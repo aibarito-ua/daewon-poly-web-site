@@ -1,5 +1,9 @@
 import {create} from 'zustand'
 const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
+    lastUnitIndex: 0,
+    setLastUnitIndex: (unit_index) => {
+        set(()=>({lastUnitIndex:unit_index}))
+    },
     selectBoxUnit: 
 [
     {

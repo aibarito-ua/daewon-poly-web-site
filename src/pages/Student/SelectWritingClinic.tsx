@@ -19,7 +19,8 @@ const SelectWritingClinic = () => {
         setCommonStandbyScreen
     } = useControlAlertStore();
     const {
-        setSparkWritingDataFromAPI
+        setSparkWritingDataFromAPI,
+        setLastUnitIndex, lastUnitIndex
     } = useSparkWritingStore()
     const navigate = useNavigate();
     const beforeRenderedFn = async () => {
@@ -29,6 +30,9 @@ const SelectWritingClinic = () => {
                 setButtonActive(true)
             }
             setSparkWritingDataFromAPI(response.units, response.book_name)
+            if (lastUnitIndex===0) {
+                setLastUnitIndex(1);
+            }
             setCommonStandbyScreen({openFlag:false})
             return response;
         });

@@ -3,7 +3,19 @@ import { CONFIG } from '../../../config';
 import axios from 'axios';
 import { url } from 'inspector';
 
-export async function callDialogAPI(ai_name:string, user_name:string, history: string[][]):Promise<string[][]> {
+export async function callDialogAPI(ai_name:string, user_name:string, history: string[][]):Promise<{
+    text:string[][],
+    usages: {
+        completion_tokens:number,
+        total_tokens:number,
+        prompt_tokens:number
+    },
+    error?: {
+        text:string,
+        status:any,
+        statusText:any
+    }
+}> {
     
     return await axios.post(
         CONFIG.CHATBOT.URL, {
@@ -15,17 +27,47 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
             }
         }
     ).then((res)=>{
-        console.log('axios result =',res)
+        // console.log('axios result =',res)
         const cmd = res.data.cmd;
         if (cmd===201) {
             const usage = res.data.usage
-            console.log(`생성에 사용한 토큰:${usage.prompt_tokens}\n생성한 토큰: ${usage.completion_tokens}\n총 사용 토큰: ${usage.total_tokens}`)
-            return res.data.text;
+            const useStartToken:number = usage.prompt_tokens;
+            const createdToken:number = usage.completion_tokens;
+            const totalUseToken:number = usage.total_tokens;
+            // console.log(`생성에 사용한 토큰:${usage.prompt_tokens}\n생성한 토큰: ${usage.completion_tokens}\n총 사용 토큰: ${usage.total_tokens}`)
+            const textData:string[][] = res.data.text;
+            return {
+                text:textData,
+                usages: {
+                    completion_tokens: createdToken,
+                    total_tokens: totalUseToken,
+                    prompt_tokens: useStartToken
+                },
+                error: undefined
+            };
+        } else {
+            return {
+                text:[],
+                usages: {
+                    completion_tokens:0,
+                    total_tokens:0,
+                    prompt_tokens: 0
+                },
+                error: undefined
+            };
         }
     }).catch((rej)=>{
         const status = rej.response.status;
         const statusText = rej.response.statusText;
-        return {text: '잠시 후 다시 시도해주세요.', status, statusText};
+        return {
+            text:[],
+            usages: {
+                completion_tokens:0,
+                total_tokens:0,
+                prompt_tokens: 0
+            },
+            error: {text: '잠시 후 다시 시도해주세요.', status, statusText}
+        }
     });
 }
 

@@ -842,7 +842,17 @@ bg-[#ffea2c]
   w-[191px]
   h-[349.9px]
   bg-unit-book-icon
-  hover:bg-unit-select-book-icon
+  /* hover:bg-unit-select-book-icon */
+}
+.select-writing-topic-item-button-last {
+  object-fit: contain;
+  background-size: contain;
+  background-repeat: no-repeat;
+  @apply 
+  text-black
+  w-[191px]
+  h-[349.9px]
+  bg-unit-select-book-icon
 }
 .unit-select-button-item {
   @apply
@@ -864,6 +874,20 @@ bg-[#ffea2c]
   justify-center
   items-center
 }
+.unit-select-button-item-unit-last {
+  font-family: 'GothamRounded';
+  font-size: 14px;
+  font-weight: 700;
+  @apply
+  flex
+  w-[58px]
+  h-[26px]
+  text-[#fff]
+  rounded-[13px]
+  justify-center
+  items-center
+  bg-[#21c39a]
+}
 .unit-select-button-item-title {
   font-family: 'Roboto';
   font-size: 18px;
@@ -873,7 +897,16 @@ bg-[#ffea2c]
   max-w-[130px]
   mt-[10.5px]
   text-[#3e61aa]
-  /* hover:text-[#21c39a] */
+}
+.unit-select-button-item-title-last {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.22;
+  @apply
+  max-w-[130px]
+  mt-[10.5px]
+  text-[#21c39a]
 }
 .unit-select-button-item-drafts {
   font-family: 'Roboto';
