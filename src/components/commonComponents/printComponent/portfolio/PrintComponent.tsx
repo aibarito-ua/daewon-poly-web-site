@@ -1,8 +1,8 @@
 import React from "react";
-import { useReactToPrint } from 'react-to-print';
 import useLoginStore from "../../../../store/useLoginStore";
 import ReportComponentToPrint from "./PrintPortfolioComponent";
 import usePortfolioStore from "../../../../store/usePortfolioStore";
+import { useReactToPrint } from "react-to-print";
 
 const PortfolioPrintComponent = (props: {
     
@@ -17,7 +17,7 @@ const PortfolioPrintComponent = (props: {
     const [isMulti, setIsMulti] = React.useState<boolean>(false);
     const [selectUnit, setSelectUnit] = React.useState(0);
 
-    const {userInfo} = useLoginStore();
+    const {userInfo, isMobile} = useLoginStore();
     const {
         displayPortfolioData,
         portfolioModal
@@ -102,11 +102,23 @@ const PortfolioPrintComponent = (props: {
     const handlePrint = useReactToPrint({
         content: () => componentRef.current
     })
+
+    const print = () => {
+        if(isMobile) {
+            if (componentRef.current) {
+                const targetRef = componentRef.current as HTMLDivElement;
+                window.ReactNativeWebView.postMessage(JSON.stringify({message: 'print', data: targetRef.innerHTML}))
+            }
+        } else {
+            handlePrint()
+        }
+    }
+
     return (
         <div>
             {/* print area */}
-            <div style={{display: 'none'}}>
-                <div ref={componentRef} className="block w-full h-full">
+            <div style={{display: 'none'}} id='test'>
+                <div ref={componentRef} className="block w-full h-full" id="print">
                     {replaceBody.length> 0 && replaceBody.map((bodyItem, bodyIndex) => {
                         const key = 'print-ref-component-report-'+bodyIndex
                         const maxCount = replaceBody.length;
@@ -126,7 +138,7 @@ const PortfolioPrintComponent = (props: {
             </div>
             {/* print button */}
             {/* bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px] */}
-            <button onClick={handlePrint} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'}></button>
+            <button onClick={print} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'}></button>
             <div style={{display:'none'}} ref={divRef}>
                 
                 <div className='flex flex-col justify-start items-start w-[160.588mm] h-[202.676mm]'>
