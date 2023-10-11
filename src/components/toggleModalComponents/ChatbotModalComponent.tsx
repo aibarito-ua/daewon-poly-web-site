@@ -37,6 +37,7 @@ export default function FormDialog() {
         setDataHist([])
         setHistoryTokens([])
         setBeforeTurnTotalToken(217)
+        setInputLength(0)
     }
   }, [open])
   React.useEffect(()=>{
