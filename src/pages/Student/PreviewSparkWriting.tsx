@@ -30,6 +30,7 @@ const PreviewSparkWriting = (props:any) => {
     const {
         setTopNavHiddenFlagged, setSubNavTitleString, selectUnitInfo, setSubRightNavTitleString,
         setSelectUnitInfo,
+        goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage
     } = useNavStore();
     
     // WritingCenter Store
@@ -129,6 +130,7 @@ const PreviewSparkWriting = (props:any) => {
         
         // data reload 
         const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
+            alert(response)
             if (response.book_name!=='') {
                 setSparkWritingDataFromAPI(response.units, response.book_name);
                 setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
@@ -592,50 +594,44 @@ const PreviewSparkWriting = (props:any) => {
             contents: contentsData
         };
         console.log('data ==',data)
-        commonAlertOpen({
-            useOneButton: true,
-            yesButtonLabel: 'OK',
-            alertType: 'continue',
-            messages: ['Please temporary saving your data.'],
-            yesEvent: async () => {
-                const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
-                if (isSaveTemporary) {
-                    if (isGrammarSave) {
-                        commonAlertOpen({
-                            useOneButton:true,
-                            yesButtonLabel: 'OK',
-                            alertType: 'continue',
-                            messages: ['Temporary saving is complete.'],
-                            yesEvent: async () => {
-                                commonAlertClose()
-                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
-                            }
-                        })
-                    } else {
-                        commonAlertOpen({
-                            useOneButton:true,
-                            yesButtonLabel: 'OK',
-                            alertType: 'continue',
-                            messages: ['Temporary saving is complete.'],
-                            yesEvent: async () => {
-                                commonAlertClose();
-                                navigate(-1)
-                            }
-                        })
+        const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
+        if (isSaveTemporary) {
+            if (isGrammarSave) {
+                commonAlertClose()
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                // commonAlertOpen({
+                //     useOneButton:true,
+                //     yesButtonLabel: 'OK',
+                //     alertType: 'continue',
+                //     messages: ['Temporary saving is complete.'],
+                //     yesEvent: async () => {
+                        
+                //     }
+                // })
+            } else {
+                commonAlertOpen({
+                    useOneButton:true,
+                    yesButtonLabel: 'OK',
+                    alertType: 'continue',
+                    messages: ['Temporary saving is complete.'],
+                    yesEvent: async () => {
+                        commonAlertClose();
+                        navigate(-1)
                     }
-                } else {
-                    commonAlertOpen({
-                        messages: ['Are you sure you want to try again?'],
-                        yesButtonLabel: 'Yes',
-                        noButtonLabel: 'Cancel',
-                        alertType: 'continue',
-                        yesEvent: async ()=> {
-                            await forcedTemporarySave();
-                        },
-                    })
-                }
+                })
             }
-        })
+        } else {
+            await forcedTemporarySave();
+        }
+        // commonAlertOpen({
+        //     useOneButton: true,
+        //     yesButtonLabel: 'OK',
+        //     alertType: 'continue',
+        //     messages: ['Do you want to save your current progress and return to the main menu?'],
+        //     yesEvent: async () => {
+                
+        //     }
+        // })
     }
 
     React.useMemo(()=>{
@@ -648,6 +644,7 @@ const PreviewSparkWriting = (props:any) => {
         } else if (guideFlag === 0) {
             if (guideText.length === 0||guideText===undefined) setGuideText(['* Check your writing.']);
         } else if (guideFlag === 1) {
+            
             const guideTextData = [
                 'Before you submit, check the revised writing.',
                 'Tap the colored text and choose whether to make changes or not.',
@@ -662,10 +659,10 @@ const PreviewSparkWriting = (props:any) => {
         setTopNavHiddenFlagged(true);
         setSubNavTitleString(`${selectUnitInfo.main} ${selectUnitInfo.sub}`);
         if (params.draft === '1') {
-            const rightTitle = <span>{'Step 1'}<span className='ordinal pl-4 pr-1'>{'1st'}</span>{'Draft'}</span>
+            const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         } else if (params.draft === '2') {
-            const rightTitle = <span>{'Step 2'}<span className='ordinal pl-4 pr-1'>{'2nd'}</span>{'Draft'}</span>
+            const rightTitle = <span>{'Step 2.'}<span className='ordinal pl-2 pr-1'>{'2nd'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         }
 // setCountofUseAIProofreading, countofUseAIProofreading 
@@ -713,6 +710,9 @@ const PreviewSparkWriting = (props:any) => {
                 if (checkGrammarsSelectAll) {
                     console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
+                    setGoBackFromDraftInUnitPage(()=>{
+                        goBackEvent()
+                    })
                     setOpenSubmitButton(false)
                 } else {
                     console.log('grammar 진행 종료')
@@ -727,6 +727,9 @@ const PreviewSparkWriting = (props:any) => {
                     // grammar 진행중
                     console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
+                    setGoBackFromDraftInUnitPage(()=>{
+                        goBackEvent()
+                    })
                     setOpenSubmitButton(false);
                 } else {
                     // grammar 종료
@@ -757,6 +760,9 @@ const PreviewSparkWriting = (props:any) => {
                 } else {
                     if (bodyHistory.body.present.length>0) {
                         setIsSaveButtonOpen(true);
+                        setGoBackFromDraftInUnitPage(()=>{
+                            goBackEvent()
+                        })
                     } else {
                         setIsSaveButtonOpen(false);
                     }
@@ -807,6 +813,36 @@ const PreviewSparkWriting = (props:any) => {
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString,
         // Spark store
     ])
+
+    const goBackEvent = () => {
+        
+        commonAlertOpen({
+            messages: ['Do you want to exit?'],
+            alertType: 'warningContinue',
+            yesButtonLabel:'Yes',
+            noButtonLabel: 'No',
+            yesEvent: async () => {
+                commonAlertOpen({
+                    messages: ['Do you want to save your current progress before you leave?'],
+                    alertType: 'warningContinue',
+                    yesButtonLabel: `Yes`,
+                    noButtonLabel: `No`,
+                    yesEvent: async ()=> {
+                        await forcedTemporarySave(true)
+                        commonAlertClose();
+                    },
+                    closeEvent: () => {
+                        commonAlertClose();
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    }
+                })
+            },
+            closeEvent: () => {
+                commonAlertClose();
+                // CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+            }
+        })
+    }
     
 
     // Render Page
@@ -821,7 +857,7 @@ const PreviewSparkWriting = (props:any) => {
                     })}
                     </p>
                     {(guideFlag===1 && bodyHistory.title) && (
-                        <button className={`absolute top-[8px] right-[15px] items-center ${isUndoBody ? ' cursor-pointer':' cursor-default'}`}
+                        <button className={`absolute top-[8px] right-[15px] items-center ${isUndoBody ? ' cursor-pointer':'hidden'}`}
                         disabled={!isUndoBody}
                         onClick={()=>undoValue()}
                         ><GrammarContentComponent.resetButtonIcon className='w-[34px] h-[34px]' /></button>
@@ -877,6 +913,10 @@ const PreviewSparkWriting = (props:any) => {
                                     commonAlertClose();
                                     // go to edit page
                                     const targetData = sparkWritingData[unitIndex];
+                                    if (targetData.proofreading_count>0) {
+                                        // edit은 세이브 필요 없을까?
+                                        // await forcedTemporarySave(true)
+                                    }
                                     // console.log('targetData =',targetData)
                                     const unitTitle = targetData.topic;
                                     const unitNum = targetData.unit_index;
@@ -897,10 +937,9 @@ const PreviewSparkWriting = (props:any) => {
                             if (isSaveButtonOpen) {
                                 
                                 commonAlertOpen({
-                                    messages: ['Do you want to save?'],
-                                    alertType: 'continue',
-                                    yesButtonLabel: `Yes, I'm sure.`,
-                                    noButtonLabel: `No, Cancel.`,
+                                    messages: ['Do you want to save your current progress and return to the main menu?'],
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
                                     yesEvent: async ()=> await forcedTemporarySave(true)
                                 })
                             }
@@ -922,7 +961,7 @@ const PreviewSparkWriting = (props:any) => {
                                 noButtonLabel: 'No',
                                 yesEvent: async () => await AIProofreadingYesOnClick()
                             })
-                        }}>AI Proofreading</button>
+                        }}>Proofreading</button>
                     }
                     {/* 임시 버튼 - will del */}
                     {!isSubmitted &&
@@ -994,11 +1033,16 @@ const PreviewSparkWriting = (props:any) => {
                                         // submit
                                         // make contents 
                                         const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
-                                            const historyMinusIndex = item.name==='Title' ? 2:2;
-                                            const currentGrammarIndex = item.order_index-historyMinusIndex;
-                                            console.log('historyMinusIndex ==',historyMinusIndex)
-                                            console.log('currentGrammarIndex =',currentGrammarIndex)
-                                            const grammar_correction_content_student = item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data);
+                                            
+                                            const currentGrammarIndex = item.order_index-2;
+                                            // console.log('item =',item)
+                                            // console.log('currentGrammarIndex =',currentGrammarIndex)
+                                            const grammar_correction_content_student = guideFlag===1 ? (
+                                                item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
+                                            ):(
+                                                item.grammar_correction_content_student
+                                            );
+                                            
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,

@@ -110,7 +110,7 @@ type TOverallBarChartDataItem = {
     unit5: number;
     amt: number;
 }
-type TAlertType = ''|'warning'|'continue';
+type TAlertType = ''|'warning'|'continue'|'warningContinue';
 type TReturn1stDraftReasonAlertValue = {
     openFlag: boolean;
     returnReason: string;

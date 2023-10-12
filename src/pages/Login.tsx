@@ -288,7 +288,7 @@ export const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>
                         {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
-                        <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center'></div>
+                        <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain'></div>
                         
                         <div className='flex flex-row mt-[30px]'>
                             <div className="relative">
@@ -330,7 +330,7 @@ export const Login = () => {
                         </div>
                         <div className='flex flex-row mt-[5.3px] h-fit items-center'>
                                 <input id="login-save-id-checkbox" type='checkbox' 
-                                    className='flex rounded-[5px] w-[20px] h-[20px] text-[#25358c] border-[#dddddd] focus:ring-transparent focus:ring-0'
+                                    className='flex rounded-[5px] w-[20px] h-[20px] text-[#42278F] border-[#dddddd] focus:ring-transparent focus:ring-0 checked:bg-[#42278F]'
                                     onChange={(value)=>{
                                         setSaveId(!saveId)
                                     }}
@@ -342,8 +342,8 @@ export const Login = () => {
                             <span>{errors.displayMessage}</span>
                         </div>
                         <div className='flex flex-row mt-[8.5px]'>
-                            <button className={isLoginBtn ? 'bg-[#192878] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
-                            : 'bg-[#192878] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd] hover:cursor-no-drop'}
+                            <button className={isLoginBtn ? 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
+                            : 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd] hover:cursor-no-drop'}
                             disabled={!isLoginBtn}
                                 type='submit'
                             >

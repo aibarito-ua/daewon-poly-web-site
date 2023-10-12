@@ -893,16 +893,19 @@ bg-[#ffea2c]
   font-size: 18px;
   font-weight: 500;
   line-height: 1.22;
+  max-lines: 2;
   @apply
   max-w-[130px]
   mt-[10.5px]
   text-[#3e61aa]
+  
 }
 .unit-select-button-item-title-last {
   font-family: 'Roboto';
   font-size: 18px;
   font-weight: 500;
   line-height: 1.22;
+  max-lines: 2;
   @apply
   max-w-[130px]
   mt-[10.5px]

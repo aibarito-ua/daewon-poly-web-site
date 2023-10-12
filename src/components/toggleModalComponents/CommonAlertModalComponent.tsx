@@ -39,7 +39,7 @@ export default function CommonAlertModalComponent(
     if (commonAlertYesFunctionEvent!==null) {
       commonAlertYesFunctionEvent();
     }
-    if (commonAlertType!=='continue') {
+    if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
       commonAlertClose();
     }
   };

@@ -64,7 +64,9 @@ const EssayWriting = () => {
         setTopNavHiddenFlagged,
         setSubNavTitleString,
         setSubRightNavTitleString,
-        selectUnitInfo
+        selectUnitInfo,
+        goBackFromDraftInUnitPage,
+        setGoBackFromDraftInUnitPage,
     } = useNavStore();
     // WritingCenter Store
     const {essayWritingInputItems, } = useEssayWritingCenterDTStore();
@@ -210,10 +212,10 @@ const EssayWriting = () => {
         }
 
         if (params.draft === '1') {
-            const rightTitle = <span>{'Step 1'}<span className='ordinal pl-4 pr-1'>{'1st'}</span>{'Draft'}</span>
+            const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         } else {
-            const rightTitle = <span>{'Step 2'}<span className='ordinal pl-4 pr-1'>{'2nd'}</span>{'Draft'}</span>
+            const rightTitle = <span>{'Step 2.'}<span className='ordinal pl-2 pr-1'>{'2nd'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         }
         if (essayTopicInput === undefined || essayTopicInput === '') {
@@ -426,6 +428,12 @@ const EssayWriting = () => {
                             redoTitleText = v.input_content.substring(0, 120);
                             titleMaxLengthCheck = true;
                         }
+                        // check line break
+                        const checkLineBreakTitle = v.input_content.match(/\n/gmi);
+                        if (checkLineBreakTitle) {
+                            redoTitleText = v.input_content.replace(/\n/gmi, '');
+                            titleMaxLengthCheck = true;
+                        }
                     }
                     if (target_leng >= 10) {
                         // 10자 이상
@@ -437,7 +445,7 @@ const EssayWriting = () => {
                 })
                 if (titleMaxLengthCheck) {
                     commonAlertOpen({
-                        messages:['“Title” can be up to 120 characters including spaces.'],
+                        messages:['The title cannot exceed one line.'],
                         useOneButton: true,
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
@@ -454,10 +462,66 @@ const EssayWriting = () => {
                 if (sum === 0) {
 
                     setIsSaveButtonOpen(true)
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            
+                        })
+                    })
                     setIsPreviewButtonOpen(true);
                 } else if (sum > 0 && sum < targetFlags.length) {
                     setIsSaveButtonOpen(true)
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            
+                        })
+                    })
                 } else {
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertClose();
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    })
                     setIsPreviewButtonOpen(false);
                     setIsSaveButtonOpen(false)
                 }
@@ -474,7 +538,7 @@ const EssayWriting = () => {
                 return {
                     heading_name: item.name,
                     input_content,
-                    grammar_correction_content_student: '',
+                    grammar_correction_content_student: item.grammar_correction_content_student!==''? (isSaveButtonOpen?'':item.grammar_correction_content_student):'',
                     order_index: item.order_index,
                 }
             })
@@ -491,18 +555,16 @@ const EssayWriting = () => {
                 draft_init_page_flag:''
             }
             // console.log('data ==',data)
-            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
+            
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
+                if (response) {
+                    setIsSaved(true);
+                    commonAlertClose();
+                }
+                return response;
+            });
             if (isSaveTemporary) {
-                setIsSaved(true);
-                commonAlertOpen({
-                    useOneButton: true,
-                    yesButtonLabel: 'OK',
-                    messages: ['Temporary saving is complete.'],
-                    yesEvent: ()=>{
-                        commonAlertClose();
-                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                    }
-                })
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             } else {
                 commonAlertOpen({
                     messages: ['Are you sure you want to try again?'],
@@ -511,12 +573,13 @@ const EssayWriting = () => {
                     yesEvent: async ()=> await temporarySaveFunction(),
                 })
             }
+            
         } else if (draftIndex === 2) {
             
             const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
                 const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
                 return {
-                    grammar_correction_content_student:'',
+                    grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                     input_content,
                     heading_name: item.name,
                     order_index: item.order_index
@@ -538,15 +601,17 @@ const EssayWriting = () => {
             if (isSaveTemporary) {
                 setCommonStandbyScreen({openFlag:false});
                 setIsSaved(true);
-                commonAlertOpen({
-                    useOneButton: true,
-                    yesButtonLabel: 'OK',
-                    messages: ['Temporary saving is complete.'],
-                    yesEvent: ()=>{
-                        commonAlertClose();
-                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                    }
-                })
+                commonAlertClose();
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                // commonAlertOpen({
+                //     useOneButton: true,
+                //     yesButtonLabel: 'OK',
+                //     messages: ['Temporary saving is complete.'],
+                //     yesEvent: ()=>{
+                //         commonAlertClose();
+                //         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                //     }
+                // })
             } else {
                 setCommonStandbyScreen({openFlag:false})
                 commonAlertOpen({
@@ -640,7 +705,7 @@ const EssayWriting = () => {
             return {
                 heading_name: item.name,
                 input_content,
-                grammar_correction_content_student: '',
+                grammar_correction_content_student: item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                 order_index: item.order_index,
             }
         })
@@ -713,7 +778,7 @@ const EssayWriting = () => {
             <div className='wrap-contain-spark-writing'>
                 {/* guide text */}
                 <div className='wrap-guide-text-spark-writing'>
-                    {'* Fill out the following outline.'}
+                    {'Fill out the following outline.'}
                 </div>
                 {/* content */}
                 <div className='wrap-content-spark-writing'>
@@ -740,32 +805,23 @@ const EssayWriting = () => {
                                 commonAlertOpen({
                                     messages:['Are you ready to preview your writing?'],
                                     alertType: 'continue',
-                                    yesButtonLabel: `Yes, I'm sure.`,
-                                    noButtonLabel: `No, Cancel.`,
-                                    yesEvent: ()=>{
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=>{
                                         if (isSaved) {
                                             CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             commonAlertClose();
                                         } else {
                                             const check = checkNewLine();
                                             if (check) {
-                                                commonAlertOpen({
-                                                    messages: ['There is modified data.','Proceed to save.'],
-                                                    useOneButton:true,
-                                                    alertType: 'continue',
-                                                    yesButtonLabel: `OK`,
-                                                    yesEvent: async ()=> {
-                                                        await temporarySaveFunction();
-                                                        commonAlertClose();
-                                                        CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                                    }
-                                                })
+                                                await temporarySaveFunction().then((res)=>{
+                                                    commonAlertClose();
+                                                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                                });
                                             } else {
                                                 commonAlertClose();
                                                 CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             }
-                                            
-
                                         }
                                     }
                                 })

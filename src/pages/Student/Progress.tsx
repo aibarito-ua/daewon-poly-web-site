@@ -149,8 +149,9 @@ const Progress = () => {
                         
                     }}>test button</button> */}
                 <div className='progress-page-view-box-wrap'>
-                    <div className='progress-page-view-box-header justify-end h-[45px] px-[20px] pt-[20px] pb-[5px]'>
-                        <div className='row-div items-center pb-[5px] gap-[4px] w-fit'>
+                    {/* 2차 개발할 경우 사용 */}
+                    {/* <div className='progress-page-view-box-header justify-end h-[45px] px-[20px] pt-[20px] pb-[5px]'>
+                        <div className='row-div items-center pb-[5px] gap-[4px]'>
                             <progressIcons.CheckGreenCircleIcon className='flex w-[18px]'/>
                             <progressIcons.CheckBlueRectIcon className='flex w-[18px]'/>
                             <span style={{
@@ -171,6 +172,10 @@ const Progress = () => {
                         </div>
                     </div>
                     <div className='progress-page-view-box-content'>
+                        <ProgressTable data={sparkWritingData}/>
+                    </div> */}
+                    {/* 1차 개발로 대체 사용 */}
+                    <div className='progress-page-view-box-content rounded-t-[24px] border-t-[5px]' style={{height: '450px'}}>
                         <ProgressTable data={sparkWritingData}/>
                     </div>
                 </div>

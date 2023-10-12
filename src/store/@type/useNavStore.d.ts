@@ -14,6 +14,10 @@ interface INavItem {
     // navItems: TNavItems;
 
     setSelectUnitInfo: (unitMainTitle:string, unitSubTitle:string) =>void;
+
+    // unit에서 back버튼 클릭 이벤트
+    goBackFromDraftInUnitPage: Function|null;
+    setGoBackFromDraftInUnitPage: (event:Function|null) => void;
 }
 type TStudentNavItem = "MyPage" | "EssayWriting" | "Portfolio";
 // type TTeacherNavItem = ""

@@ -36,6 +36,16 @@ const useNavStore = create<INavItem>((set) => ({
             main: unitMainTitle, sub: unitSubTitle
         };
         set(()=>({selectUnitInfo: unitInfo}))
+    },
+
+    // unit back event
+    goBackFromDraftInUnitPage: null,
+    setGoBackFromDraftInUnitPage: (event) => {
+        if (event) {
+            set(()=>({goBackFromDraftInUnitPage: event}))
+        } else {
+            set(()=>({goBackFromDraftInUnitPage: null}))
+        }
     }
 }))
 

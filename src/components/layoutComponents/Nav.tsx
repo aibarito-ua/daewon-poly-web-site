@@ -66,7 +66,10 @@ export const navItems:INavItems = {
 export const Nav = () => {
     const {role } = useLoginStore()
     const navigate = useNavigate();
-    const {sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged, subNavTitleString, subRightNavTitleString} = useNavStore();
+    const {
+        sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged, subNavTitleString, subRightNavTitleString,
+        goBackFromDraftInUnitPage,
+    } = useNavStore();
     const onClickFlaggedSidebar = (e:React.MouseEvent) => {
         e.preventDefault();
         setSidebarFlagged(!sidebarFlagged)
@@ -114,7 +117,12 @@ export const Nav = () => {
         </div>
         <div className={`absolute top-0 z-50 w-full h-[111px] ${topNavHiddenFlagged ? '': 'hidden'}`}>
             <div className='btn-go-back-from-draft select-none'
-            onClick={()=>CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)}></div>
+            onClick={async ()=>{
+                if (goBackFromDraftInUnitPage) {
+                    await goBackFromDraftInUnitPage();
+                }
+                // CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+            }}></div>
 
             <div className='flex flex-1 flex-row justify-center mt-[48px] select-none'>
                 <div className='flex flex-col gap-[6px] justify-center items-center'>

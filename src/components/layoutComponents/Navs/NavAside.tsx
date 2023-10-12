@@ -76,7 +76,7 @@ const NavAside = () => {
         // aria-label="Sidebar"
         >
             <div className="h-full  pb-4 overflow-y-auto bg-[#3c2481]">
-            <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center' />
+            <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain' />
                 <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`

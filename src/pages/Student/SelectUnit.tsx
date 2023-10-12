@@ -17,7 +17,10 @@ import UnitReportModalComponent from '../../components/toggleModalComponents/Uni
 export default function SelectUnit () {
     const navigate = useNavigate();
     const {role, userInfo} = useLoginStore();
-    const {setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen} = useNavStore()
+    const {
+        setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen,
+        goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage
+    } = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
     const {
         sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI,
@@ -80,6 +83,12 @@ export default function SelectUnit () {
         const student_code = userInfo.userCode;
         
         const getReportAll = await getReportsAPI(student_code, userInfo.accessToken);
+        if (goBackFromDraftInUnitPage) {
+            const exitFunc = () => {
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+            };
+            setGoBackFromDraftInUnitPage(()=>exitFunc());
+        }
         if (getReportAll && allUnitsDataFromAPI) {
             console.log('getReportAll ==',getReportAll)
             let dumyFinderData = {label:'init', level:userInfo.courseName, semester:userInfo.semester, year:userInfo.year};
@@ -291,6 +300,9 @@ export default function SelectUnit () {
                     const firstFeedback = firstDraft===4 ? true : false;
                     const secondFeedback = secondDraft===4 ? true : false;
                     
+                    // grammar save check -> prev or write
+                    const isGrammarSave1st = item.draft_1_outline[1].grammar_correction_content_student !== '';
+                    
                     return (
                         
                     <div key={topicsIndex} 
@@ -304,7 +316,11 @@ export default function SelectUnit () {
                                 await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
-                                await selectTemporaryPreview(selectUnitIndex, selectUnitSubTitle, '1');
+                                if (isGrammarSave1st) {
+                                    await selectTemporaryPreview(selectUnitIndex, selectUnitSubTitle, '1');
+                                } else {
+                                    await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                }
                             } else if (firstDraft === 2|| firstDraft === 3) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
                                 await selectPreview(selectUnitIndex, selectUnitSubTitle, '1')
@@ -405,7 +421,7 @@ export default function SelectUnit () {
             <div className='flex flex-1 flex-col w-full h-fit px-[25px] pb-[25px]'>
             
                 {/* page titles */}
-                <div className='flex flex-col font-bold w-full justify-start pt-[93.4px] text-black h-1/5'>
+                <div className='flex flex-col font-bold w-full justify-start pt-[73.4px] text-black h-1/5 pb-[20px]'>
                     <div className='writing-activity-page-title-div'>
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
