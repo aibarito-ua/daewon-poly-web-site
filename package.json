@@ -34,7 +34,7 @@
   },
   "scripts": {
     "dev": "HOST=0.0.0.0 && PORT=25255 react-scripts start",
-    "start": "react-scripts start",
+    "start": "PORT=25255 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
