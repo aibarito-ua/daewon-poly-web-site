@@ -24,26 +24,34 @@ export const navItems:INavItems = {
             {
                 path: "WritingClinic", 
                 label: 'Writing Activity', 
-                onMenuIcon: <commonIconSvgs.NavWritingActivityActiveOnIcon className='w-[45px] h-[45px]'/>,
-                offMenuIcon: <commonIconSvgs.NavWritingActivityActiveOffIcon className='w-[45px] h-[45px]'/>
+                // onMenuIcon: <commonIconSvgs.NavWritingActivityActiveOnIcon className='w-[45px] h-[45px]'/>,
+                // offMenuIcon: <commonIconSvgs.NavWritingActivityActiveOffIcon className='w-[45px] h-[45px]'/>
+                onMenuIcon: <div className='bg-nav-writing-activity-on bg-no-repeat bg-contain w-[45px] h-[45px]'/>,
+                offMenuIcon: <div className='bg-nav-writing-activity-off bg-no-repeat bg-contain w-[45px] h-[45px]'/>
             },
             {
                 path: "Progress",
                 label: 'Progress',
-                onMenuIcon: <commonIconSvgs.NavProgressActiveOnIcon className='w-[45px] h-[45px]'/>,
-                offMenuIcon: <commonIconSvgs.NavProgressActiveOffIcon className='w-[45px] h-[45px]'/>
+                // onMenuIcon: <commonIconSvgs.NavProgressActiveOnIcon className='w-[45px] h-[45px]'/>,
+                // offMenuIcon: <commonIconSvgs.NavProgressActiveOffIcon className='w-[45px] h-[45px]'/>
+                onMenuIcon: <div className='bg-nav-progress-on bg-no-repeat bg-contain w-[45px] h-[45px]'/>,
+                offMenuIcon: <div className='bg-nav-progress-off bg-no-repeat bg-contain w-[45px] h-[45px]'/>
             },
             {
                 path: "Report",
                 label: 'Report',
-                onMenuIcon: <commonIconSvgs.NavReportActiveOnIcon className='w-[45px] h-[45px]'/>,
-                offMenuIcon: <commonIconSvgs.NavReportActiveOffIcon className='w-[45px] h-[45px]'/>
+                // onMenuIcon: <commonIconSvgs.NavReportActiveOnIcon className='w-[45px] h-[45px]'/>,
+                // offMenuIcon: <commonIconSvgs.NavReportActiveOffIcon className='w-[45px] h-[45px]'/>
+                onMenuIcon: <div className='bg-nav-report-on bg-no-repeat bg-contain w-[45px] h-[45px]'/>,
+                offMenuIcon: <div className='bg-nav-report-off bg-no-repeat bg-contain w-[45px] h-[45px]'/>
             },
             {
                 path: "Portfolio",
                 label: 'Portfolio',
-                onMenuIcon: <commonIconSvgs.NavPortfolioActiveOnIcon className='w-[45px] h-[45px]'/>,
-                offMenuIcon: <commonIconSvgs.NavPortfolioActiveOffIcon className='w-[45px] h-[45px]'/>
+                // onMenuIcon: <commonIconSvgs.NavPortfolioActiveOnIcon className='w-[45px] h-[45px]'/>,
+                // offMenuIcon: <commonIconSvgs.NavPortfolioActiveOffIcon className='w-[45px] h-[45px]'/>
+                onMenuIcon: <div className='bg-nav-portfolio-on bg-no-repeat bg-contain w-[45px] h-[45px]'/>,
+                offMenuIcon: <div className='bg-nav-portfolio-off bg-no-repeat bg-contain w-[45px] h-[45px]'/>
             },
             // {path: "StudentHome", label: ''}
         ]

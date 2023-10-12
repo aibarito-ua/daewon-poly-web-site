@@ -949,6 +949,8 @@ bg-[#ffea2c]
   @apply
   absolute
   bg-unit-complete-report-icon
+  bg-no-repeat
+  bg-contain
   w-[80px]
   h-[100px]
   z-30
@@ -959,6 +961,8 @@ bg-[#ffea2c]
   @apply
   absolute
   bg-unit-complete-flower-icon
+  bg-no-repeat
+  bg-contain
   w-[52.4px]
   h-[61.7px]
   z-30
