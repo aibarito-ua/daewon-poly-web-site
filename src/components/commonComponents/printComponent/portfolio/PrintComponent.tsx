@@ -3,6 +3,7 @@ import useLoginStore from "../../../../store/useLoginStore";
 import ReportComponentToPrint from "./PrintPortfolioComponent";
 import usePortfolioStore from "../../../../store/usePortfolioStore";
 import { useReactToPrint } from "react-to-print";
+import jsPDF from "jspdf";
 
 const PortfolioPrintComponent = (props: {
     
@@ -106,8 +107,21 @@ const PortfolioPrintComponent = (props: {
     const print = () => {
         if(isMobile) {
             if (componentRef.current) {
-                const targetRef = componentRef.current as HTMLDivElement;
-                window.ReactNativeWebView.postMessage(JSON.stringify({message: 'print', data: targetRef.innerHTML}))
+                console.log('print mobile')
+                const doc = new jsPDF('p', 'mm');
+                
+                // TODO: change font if need
+                // doc.setFont('Inter-Regular', 'normal');
+        
+                doc.html(componentRef.current, {
+                    async callback(doc) {
+                        window.ReactNativeWebView.postMessage(JSON.stringify({message: 'print', data: doc.output('datauristring')}))
+                    },
+                    html2canvas: {
+                        // TODO: change this, width other values
+                        scale: 0.264,
+                    }
+                });
             }
         } else {
             handlePrint()
