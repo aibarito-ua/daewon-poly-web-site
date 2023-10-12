@@ -283,7 +283,7 @@ const mouseOffEvent = (e:any) => {
         fontWeight={500}
         fontSize={17}
         fill="#222"
-        >{`unit ${reportSelectUnit}`}</text>
+        >{`Unit ${reportSelectUnit}`}</text>
         <text x={stDotX} y={stDotY}
         dy={-5}
         fontFamily="GothamRounded"
