@@ -20,22 +20,24 @@ const SelectWritingClinic = () => {
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI,
-        setLastUnitIndex, lastUnitIndex
+        setLastUnitIndex, lastUnitIndex,
+        sparkWritingBookName
     } = useSparkWritingStore()
     const navigate = useNavigate();
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
-        await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
-            if (response.book_name!=='') {
-                setButtonActive(true)
-            }
-            setSparkWritingDataFromAPI(response.units, response.book_name)
-            if (lastUnitIndex===0) {
-                setLastUnitIndex(1);
-            }
-            setCommonStandbyScreen({openFlag:false})
+        const response = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             return response;
         });
+        // alert(JSON.stringify(response))
+        if (response.book_name!=='') {
+            setButtonActive(true)
+        }
+        setSparkWritingDataFromAPI(response.units, response.book_name)
+        if (lastUnitIndex===0) {
+            setLastUnitIndex(1);
+        }
+        setCommonStandbyScreen({openFlag:false})
     }
     useComponentWillMount(()=>{
         beforeRenderedFn();

@@ -100,14 +100,13 @@ const PortfolioPrintComponent = (props: {
         }
     }, [portfolioModal, isReplace])
 
-    const handlePrint = useReactToPrint({
+    const printRegular = useReactToPrint({
         content: () => componentRef.current
     })
 
-    const print = () => {
+    const handlePrint = () => {
         if(isMobile) {
             if (componentRef.current) {
-                console.log('print mobile')
                 const doc = new jsPDF('p', 'mm');
                 
                 // TODO: change font if need
@@ -115,16 +114,17 @@ const PortfolioPrintComponent = (props: {
         
                 doc.html(componentRef.current, {
                     async callback(doc) {
+                        // doc.save('report.pdf')
                         window.ReactNativeWebView.postMessage(JSON.stringify({message: 'print', data: doc.output('datauristring')}))
                     },
                     html2canvas: {
                         // TODO: change this, width other values
                         scale: 0.264,
                     }
-                });
+                })
             }
         } else {
-            handlePrint()
+            printRegular()
         }
     }
 
@@ -152,7 +152,7 @@ const PortfolioPrintComponent = (props: {
             </div>
             {/* print button */}
             {/* bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px] */}
-            <button onClick={print} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'}></button>
+            <button onClick={handlePrint} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'}></button>
             <div style={{display:'none'}} ref={divRef}>
                 
                 <div className='flex flex-col justify-start items-start w-[160.588mm] h-[202.676mm]'>

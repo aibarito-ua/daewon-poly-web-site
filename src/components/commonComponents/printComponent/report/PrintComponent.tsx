@@ -3,6 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import useLoginStore from "../../../../store/useLoginStore";
 import ReportComponentToPrint from "./PrintReportComponent";
 import useControlAlertStore from "../../../../store/useControlAlertStore";
+import jsPDF from "jspdf";
 
 const PrintReportExportButton = (props: {
     isActivityPage?:boolean;
@@ -17,7 +18,7 @@ const PrintReportExportButton = (props: {
     const [isReplace, setIsReplace] = React.useState<boolean>(false);
     const [isMulti, setIsMulti] = React.useState<boolean>(false);
 
-    const {userInfo} = useLoginStore();
+    const {userInfo, isMobile} = useLoginStore();
     const {
         reportModalRubricData,
         reportSelectBookName,
@@ -97,9 +98,32 @@ const PrintReportExportButton = (props: {
         // }
     }, [reportSelectUnit])
 
-    const handlePrint = useReactToPrint({
+    const printRegular = useReactToPrint({
         content: () => componentRef.current
     })
+
+    const handlePrint = () => {
+        if(isMobile) {
+            if (componentRef.current) {
+                const doc = new jsPDF('p', 'mm');
+                
+                // TODO: change font if need
+                // doc.setFont('Inter-Regular', 'normal');
+        
+                doc.html(componentRef.current, {
+                    async callback(doc) {
+                        window.ReactNativeWebView.postMessage(JSON.stringify({message: 'print', data: doc.output('datauristring')}))
+                    },
+                    html2canvas: {
+                        // TODO: change this, width other values
+                        scale: 0.264,
+                    }
+                })
+            }
+        } else {
+            printRegular()
+        }
+    }
     const ov_comments = unitReportData.teacher_comments.length> 0 ? (unitReportData.teacher_comments[0].draft_index===2? unitReportData.teacher_comments[0].comment : unitReportData.teacher_comments[1].comment):'';
     const ov_comments_split = ov_comments.split('\n');
     return (
