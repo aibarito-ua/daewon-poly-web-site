@@ -130,7 +130,7 @@ const PreviewSparkWriting = (props:any) => {
         
         // data reload 
         const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
-            alert(response)
+            
             if (response.book_name!=='') {
                 setSparkWritingDataFromAPI(response.units, response.book_name);
                 setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
