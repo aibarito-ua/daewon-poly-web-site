@@ -278,9 +278,14 @@ export default function SelectUnit () {
         }
         
         return (
-            <div className="flex flex-col bg-[#fff] h-[445px] max-w-[1010px] px-[25px] pb-[35px] pt-[23px] rounded-[24px]">
+            <div className={window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 
+             ?"flex flex-col bg-[#fff] w-full h-[445px] px-[25px] pb-[35px] pt-[23px] rounded-[24px]"
+             :"flex flex-col bg-[#fff] h-[445px] max-w-[1010px] px-[25px] pb-[35px] pt-[23px] rounded-[24px]"
+            }
+            >
                 <div className='select-a-unit-to-begin select-none'>{'* Select a unit to begin.'}</div>
-                <div className='select-unit-div'>
+                <div className={ window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 
+                ? 'select-unit-div-electron': 'select-unit-div'}>
                 {props.items.map((item:TSparkWritingData, topicsIndex:number)=>{
                                 
                     // 각 회차별 

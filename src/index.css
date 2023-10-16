@@ -274,8 +274,8 @@ code {
 #root {
   font-family: "Noto Sans CJK KR";
   @apply
-  max-h-[800px]
-  max-w-[1280px]
+  /* max-h-[800px]
+  max-w-[1280px] */
   w-full
   h-full
   min-h-fit
@@ -316,6 +316,14 @@ body {
   flex-1
   max-h-[800px]
   max-w-[1280px]
+  h-full
+  w-full
+  bg-[#3c2481]
+}
+.container-wrapper-electron {
+  @apply
+  flex
+  flex-1
   h-full
   w-full
   bg-[#3c2481]
@@ -409,7 +417,8 @@ body {
   backdrop-filter: blur(195px);
   background-color: rgba(225,225,225, 0.5);
   -webkit-backdrop-filter: blur(190px);
-  object-fit: contain;
+  background-size: cover;
+  /* object-fit: contain; */
   @apply
   w-[calc(100%-30px)]
   h-[calc(100%-60px)]
@@ -417,6 +426,7 @@ body {
   bg-menu-inner-img
   mt-[30px]
   rounded-[18px]
+  /* bg-co */
 }
 .section-spark-writing {
   @apply
@@ -978,6 +988,14 @@ bg-[#ffea2c]
   pt-[22.9px]
   gap-[5px]
 }
+.select-unit-div-electron {
+  @apply
+  flex flex-row
+  w-full
+  pt-[22.9px]
+  justify-center
+  gap-[5px]
+}
 
 /*  */
 .div-to-button-hover-effect {
@@ -1418,6 +1436,15 @@ bg-[#ffea2c]
   flex-col
   h-[445px]
   max-w-[1010px]
+  rounded-[24px]
+  bg-white
+}
+.progress-page-view-box-wrap-electron {
+  @apply
+  flex
+  flex-col
+  h-[445px]
+  w-full
   rounded-[24px]
   bg-white
 }

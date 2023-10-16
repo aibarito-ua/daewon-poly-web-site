@@ -9,7 +9,7 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     const bodyItemDump = manufactureItem.splice(0);
     const bodyItemNames = CommonFunctions.outlineNameLists(bodyItemDump)
     const bodyItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(bodyItemNames, bodyItemDump);
-    console.log('bodyItemNames =',bodyItem)
+    // console.log('bodyItemNames =',bodyItem)
     
     // Title
     const contentTitleComponent = (titleText:string, keyVal:any) => {

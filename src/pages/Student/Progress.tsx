@@ -148,7 +148,10 @@ const Progress = () => {
                         setUnitReportModal({open:true, unitTitle})
                         
                     }}>test button</button> */}
-                <div className='progress-page-view-box-wrap'>
+                <div className={window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 
+                    ? 'progress-page-view-box-wrap-electron' 
+                    :'progress-page-view-box-wrap'
+                }>
                     {/* 2차 개발할 경우 사용 */}
                     {/* <div className='progress-page-view-box-header justify-end h-[45px] px-[20px] pt-[20px] pb-[5px]'>
                         <div className='row-div items-center pb-[5px] gap-[4px]'>

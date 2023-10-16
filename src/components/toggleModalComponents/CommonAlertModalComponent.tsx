@@ -58,17 +58,17 @@ export default function CommonAlertModalComponent(
     // open={true}
       onClose={handleClose}>
         <DialogContent 
-          className='flex flex-1 flex-col max-w-[390px] h-fit'
+          className={ (commonAlertType==='warning'||commonAlertType==='warningContinue')? 'flex flex-1 flex-col w-[390px] h-fit':'flex flex-1 flex-col max-w-[390px] h-fit'}
           sx={{
             paddingY:0,
             paddingX: 0
           }}
         >
         <div className='flex flex-1 flex-col h-[400px] justify-center border-t border-t-[#dddddd]'>
-            {commonAlertType==='warning' && <commonSvgs.ExclamationMarkIcon className='w-[100px] h-[100px] mt-[36px] ml-[145px]'/>}
+            {(commonAlertType==='warning'||commonAlertType==='warningContinue') && <commonSvgs.ExclamationMarkIcon className='w-[100px] h-[100px] mt-[36px] ml-[145px]'/>}
             
-            {commonAlertHeadTitle !== '' && <div className={`text-center font-[Roboto] text-[20px] font-[700] text-[#222222] ${commonAlertType==='warning'? 'mt-[20px]': 'mt-[39.4px]'}`}>{commonAlertHeadTitle}</div>}
-            <div className={commonAlertType==='warning' ? (
+            {commonAlertHeadTitle !== '' && <div className={`text-center font-[Roboto] text-[20px] font-[700] text-[#222222] ${(commonAlertType==='warning'||commonAlertType==='warningContinue')? 'mt-[20px]': 'mt-[39.4px]'}`}>{commonAlertHeadTitle}</div>}
+            <div className={(commonAlertType==='warning'||commonAlertType==='warningContinue') ? (
                 commonAlertHeadTitle !== '' ? 'mt-[10px] mb-[30px]':'mt-[23px] mb-[30px]'
             ): (
                 commonAlertHeadTitle !== '' ? 'mt-[10px] mb-[28.6px]':'mt-[48px] mb-[36.1px]'
@@ -97,12 +97,12 @@ export default function CommonAlertModalComponent(
                 </div>
               ):(
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] gap-[10px] items-center'>
+                  <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#dcdadf] rounded-[15px] text-[#959aaa] hover:cursor-pointer items-center'
+                    onClick={commonAlertCloseEvent!==null? ()=>commonAlertCloseEvent(): handleClose}
+                  >{commonAlertNoLabel}</div>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'
                       onClick={handleClickYes}
                   >{commonAlertYesLabel}</div>
-                    <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#dcdadf] rounded-[15px] text-[#959aaa] hover:cursor-pointer items-center'
-                      onClick={commonAlertCloseEvent!==null? ()=>commonAlertCloseEvent(): handleClose}
-                    >{commonAlertNoLabel}</div>
                 </div>
             )}
         </DialogActions>

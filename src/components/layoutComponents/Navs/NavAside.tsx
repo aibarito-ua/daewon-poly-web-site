@@ -32,7 +32,7 @@ const NavAside = () => {
     })
 
     const goLink = async (role: TRole, link: string) => {
-        console.log("link :::", link);
+        // console.log("link :::", link);
         const rolePath = role==='logout'? '': (role==='admin'? 'admin': (role==='teacher'?'teacher':'student'))
         navigate(`/${rolePath}/${link}`);
     }
@@ -57,8 +57,8 @@ const NavAside = () => {
     React.useEffect(()=>{
         const checkTargetPath = location.pathname.split('/')[2];
         const selectedTargetPath = navItems[role].selectedMenu[0].path;
-        console.log('navigate =',checkTargetPath)
-        console.log('nav =',navItems[role].selectedMenu[0].path)
+        // console.log('navigate =',checkTargetPath)
+        // console.log('nav =',navItems[role].selectedMenu[0].path)
         if (checkTargetPath!==selectedTargetPath) {
             setSelectMenu(checkTargetPath);
         }
@@ -80,8 +80,8 @@ const NavAside = () => {
                 <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`
-                        console.log('v.path =',v.path)
-                        console.log('selectedMenu =',selectedMenu)
+                        // console.log('v.path =',v.path)
+                        // console.log('selectedMenu =',selectedMenu)
                         return (
                             <li key={key} 
                             className={`div-to-button-hover-effect w-[172px] h-[74px] select-none ${

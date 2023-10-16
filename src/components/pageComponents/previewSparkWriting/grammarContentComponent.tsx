@@ -21,6 +21,15 @@ const GrammarContentComponent = {
         </svg>
 
       );
+    },
+    resetButtonDisabledIcon(props: SVGAttributes<SVGElement>):JSX.Element {
+        return (
+            <svg {...props} width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="34" height="34" rx="10" fill="#AAAAAA"/>
+            <rect x="0.5" y="0.5" width="33" height="33" rx="9.5" stroke="white" strokeOpacity="0.5"/>
+            <path opacity="0.6" d="M20.2245 13.0144H12.31L14.0241 11.2359C14.5172 10.7242 14.5172 9.89521 14.0241 9.38357C13.531 8.87236 12.732 8.87193 12.2389 9.38357L8.37025 13.3977L8.36646 13.4016C8.35342 13.4156 8.34038 13.4296 8.32775 13.444C8.32397 13.4483 8.3206 13.4527 8.31682 13.4571C8.30672 13.4688 8.29662 13.4806 8.28736 13.4929C8.28442 13.4968 8.28147 13.5007 8.27853 13.5042C8.26843 13.5173 8.25833 13.5304 8.24866 13.5439C8.24697 13.5466 8.24529 13.5487 8.24361 13.5514C8.23309 13.5662 8.22257 13.5815 8.21247 13.5972L8.21121 13.5994C8.09971 13.7731 8.02735 13.9757 8.00631 14.1944C8.00631 14.1975 8.00589 14.2009 8.00547 14.204C8.00379 14.2219 8.00252 14.2402 8.00168 14.2586C8.00084 14.2804 8 14.3022 8 14.3241C8 14.3459 8.00042 14.3677 8.00168 14.3895C8.00252 14.4079 8.00421 14.4258 8.00547 14.4441C8.00547 14.4472 8.00547 14.4507 8.00631 14.4537C8.02693 14.6724 8.09971 14.875 8.21121 15.0487L8.21247 15.0505C8.22257 15.0662 8.23309 15.081 8.24361 15.0963C8.24529 15.0989 8.24697 15.1011 8.24866 15.1037C8.25833 15.1173 8.26843 15.1304 8.27853 15.1435C8.28147 15.1474 8.28442 15.1513 8.28736 15.1548C8.29704 15.167 8.30714 15.1788 8.31682 15.1906C8.3206 15.195 8.32397 15.1993 8.32775 15.2037C8.34038 15.2181 8.35342 15.2321 8.36646 15.2461L8.37025 15.25L12.2389 19.2641C12.4855 19.5199 12.8082 19.6478 13.1313 19.6478C13.4544 19.6478 13.7776 19.5199 14.0237 19.2641C14.5168 18.7525 14.5168 17.9234 14.0237 17.4118L12.3096 15.6333H20.2241C22.0169 15.6333 23.4756 17.1468 23.4756 19.007C23.4756 20.8671 22.0169 22.3807 20.2241 22.3807H18.1313C17.4342 22.3807 16.8691 22.967 16.8691 23.6903C16.8691 24.4137 17.4342 25 18.1313 25H20.2241C23.4091 25 26 22.3117 26 19.007C26 15.7023 23.4095 13.0144 20.2245 13.0144Z" fill="white"/>
+            </svg>
+        )
     }
     ,
     titleCompareDif1: (
@@ -44,7 +53,7 @@ const GrammarContentComponent = {
             return <span className='' key={sentenceKey}>
                 <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
                 {sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
-                    console.log('word =',word)
+                    // console.log('word =',word)
                     let returnValue:any = '';
                     const wordElementsLength = word.length;
                     // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
@@ -99,7 +108,9 @@ const GrammarContentComponent = {
                                 // before word check
                                 sentence[wordIndex-1].length > 1 ? false : true
                             );
-                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                return e !== null && e !== undefined && e.replace(' ','') !== '';
+                            }).slice(-1)[0]:'';
                             // after check
                             // word 유무
                             // 수정될 단어 check
@@ -111,7 +122,10 @@ const GrammarContentComponent = {
                                 // afster word check
                                 sentence[wordIndex+1].length > 1 ? false:true
                             );
-                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                            
+                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                return e !== null && e !== undefined && e.replace(' ','') !== '';
+                            }).slice(0)[0] : '';
                             
                             // set values
                             const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
@@ -161,7 +175,9 @@ const GrammarContentComponent = {
                                 // before word check
                                 sentence[wordIndex-1].length > 1 ? false : true
                             );
-                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                return e !== null && e !== undefined && e.replace(' ','') !== '';
+                            }).slice(-1)[0]:'';
                             // after check
                             // word 유무
                             // 수정될 단어 check
@@ -173,7 +189,9 @@ const GrammarContentComponent = {
                                 // afster word check
                                 sentence[wordIndex+1].length > 1 ? false:true
                             );
-                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                return e !== null && e !== undefined && e.replace(' ','') !== '';
+                            }).slice(0)[0] : '';
                             
                             // set values
                             const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
@@ -392,7 +410,9 @@ const GrammarContentComponent = {
                                     // before word check
                                     sentence[wordIndex-1].length > 1 ? false : true
                                 );
-                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                    return e !== null && e !== undefined && e.replace(' ','') !== '';
+                                }).slice(-1)[0]:'';
                                 // after check
                                 // word 유무
                                 // 수정될 단어 check
@@ -404,7 +424,9 @@ const GrammarContentComponent = {
                                     // afster word check
                                     sentence[wordIndex+1].length > 1 ? false:true
                                 );
-                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                    return e !== null && e !== undefined && e.replace(' ','') !== '';
+                                }).slice(0)[0] : '';
                                 
                                 // set values
                                 const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
@@ -460,7 +482,10 @@ const GrammarContentComponent = {
                                     // before word check
                                     sentence[wordIndex-1].length > 1 ? false : true
                                 );
-                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                                
+                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                    return e !== null && e !== undefined && e.replace(' ','') !== '';
+                                }).slice(-1)[0]:'';
                                 // after check
                                 // word 유무
                                 // 수정될 단어 check
@@ -472,7 +497,9 @@ const GrammarContentComponent = {
                                     // afster word check
                                     sentence[wordIndex+1].length > 1 ? false:true
                                 );
-                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(/[\s\n]/gmi).filter((e)=>{
+                                    return e !== null && e !== undefined && e.replace(' ','') !== '';
+                                }).slice(0)[0] : '';
                                 
                                 // set values
                                 const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (

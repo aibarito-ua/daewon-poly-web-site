@@ -62,7 +62,7 @@ const PreviewSparkWriting = (props:any) => {
     // undo history init
     const setInitHistorys = (hist:{title:TTitleHistory, body:TGrammarResponseResult[]}) => {
         const stateValue = GrammarContentComponent.setTInitHistorys(hist, bodyHistory);
-        console.log('stateValue 49row==',stateValue)
+      //  console.log('stateValue 49row==',stateValue)
         if (stateValue!==undefined) setBodyHistory(stateValue);
     }
     const setTitleValue = (hist:TTitleHistory) => {
@@ -113,6 +113,8 @@ const PreviewSparkWriting = (props:any) => {
     const [isGrammarProceed, setIsGrammarProceed] = React.useState<boolean>(false);
     // submit check flag
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
+    // grammar가 끝난 후 현재 페이지 분기처리
+    const [isPreview, setIsPreview] = React.useState<boolean>(true);
     
     // param hook
     const params = useParams();
@@ -144,10 +146,10 @@ const PreviewSparkWriting = (props:any) => {
             const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
             // check submit?
             const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.status;
-            console.log('checkTarget =',checkTarget,'\ncheckSubmitted=',checkSubmitted)
-            console.log(`sparkWritingData[${unitIndex}]=`,sparkWritingData[unitIndex])
+          //  console.log('checkTarget =',checkTarget,'\ncheckSubmitted=',checkSubmitted)
+          //  console.log(`sparkWritingData[${unitIndex}]=`,sparkWritingData[unitIndex])
             if (checkSubmitted > 1) {
-                console.log('test 11')
+              //  console.log('test 11')
                 setIsSubmitted(true);
                 
             } else {
@@ -173,13 +175,14 @@ const PreviewSparkWriting = (props:any) => {
                         }
                     }
                 }
-                if (bodyGrammarData.present.length > 0) {
+                if (bodyGrammarData.present && bodyGrammarData.present.length > 0) {
         
                     setBodyHistory({
                         title: titleGrammarData,
                         body: bodyGrammarData
                     })
                     setIsGrammarProceed(true);
+                    setIsPreview(false)
                     setGuideFlag(1)
                 }
             }
@@ -221,7 +224,7 @@ const PreviewSparkWriting = (props:any) => {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
             const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken);
-            console.log('res ====',res)
+          //  console.log('res ====',res)
             if (res.result_body.length>0) {
                 const unitId = sparkWritingData[unitIndex].unit_id
                 const proofReadingCountUpdateValue = ProofReadingCountValue+1;
@@ -230,8 +233,9 @@ const PreviewSparkWriting = (props:any) => {
                 if (updateCountAPI.statusCode === 200) {
                     setProofreadingCount(unitId)
                     setCommonStandbyScreen({openFlag:false})
+                    setIsPreview(false)
                     setIsGrammarProceed(true);
-                    console.log('res grammar =',res)
+                  //  console.log('res grammar =',res)
                     setInitHistorys({
                         title: res.result_title,
                         body: res.result_body
@@ -249,7 +253,7 @@ const PreviewSparkWriting = (props:any) => {
     const checkSelectedGrammarModals = () => {
         const checkTitle = checkSelectedTitleGrammarModals();
         const checkBody = checkSelectedBodyGrammarModals();
-        console.log('check title =',checkTitle,' body =',checkBody)
+      //  console.log('check title =',checkTitle,' body =',checkBody)
         return checkTitle? true: (checkBody?true:false);
     }
     // check title select grammars
@@ -280,11 +284,11 @@ const PreviewSparkWriting = (props:any) => {
                         }
                     }
                     if ((checkType1 || checkTypeMinus1) && !checkType2) {
-                        console.log('check body true ==',wordTitleValue)
-                        console.log('checkType1::',checkType1)
-                        console.log('checkTypeMinus1::',checkTypeMinus1)
-                        console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
-                        console.log('checkType2::',checkType2)
+                      //  console.log('check body true ==',wordTitleValue)
+                      //  console.log('checkType1::',checkType1)
+                      //  console.log('checkTypeMinus1::',checkTypeMinus1)
+                      //  console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
+                      //  console.log('checkType2::',checkType2)
                         return true; // 조건 충족 시 함수 종료
                     } else {
                         checkType0 = false;
@@ -300,7 +304,7 @@ const PreviewSparkWriting = (props:any) => {
     };
     // check body select grammars
     const checkSelectedBodyGrammarModals = () => {
-        console.log('body hist ===',bodyHistory.body.present)
+      //  console.log('body hist ===',bodyHistory.body.present)
         for (const item of bodyHistory.body.present) {
             for (const presentBody of item.data) {
                 let checkType0 = false;
@@ -318,11 +322,11 @@ const PreviewSparkWriting = (props:any) => {
                         }
     
                         if ((checkType1 || checkTypeMinus1) && !checkType2) {
-                            console.log('check body true ==',wordBodyValue)
-                            console.log('checkType1::',checkType1)
-                            console.log('checkTypeMinus1::',checkTypeMinus1)
-                            console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
-                            console.log('checkType2::',checkType2)
+                          //  console.log('check body true ==',wordBodyValue)
+                          //  console.log('checkType1::',checkType1)
+                          //  console.log('checkTypeMinus1::',checkTypeMinus1)
+                          //  console.log('(checkType1 || checkTypeMinus1) ::',(checkType1 || checkTypeMinus1))
+                          //  console.log('checkType2::',checkType2)
                             return true; // 조건 충족 시 함수 종료
                         } else {
                             checkType0 = false;
@@ -368,7 +372,7 @@ const PreviewSparkWriting = (props:any) => {
     }
 
     const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
-        console.log('main div =',mainDiv)
+      //  console.log('main div =',mainDiv)
         if (mainDiv === 'Body') {
             let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
             let dumybodyHistory = dumyBodyHist.body.present;
@@ -383,7 +387,7 @@ const PreviewSparkWriting = (props:any) => {
                     break;
                 }
             }
-            console.log('checkIsSelected ==',checkIsSelected)
+          //  console.log('checkIsSelected ==',checkIsSelected)
             if (!checkIsSelected) {
                 const userSelectData:TGrammarResDiff = {
                     key: `${wordIndex}-${wordInnerLength}`,
@@ -447,8 +451,8 @@ const PreviewSparkWriting = (props:any) => {
     }
     const replaceUpdateSparkWritingTitle = () => {
         const unitId = sparkWritingData[unitIndex].unit_id
-        console.log('unit index =',sparkWritingData[unitIndex])
-        console.log('unit ==',unitId)
+      //  console.log('unit index =',sparkWritingData[unitIndex])
+      //  console.log('unit ==',unitId)
         for (const presentTitle of bodyHistory.title.present) {
             let presentParagraghString = '';
             for (const iPresentTitleValue of presentTitle) {
@@ -479,15 +483,15 @@ const PreviewSparkWriting = (props:any) => {
                 }
 
             }
-            console.log('in checking proceed ')
-            console.log('unitId : ',unitId, ', unitIndex ::',unitIndex)
+          //  console.log('in checking proceed ')
+          //  console.log('unitId : ',unitId, ', unitIndex ::',unitIndex)
             
             setOutlineInputText(presentParagraghString,unitId, unitIndex,1,1)
         }
     }
     const replaceUpdateSparkWritingBody = () => {
         const unitId = sparkWritingData[unitIndex].unit_id
-        console.log('body history =',bodyHistory.body.present)
+      //  console.log('body history =',bodyHistory.body.present)
         for (const item of bodyHistory.body.present) {
             for (const presentBody of item.data) {
                 
@@ -520,7 +524,7 @@ const PreviewSparkWriting = (props:any) => {
                         presentParagraghString+=wordString;
                     }
                 }
-                console.log('presentBody:::',presentParagraghString)
+              //  console.log('presentBody:::',presentParagraghString)
                 // paragragh update store
                 setOutlineInputText(presentParagraghString,unitId, unitIndex,item.order_index,1 )
             }
@@ -593,7 +597,7 @@ const PreviewSparkWriting = (props:any) => {
             proofreading_count: targetData.proofreading_count,
             contents: contentsData
         };
-        console.log('data ==',data)
+      //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
         if (isSaveTemporary) {
             if (isGrammarSave) {
@@ -642,7 +646,7 @@ const PreviewSparkWriting = (props:any) => {
         if (guideFlag===undefined) {
             setGuideFlag(0)
         } else if (guideFlag === 0) {
-            if (guideText.length === 0||guideText===undefined) setGuideText(['* Check your writing.']);
+            if (guideText.length === 0||guideText===undefined) setGuideText(['Check your writing.']);
         } else if (guideFlag === 1) {
             
             const guideTextData = [
@@ -707,32 +711,34 @@ const PreviewSparkWriting = (props:any) => {
             const checkGrammarsSelectAll = checkSelectedGrammarModals();
             if (countofUseAIProofreading===2) {
                 if (checkGrammarsSelectAll) {
-                    console.log('grammar 진행 중')
+                  //  console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
+                    setIsGrammarProceed(true)
                     setGoBackFromDraftInUnitPage(()=>{
                         goBackEvent()
                     })
                     setOpenSubmitButton(false)
                 } else {
-                    console.log('grammar 진행 종료')
+                  //  console.log('grammar 진행 종료')
                     replaceUpdateSparkWritingTitle()
                     replaceUpdateSparkWritingBody()
                     setIsGrammarProceed(false)
                     setOpenSubmitButton(true)
                 }
             } else if (countofUseAIProofreading>=0 && countofUseAIProofreading <2) {
-                console.log(bodyHistory)
+              //  console.log(bodyHistory)
                 if (checkGrammarsSelectAll) {
                     // grammar 진행중
-                    console.log('grammar 진행 중')
+                  //  console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
+                    setIsGrammarProceed(true)
                     setGoBackFromDraftInUnitPage(()=>{
                         goBackEvent()
                     })
                     setOpenSubmitButton(false);
                 } else {
                     // grammar 종료
-                    console.log('grammar 진행 종료')
+                  //  console.log('grammar 진행 종료')
                     replaceUpdateSparkWritingTitle()
                     replaceUpdateSparkWritingBody()
                     setIsGrammarProceed(false)
@@ -741,7 +747,7 @@ const PreviewSparkWriting = (props:any) => {
             }
         } else {
             // grammar 진행 전
-            console.log('grammar 진행 전')
+          //  console.log('grammar 진행 전')
             
             if (countofUseAIProofreading>0) {
                 if (countofUseAIProofreading===2) {
@@ -772,7 +778,7 @@ const PreviewSparkWriting = (props:any) => {
         }
         if (isSubmitted===undefined || !isSubmitted) {
             const checkSubmit = sparkWritingData[unitIndex].draft_1_status.submit_date;
-            console.log('check submit ==',checkSubmit)
+          //  console.log('check submit ==',checkSubmit)
             if (checkSubmit===null||checkSubmit===undefined||checkSubmit==='') {
                 if (isStandbyFeedback!=='') {
                     setIsSubmitted(true)
@@ -796,9 +802,13 @@ const PreviewSparkWriting = (props:any) => {
                 }
             }
         }
-        console.log('submit ==',isSubmitted)
-        console.log('submit ==',sparkWritingData[unitIndex].proofreading_count)
-        console.log('test outline items =',sparkWritingData)
+       console.log('isSubmitted ==',isSubmitted)
+       console.log('proofreading count ==',sparkWritingData[unitIndex].proofreading_count)
+       console.log('openSubmitButton =',openSubmitButton)
+       console.log('isPreview =',isPreview)
+       console.log('isGrammarProceed =',isGrammarProceed)
+      //  console.log('test outline items =',sparkWritingData)
+
         return ()=>{
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
@@ -856,10 +866,14 @@ const PreviewSparkWriting = (props:any) => {
                     })}
                     </p>
                     {(guideFlag===1 && bodyHistory.title) && (
-                        <button className={`absolute top-[8px] right-[15px] items-center ${isUndoBody ? ' cursor-pointer':'hidden'}`}
+                        <button className={`absolute top-[8px] right-[15px] items-center ${isUndoBody ? ' cursor-pointer':'cursor-not-allowed'}`}
                         disabled={!isUndoBody}
-                        onClick={()=>undoValue()}
-                        ><GrammarContentComponent.resetButtonIcon className='w-[34px] h-[34px]' /></button>
+                        onClick={isUndoBody ? ()=>undoValue():()=>{}}
+                        >{
+                            isUndoBody 
+                            ? <GrammarContentComponent.resetButtonIcon className='w-[34px] h-[34px]' />
+                            : <GrammarContentComponent.resetButtonDisabledIcon className='w-[34px] h-[34px]' />
+                        }</button>
                     )}
                 </div>
                 {/* content */}
@@ -881,7 +895,7 @@ const PreviewSparkWriting = (props:any) => {
                                 return <span className='pb-[20px]' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
-                                        console.log('==test draft jsx ===',v)
+                                        // console.log('==test draft jsx ===',v)
                                         return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip)
                                         // return <></>
                                     })}
@@ -946,12 +960,19 @@ const PreviewSparkWriting = (props:any) => {
                         }}>Save</div>
                     }
                     {!isSubmitted &&
-                        <button className={!isSubmitted 
-                            ? (
-                                isGrammarProceed ? 'hidden':
-                                `${sparkWritingData[unitIndex].proofreading_count<2?'save-button-active div-to-button-hover-effect':'save-button'}`
-                            )
-                            :'hidden'
+                    
+                        <button className={
+                            isPreview 
+                                ? (
+                                    // preview 화면
+                                    sparkWritingData[unitIndex].proofreading_count === 2
+                                        ? 'save-button-active div-to-button-hover-effect'
+                                        : 'hidden'
+                                )
+                                : (
+                                    // proofreading화면 분기점
+                                    'hidden'
+                                )
                         } 
                         onClick={()=>{
                             if (sparkWritingData[unitIndex].proofreading_count===2) {
@@ -979,11 +1000,19 @@ const PreviewSparkWriting = (props:any) => {
                         <button className={
                             
                             !isSubmitted 
-                            ? (
-                                isGrammarProceed ? 'hidden':
-                                `${sparkWritingData[unitIndex].proofreading_count===2?'save-button-active div-to-button-hover-effect':'save-button'}`
-                            )
+                            
+                                ?(
+                                    sparkWritingData[unitIndex].proofreading_count===2
+                                    ? 'save-button-active div-to-button-hover-effect'
+                                    : 'save-button'
+                                )
+                                
                             :'hidden'
+
+                            // submit 활성화 조건
+                            // !isSubmitted && (openSubmitButton && countofUseAIProofreading>0) 
+                            // submit 비활성화 조건
+                            // !isSubmitted && (openSubmitButton && countofUseAIProofreading>0) && isGrammarProceed
                         } 
                         onClick={()=>{
                             if (sparkWritingData[unitIndex].proofreading_count===2) {
@@ -1000,9 +1029,9 @@ const PreviewSparkWriting = (props:any) => {
                                             "unit_id": sparkWritingData[unitIndex].unit_id,
                                             "proofreading_count": 0
                                         }
-                                        console.log('data =',data)
+                                      //  console.log('data =',data)
                                         const reset = await grammarReset(data, userInfo.accessToken);
-                                        console.log('reset =',reset)
+                                      //  console.log('reset =',reset)
                                         if (reset.statusCode === 200) {
                                             setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);
                                             await beforeRenderedFn();
@@ -1015,9 +1044,28 @@ const PreviewSparkWriting = (props:any) => {
                     }
 
                     {!isSubmitted &&
-                        <button className={ !isSubmitted ?`${(openSubmitButton && countofUseAIProofreading>0)?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
+                        <button className={ 
+                            isPreview 
+                                ? (
+                                    // preview 화면
+                                    sparkWritingData[unitIndex].proofreading_count === 2
+                                        ? 'save-button-active div-to-button-hover-effect'
+                                        : 'hidden'
+                                )
+                                : (
+                                    // proofreading화면 분기점
+                                    isGrammarProceed
+                                        ? 'save-button'
+                                        : (
+                                            sparkWritingData[unitIndex].proofreading_count > 0 
+                                                ? 'save-button-active div-to-button-hover-effect'
+                                                :'save-button'
+                                        )
+                                )
+                        }
+                            onClick={()=>{
                             const checkGrammarsSelectAll = checkSelectedGrammarModals();
-                            console.log('select all =',checkGrammarsSelectAll)
+                          //  console.log('select all =',checkGrammarsSelectAll)
                             // grammar 시작 후
                             // select 완료 여부
                             // grammar 시작 전
@@ -1025,7 +1073,7 @@ const PreviewSparkWriting = (props:any) => {
                                 replaceUpdateSparkWritingTitle();
                                 replaceUpdateSparkWritingBody();
                             }
-                            console.log('openSubmitButton =',openSubmitButton)
+                          //  console.log('openSubmitButton =',openSubmitButton)
                             if (openSubmitButton&&countofUseAIProofreading>0) {
                                 // submit date check
                                 const currentSparkWritingData = sparkWritingData[unitIndex]
@@ -1076,12 +1124,12 @@ const PreviewSparkWriting = (props:any) => {
                                             contents: contentsData,
                                             proofreading_count: currentSparkWritingData.proofreading_count
                                         }
-                                        console.log('submit item = ',submitData)
+                                      //  console.log('submit item = ',submitData)
                                         commonAlertClose();
                                         setCommonStandbyScreen({openFlag:true})
                                         const submit = await draft1stSubmit(submitData, userInfo.accessToken);
                                         
-                                        console.log('submit return data =',submit)
+                                      //  console.log('submit return data =',submit)
                                         if (submit) {
                                             setCommonStandbyScreen({openFlag:false})
                                             commonAlertOpen({
@@ -1098,16 +1146,6 @@ const PreviewSparkWriting = (props:any) => {
                                     },
                                     closeEvent: async() => {
                                         commonAlertClose();
-                                        // if (noMessages!=='') {
-                                        //     commonAlertOpen({
-                                        //         messages: [noMessages],
-                                        //         useOneButton: true,
-                                        //         yesButtonLabel: 'OK',
-                                        //         yesEvent: ()=> commonAlertClose(),
-                                        //     })
-                                        // } else {
-                                        //     commonAlertClose();
-                                        // }
                                     }
                                 })
                             }

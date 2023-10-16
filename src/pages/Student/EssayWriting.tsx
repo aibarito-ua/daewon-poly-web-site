@@ -190,7 +190,15 @@ const EssayWriting = () => {
             const data = sparkWritingData[unitIndex];
             // console.log('fold 0', data)
             const leng = data.draft_1_outline.length;
-            const foldInit = Array.from({length: leng}, ()=>false)
+            let isFirstComeHere = false;
+            for (let i = 0; i < data.draft_1_outline.length; i++) {
+                const targetInput = data.draft_1_outline[i].input_content;
+                if (targetInput.length > 0) {
+                    isFirstComeHere=true;
+                    break;
+                }
+            }
+            const foldInit = isFirstComeHere ? Array.from({length: leng}, ()=>true) : Array.from({length: leng}, ()=>false)
             setFoldFlag(foldInit)
         } else {
             if (updateFoldIndex !== undefined) {
@@ -524,6 +532,59 @@ const EssayWriting = () => {
                     })
                     setIsPreviewButtonOpen(false);
                     setIsSaveButtonOpen(false)
+                }
+            } else if (DraftIndex==='2') {
+                // draft2ndSaveActive
+                // draft2ndSubmitActive
+                let questionOpenSave = false;
+                if (draft2ndSaveActive||draft2ndSubmitActive) {
+                    questionOpenSave = true;
+                } else {
+                    questionOpenSave = false;
+                }
+                if (questionOpenSave) {
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=> {
+                                        setCommonStandbyScreen({openFlag:true})
+                                        setDraft2ndPageSet('')
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            
+                        })
+                    })
+                } else {
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            
+                        })
+                    })
                 }
             }
         }
@@ -950,33 +1011,37 @@ const EssayWriting = () => {
                 </div>
                 <div className='absolute right-[30px] bottom-[25px] flex flex-row gap-[10px]'>
                     {/* <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div> */}
-                    <div className={draft2ndSaveActive ? 'draft-2nd-save-button': 'draft-2nd-save-button-readonly'} onClick={async () => {
-                        commonAlertOpen({
-                            messages:['Do you want to return to edit your writing?'],
-                            yesButtonLabel: 'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                commonAlertClose();
-                                setCommonStandbyScreen({openFlag:true})
-                                setDraft2ndPageSet('')
-                                await temporarySaveFunction();
-                            }
-                        })
-                    }}/>
-                    <div className={draft2ndSubmitActive ? 'draft-2nd-submit-button':'draft-2nd-submit-button-readonly'} onClick={async()=>{
-                        commonAlertOpen({
-                            messages: ['Are you ready to submit?'],
-                            head: `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
-                            yesButtonLabel: 'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                commonAlertClose();
-                                setCommonStandbyScreen({openFlag:true})
-                                setDraft2ndPageSet('')
-                                await submit2ndDraftFunction();
-                            },
-                        })
-                    }}/>
+                    <div className={`${draft2ndSaveActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
+                        if (draft2ndSaveActive) {
+                            commonAlertOpen({
+                                messages:['Do you want to return to edit your writing?'],
+                                yesButtonLabel: 'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    commonAlertClose();
+                                    setCommonStandbyScreen({openFlag:true})
+                                    setDraft2ndPageSet('')
+                                    await temporarySaveFunction();
+                                }
+                            })
+                        }
+                    }}>Save</div>
+                    <div className={`${draft2ndSubmitActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
+                        if (draft2ndSubmitActive) {
+                            commonAlertOpen({
+                                messages: ['Are you ready to submit?'],
+                                head: `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                                yesButtonLabel: 'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    commonAlertClose();
+                                    setCommonStandbyScreen({openFlag:true})
+                                    setDraft2ndPageSet('')
+                                    await submit2ndDraftFunction();
+                                },
+                            })
+                        }
+                    }}>Submit</div>
                 </div>
             </div>
         )

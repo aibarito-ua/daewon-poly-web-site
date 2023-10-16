@@ -1,3 +1,4 @@
+import React from 'react';
 import { progressIcons } from '../../../util/svgs/commonProgressIcons';
 import ProgressPercent from '../../chartComponents/progressDoughnutChart'
 const THeadText = (props: {str1:string,str2:string}) => {
@@ -36,13 +37,25 @@ const ProgressTable = (props:any) => {
     const {
         data
     } = props;
+    const [isElectron, setIsElectron] = React.useState<boolean>(false);
+    React.useEffect(()=>{
+        if (window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 ) {
+            setIsElectron(true)
+        } else {
+            setIsElectron(false)
+        }
+    },[])
     const target:TSparkWritingDatas = data;
     // sort by unit index
     const unitDataArray = target.sort((a,b) => {
         return a.unit_index - b.unit_index
     });
     return (
-        <table className='w-[1010px] p-[10px]'>
+        <table className={
+            isElectron
+            ?'w-[1010px] p-[10px]'
+            :'w-full p-[10px]'
+        }>
             <thead className='table-header-group'>
                 <tr className='progress-page-view-box-table-head-row'>
                     <td className='w-[440px]'></td>

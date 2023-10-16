@@ -27,6 +27,7 @@ import PortfolioModalComponent from '../components/toggleModalComponents/Portfol
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
+    
     const publicRoutes = () => {
         const routeValue = routeValues.publicRoutes;
         // 각 권한별 기본 페이지
@@ -53,8 +54,9 @@ export default function Roter() {
     //     const routeValue = routeValues.privateRoutes;
 
     // }
+    
     return (
-        <div className='container-wrapper relative'>
+        <div className={window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 ? 'container-wrapper-electron relative':'container-wrapper relative'}>
             {role!=='logout' && <Nav />}
             {role!=='logout' && <NavAside />}
             <div className="max-display-screen">
