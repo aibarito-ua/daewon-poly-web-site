@@ -1221,6 +1221,18 @@ bg-[#ffea2c]
   pt-[22px]
   justify-center
 }
+.grammar-tooltip-custom-before-after-texts {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: center;
+  @apply
+  px-[4px]
+  py-[1px]
+  rounded-[5px]
+  select-none
+}
 .grammar-tooltip-custom-content-delete-text {
   font-family: 'Roboto';
   font-size: 18px;
@@ -1234,6 +1246,7 @@ bg-[#ffea2c]
   text-[#eb3a3a]
   bg-[#ffe8e8]
   line-through
+  select-none
 }
 .grammar-tooltip-custom-content-add-text {
   font-family: 'Roboto';
@@ -1247,6 +1260,7 @@ bg-[#ffea2c]
   rounded-[5px]
   text-[#00be91]
   bg-[#def4e7]
+  select-none
 }
 
 /* Outlint Format Button Custom */

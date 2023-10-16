@@ -54,7 +54,14 @@ const GrammarContentComponent = {
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                         const dataKey = word[0].key;
                         const currentWord = word[0].word;
-                        const reasons = word[0].correction_reason;
+                        const reasonValue = word[0].correction_reason;
+                        const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                            if (reasonValue.length === reasonTextIndex-1) {
+                                return reasonText
+                            } else {
+                                return reasonText + '/'
+                            }
+                        })):reasonValue[0];
 
                         const emptyCheckStart = currentWord.match(/^\s/gmi);
                         const emptyCheckEnd = currentWord.match(/\s$/gmi);
@@ -77,21 +84,61 @@ const GrammarContentComponent = {
 
                         if (compareWordFlag === 1) {
                             // only add
-                            const textTagId = 'title-'+mainTagKey+'-add'
-                            const describeText = [
-                                reasons,
+                            // before check
+                            // 수정될 단어 check
+                            // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                            
+                            // beforeCheckDisplay : 0,2 -> false, 1-> true
+                            // 0: 단어 없음 - display none
+                            // 1: 단어 수정 없음 - display
+                            // 2: 단어 수정 - display none
+                            const beforeCheckDisplay = wordIndex===0 ? (
+                                // before word check pass
+                                false
+                            ):(
+                                // before word check
+                                sentence[wordIndex-1].length > 1 ? false : true
+                            );
+                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                            // after check
+                            // word 유무
+                            // 수정될 단어 check
+                            // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                            const afterCheckDisplay = wordIndex === (sentence.length-1) ? (
+                                // after word check pass
+                                false
+                            ) : (
+                                // afster word check
+                                sentence[wordIndex+1].length > 1 ? false:true
+                            );
+                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                            
+                            // set values
+                            const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
+                                <span className='grammar-tooltip-custom-content-wrap'>
+                                    <pre className='grammar-tooltip-custom-before-after-texts'>{beforeWord}</pre>
+                                    <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
+                                    <pre className='grammar-tooltip-custom-before-after-texts'>{afterWord}</pre>
+                                </span>
+                            ) : (
                                 <span className='grammar-tooltip-custom-content-wrap'>
                                     <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
                                 </span>
+                            )
+                            const textTagId = 'title-'+mainTagKey+'-add'
+                            const describeText = [
+                                reasons,
+                                displayWordInModal
                             ]
+
                             returnValue = (
                                 <GrammarTooltipCustom 
                                     addEmpty={displayTextCheck}
                                     mainTagkey={mainTagKey}
                                     textTagid={textTagId} 
                                     tagType={'add'} 
-                                    compareResultText={displayText}
-                                    tooltipText={describeText} 
+                                    compareResultText={displayText} // page에 보여줄 단어
+                                    tooltipText={describeText} // 모달의 툴팁에 보여줄 단어
                                     acceptEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                     ignoreEventFunction={()=>clickTooltip('', 'Title', 0,paragraphIndex, sentenceIndex, wordIndex)} 
                                     thisIndex={[]}       
@@ -99,13 +146,60 @@ const GrammarContentComponent = {
                             )
                         } else if (compareWordFlag === -1) {
                             // only delete
+                            // before check
+                            // 수정될 단어 check
+                            // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                            
+                            // beforeCheckDisplay : 0,2 -> false, 1-> true
+                            // 0: 단어 없음 - display none
+                            // 1: 단어 수정 없음 - display
+                            // 2: 단어 수정 - display none
+                            const beforeCheckDisplay = wordIndex===0 ? (
+                                // before word check pass
+                                false
+                            ):(
+                                // before word check
+                                sentence[wordIndex-1].length > 1 ? false : true
+                            );
+                            const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                            // after check
+                            // word 유무
+                            // 수정될 단어 check
+                            // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                            const afterCheckDisplay = wordIndex === (sentence.length-1) ? (
+                                // after word check pass
+                                false
+                            ) : (
+                                // afster word check
+                                sentence[wordIndex+1].length > 1 ? false:true
+                            );
+                            const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                            
+                            // set values
+                            const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
+                                <span className='grammar-tooltip-custom-content-wrap'>
+                                    <pre className='grammar-tooltip-custom-before-after-texts'>{beforeWord}</pre>
+                                    <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                    <pre className='grammar-tooltip-custom-before-after-texts'>{afterWord}</pre>
+                                </span>
+                            ) : (
+                                <span className='grammar-tooltip-custom-content-wrap'>
+                                    <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                </span>
+                            )
                             const textTagId = 'title-'+mainTagKey+'-del'
                             const describeText = [
                                 reasons,
-                                <span className='grammar-tooltip-custom-content-wrap'>
-                                <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
-                                </span>
-                            ];
+                                displayWordInModal
+                            ]
+
+                            // const textTagId = 'title-'+mainTagKey+'-del'
+                            // const describeText = [
+                            //     reasons,
+                            //     <span className='grammar-tooltip-custom-content-wrap'>
+                            //     <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                            //     </span>
+                            // ];
                             returnValue = (
                                 <GrammarTooltipCustom 
                                     addEmpty={displayTextCheck}
@@ -143,12 +237,28 @@ const GrammarContentComponent = {
                                 // add
                                 addKey = targetInnerWord.key;
                                 addWord = targetInnerWord.word;
-                                reason = targetInnerWord.correction_reason
+                                // reason = targetInnerWord.correction_reason
+                                const reasonValue = targetInnerWord.correction_reason;
+                                reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                                    if (reasonValue.length === reasonTextIndex-1) {
+                                        return reasonText
+                                    } else {
+                                        return reasonText + '/'
+                                    }
+                                })):reasonValue[0];
                             } else if (targetInnerWord.type===-1) {
                                 // delete
                                 deleteKey = targetInnerWord.key;
                                 deleteWord = targetInnerWord.word;
-                                reason = targetInnerWord.correction_reason
+                                // reason = targetInnerWord.correction_reason
+                                const reasonValue = targetInnerWord.correction_reason;
+                                reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                                    if (reasonValue.length === reasonTextIndex-1) {
+                                        return reasonText
+                                    } else {
+                                        return reasonText + '/'
+                                    }
+                                })):reasonValue[0];
                             } else if (targetInnerWord.type === 2) {
                                 // check selected
                                 selectedWord=targetInnerWord.word;
@@ -237,7 +347,15 @@ const GrammarContentComponent = {
                             const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                             const dataKey = word[0].key;
                             const currentWord = word[0].word;
-                            const reasons = word[0].correction_reason;
+                            // const reasons = word[0].correction_reason;
+                            const reasonValue = word[0].correction_reason;
+                            const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                                if (reasonValue.length === reasonTextIndex-1) {
+                                    return reasonText
+                                } else {
+                                    return reasonText + '/'
+                                }
+                            })):reasonValue[0];
                             const emptyCheckStart = currentWord.match(/^\s/gmi);
                             const emptyCheckEnd = currentWord.match(/\s$/gmi);
                             let displayText = '';
@@ -259,13 +377,59 @@ const GrammarContentComponent = {
 
                             if (compareWordFlag === 1) {
                                 // only add
+                                // before check
+                                // 수정될 단어 check
+                                // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                                
+                                // beforeCheckDisplay : 0,2 -> false, 1-> true
+                                // 0: 단어 없음 - display none
+                                // 1: 단어 수정 없음 - display
+                                // 2: 단어 수정 - display none
+                                const beforeCheckDisplay = wordIndex===0 ? (
+                                    // before word check pass
+                                    false
+                                ):(
+                                    // before word check
+                                    sentence[wordIndex-1].length > 1 ? false : true
+                                );
+                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                                // after check
+                                // word 유무
+                                // 수정될 단어 check
+                                // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                                const afterCheckDisplay = wordIndex === (sentence.length-1) ? (
+                                    // after word check pass
+                                    false
+                                ) : (
+                                    // afster word check
+                                    sentence[wordIndex+1].length > 1 ? false:true
+                                );
+                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                                
+                                // set values
+                                const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                        <pre className='grammar-tooltip-custom-before-after-texts'>{beforeWord}</pre>
+                                        <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
+                                        <pre className='grammar-tooltip-custom-before-after-texts'>{afterWord}</pre>
+                                    </span>
+                                ) : (
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                        <pre className='grammar-tooltip-custom-content-add-text'>{currentWord}</pre>
+                                    </span>
+                                )
                                 const textTagId = 'title-'+mainTagKey+'-add'
                                 const describeText = [
                                     reasons,
-                                    <span className='grammar-tooltip-custom-content-wrap'>
-                                        <pre className='grammar-tooltip-custom-content-add-text'>{displayText}</pre>
-                                    </span>
+                                    displayWordInModal
                                 ]
+                                // const textTagId = 'title-'+mainTagKey+'-add'
+                                // const describeText = [
+                                //     reasons,
+                                //     <span className='grammar-tooltip-custom-content-wrap'>
+                                //         <pre className='grammar-tooltip-custom-content-add-text'>{displayText}</pre>
+                                //     </span>
+                                // ]
                                 returnValue = (
                                     <GrammarTooltipCustom 
                                         addEmpty={displayTextCheck}
@@ -281,13 +445,59 @@ const GrammarContentComponent = {
                                 )
                             } else if (compareWordFlag === -1) {
                                 // only delete
+                                // before check
+                                // 수정될 단어 check
+                                // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                                
+                                // beforeCheckDisplay : 0,2 -> false, 1-> true
+                                // 0: 단어 없음 - display none
+                                // 1: 단어 수정 없음 - display
+                                // 2: 단어 수정 - display none
+                                const beforeCheckDisplay = wordIndex===0 ? (
+                                    // before word check pass
+                                    false
+                                ):(
+                                    // before word check
+                                    sentence[wordIndex-1].length > 1 ? false : true
+                                );
+                                const beforeWord = beforeCheckDisplay ? sentence[wordIndex-1][0].word.split(' ').slice(-1)[0]:'';
+                                // after check
+                                // word 유무
+                                // 수정될 단어 check
+                                // word 있고, 수정될 단어가 아닌 경우 display에 추가
+                                const afterCheckDisplay = wordIndex === (sentence.length-1) ? (
+                                    // after word check pass
+                                    false
+                                ) : (
+                                    // afster word check
+                                    sentence[wordIndex+1].length > 1 ? false:true
+                                );
+                                const afterWord = afterCheckDisplay ? sentence[wordIndex+1][0].word.split(' ').slice(0)[0] : '';
+                                
+                                // set values
+                                const displayWordInModal = beforeWord!=='' || afterWord!=='' ? (
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                        <pre className='grammar-tooltip-custom-before-after-texts'>{beforeWord}</pre>
+                                        <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                        <pre className='grammar-tooltip-custom-before-after-texts'>{afterWord}</pre>
+                                    </span>
+                                ) : (
+                                    <span className='grammar-tooltip-custom-content-wrap'>
+                                        <pre className='grammar-tooltip-custom-content-delete-text'>{currentWord}</pre>
+                                    </span>
+                                )
                                 const textTagId = 'title-'+mainTagKey+'-del'
                                 const describeText = [
                                     reasons,
-                                    <span className='grammar-tooltip-custom-content-wrap'>
-                                    <pre className='grammar-tooltip-custom-content-delete-text'>{displayText}</pre>
-                                    </span>
-                                ];
+                                    displayWordInModal
+                                ]
+                                // const textTagId = 'title-'+mainTagKey+'-del'
+                                // const describeText = [
+                                //     reasons,
+                                //     <span className='grammar-tooltip-custom-content-wrap'>
+                                //     <pre className='grammar-tooltip-custom-content-delete-text'>{displayText}</pre>
+                                //     </span>
+                                // ];
                                 returnValue = (
                                     <GrammarTooltipCustom 
                                         addEmpty={displayTextCheck}
@@ -317,6 +527,7 @@ const GrammarContentComponent = {
                             let reason:any = '';
                             let checkSelected = false;
                             let selectedWord = '';
+                            let isAccept = false;
                             
                             for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
                                 const targetInnerWord = word[innerWordIdx];
@@ -324,18 +535,35 @@ const GrammarContentComponent = {
                                     // add
                                     addKey = targetInnerWord.key;
                                     addWord = targetInnerWord.word;
-                                    reason = targetInnerWord.correction_reason
+                                    // reason = targetInnerWord.correction_reason
+                                    const reasonValue = targetInnerWord.correction_reason;
+                                    reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                                        if (reasonValue.length === reasonTextIndex-1) {
+                                            return reasonText
+                                        } else {
+                                            return reasonText + '/'
+                                        }
+                                    })):reasonValue[0];
                                 } else if (targetInnerWord.type===-1) {
                                     // delete
                                     deleteKey = targetInnerWord.key;
                                     deleteWord = targetInnerWord.word;
-                                    reason = targetInnerWord.correction_reason
+                                    // reason = targetInnerWord.correction_reason
+                                    const reasonValue = targetInnerWord.correction_reason;
+                                    reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
+                                        if (reasonValue.length === reasonTextIndex-1) {
+                                            return reasonText
+                                        } else {
+                                            return reasonText + '/'
+                                        }
+                                    })):reasonValue[0];
                                 } else if (targetInnerWord.type === 2) {
                                     // check selected
                                     selectedWord=targetInnerWord.word;
                                     checkSelected=true;
                                 }
                             }
+                            
                             
                             // // delete + add set
                             const JsxText = <span className='grammar-tooltip-custom-content-wrap'>
@@ -350,7 +578,8 @@ const GrammarContentComponent = {
                             const empty = ' ';
                             if (checkSelected) {
                                 const textTagId = 'title-'+mainTagKey + '-change'
-                                returnValue = <span key={mainTagKey} className='text-[#00be91]'><span id={textTagId}>{selectedWord}</span></span>
+                                isAccept = selectedWord === addWord;
+                                returnValue = <span key={mainTagKey} className={isAccept ? 'text-[#00be91]': ''}><span id={textTagId}>{selectedWord}</span></span>
                             } else {
                                 returnValue = (
                                     <span key={mainTagKey+'-both'}>

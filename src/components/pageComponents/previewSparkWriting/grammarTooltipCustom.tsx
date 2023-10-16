@@ -19,7 +19,7 @@ interface IGrammarTooltipCustomProps {
     textTagid: string;
     tagType: string; // "add" or "delete"
     compareResultText: string|JSX.Element;
-    tooltipText: (string[]|JSX.Element)[];
+    tooltipText: (string|string[]|JSX.Element)[];
     
     acceptEventFunction: Function;
     ignoreEventFunction: Function;

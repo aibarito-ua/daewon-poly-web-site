@@ -648,7 +648,6 @@ const PreviewSparkWriting = (props:any) => {
             const guideTextData = [
                 'Before you submit, check the revised writing.',
                 'Tap the colored text and choose whether to make changes or not.',
-                'When it\'s done, submit your 1st draft.'
             ];
             setGuideText(guideTextData)
         }
@@ -948,25 +947,42 @@ const PreviewSparkWriting = (props:any) => {
                     }
                     {!isSubmitted &&
                         <button className={!isSubmitted 
-                            ?`${sparkWritingData[unitIndex].proofreading_count<2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                            ? (
+                                isGrammarProceed ? 'hidden':
+                                `${sparkWritingData[unitIndex].proofreading_count<2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                            )
                             :'hidden'
                         } 
                         onClick={()=>{
-                            commonAlertOpen({
-                                messages: sparkWritingData[unitIndex].proofreading_count===2 ? ['You have already used AI proofreading twice.']: [
-                                    'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
-                                    `${sparkWritingData[unitIndex].proofreading_count}/2`
-                                ],
-                                yesButtonLabel: 'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => await AIProofreadingYesOnClick()
-                            })
+                            if (sparkWritingData[unitIndex].proofreading_count===2) {
+                                commonAlertOpen({
+                                    messages:  ['You have already used AI proofreading twice.'],
+                                    useOneButton:true,
+                                    yesButtonLabel: 'OK',
+                                    // yesEvent: async () => await AIProofreadingYesOnClick()
+                                })
+                            } else {
+                                commonAlertOpen({
+                                    messages: [
+                                        'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
+                                        `(${sparkWritingData[unitIndex].proofreading_count+1}/2)`
+                                    ],
+                                    yesButtonLabel: 'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => await AIProofreadingYesOnClick()
+                                })
+                            }
                         }}>Proofreading</button>
                     }
                     {/* 임시 버튼 - will del */}
                     {!isSubmitted &&
-                        <button className={!isSubmitted 
-                            ?`${sparkWritingData[unitIndex].proofreading_count===2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                        <button className={
+                            
+                            !isSubmitted 
+                            ? (
+                                isGrammarProceed ? 'hidden':
+                                `${sparkWritingData[unitIndex].proofreading_count===2?'save-button-active div-to-button-hover-effect':'save-button'}`
+                            )
                             :'hidden'
                         } 
                         onClick={()=>{

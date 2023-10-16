@@ -19,6 +19,7 @@ export const Login = () => {
     const [msgCheck, setMsgCheck] = React.useState<{beforeId: string, incorrectedCount: number}>({beforeId:'', incorrectedCount:0});
     const [saveId, setSaveId] = React.useState<boolean>(false)
     const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
+    const [version, setVersion] = React.useState<string>('');
 
     const {
         commonAlertOpen
@@ -63,7 +64,7 @@ export const Login = () => {
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-
+            
         } else {
             await fetchIpAddress();
         }
@@ -84,13 +85,15 @@ export const Login = () => {
             // response.isPasswordCorrect
             if (!response.isPasswordCorrect) {
                 if (msgCheck.beforeId !== loginValues.username) {
-                    const count = 1
+                    // const count = 1
+                    const count = response.tries;
                     setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
                     setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
                 } else {
                     // console.log('count =',msgCheck.incorrectedCount)
                     if (msgCheck.incorrectedCount>0&&msgCheck.incorrectedCount<4) {
-                        const count = msgCheck.incorrectedCount+1
+                        // const count = msgCheck.incorrectedCount+1
+                        const count = response.tries;
                         // console.log('set count =',count)
                         const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
                         setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
@@ -138,8 +141,19 @@ export const Login = () => {
                                 
                             })
                         } else {
-                            // 정상 로그인
-                            forceLogin(loginValues, device_id, saveId)
+                            //  5 비밀번호 5회 틀린경우
+                            if (response.isFiveTimesWrong) {
+                                commonAlertOpen({
+                                    alertType: 'warning',
+                                    messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                    useOneButton: true,
+                                    yesButtonLabel: 'OK',
+                                    yesEvent: goPasswordUpdatePage
+                                })
+                            } else {
+                                // 정상 로그인
+                                forceLogin(loginValues, device_id, saveId)
+                            }
                         }
                     } // end password 6month check
                 } // end target check
@@ -152,12 +166,14 @@ export const Login = () => {
         let check = false;
         if (e.target.name === 'username') {
             errorDump.displayMessage='';
-            check=true 
+            check=true;
+            // setMsgCheck({beforeId:msgCheck.beforeId, incorrectedCount:0})
         } else if (e.target.name === 'password') {
             errorDump.displayMessage = ''
             check=true
         }
         if (check) { setErrors(errorDump) };
+        
 
         setLoginValues({
             ...loginValues,
@@ -194,6 +210,9 @@ export const Login = () => {
             if(rnData['userInfo']) {
                 setUserInfo(rnData['userInfo'])
             }
+            if(rnData['version']) {
+                setVersion(rnData['version'])
+            }
 
             // we use rnData, because react state is updated in the next render cycle
             await forceLogin(rnData['loginValues'], rnData['deviceId'], rnData['saveId'])
@@ -215,6 +234,9 @@ export const Login = () => {
         }
         if(data['userInfo']) {
             setUserInfo(data['userInfo'])
+        }
+        if(data['version']) {
+            setVersion(data['version'])
         }
         await forceLogin(data['loginValues'], data['deviceId'], data['saveId'])
     }
@@ -370,7 +392,8 @@ export const Login = () => {
 
                         }}>
                             <p>{'COPY RIGHT© 2023 Poly Inspiration. ALL RIGHTS RESERVED.'}</p>
-                            <p>{'Version 0.1.1'}</p>
+                            {(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) && <p>{`Version ${version}`}</p>}
+                            { (!isMobile && window.navigator.userAgent.toLowerCase().indexOf('electron') <= -1) && <p>{'Version 0.1.1'}</p>}
                         </div>
                     </div>
                 </form>
