@@ -71,7 +71,7 @@ const ProgressTable = (props:any) => {
                     const firstDraftStatus = unitItem.draft_1_status.status;
                     const secondDraftStatus = unitItem.draft_2_status.status;
                     // icons
-                    let firstDraftState = <progressIcons.NoEntryGrayCircleIcon/>
+                    let firstDraftState = progressIcons.EntryBlueIcon;
                     let firstDraftFeedbackState = <progressIcons.NoEntryGrayRectIcon/>
                     let secondDrafteState = <progressIcons.NoEntryGrayCircleIcon/>
                     let finalEvaluationState = <progressIcons.NoEntryGrayRectIcon/>
@@ -97,19 +97,22 @@ const ProgressTable = (props:any) => {
                     } else if (firstDraftStatus === 2||firstDraftStatus===3) {
                         console.log(2)
                         progressPercentValue+=25;
-                        firstDraftState=<progressIcons.CheckGreenCircleIcon/>;
+                        firstDraftState=progressIcons.CheckGreenCircleIcon;
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                     } else if (firstDraftStatus===4) {
                         console.log(4)
                         progressPercentValue+=50;
-                        firstDraftState=<progressIcons.CheckGreenCircleIcon/>;
+                        firstDraftState=progressIcons.CheckGreenCircleIcon;
                         firstDraftFeedbackState=<progressIcons.CheckBlueRectIcon/>;
+
+                        secondDrafteState = progressIcons.EntryBlueIcon;
+                        
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_complete_date ? formatDateforStringData(unitItem.draft_1_status.review_complete_date):'';
                     } else if (firstDraftStatus===5) {
                         console.log(5)
                         progressPercentValue+=0;
-                        firstDraftState=<progressIcons.RecycleRedCircleIcon/>;
+                        firstDraftState=progressIcons.RecycleRedCircleIcon;
                         firstDraftFeedbackState=<progressIcons.RejectRedRectIcon/>;
                         firstDraftStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
@@ -121,17 +124,17 @@ const ProgressTable = (props:any) => {
                         secondDrafteStateData=unitItem.draft_2_status.temp_save_date? formatDateforStringData(unitItem.draft_2_status.temp_save_date):'';
                     } else if (secondDraftStatus === 2||secondDraftStatus===3) {
                         progressPercentValue+=25;
-                        secondDrafteState=<progressIcons.CheckGreenCircleIcon/>;
+                        secondDrafteState=progressIcons.CheckGreenCircleIcon;
                         secondDrafteStateData=unitItem.draft_2_status.submit_date? formatDateforStringData(unitItem.draft_2_status.submit_date):'';
                     } else if (secondDraftStatus===4) {
                         progressPercentValue+=50;
-                        secondDrafteState=<progressIcons.CheckGreenCircleIcon/>;
+                        secondDrafteState=progressIcons.CheckGreenCircleIcon;
                         finalEvaluationState=<progressIcons.CheckBlueRectIcon/>;
                         secondDrafteStateData=unitItem.draft_2_status.submit_date? formatDateforStringData(unitItem.draft_2_status.submit_date):'';
                         finalEvaluationStateData=unitItem.draft_2_status.review_complete_date? formatDateforStringData(unitItem.draft_2_status.review_complete_date):'';
                     } else if (secondDraftStatus===5) {
                         progressPercentValue+=0;
-                        secondDrafteState=<progressIcons.RecycleRedCircleIcon/>;
+                        secondDrafteState=progressIcons.RecycleRedCircleIcon;
                         finalEvaluationState=<progressIcons.RejectRedRectIcon/>;
                         secondDrafteStateData=unitItem.draft_2_status.review_reject_date? formatDateforStringData(unitItem.draft_2_status.review_reject_date):'';
                         finalEvaluationStateData=unitItem.draft_2_status.review_reject_date? formatDateforStringData(unitItem.draft_2_status.review_reject_date): '';

@@ -93,6 +93,11 @@ module.exports = {
         'nav-report-off': "url('/src/util/svgs/commonIconPNG/nav_report_off.png')",
         'nav-portfolio-on': "url('/src/util/svgs/commonIconPNG/nav_portfolio_on.png')",
         'nav-portfolio-off': "url('/src/util/svgs/commonIconPNG/nav_portfolio_off.png')",
+
+        // progress small icons
+        'progress-status-ic-blue-entry-circle': "url(/src/util/png/progress/ic_entry_3x.png)",
+        'progress-status-ic-green-check-circle': "url(/src/util/png/progress/checkGreenCircleIcon.png)",
+        'progress-status-ic-red-recycle-circle': "rul(/src/util/png/progress/recycleRedCircleIcon.png)",
       }
     },
     borderWidth: {

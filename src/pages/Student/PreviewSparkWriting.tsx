@@ -961,9 +961,9 @@ const PreviewSparkWriting = (props:any) => {
                             isPreview 
                                 ? (
                                     // preview 화면
-                                    sparkWritingData[unitIndex].proofreading_count === 2
+                                    sparkWritingData[unitIndex].proofreading_count < 2
                                         ? 'save-button-active div-to-button-hover-effect'
-                                        : 'hidden'
+                                        : 'save-button'
                                 )
                                 : (
                                     // proofreading화면 분기점

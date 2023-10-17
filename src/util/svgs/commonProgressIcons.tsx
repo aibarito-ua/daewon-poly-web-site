@@ -1,26 +1,27 @@
 import React from 'react'
-function CheckGreenCircleIcon(props: React.SVGAttributes<SVGElement>) {
-    return (
-        <svg {...props} width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g filter="url(#filter0_d_601_3071)">
-        <rect width="30" height="30" rx="15" fill="#21BF60"/>
-        <rect x="1" y="1" width="28" height="28" rx="14" stroke="#51DF8A" strokeWidth="2"/>
-        </g>
-        <path fillRule="evenodd" clipRule="evenodd" d="M21.5082 10.303C21.6999 10.4947 21.8077 10.7548 21.8077 11.026C21.8077 11.2972 21.6999 11.5573 21.5082 11.7491L13.8425 19.4148C13.7412 19.5161 13.621 19.5965 13.4886 19.6513C13.3562 19.7062 13.2143 19.7344 13.0711 19.7344C12.9278 19.7344 12.7859 19.7062 12.6535 19.6513C12.5211 19.5965 12.4009 19.5161 12.2996 19.4148L8.49094 15.6068C8.39326 15.5125 8.31534 15.3996 8.26174 15.2748C8.20814 15.1501 8.17993 15.0159 8.17875 14.8801C8.17757 14.7443 8.20345 14.6096 8.25487 14.4839C8.30629 14.3582 8.38223 14.244 8.47826 14.148C8.57429 14.052 8.68848 13.976 8.81417 13.9246C8.93986 13.8732 9.07453 13.8473 9.21033 13.8485C9.34612 13.8497 9.48032 13.8779 9.6051 13.9315C9.72988 13.9851 9.84273 14.063 9.93707 14.1607L13.0707 17.2943L20.0614 10.303C20.1564 10.2079 20.2691 10.1325 20.3933 10.0811C20.5174 10.0296 20.6504 10.0032 20.7848 10.0032C20.9192 10.0032 21.0522 10.0296 21.1763 10.0811C21.3005 10.1325 21.4132 10.2079 21.5082 10.303Z" fill="white"/>
-        <defs>
-        <filter id="filter0_d_601_3071" x="0" y="0" width="30" height="32" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dy="2"/>
-        <feComposite in2="hardAlpha" operator="out"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0.0887153 0 0 0 0 0.608333 0 0 0 0 0.295905 0 0 0 1 0"/>
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_601_3071"/>
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_601_3071" result="shape"/>
-        </filter>
-        </defs>
-        </svg>
-    )
-}
+// function CheckGreenCircleIcon(props: React.SVGAttributes<SVGElement>) {
+//     return (
+//         <svg {...props} width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+//         <g filter="url(#filter0_d_601_3071)">
+//         <rect width="30" height="30" rx="15" fill="#21BF60"/>
+//         <rect x="1" y="1" width="28" height="28" rx="14" stroke="#51DF8A" strokeWidth="2"/>
+//         </g>
+//         <path fillRule="evenodd" clipRule="evenodd" d="M21.5082 10.303C21.6999 10.4947 21.8077 10.7548 21.8077 11.026C21.8077 11.2972 21.6999 11.5573 21.5082 11.7491L13.8425 19.4148C13.7412 19.5161 13.621 19.5965 13.4886 19.6513C13.3562 19.7062 13.2143 19.7344 13.0711 19.7344C12.9278 19.7344 12.7859 19.7062 12.6535 19.6513C12.5211 19.5965 12.4009 19.5161 12.2996 19.4148L8.49094 15.6068C8.39326 15.5125 8.31534 15.3996 8.26174 15.2748C8.20814 15.1501 8.17993 15.0159 8.17875 14.8801C8.17757 14.7443 8.20345 14.6096 8.25487 14.4839C8.30629 14.3582 8.38223 14.244 8.47826 14.148C8.57429 14.052 8.68848 13.976 8.81417 13.9246C8.93986 13.8732 9.07453 13.8473 9.21033 13.8485C9.34612 13.8497 9.48032 13.8779 9.6051 13.9315C9.72988 13.9851 9.84273 14.063 9.93707 14.1607L13.0707 17.2943L20.0614 10.303C20.1564 10.2079 20.2691 10.1325 20.3933 10.0811C20.5174 10.0296 20.6504 10.0032 20.7848 10.0032C20.9192 10.0032 21.0522 10.0296 21.1763 10.0811C21.3005 10.1325 21.4132 10.2079 21.5082 10.303Z" fill="white"/>
+//         <defs>
+//         <filter id="filter0_d_601_3071" x="0" y="0" width="30" height="32" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+//         <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+//         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+//         <feOffset dy="2"/>
+//         <feComposite in2="hardAlpha" operator="out"/>
+//         <feColorMatrix type="matrix" values="0 0 0 0 0.0887153 0 0 0 0 0.608333 0 0 0 0 0.295905 0 0 0 1 0"/>
+//         <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_601_3071"/>
+//         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_601_3071" result="shape"/>
+//         </filter>
+//         </defs>
+//         </svg>
+//     )
+// }
+const CheckGreenCircleIcon = <div className='bg-progress-status-ic-green-check-circle bg-no-repeat bg-cover w-[30px] h-[32px]'/>
 function SaveYellowCircleIcon(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,15 +31,16 @@ function SaveYellowCircleIcon(props: React.SVGAttributes<SVGElement>) {
 
     )
 }
-function RecycleRedCircleIcon(props: React.SVGAttributes<SVGElement>) {
-    return (
-        <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="30" height="30" rx="15" fill="#F03063"/>
-        <path d="M19.0899 7.88455C15.8999 6.08504 11.9737 6.65761 9.35621 9.02969V7.63916C9.38187 7.21254 9.0579 6.84687 8.63128 6.8196C8.6008 6.818 8.56873 6.818 8.53825 6.8196C8.11163 6.79394 7.74596 7.11792 7.72029 7.54454C7.71869 7.57501 7.71869 7.60709 7.72029 7.63756V11.3184C7.69463 11.745 8.01861 12.1107 8.44523 12.1363C8.4757 12.1379 8.50778 12.1379 8.53825 12.1363H12.2191C12.6457 12.162 13.0114 11.838 13.037 11.4114C13.0386 11.3809 13.0386 11.3488 13.037 11.3184C13.0627 10.8918 12.7387 10.5261 12.3121 10.5004C12.2816 10.4988 12.2495 10.4988 12.2191 10.5004H10.256C11.4861 9.19168 13.2038 8.45231 15.0001 8.45552C18.6104 8.46675 21.5326 11.3889 21.5438 14.9992C21.5181 15.4258 21.8421 15.7915 22.2687 15.8172C22.2992 15.8188 22.3313 15.8188 22.3618 15.8172C22.7884 15.8428 23.1541 15.5188 23.1797 15.0922C23.1813 15.0617 23.1813 15.0297 23.1797 14.9992C23.1861 12.0674 21.6272 9.35367 19.0899 7.88295V7.88455ZM21.462 17.8637H17.7812C17.3289 17.8637 16.9632 18.2309 16.9632 18.6816C16.9632 19.1323 17.3289 19.498 17.7812 19.4996H19.7443C18.5141 20.8083 16.7964 21.5477 15.0001 21.5445C11.3899 21.5332 8.46768 18.611 8.45646 15.0008C8.48212 14.5742 8.15814 14.2085 7.73152 14.1828C7.70105 14.1812 7.66897 14.1812 7.6385 14.1828C7.21188 14.1572 6.8462 14.4812 6.82054 14.9078C6.81893 14.9382 6.81893 14.9703 6.82054 15.0008C6.80771 19.506 10.45 23.1676 14.9536 23.1804C17.0755 23.1868 19.1172 22.364 20.644 20.8901V22.3624C20.6184 22.7891 20.9424 23.1547 21.369 23.1804C21.3995 23.182 21.4315 23.182 21.462 23.1804C21.8886 23.2061 22.2543 22.8821 22.28 22.4555C22.2816 22.425 22.2816 22.3929 22.28 22.3624V18.6816C22.28 18.2309 21.9127 17.8653 21.462 17.8637Z" fill="white"/>
-        </svg>
+// function RecycleRedCircleIcon(props: React.SVGAttributes<SVGElement>) {
+//     return (
+//         <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+//         <rect width="30" height="30" rx="15" fill="#F03063"/>
+//         <path d="M19.0899 7.88455C15.8999 6.08504 11.9737 6.65761 9.35621 9.02969V7.63916C9.38187 7.21254 9.0579 6.84687 8.63128 6.8196C8.6008 6.818 8.56873 6.818 8.53825 6.8196C8.11163 6.79394 7.74596 7.11792 7.72029 7.54454C7.71869 7.57501 7.71869 7.60709 7.72029 7.63756V11.3184C7.69463 11.745 8.01861 12.1107 8.44523 12.1363C8.4757 12.1379 8.50778 12.1379 8.53825 12.1363H12.2191C12.6457 12.162 13.0114 11.838 13.037 11.4114C13.0386 11.3809 13.0386 11.3488 13.037 11.3184C13.0627 10.8918 12.7387 10.5261 12.3121 10.5004C12.2816 10.4988 12.2495 10.4988 12.2191 10.5004H10.256C11.4861 9.19168 13.2038 8.45231 15.0001 8.45552C18.6104 8.46675 21.5326 11.3889 21.5438 14.9992C21.5181 15.4258 21.8421 15.7915 22.2687 15.8172C22.2992 15.8188 22.3313 15.8188 22.3618 15.8172C22.7884 15.8428 23.1541 15.5188 23.1797 15.0922C23.1813 15.0617 23.1813 15.0297 23.1797 14.9992C23.1861 12.0674 21.6272 9.35367 19.0899 7.88295V7.88455ZM21.462 17.8637H17.7812C17.3289 17.8637 16.9632 18.2309 16.9632 18.6816C16.9632 19.1323 17.3289 19.498 17.7812 19.4996H19.7443C18.5141 20.8083 16.7964 21.5477 15.0001 21.5445C11.3899 21.5332 8.46768 18.611 8.45646 15.0008C8.48212 14.5742 8.15814 14.2085 7.73152 14.1828C7.70105 14.1812 7.66897 14.1812 7.6385 14.1828C7.21188 14.1572 6.8462 14.4812 6.82054 14.9078C6.81893 14.9382 6.81893 14.9703 6.82054 15.0008C6.80771 19.506 10.45 23.1676 14.9536 23.1804C17.0755 23.1868 19.1172 22.364 20.644 20.8901V22.3624C20.6184 22.7891 20.9424 23.1547 21.369 23.1804C21.3995 23.182 21.4315 23.182 21.462 23.1804C21.8886 23.2061 22.2543 22.8821 22.28 22.4555C22.2816 22.425 22.2816 22.3929 22.28 22.3624V18.6816C22.28 18.2309 21.9127 17.8653 21.462 17.8637Z" fill="white"/>
+//         </svg>
 
-    )
-}
+//     )
+// }
+const RecycleRedCircleIcon = <div className='bg-progress-status-ic-red-recycle-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>
 function RejectRedRectIcon(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -139,6 +141,7 @@ function NoEntryGrayRectIcon(props: React.SVGAttributes<SVGElement>) {
         </svg>
     )
 }
+const EntryBlueIcon = <div className='bg-progress-status-ic-blue-entry-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>;
 
 export const progressIcons = {
     CheckGreenCircleIcon,
@@ -150,5 +153,6 @@ export const progressIcons = {
     CheckBlueRectIcon,
     FeedbackEmptyGrayRectIcon,
     LevelSelectToggleDownArrowIcon,
-    LevelSelectToggleUpArrowIcon
+    LevelSelectToggleUpArrowIcon,
+    EntryBlueIcon
 }
