@@ -28,28 +28,47 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
 
   const {
     // keyValue, rubric_type, rubric_type_datas, isFinalDraft
-    isNext, isPrev, setIsNext, setIsPrev, handleNext, handlePrev, isActivityPage, isNoData
+    // isNext, isPrev, setIsNext, setIsPrev, 
+    // handleNext, handlePrev, 
+    isActivityPage, isNoData
   } = props;
     
   const [open, setOpen] = React.useState(false);
   const [viewRubric, setViewRubric] = React.useState<IRubricTableDataItem[][]>([]);
   const [viewRubricHead, setViewRubricHead] = React.useState<TRubricTypeHeader[]>([]);
   const [title, setTitle] = React.useState<string>('');
+  const [isNext, setIsNext] = React.useState<boolean>(false);
+  const [isPrev, setIsPrev] = React.useState<boolean>(false);
+  const [selectUnitIndex, setSelectUnitIndex] = React.useState<number>(1);
   const {
-    reportSelectUnit,
+    // reportSelectUnit,
     reportModalRubricData,
   } = useControlAlertStore();
+
+  const handleNext = (currentIndex:number) => {
+    if (isNext) {
+      setSelectUnitIndex(currentIndex+1)
+    }
+  }
+
+  const handlePrev = (currentIndex:number) => {
+    if (isPrev) {
+      setSelectUnitIndex(currentIndex-1)
+    }
+  }
 
   React.useEffect(()=>{
     if (!open) {
       setViewRubric([])
       setViewRubricHead([])
+      setSelectUnitIndex(1);
     } else {
-        
+        console.log('reportModalRubricData =',reportModalRubricData)
         const allRubricData = reportModalRubricData;
         if (allRubricData.length > 0) {
+          let currentUnit = selectUnitIndex;
             for (let i = 0; i < allRubricData.length; i++) {
-                if (allRubricData[i].unit_index === reportSelectUnit) {
+                if (allRubricData[i].unit_index === selectUnitIndex) {
                     const targetRubricData = allRubricData[i].rubric;
                     const dataHead:TRubricTypeHeader[] = [
                         {accessor: 'category', header: 'Category'},
@@ -65,16 +84,26 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
                         dataHead: dataHead
                     }
                     const topic = targetRubricData.name.split('_')
-                    const targetText = `Unit ${reportSelectUnit}. ${topic[1]}`;
+                    const targetText = `Unit ${selectUnitIndex}. ${topic[1]}`;
                     setTitle(targetText)
                     processTableData(rubric_type_data);
                 }
-            }
+            };
+          if (currentUnit === 1) {
+            setIsNext(true);
+            setIsPrev(false);
+          } else if (currentUnit === 5) {
+            setIsNext(false);
+            setIsPrev(true);
+          } else {
+            setIsNext(true);
+            setIsPrev(true);
+          }
         }
     
 
     }
-  }, [open, reportSelectUnit])
+  }, [open, selectUnitIndex])
 
   // process table data 
   const processTableData = (allDatas:TRubricTypeData ) => {
@@ -139,7 +168,7 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
                 return (
                   <td key={cellItem.key}
                   className={`p-[10px] whitespace-normal border border-[#ddd] ${
-                    cellItem.key==='category' ? 'bg-[#fff9ec] rubric-modal-head-font'
+                    cellItem.key==='category' ? 'bg-[#fff9ec] rubric-modal-head-font capitalize'
                     :cellItem.key==='explanation' ? 'bg-[#fffdf7] rubric-modal-body-font' : 'bg-white rubric-modal-body-font'
                   }`}>
                     {typeof(cellItem.value)==='string' ? cellItem.value 
@@ -217,13 +246,13 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
             <div className={!isPrev
                 ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
                 : 'absolute top-[215px] -left-[25px] bg-tab-rubric-modal-left w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
-                onClick={()=>handlePrev(reportSelectUnit)}
+                onClick={()=>handlePrev(selectUnitIndex)}
             />
             <div className={!isNext
                 ? 'absolute top-[215px] -right-[25px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
                 : 'absolute top-[215px] -right-[25px] bg-tab-rubric-modal-right w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
             }
-                onClick={()=>handleNext(reportSelectUnit)}
+                onClick={()=>handleNext(selectUnitIndex)}
             />
         <div className='flex flex-grow flex-col w-full overflow-y-auto px-[45px] py-[30px]'>
           <table className=' text-left w-full border border-[#808080] table-fixed'>

@@ -33,7 +33,7 @@ export default function UnitReportModalComponent() {
         if ( unitReportModal.open) {
             console.log()
         } else {
-            setMenuControl(0);
+            setMenuControl(1);
         }
     }, [unitReportModal])
     React.useEffect(()=>{

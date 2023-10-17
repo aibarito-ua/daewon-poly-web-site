@@ -272,6 +272,11 @@ const textTooltip = () => {
     const pathX_right = pathX + addDump + 10;
     const pathX_left = pathX - addDump;
     
+    // 소수점 변경
+    const currentScore = tooltipData.value;
+    const scoreReplace1 = Math.round(currentScore*10);
+    const scoreResult = scoreReplace1/10;
+
     return (
         <g>
             <path stroke="none" fill="#fff" 
@@ -285,7 +290,7 @@ const textTooltip = () => {
                 y={sy}
                 textAnchor={textAnchor}
                 fill="#333"
-            >{`${clickIndex}: ${tooltipData.value}%`}</text>
+            >{`${clickIndex}: ${scoreResult}%`}</text>
         </g>
     )
 

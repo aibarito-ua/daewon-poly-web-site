@@ -25,7 +25,7 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     }
     // Body
     const contentBodyComponent = (itemIndex:number, text:string, paddingStr:string) => {
-        return (<span className={`flex indent-[15px] ${paddingStr}`} key={itemIndex}><span className=''></span>
+        return (<span className={`flex ${paddingStr}`} key={itemIndex}>
             <pre className='preview-body-text-pre'>{text}</pre>
         </span>)
     }
@@ -33,7 +33,7 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     const contentBodyComponent2 = (itemIndex:number, text:string, paddingStr:string) => {
         const textArr = text.split('\n');
         return textArr.map((textItem, textItemIndex)=>(
-            <span className={`flex indent-[15px] pb-[20px] ${paddingStr}`} key={itemIndex+'-draft-2-'+textItemIndex}><span className=''></span>
+            <span className={`flex pb-[20px] ${paddingStr}`} key={itemIndex+'-draft-2-'+textItemIndex}>
                 <pre className='preview-body-text-pre'>{textItem}</pre>
             </span>
         ));

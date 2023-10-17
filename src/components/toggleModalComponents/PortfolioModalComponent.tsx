@@ -1,22 +1,11 @@
 import React from 'react';
 
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import useControlAlertStore from '../../store/useControlAlertStore';
 import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
 
 import PrintReportExportButton from '../commonComponents/printComponent/portfolio/PrintComponent';
 import usePortfolioStore from '../../store/usePortfolioStore';
-import PortfolioTabComponent from './ItemComponents/PortfolioTabComponent';
 
-const testBody = `"Have you ever stumble upon an ancient artifact that left you in awe of its enigmatic origin? Perhaps it held secret untold, waiting for a curious soul to unlock its mysteries. Such encounter with history often lead to a profound sense of wonder and fascination.
-
-As I laid my eyes upon the relic, I was struck by its profound antiquity. The weathered surface bore witness to countless year, with intricate carving etched into the stones, telling tales of forgot civilizations. Its rough texture hinted at a storied past, while faded pigments hinted at the vibrant hues it once boasted.
-
-Nestled within the artifact's hollowed interior, I discovered a trove of relics, each one more fascinating than the last. Delicate fragments of pottery whispered of an ancient culture's artistic prowess, while shards of weathered metal hinted at a forgotten technology. Together, these remnant painted a vivid picture of a society long lost to the sant of time.
-
- As we reflect upon the significance of this relic, We are reminded of the inexorable passage of time and the impermanence of human achievement. What stories remain untold, buried beneath layer of history? What other treasures lie in wait for the intrepid explorer, ready to unveil the narratives of bygone eras? only time will tell, as we continue our quest to unlock the mysteries of our shared past.
-
-"`
 export default function PortfolioModalComponent() {
     const {
         displayPortfolioData,
@@ -37,7 +26,6 @@ export default function PortfolioModalComponent() {
     const [printPreviewer, setPrintPreviewer] = React.useState<boolean>(false);
     const printComponentRef = React.useRef<HTMLDivElement>(null);
     
-
     const setIsPrevAndNext = (prev:boolean, next:boolean) => {
         let data:TPortfolioModal = JSON.parse(JSON.stringify(portfolioModal));
         data.isNext=next;
@@ -52,15 +40,36 @@ export default function PortfolioModalComponent() {
     
     const handlePrev = () => {
 
-        if (portfolioModal.isPrev && portfolioModal.selectUnit!==1) {
-            const prevIndex = portfolioModal.selectUnit-1;
-            setUnitIndex(prevIndex);
+        // if (portfolioModal.isPrev && portfolioModal.selectUnit!==1) {
+        //     const prevIndex = portfolioModal.selectUnit-1;
+        //     setUnitIndex(prevIndex);
+        // }
+        if (portfolioModal.isPrev && portfolioModal.selectUnit !== 1) {
+            let allUnits:number[] = [];
+            const allPortfolioData = displayPortfolioData.unit_portfolios;
+            for (let i = 0; i < allPortfolioData.length; i++) {
+                allUnits.push(allPortfolioData[i].unit_index);
+            }
+            const findCurrentUnitIndex = allUnits.indexOf(portfolioModal.selectUnit);
+            console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
+            const beforeUnitIndex = allUnits[findCurrentUnitIndex-1];
+            console.log('beforeUnitIndex =',beforeUnitIndex)
+            setUnitIndex(beforeUnitIndex);
         }
     }
     const handleNext = () => {
         if (portfolioModal.isNext && portfolioModal.selectUnit!==5) {
-            const nextIndex = portfolioModal.selectUnit+1;
-            setUnitIndex(nextIndex)
+            
+            let allUnits:number[] = [];
+            const allPortfolioData = displayPortfolioData.unit_portfolios;
+            for (let i = 0; i < allPortfolioData.length; i++) {
+                allUnits.push(allPortfolioData[i].unit_index);
+            }
+            const findCurrentUnitIndex = allUnits.indexOf(portfolioModal.selectUnit);
+            console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
+            const afterUnitIndex = allUnits[findCurrentUnitIndex+1];
+            console.log('beforeUnitIndex =',afterUnitIndex)
+            setUnitIndex(afterUnitIndex);
         }
     }
     const ReportCompletionDateDiv = () => {

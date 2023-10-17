@@ -30,6 +30,7 @@ const EssayWriting = () => {
     // fold flag
     const [foldFlag, setFoldFlag] = React.useState<boolean[]>([]);
     const draft1stRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
+    const draft2ndRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
     const [updateFoldIndex, setUpdateFoldIndex] = React.useState<number>();
 
     // check open  Buttons
@@ -165,7 +166,7 @@ const EssayWriting = () => {
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
                     }
-                    
+
                     // 1차 데이터 셋팅
                     if (draft1stStatus.status===4) {
                         // 1차 완료 , 2차 시작 init 
@@ -561,6 +562,56 @@ const EssayWriting = () => {
                     setIsSaveButtonOpen(false)
                 }
             } else if (DraftIndex==='2') {
+
+                // title validate
+                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_2_outline;
+                
+                let titleMaxLengthCheck = false;
+                let orderIndex = -1;
+                let unitId = -1;
+                let unitIndex = -1;
+                let redoTitleText = '';
+                for (let i = 0; i < targetDataOutline.length; i++) {
+                    const item = targetDataOutline[i]
+                    const target_length = item.input_content.replaceAll(' ','').length;
+                    if (item.name === 'Title') {
+                        const titleLength = item.input_content.length;
+                        orderIndex = item.order_index;
+                        unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
+                        unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
+                        if (titleLength > 120) {
+                            redoTitleText = item.input_content.substring(0, 120);
+                            commonAlertOpen({
+                                messages:['The title cannot exceed one line.'],
+                                useOneButton: true,
+                                yesButtonLabel: 'OK',
+                                yesEvent: () => {
+                                    setOutlineInputText(redoTitleText, unitId, unitIndex, 1,2)
+                                }
+                            })
+                            return;
+                        }
+                        const checkTitleLineBreak = item.input_content.match(/\n/gmi);
+                        if (checkTitleLineBreak) {
+                            redoTitleText = item.input_content.replace(/\n/gmi,'');
+                            commonAlertOpen({
+                                messages:['The title cannot exceed one line.'],
+                                useOneButton: true,
+                                yesButtonLabel: 'OK',
+                                yesEvent: () => {
+                                    setOutlineInputText(redoTitleText, unitId, unitIndex, 1,2)
+                                }
+                            })
+                            return;
+                        }
+                    }
+                };
+
+                if (titleMaxLengthCheck) {
+                    
+                    return;
+                }
+
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
                 console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
@@ -834,7 +885,11 @@ const EssayWriting = () => {
         // console.log('fold settings ==',foldFlag)
         const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
             if (foldIndex === i) {
-                return !foldItem
+                if (!foldItem) {
+                    return !foldItem
+                } else {
+                    return foldItem
+                }
             } else return foldItem;
         })
         setFoldFlag(dumpFlags)
@@ -897,7 +952,7 @@ const EssayWriting = () => {
                                     <div 
                                         className='outline-content-box-item'>
                                             
-                                            <textarea rows={1} style={{'resize':'none'}}
+                                            <textarea rows={1} style={{'resize':'none','overflow':'hidden'}}
                                                 ref={(el) => {
                                                     draft1stRefs.current[i]= el
                                                 }}
@@ -1122,8 +1177,13 @@ const EssayWriting = () => {
                     <div className={`${draft2ndSubmitActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSubmitActive) {
                             commonAlertOpen({
-                                messages: ['Are you ready to submit?'],
                                 head: `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                                messages: ['Are you ready to submit?'],
+                                // messages: [
+                                //     `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                                //     'Are you ready to submit?'
+                                // ],
+                                alertType: 'continue',
                                 yesButtonLabel: 'Yes',
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {

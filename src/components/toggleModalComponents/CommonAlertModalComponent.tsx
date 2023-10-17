@@ -58,7 +58,7 @@ export default function CommonAlertModalComponent(
     // open={true}
       onClose={handleClose}>
         <DialogContent 
-          className={ (commonAlertType==='warning'||commonAlertType==='warningContinue')? 'flex flex-1 flex-col w-[390px] h-fit':'flex flex-1 flex-col max-w-[390px] h-fit'}
+          className={ (commonAlertType==='warning'||commonAlertType==='warningContinue')? 'flex flex-1 flex-col w-[390px] h-fit':'flex flex-1 flex-col w-[390px] h-[160px]'}
           sx={{
             paddingY:0,
             paddingX: 0

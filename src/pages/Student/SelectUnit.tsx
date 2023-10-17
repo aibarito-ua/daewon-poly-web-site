@@ -363,13 +363,14 @@ export default function SelectUnit () {
                     }}
                     >
                         <div className='unit-select-button-item'>
-                            <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-unit-last': 'unit-select-button-item-unit'}>
-                                {selectUnitMainTitle}
+                            <div className='unit-select-button-item-head'>
+                                <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-unit-last': 'unit-select-button-item-unit'}>
+                                    {selectUnitMainTitle}
+                                </div>
+                                <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-title-last ': 'unit-select-button-item-title'}>{selectUnitSubTitle}</div>
                             </div>
-                            <div className={lastUnitIndex===item.unit_index ? 'unit-select-button-item-title-last ': 'unit-select-button-item-title'}>{selectUnitSubTitle}</div>
-                        
                             {(firstDraft !== 4 || secondDraft !== 4) && (
-                                <div className='unit-select-button-item-drafts z-0 mt-[36px]'>
+                                <div className='unit-select-button-item-drafts z-0 mt-[31.7px]'>
                                     <div className='flex unit-select-button-item-dotted z-0'></div>
                                     <div className='flex flex-row z-10 relative items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 1)
@@ -386,7 +387,7 @@ export default function SelectUnit () {
                                 </div>
                             )}
                             {(firstDraft === 4 && secondDraft === 4) && (
-                                <div className='unit-select-button-item-drafts z-0 mt-[36px] relative'>
+                                <div className='unit-select-button-item-drafts z-0 mt-[31.7px] relative'>
                                     <div className='flex unit-select-button-item-dotted z-0'></div>
                                     <div className='flex flex-row z-10 relative items-center'><span>{
                                         draftIcons(firstDraft, secondDraft, 1)

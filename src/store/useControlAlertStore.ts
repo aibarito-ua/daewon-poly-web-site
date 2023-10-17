@@ -733,6 +733,16 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(get().reportModalRubricData));
         let dumyOverallBar:TOverallBarChartDataItem[] = JSON.parse(JSON.stringify(get().reportSelectedOverallBarChart));
         let dumyOverallPie:TAllDoughnutDatas = JSON.parse(JSON.stringify(get().reportSelectedOverallPieChart));
+
+        // dumyOverallPie data check
+        dumyOverallPie = dumyOverallPie.map((item)=>{
+            const checkValue = item.data[0].value;
+            if (checkValue!== 0) {
+                item.data[0].value = 0
+            }
+            return item;
+        })
+
         for (let i = 0; i < data.periods.length; i++) {
             const currentPeriod = data.periods[i];
             console.log('currentPeriod ==',currentPeriod)
@@ -779,6 +789,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 }
                 for (let s = 0; s < sumData.length; s++) {
                     if (sumData[s].name === targetCateName) {
+                        console.log('targetCateName =',targetCateName)
+                        console.log('sumData[',s,'].name =',sumData[s].name)
+                        console.log('targetScore =',targetScore)
                         sumData[s].sum += targetScore;
                         break;
                     }
@@ -815,7 +828,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         // set pie data
         for (let p = 0; p < dumyOverallPie.length; p++) {
             const currentPie = dumyOverallPie[p];
-
+            console.log('currentPie [',p,'] :',currentPie)
             for (let s = 0; s < sumData.length; s++) {
                 if (sumData[s].name === currentPie.target) {
                     const maxScore = unitCount*10;

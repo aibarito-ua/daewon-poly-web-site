@@ -24,12 +24,15 @@ export default function FormDialog() {
   const [historyTokens, setHistoryTokens] = React.useState<number[]>([]);
   // before total token
   const [beforeTurnTotalToken, setBeforeTurnTotalToken] = React.useState<number>(217);
+
+  
   const {
-    name
+    name, userInfo
   } = useLoginStore();
   const ai_name = 'Ella';
   // const user_name = name;
   const user_name = 'UaTester';
+  // const user_name = userInfo.memberNameEn;
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -38,6 +41,10 @@ export default function FormDialog() {
         setHistoryTokens([])
         setBeforeTurnTotalToken(217)
         setInputLength(0)
+    } else {
+      // console.log('chatHistory =',chatHistory)
+      const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
+      setChatHistory(initHist)
     }
   }, [open])
   React.useEffect(()=>{
@@ -51,6 +58,7 @@ export default function FormDialog() {
   }, [inputText])
   React.useEffect(()=>{
     console.log('chat history log =',chatHistory)
+    console.log('dataHist log =',dataHist)
   },[chatHistory])
 
   const callDialogAPIFN = async (txt:string) => {
@@ -123,9 +131,10 @@ export default function FormDialog() {
   };
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     // console.log('current value =',e.currentTarget.value)
+    // [ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]
+    const value = e.currentTarget.value.replace(/[ㄱ-ㅎ가-힣]|[{}:\"'\\]/gmi,'');
     e.currentTarget.style.height = 'auto';
     e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-    const value = e.currentTarget.value;
     
     const inputValue = value.replace(/\n{2,}/gm, '\n')
     const countInputLength = inputValue.length
@@ -209,13 +218,13 @@ export default function FormDialog() {
               autoFocus
               maxLength={1000}
               rows={1}
-              placeholder='Type your question here.'
+              placeholder='Type here or tap on the mic button to begin.'
               onChange={(e)=>onChangeValue(e)}
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
               value={inputText}
             />
-            <div className='flex w-full justify-center'>{`Number of characters: ${inputLength} / 1000`}</div>
-            <div className='flex w-full justify-center'>{`* copy&past max character 998`}</div>
+            {/* <div className='flex w-full justify-center'>{`Number of characters: ${inputLength} / 1000`}</div>
+            <div className='flex w-full justify-center'>{`* copy&past max character 998`}</div> */}
 
           </div>
         </DialogActions>

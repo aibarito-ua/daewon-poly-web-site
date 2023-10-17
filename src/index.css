@@ -844,30 +844,39 @@ bg-[#ffea2c]
 }
 /* 1.1. topic select button */
 .select-writing-topic-item-button {
-  object-fit: contain;
+  
   background-size: contain;
   background-repeat: no-repeat;
   @apply 
   text-black
   w-[191px]
-  h-[349.9px]
+  h-[348px]
+  min-w-[191px]
+  min-h-[348px]
   bg-unit-book-icon
   /* hover:bg-unit-select-book-icon */
 }
 .select-writing-topic-item-button-last {
-  object-fit: contain;
+  
   background-size: contain;
   background-repeat: no-repeat;
   @apply 
   text-black
   w-[191px]
-  h-[349.9px]
+  h-[348px]
+  min-w-[191px]
+  min-h-[348px]
   bg-unit-select-book-icon
 }
 .unit-select-button-item {
   @apply
   pt-[20.3px] pl-[31px] text-start
   relative
+}
+.unit-select-button-item-head {
+  @apply
+  w-[150px]
+  h-[100px]
 }
 .unit-select-button-item-unit {
   font-family: 'GothamRounded';

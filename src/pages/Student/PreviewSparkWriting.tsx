@@ -722,7 +722,10 @@ const PreviewSparkWriting = (props:any) => {
                 setIsUndoBody(false);
             }
         }
-
+        console.log('goBackFromDraftInUnitPage =',goBackFromDraftInUnitPage)
+        if (!goBackFromDraftInUnitPage) {
+            setGoBackFromDraftInUnitPage(()=>{ goBackEvent() })
+        }
         // check grammar modal select
         if (bodyHistory.body.present.length > 0 && bodyHistory.title.present) {
             // grammar 진행 시작
@@ -732,9 +735,7 @@ const PreviewSparkWriting = (props:any) => {
                   //  console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
-                    setGoBackFromDraftInUnitPage(()=>{
-                        goBackEvent()
-                    })
+                    
                     setOpenSubmitButton(false)
                 } else {
                   //  console.log('grammar 진행 종료')
@@ -750,9 +751,7 @@ const PreviewSparkWriting = (props:any) => {
                   //  console.log('grammar 진행 중')
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
-                    setGoBackFromDraftInUnitPage(()=>{
-                        goBackEvent()
-                    })
+                    
                     setOpenSubmitButton(false);
                 } else {
                     // grammar 종료
@@ -766,10 +765,12 @@ const PreviewSparkWriting = (props:any) => {
         } else {
             // grammar 진행 전
           //  console.log('grammar 진행 전')
-            
+            console.log('countofUseAIProofreading =',countofUseAIProofreading)
+
             if (countofUseAIProofreading>0) {
                 if (countofUseAIProofreading===2) {
                     const checkGrammarsSelectAll = checkSelectedGrammarModals();
+                    console.log('checkGrammarsSelectAll =',checkGrammarsSelectAll)
                     if (checkGrammarsSelectAll) {
                         setOpenSubmitButton(false);
                     } else {
@@ -779,13 +780,12 @@ const PreviewSparkWriting = (props:any) => {
                 
                 const submitDate = sparkWritingData[unitIndex].draft_1_status.submit_date;
                 if (submitDate!==null && submitDate!=='') {
+                    console.log('submitDate =',submitDate)
                     setIsSaveButtonOpen(false);
                 } else {
+                    console.log('bodyHistory.body.present.length =',bodyHistory.body.present.length)
                     if (bodyHistory.body.present.length>0) {
                         setIsSaveButtonOpen(true);
-                        setGoBackFromDraftInUnitPage(()=>{
-                            goBackEvent()
-                        })
                     } else {
                         setIsSaveButtonOpen(false);
                     }
@@ -1105,8 +1105,9 @@ const PreviewSparkWriting = (props:any) => {
                                 commonAlertOpen({
                                     yesButtonLabel: 'Yes',
                                     alertType: 'continue',
+                                    head: `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
                                     messages: [
-                                        `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
+                                        // `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
                                         'Are you ready to submit?'
                                     ],
                                     noButtonLabel: 'No',
