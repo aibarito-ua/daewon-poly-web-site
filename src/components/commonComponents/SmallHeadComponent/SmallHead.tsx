@@ -25,21 +25,21 @@ export default function SmallHead (props: {
                 {(props.mainTitle==='Progress'&&props.subTitle===undefined) && (
                     <div className="left-top-progress-buttons-div select-none">
                         {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
+                            return <div key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</div>
                         })}
                     </div>
                 )}
                 {(props.mainTitle==='Report'&&props.subTitle===undefined) && (
                     <div className="left-top-progress-buttons-div select-none">
                         {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
+                            return <div key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</div>
                         })}
                     </div>
                 )}
                 {(props.mainTitle==='Portfolio'&&props.subTitle===undefined) && (
                     <div className="left-top-progress-buttons-div select-none">
                         {progressButtonLabel.map((item, progressButtonIndex) => {
-                            return <button key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</button>
+                            return <div key={progressButtonIndex} className={progressTabActiveIndex===progressButtonIndex ? 'left-top-progress-button-active': 'left-top-progress-button'}>{item}</div>
                         })}
                     </div>
                 )}

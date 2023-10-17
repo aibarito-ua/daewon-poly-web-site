@@ -165,6 +165,13 @@ const EssayWriting = () => {
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
                     }
+                    
+                    // 1차 데이터 셋팅
+                    if (draft1stStatus.status===4) {
+                        // 1차 완료 , 2차 시작 init 
+                        setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
+                        setDraft2ndPageSet(targetPageFlag);
+                    }
                 }
             }
         
@@ -959,16 +966,16 @@ const EssayWriting = () => {
                                             CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             commonAlertClose();
                                         } else {
-                                            const check = checkNewLine();
-                                            if (check) {
-                                                await temporarySaveFunction().then((res)=>{
-                                                    commonAlertClose();
-                                                    CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                                });
-                                            } else {
+                                            // const check = checkNewLine();
+                                            // if (check) {
+                                            //     await temporarySaveFunction().then((res)=>{
+                                            //         commonAlertClose();
+                                            //         CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                            //     });
+                                            // } else {
                                                 commonAlertClose();
                                                 CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                            }
+                                            // }
                                         }
                                     }
                                 })

@@ -20,6 +20,10 @@ interface IUsePortfolioProps {
     portfolioModal: TPortfolioModal;
     setPortfolioModal: (data:TPortfolioModal) => void;
     setPortfolioModalClose: () => void;
+
+    // force readonly select box
+    forceReadOnlyPortfolioSelectBox: boolean[];
+    setForceReadOnlyPortfolioSelectBox: (flags:boolean[]) => void;
 }
 // portfolio modal control
 type TPortfolioModal = {

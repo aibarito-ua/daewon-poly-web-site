@@ -79,6 +79,10 @@ interface IUseControlAlertStore {
     // report control. prev&next
     // unit index array value
     reportCompletedUnitIndexArray: number[];
+
+    // report box readonly forced
+    forcedReadOnlyReportSelectBox: boolean[];
+    setForcedReadOnlyReportSelectBox: (flags: boolean[]) => void;
     
     
 }

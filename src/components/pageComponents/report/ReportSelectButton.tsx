@@ -23,6 +23,7 @@ export default function ReportSelectButton(props:{
   } = props;
   // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
+  const [disabled, setDisabled] = React.useState<boolean>(false);
 
   const {
     reportSelectFinder,
@@ -31,7 +32,30 @@ export default function ReportSelectButton(props:{
     reportSemester,
     setReportSelectBoxValue,
     reportAPIData,
+    forcedReadOnlyReportSelectBox
   } = useControlAlertStore();
+  React.useEffect(()=>{
+    // isLevel? (reportSemester===''?true:false):false
+    let isDisabled = false;
+    if (isLevel) {
+      if (forcedReadOnlyReportSelectBox[1]) {
+        isDisabled = true;
+      } else {
+        if (reportSemester==='') {
+          isDisabled = true;
+        } else {
+          isDisabled = false;
+        }
+      }
+    } else {
+      if (forcedReadOnlyReportSelectBox[0]) {
+        isDisabled = true;
+      } else {
+        isDisabled = false;
+      }
+    }
+    setDisabled(isDisabled)
+  },[forcedReadOnlyReportSelectBox])
 
   const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
     console.log('value ==',value)
@@ -70,10 +94,23 @@ export default function ReportSelectButton(props:{
 
 
   return (
-    <div className='flex items-center h-[45px] ' >
-      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1}} >
+    <div className='flex items-center h-[45px]' >
+      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1 }} >
         <Select
-            sx={{
+            sx={
+              disabled 
+              ? {
+              color:'#aeaeae',
+              height: '45px',
+              backgroundColor: '#fff',
+              borderRadius: '15px',
+              '& .MuiInputBase-input': {
+                padding:0
+              },
+              '& .MuiSelect-icon': {
+                right: '14px'
+              },
+            } : {
               color: (isLevel? reportLevel: reportSemester)===''? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
@@ -84,14 +121,17 @@ export default function ReportSelectButton(props:{
               '& .MuiSelect-icon': {
                 right: '14px'
               }
-            }}
+            }
+          }
             
             placeholder='test'
             value={isLevel? reportLevel: reportSemester}
-            disabled={isLevel? (reportSemester===''?true:false):false}
+            
+            disabled={disabled}
             onChange={handleChange}
             displayEmpty={true}
             open={open}
+            
             renderValue={(selected) => {
               console.log('selected !!=',selected)
               if (selected.length === 0) {

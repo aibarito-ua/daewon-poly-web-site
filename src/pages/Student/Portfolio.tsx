@@ -28,6 +28,10 @@ export const Portfolio = () => {
         portfolioApiData,
         setPortfolioApiData,
         displayPortfolioData,
+
+        // force readonly
+        forceReadOnlyPortfolioSelectBox,
+        setForceReadOnlyPortfolioSelectBox,
     } = usePortfolioStore();
 
     const beforeRenderedFn = async () => {
@@ -59,10 +63,10 @@ export const Portfolio = () => {
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
                         <PortfolioSelectButton 
-                            disabled={false} isUse='semester'
+                             isUse='semester'
                         />
                         <PortfolioSelectButton
-                            disabled={true} isUse='level'
+                             isUse='level'
                         />
                     </div>
                 </div>

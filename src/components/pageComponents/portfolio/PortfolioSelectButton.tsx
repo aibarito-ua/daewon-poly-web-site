@@ -7,10 +7,8 @@ import usePortfolioStore from '../../../store/usePortfolioStore';
 
 export default function PortfolioSelectButton(props:{
   isUse: "semester"|"level";
-  disabled:boolean;
 }) {
   const {
-    disabled, 
     isUse,
   } = props;
   
@@ -19,6 +17,7 @@ export default function PortfolioSelectButton(props:{
   const {
     semesters, selectSemester, setSelectSemester,
     levels, selectLevel, setSelectLevel,
+    forceReadOnlyPortfolioSelectBox
   } = usePortfolioStore();
   React.useEffect(()=>{
     if (levels.length>0) {
@@ -60,9 +59,25 @@ export default function PortfolioSelectButton(props:{
 
   return (
     <div className='flex items-center h-[45px] ' >
-      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1}} >
+      <FormControl sx={{ 
+        width: '240px', height: '45px', minHeight:'45px', m: 1,
+        cursor: isReadOnly ? 'not-allowed': 'pointer'
+        }} >
         <Select
-            sx={{
+            sx={
+              isReadOnly
+              ? {
+              color: '#aeaeae',
+              height: '45px',
+              backgroundColor: '#fff',
+              borderRadius: '15px',
+              '& .MuiInputBase-input': {
+                padding:0
+              },
+              '& .MuiSelect-icon': {
+                right: '14px'
+              },
+            } : {
               color: selectValue()===''? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
@@ -73,11 +88,12 @@ export default function PortfolioSelectButton(props:{
               '& .MuiSelect-icon': {
                 right: '14px'
               }
-            }}
+            }
+          }
             
             placeholder='test'
             value={selectValue()}
-            disabled={disabled}
+            disabled={isReadOnly}
             onChange={handleChange}
             displayEmpty={true}
             open={open}
@@ -98,7 +114,7 @@ export default function PortfolioSelectButton(props:{
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
             
         >
-            <MenuItem disabled={disabled} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
+            <MenuItem disabled={isReadOnly} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
             {isUse==='level' && levels.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.level}>{dataItem.level}</MenuItem>
             })}

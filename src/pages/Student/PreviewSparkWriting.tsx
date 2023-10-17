@@ -3,7 +3,7 @@ import useEssayWritingCenterDTStore from "../../store/useEssayWritingCenterDTSto
 import useLoginStore from "../../store/useLoginStore";
 import useNavStore from "../../store/useNavStore";
 import useSparkWritingStore from "../../store/useSparkWritingStore";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { PopupModalComponent } from '../../components/toggleModalComponents/popupModalComponent';
 import contentComponent from '../../components/pageComponents/previewSparkWriting/contentComponent';
 import { grammarCheck, grammarReset, previewTest, proofReadingCountUpdate } from './api/GrammarApi';
@@ -24,7 +24,8 @@ const PreviewSparkWriting = (props:any) => {
         setProofreadingCount,
         setOutlineInputText,
         setSparkWritingDataFromAPI,
-        setProofreadingCountReset
+        setProofreadingCountReset,
+        sparkWritingBookName,
     } = useSparkWritingStore();
     // Nav Store
     const {
@@ -126,79 +127,100 @@ const PreviewSparkWriting = (props:any) => {
     
     // Navigate hook
     const navigate = useNavigate();
+    const locationInfo = useLocation();
+    // will mount grammar data check
+    const beforeRenderedFn = async () => {
+        let reloadData:boolean;
+        if (params.unit && params.draft) {
+            const beforePath = document.referrer.replace(window.location.origin, '');
+            const beforeIsWritingPage = '/student/WritingClinic/SparkWriting'
+            // const beforeUrl = document.referrer+`/${params.unit}/${params.draft}`;
 
-     // will mount grammar data check
-     const beforeRenderedFn = async () => {
-        
-        // data reload 
-        const reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
             
-            if (response.book_name!=='') {
+            if (beforePath === beforeIsWritingPage) {
+                // console.log('location test =',window.location.protocol, '\n',window.location)
+                // console.log('params =',params)
+                // console.log('beforePath =',beforePath)
+                const response = {
+                    book_name: sparkWritingBookName,
+                    units: sparkWritingData
+                };
                 setSparkWritingDataFromAPI(response.units, response.book_name);
                 setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
-                return true;
+                reloadData = true;
             } else {
-                return false;
+                // data reload 
+                reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
+                    
+                    if (response.book_name!=='') {
+                        setSparkWritingDataFromAPI(response.units, response.book_name);
+                        setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })
             }
-        })
-        
-        if (reloadData) {
-            const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
-            // check submit?
-            const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.status;
-          //  console.log('checkTarget =',checkTarget,'\ncheckSubmitted=',checkSubmitted)
-          //  console.log(`sparkWritingData[${unitIndex}]=`,sparkWritingData[unitIndex])
-            if (checkSubmitted > 1) {
-              //  console.log('test 11')
-                setIsSubmitted(true);
-                
-            } else {
-                let titleGrammarData:{
-                    past: TTitleHistory[];
-                    present: TTitleHistory;
-                    future: TTitleHistory[];
-                } = {past:[], present:[], future: []};
-                let bodyGrammarData:{
-                    past: TbodyHistory[];
-                    present: TbodyHistory;
-                    future: TbodyHistory[];
-                } = {past:[], present:[], future: []};
-
-                for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
-                    const targetValue = checkTarget[unitsIdx];
-                    if (targetValue.grammar_correction_content_student&&targetValue.grammar_correction_content_student!=='') {
-                        if (targetValue.name==='Title') {
-                            titleGrammarData = JSON.parse(targetValue.grammar_correction_content_student);
-                        } else if (targetValue.order_index===2) {
-                            const targetDataParsing = JSON.parse(targetValue.grammar_correction_content_student)
-                            bodyGrammarData = targetDataParsing;
+            if (reloadData) {
+                const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
+                // check submit?
+                const checkSubmitted = sparkWritingData[unitIndex].draft_1_status.status;
+              //  console.log('checkTarget =',checkTarget,'\ncheckSubmitted=',checkSubmitted)
+              //  console.log(`sparkWritingData[${unitIndex}]=`,sparkWritingData[unitIndex])
+                if (checkSubmitted > 1) {
+                  //  console.log('test 11')
+                    setIsSubmitted(true);
+                    
+                } else {
+                    let titleGrammarData:{
+                        past: TTitleHistory[];
+                        present: TTitleHistory;
+                        future: TTitleHistory[];
+                    } = {past:[], present:[], future: []};
+                    let bodyGrammarData:{
+                        past: TbodyHistory[];
+                        present: TbodyHistory;
+                        future: TbodyHistory[];
+                    } = {past:[], present:[], future: []};
+    
+                    for (let unitsIdx = 0; unitsIdx < checkTarget.length; unitsIdx++) {
+                        const targetValue = checkTarget[unitsIdx];
+                        if (targetValue.grammar_correction_content_student&&targetValue.grammar_correction_content_student!=='') {
+                            if (targetValue.name==='Title') {
+                                titleGrammarData = JSON.parse(targetValue.grammar_correction_content_student);
+                            } else if (targetValue.order_index===2) {
+                                const targetDataParsing = JSON.parse(targetValue.grammar_correction_content_student)
+                                bodyGrammarData = targetDataParsing;
+                            }
                         }
                     }
+                    if (bodyGrammarData.present && bodyGrammarData.present.length > 0) {
+            
+                        setBodyHistory({
+                            title: titleGrammarData,
+                            body: bodyGrammarData
+                        })
+                        setIsGrammarProceed(true);
+                        setIsPreview(false)
+                        setGuideFlag(1)
+                    }
                 }
-                if (bodyGrammarData.present && bodyGrammarData.present.length > 0) {
-        
-                    setBodyHistory({
-                        title: titleGrammarData,
-                        body: bodyGrammarData
-                    })
-                    setIsGrammarProceed(true);
-                    setIsPreview(false)
-                    setGuideFlag(1)
-                }
+                setCommonStandbyScreen({openFlag:false})
+            } else {
+                commonAlertOpen({
+                    alertType: 'warning',
+                    useOneButton: true,
+                    yesButtonLabel: 'OK',
+                    messages: ['Please try again.'],
+                    yesEvent: () => {
+                        setCommonStandbyScreen({openFlag:false})
+                        navigate(-1)
+                    }
+                })
             }
-            setCommonStandbyScreen({openFlag:false})
-        } else {
-            commonAlertOpen({
-                alertType: 'warning',
-                useOneButton: true,
-                yesButtonLabel: 'OK',
-                messages: ['Please try again.'],
-                yesEvent: () => {
-                    setCommonStandbyScreen({openFlag:false})
-                    navigate(-1)
-                }
-            })
         }
+        
+       
     }
     useComponentWillMount(async ()=>{
         setCommonStandbyScreen({openFlag:true})

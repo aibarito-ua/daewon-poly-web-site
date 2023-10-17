@@ -1000,7 +1000,10 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         set(()=>({unitReportData: data, unitRubricScoresData: rubricScoreDataStates}))
     },
     reportSelectBookName:'',
-
+    forcedReadOnlyReportSelectBox: [false, false],
+    setForcedReadOnlyReportSelectBox: (flags) => {
+        set(()=>({forcedReadOnlyReportSelectBox:flags}))
+    },
 }))
 
 export default useControlAlertStore;

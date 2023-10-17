@@ -106,7 +106,6 @@ const ProgressTable = (props:any) => {
                         firstDraftFeedbackState=<progressIcons.CheckBlueRectIcon/>;
 
                         secondDrafteState = progressIcons.EntryBlueIcon;
-                        
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_complete_date ? formatDateforStringData(unitItem.draft_1_status.review_complete_date):'';
                     } else if (firstDraftStatus===5) {

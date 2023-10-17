@@ -193,7 +193,11 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
             selectSemester: checkSemester ? dumpSemester[0].label:'',
             selectLevel: checkSemester ? dumpSemester[0].level:'',
         }))
-    }
+    },
+    forceReadOnlyPortfolioSelectBox: [],
+    setForceReadOnlyPortfolioSelectBox: (flags) => {
+        set(()=>({forceReadOnlyPortfolioSelectBox:flags}))
+    },
 }))
 
 export default usePortfolioStore;
