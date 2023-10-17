@@ -83,7 +83,11 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
             </div>
         }
     }
-    return <div className="w-[1010px] h-[492px] bg-white rounded-[24px] p-[35px]">
+    return <div className={
+        window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 
+        ? "portfolio-container-wrap-electron"
+        : "portfolio-container-wrap"
+    }>
         <div className="flex flex-col gap-[15px]">
             <div className="flex flex-row w-full h-fit justify-center items-center gap-[20px]">
                 {/* {displayRow(1)}

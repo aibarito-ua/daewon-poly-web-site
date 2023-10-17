@@ -1447,6 +1447,7 @@ bg-[#ffea2c]
   w-full
   rounded-[24px]
   bg-white
+  
 }
 .progress-page-view-box-header {
   @apply
@@ -1464,6 +1465,7 @@ bg-[#ffea2c]
   border-b-[5px]
   border-x-[5px]
   border-white
+  justify-center
 }
 .progress-page-view-box-list-icon {
   @apply
@@ -1650,7 +1652,28 @@ bg-[#ffea2c]
   text-[#222222]
   h-full 
 }
-
+.report-chart-pannel-report-by-unit-wrap {
+  @apply
+  w-[1010px]
+  h-[424px]
+  flex
+  flex-col
+  justify-center
+  items-center
+  pt-[30px]
+  px-[70px]
+}
+.report-chart-pannel-report-by-unit-wrap-electron {
+  @apply
+  w-full
+  h-[424px]
+  flex
+  flex-col
+  justify-center
+  items-center
+  pt-[30px]
+  px-[70px]
+}
 /* report chart right components */
 .report-chart-right-components-div {
   @apply
@@ -2417,8 +2440,9 @@ bg-[#ffea2c]
   top-[7px]
   right-[15px]
   w-[36px]
-  h-[36px]
+  h-[38px]
   bg-no-repeat
+  bg-cover
   bg-teacher-feedback-more-comment-detail-button-icon
 }
 
@@ -2838,7 +2862,24 @@ bg-[#ffea2c]
   w-[36px]
   h-[36px]
 } */
-
+/* portfolio */
+.portfolio-container-wrap {
+  @apply
+  w-[1010px]
+  h-[492px]
+  bg-white
+  rounded-[24px]
+  p-[35px]
+}
+.portfolio-container-wrap-electron {
+  @apply
+  /* w-[1010px] */
+  w-full
+  h-[492px]
+  bg-white
+  rounded-[24px]
+  p-[35px]
+}
 .export-lm-wh-draft-info-numbering-div {
   font-family: 'GothamRounded';
   font-size: 2.902mm;
@@ -2886,6 +2927,7 @@ bg-[#ffea2c]
   text-align: left;
   color: #555
 }
+
 .portfolio-contents-date-font {
   font-family: 'Roboto';
   font-size: 18px;

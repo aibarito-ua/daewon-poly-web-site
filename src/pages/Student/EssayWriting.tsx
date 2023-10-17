@@ -55,6 +55,9 @@ const EssayWriting = () => {
     // 2nd submit active flag
     const [draft2ndSubmitActive, setDraft2ndSubmitActive] = React.useState<boolean>(false);
 
+    // 2nd draft input update check flag
+    const [isUpdateDraft2Inputs, setIsUpdateDraft2Inputs] = React.useState<boolean>(false);
+
     // user info
     const {
         userInfo
@@ -79,6 +82,8 @@ const EssayWriting = () => {
         draft2ndPageSet,
         setDraft2ndPageSet,
         commentFocusId,
+        sparkWritingDataDumy,
+        historyDataDelete,
     } = useSparkWritingStore();
     const params = useParams();
     // console.log('params : unit =',params.unit,': draft =',params.draft)
@@ -223,6 +228,20 @@ const EssayWriting = () => {
             const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         } else {
+            if (originalTargetData.length>0) {
+                console.log('draft 2 value update')
+                const draft2Outlines = sparkWritingData[unitIndex].draft_2_outline;
+                const dumyDraft2Outlines = originalTargetData[unitIndex].draft_2_outline;
+                let isUpdate2nd = false;
+                for (let i = 0; i < draft2Outlines.length; i++) {
+                    if (draft2Outlines[i].input_content !== dumyDraft2Outlines[i].input_content) {
+                        isUpdate2nd = true;
+                        break;
+                    }
+                }
+                console.log('isUpdate =',isUpdate2nd)
+                setIsUpdateDraft2Inputs(isUpdate2nd);
+            } 
             const rightTitle = <span>{'Step 2.'}<span className='ordinal pl-2 pr-1'>{'2nd'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
         }
@@ -240,6 +259,7 @@ const EssayWriting = () => {
             setSubRightNavTitleString('')
             setIsPreviewButtonOpen(false);
             setIsSaveButtonOpen(false);
+            setIsUpdateDraft2Inputs(false);
             
         }
     },[
@@ -536,8 +556,10 @@ const EssayWriting = () => {
             } else if (DraftIndex==='2') {
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
+                console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
+                console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                 let questionOpenSave = false;
-                if (draft2ndSaveActive||draft2ndSubmitActive) {
+                if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
                     questionOpenSave = true;
                 } else {
                     questionOpenSave = false;
@@ -589,6 +611,68 @@ const EssayWriting = () => {
             }
         }
     },[]);
+    React.useEffect(()=>{
+        if (sparkWritingData !== undefined) {
+            if (DraftIndex==='2') {
+                // draft2ndSaveActive
+                // draft2ndSubmitActive
+                console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
+                console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
+                let questionOpenSave = false;
+                if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
+                    questionOpenSave = true;
+                } else {
+                    questionOpenSave = false;
+                }
+                if (questionOpenSave) {
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=> {
+                                        setCommonStandbyScreen({openFlag:true})
+                                        setDraft2ndPageSet('')
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            
+                        })
+                    })
+                } else {
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            
+                        })
+                    })
+                }
+            }
+        }
+    },[
+        draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs
+    ])
 
     const temporarySaveFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
@@ -862,13 +946,15 @@ const EssayWriting = () => {
                     <div className={`${isPreviewButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
                         if (isPreviewButtonOpen) {
                             callbackCheckValues()
-                            // setShowPreviewModal(true)
                                 commonAlertOpen({
                                     messages:['Are you ready to preview your writing?'],
                                     alertType: 'continue',
                                     yesButtonLabel: `Yes`,
                                     noButtonLabel: `No`,
                                     yesEvent: async ()=>{
+                                        const unitIndex = parseInt(UnitIndex);
+                                        const draftIndex = parseInt(DraftIndex);
+                                        historyDataDelete(unitIndex, draftIndex)
                                         if (isSaved) {
                                             CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             commonAlertClose();

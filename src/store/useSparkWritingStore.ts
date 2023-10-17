@@ -296,6 +296,20 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     checkWritingValues: {
 
     },
+    historyDataDelete: (unitIndex, draftIndex) => {
+        let allSparkData:TSparkWritingDatas = get().sparkWritingData.map((item)=>{
+            if (item.unit_index === unitIndex) {
+                if (draftIndex === 1) {
+                    for (let i = 0; i < item.draft_1_outline.length; i++) {
+                        item.draft_1_outline[i].grammar_correction_content_student=''
+                    }
+                }
+            }
+            return item;
+            
+        });
+        set(()=>({sparkWritingData:allSparkData}))
+    },
     setOutlineInputText: (
         inputText: string,
         unitId:number,
@@ -344,7 +358,8 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             console.log('title ===',dumyUnitData)
         }
         set(()=>({
-            sparkWritingData: dumyUnitData
+            sparkWritingData: dumyUnitData,
+
         }))
         
     },
@@ -369,7 +384,8 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
 
         set(()=>({
             sparkWritingBookName:bookName? bookName:get().sparkWritingBookName,
-            sparkWritingData:data
+            sparkWritingData:data,
+            sparkWritingDataDumy: data,
         }))
     },
     setProofreadingCount: (unitId:number) => {
@@ -386,7 +402,10 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             return item;
         });
         if (isAvailable) {
-            set(()=>({sparkWritingData:getCurrentData}))
+            set(()=>({
+                sparkWritingData:getCurrentData,
+                sparkWritingDataDumy: getCurrentData,
+            }))
         }
         return isAvailable;
     },
@@ -404,7 +423,10 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             return item;
         });
         if (isAvailable) {
-            set(()=>({sparkWritingData:getCurrentData}))
+            set(()=>({
+                sparkWritingData:getCurrentData,
+                sparkWritingDataDumy: getCurrentData,
+            }))
         }
         return isAvailable;
     },
@@ -440,6 +462,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     // }
 //    temp_save_date > submit_date > review_reject_date > review_complete_date
     sparkWritingData: [],
+    sparkWritingDataDumy: [],
 
     // student's feedback 
     feedbackDataInStudent: {

@@ -17,7 +17,9 @@ interface ISparkWritingStore {
     sparkWritingBookName: string;
     sparkWritingData: TSparkWritingDatas;
     setSparkWritingDataFromAPI: (data:TSparkWritingDatas,bookName?:string)=>void;
-
+    // 비교 데이터
+    sparkWritingDataDumy: TSparkWritingDatas;
+    
     // save draft temporary data form
     sparkWritingTemporarySaveData: TSparkWritingTemporarySaveData;
     setSparkWritingTemporarySaveData: (data: TSparkWritingTemporarySaveData) => void;
@@ -43,6 +45,9 @@ interface ISparkWritingStore {
     progressAllLevelsValue: string[];
     setProgressAllLevelBoxValues: (data: string[]) => void;
     setProgressLevelBoxValue: (level:string) => void;
+
+    // preview페이지 강제 이동 -> history data delete
+    historyDataDelete: (unitIndex:number, draftIndex:number) => void;
 }
 type TDraft2ndPageSet = 'fresh'|'revise'|'';
 type TSparkWritingDatas = TSparkWritingData[]

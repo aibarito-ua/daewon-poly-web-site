@@ -205,10 +205,6 @@ const PreviewSparkWriting = (props:any) => {
         await beforeRenderedFn();
     })
 
-    // AI Proofreading Events
-    const AIProofreadingOnClickEvent = () => setShowAIProofreadingModal(true);
-    const AIProofreadingClose = () => setShowAIProofreadingModal(false);
-
     const AIProofreadingYesOnClick = async () => {
         // 추가 로직
         // grammar 시작 후

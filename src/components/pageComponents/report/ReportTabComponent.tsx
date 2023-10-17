@@ -323,7 +323,11 @@ const handleNext = (currentIndex:number) => {
         <CustomTabPanel value={value} index={1}>
             {isNoData && noDataJSX()}
             {!isNoData && (
-                <div className='w-[1010px] h-[424px] flex flex-col justify-center items-center pt-[30px] px-[70px]'>
+                <div className={
+                  window.navigator.userAgent.toLowerCase().indexOf('electron') > -1
+                  ? 'report-chart-pannel-report-by-unit-wrap-electron'
+                  : 'report-chart-pannel-report-by-unit-wrap'
+                }>
                     {/* title */}
                     <div className='flex flex-row report-by-unit-page-title-font pb-[15px]'>
                         {reportByUnitMainTitle}
