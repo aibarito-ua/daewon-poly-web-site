@@ -22,20 +22,26 @@ interface StyledTabsProps {
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs
     {...props}
-    
+    TabIndicatorProps={{
+      style: { 
+        display: 'none', width: 0, height: 0
+      }
+    }}
     // TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
 ))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    maxWidth: 40,
-    width: '100%',
-    backgroundColor: '#635ee7',
-  },
+  height:'55px',
+  '& .MuiTabs-flexContainer': {
+    
+  }
+  // '& .MuiTabs-indicator': {
+  //   display: 'none',
+  // },
+  // '& .MuiTabs-indicatorSpan': {
+  //   maxWidth: 40,
+  //   width: '100%',
+  //   backgroundColor: '#fff',
+  // },
 });
 
 interface StyledTabProps {
@@ -67,29 +73,33 @@ interface TabPanelProps {
   }
 function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        className='flex flex-row w-full bg-white rounded-b-[24px]'
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ 
-            width: '100%',
-            height: '424px',
-            backgroundColor: '#fff',
-              borderBottomRightRadius: '24px',
-              borderBottomLeftRadius: '24px',
-           }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
+    if (value === index) {
+      return (
+        <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          className={value === index ? 'flex flex-row w-full bg-white rounded-b-[24px]' : 'hidden w-0 h-0'}
+          {...other}
+        >
+          {value === index && (
+            <Box sx={{ 
+              width: '100%',
+              height: '424px',
+              backgroundColor: '#fff',
+                borderBottomRightRadius: '24px',
+                borderBottomLeftRadius: '24px',
+             }}>
+              <Typography>{children}</Typography>
+            </Box>
+          )}
+        </div>
+      );
+
+    } else {
+      return null
+    }
   }
 
 export default function CustomizedReportTabs(
@@ -174,7 +184,7 @@ export default function CustomizedReportTabs(
     return <div className='flex flex-col justify-center items-center h-[424px]'>
         <div className=''>
             <div className='bg-tab-no-data-img-svg bg-no-repeat w-[280px] h-[197px]' />
-            <div className='report-no-data-font'>{'No data to show'}</div>
+            <div className='report-no-data-font mt-[20px]'>{'No data to show'}</div>
         </div>
     </div>
   }
@@ -215,21 +225,28 @@ const handleNext = (currentIndex:number) => {
           value={value}
           onChange={!isNoData?handleChange:()=>{}}
           aria-label="styled tabs"
+          
           sx={{
             width: '100%',
-            height: '68px',
+            height: '66px',
             paddingTop: '13px',
             paddingLeft: '50px',
             backgroundColor: '#3e61aa',
             borderTopLeftRadius: '24px',
             borderTopRightRadius: '24px',
+            borderWidth: '0px',
+            borderBottom: 'none',
+            '& .MuiTabs-indicator': {
+              // display: 'none',
+              // background: 'white'
+              transition: 'none'
+            },
           }}
         >
           <Tab  sx={{
+            height: '55px',
             paddingLeft: '27px',
             paddingRight: '27px',
-            paddingTop: '23px',
-            paddingBottom: '18px',
             color: '#fff',
             fontFamily: 'GothamRounded',
             fontSize: '20px',
@@ -244,13 +261,12 @@ const handleNext = (currentIndex:number) => {
                 color: '#192878',
             },
           }} 
-          className={value===0? 'bg-no-repeat w-[240px] h-[55.2px] bg-tab-title-active-bg-svg':'h-[55.2px]'}
+          className={value===0? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':''}
           label="Overall Report" />
           <Tab sx={{
+            height: '55px',
             paddingLeft: '27px',
             paddingRight: '27px',
-            paddingTop: '23px',
-            paddingBottom: '18px',
             color: '#fff',
             fontFamily: 'GothamRounded',
             fontSize: '20px',
@@ -261,11 +277,12 @@ const handleNext = (currentIndex:number) => {
             letterSpacing: 'normal',
             textTransform: 'inherit',
             userSelect: 'none',
+            zIndex: 13333,
             '&.Mui-selected': {
                 color: '#192878',
             }
           }} 
-          className={value===1? 'bg-no-repeat w-[240px] h-[55.2px] bg-tab-title-active-bg-svg':'h-[55.2px]'} 
+          className={value===1? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':''} 
           label="Report by Unit" />
           
         </StyledTabs>
@@ -320,7 +337,7 @@ const handleNext = (currentIndex:number) => {
             )} 
         </CustomTabPanel>
         {/* report by unit tab panel */}
-        <CustomTabPanel value={value} index={1}>
+        <CustomTabPanel value={value} index={1} >
             {isNoData && noDataJSX()}
             {!isNoData && (
                 <div className={
@@ -337,13 +354,13 @@ const handleNext = (currentIndex:number) => {
                     <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData}/>
 
                     <div className={!isPrev
-                        ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                        : 'absolute top-[215px] -left-[25px] bg-tab-report-prev w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
+                        ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                        : 'absolute top-[215px] -left-[25px] bg-tab-report-prev bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
                         onClick={()=>handlePrev(reportSelectUnit)}
                     />
                     <div className={!isNext
-                        ? 'absolute top-[215px] -right-[25px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                        : 'absolute top-[215px] -right-[25px] bg-tab-report-next w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
+                        ? 'absolute top-[215px] -right-[25px] bg-tab-next-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                        : 'absolute top-[215px] -right-[25px] bg-tab-report-next bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
                     }
                         onClick={()=>handleNext(reportSelectUnit)}
                     />

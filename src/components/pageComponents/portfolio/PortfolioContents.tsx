@@ -54,7 +54,7 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
                 const checkCrown = avr>=80?true:false;
 
                 contentJSX = <div key={key}
-                className="w-[300px] h-[206px] bg-no-repeat bg-portfolio-unit-open-bg-svg relative select-none hover:cursor-pointer"
+                className="w-[300px] h-[206px] bg-no-repeat bg-portfolio-unit-open-bg-svg bg-cover relative select-none hover:cursor-pointer"
                 onClick={()=>{
                     let data = portfolioModal;
                     data.open=true;
@@ -76,7 +76,7 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
         if (contentJSX!==null) {
             return contentJSX;
         } else {
-            return <div className="w-[300px] h-[206px] bg-no-repeat bg-portfolio-unit-lock-bg-svg relative flex">
+            return <div className="w-[300px] h-[206px] bg-no-repeat bg-portfolio-unit-lock-bg-svg bg-cover relative flex">
                 <div className="absolute top-[123px] left-[120px] portfolio-contents-null-font">
                     {`Unit ${index}`}
                 </div>

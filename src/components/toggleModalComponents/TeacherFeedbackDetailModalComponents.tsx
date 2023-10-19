@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import draftViewBox from '../pageComponents/feedbackComponents/draftFeedback';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
+import CommentListWordCustom from '../pageComponents/feedbackComponents/commentListWordCustom';
 
 export default function TeacherFeedbackDetailModalComponents (props: {
     draftItem: TSparkWritingData,
@@ -86,24 +87,29 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                         <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px]'>
                             {draftItem.draft_1_comment.map((item,draftCommentIndex) => {
                                 const key = 'teacherFeedbackModalComment-'+draftCommentIndex
-                                return (
-                                    <div className={commentFocusId!==item.comment_className 
-                                        ?'flex w-[300px] border-[1px] border-[#dbdbdb] bg-white rounded-[15px] p-[10px]'
-                                        : 'flex w-[300px] border-[2px] border-[#f1b02e] bg-white rounded-[15px] p-[10px]'
-                                    } key={key}
-                                    style={{
-                                        fontFamily: 'Roboto',
-                                        fontSize: '16px',
-                                        color: '#333',
-                                        lineHeight: 1.38,
-                                        textAlign:'left'
-                                    }}
-                                    onClick={()=>{
-                                        setCommentFocusId(item.comment_className);
-                                        
-                                    }}
-                                    >{item.comment}</div>
-                                )
+                                // return (
+                                //     <div className={commentFocusId!==item.comment_className 
+                                //         ?'flex w-[300px] border-[1px] border-[#dbdbdb] bg-white rounded-[15px] p-[10px]'
+                                //         : 'flex w-[300px] border-[2px] border-[#f1b02e] bg-white rounded-[15px] p-[10px]'
+                                //     } key={key}
+                                //     style={{
+                                //         fontFamily: 'Roboto',
+                                //         fontSize: '16px',
+                                //         color: '#333',
+                                //         lineHeight: 1.38,
+                                //         textAlign:'left'
+                                //     }}
+                                //     onClick={()=>{
+                                //         setCommentFocusId(item.comment_className);
+                                //     }}
+                                    
+                                //     >{item.comment}</div>
+                                // )
+                                return <CommentListWordCustom 
+                                    comment={item.comment}
+                                    commentClassName={item.comment_className}
+                                    mainTagkey={key}
+                                />
                             })}
                         </div>
                     </div>

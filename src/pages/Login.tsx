@@ -84,21 +84,18 @@ export const Login = () => {
             // count 5 -> alert -> 비밀번호 변경 페이지 연결
             // response.isPasswordCorrect
             if (!response.isPasswordCorrect) {
+                const count = response.failedTries;
                 if (msgCheck.beforeId !== loginValues.username) {
                     // const count = 1
-                    const count = response.tries;
-                    setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
-                    setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
-                } else {
-                    // console.log('count =',msgCheck.incorrectedCount)
-                    if (msgCheck.incorrectedCount>0&&msgCheck.incorrectedCount<4) {
-                        // const count = msgCheck.incorrectedCount+1
-                        const count = response.tries;
-                        // console.log('set count =',count)
+                    if (count > 1 &&count<4) {
                         const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
                         setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
                         setErrors({displayMessage: msg})
+                    } else if (count === 1) {
+                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                        setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
                     } else {
+                        //count 5
                         commonAlertOpen({
                             alertType: 'warning',
                             messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
@@ -106,6 +103,26 @@ export const Login = () => {
                             yesButtonLabel: 'OK',
                             yesEvent: goPasswordUpdatePage
                         })
+                    }
+                } else {
+                    // console.log('count =',msgCheck.incorrectedCount)
+                    // if (msgCheck.incorrectedCount>0&&msgCheck.incorrectedCount<4) {
+                    if (count> 1 &&count<4) {
+                        // console.log('set count =',count)
+                        const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
+                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                        setErrors({displayMessage: msg})
+                    } else if (count === 5) {
+                        commonAlertOpen({
+                            alertType: 'warning',
+                            messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                            useOneButton: true,
+                            yesButtonLabel: 'OK',
+                            yesEvent: goPasswordUpdatePage
+                        })
+                    } else if (count === 1) {
+                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                        setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
                     }
                 }
                 setLoginValues({...loginValues, ['password']: ''})

@@ -470,7 +470,7 @@ body {
   flex-row pl-[15px]
 }
 .wrap-guide-2nd-text-spark-writing {
-  font-family: 'Roboto';
+  font-family: 'GothamRounded';
   font-size: 20px;
   font-weight: 700;
   color: #fff;
@@ -1843,7 +1843,9 @@ bg-[#ffea2c]
   letter-spacing: normal;
   line-height: normal;
   text-align: right;
-  color: '#666'
+  /* color: '#666' */
+  @apply
+  text-[#666]
 }
 .report-chart-righ-correction-content {
   @apply
@@ -2046,7 +2048,7 @@ bg-[#ffea2c]
   justify-center
   items-center
   w-[235px]
-  h-[50px]
+  h-[55px]
   capitalize
   bg-unit-report-modal-active-manu
   bg-no-repeat
@@ -2368,15 +2370,18 @@ bg-[#ffea2c]
   text-align: center;
   font-weight: 600;
   line-height: 1.22;
+  box-shadow: 0 5px 0 0 #e3e6ed;
   @apply
   text-[#333]
   flex
+  justify-center
   py-[9px]
   px-[10px]
   border-[2px]
   border-[#3e61aa]
   rounded-[15px]
   bg-white
+  h-[62px]
 }
 .teacher-feedback-body-font {
   font-family: 'Roboto';
@@ -2388,8 +2393,10 @@ bg-[#ffea2c]
   text-[#333]
   flex
   flex-col
-  gap-[13px]
   justify-start
+  justify-items-start
+  
+  gap-[13px]
   bg-white
 }
 .draft-2nd-title-font {
@@ -2398,6 +2405,7 @@ bg-[#ffea2c]
   text-align: center;
   font-weight: 600;
   line-height: 1.22;
+  box-shadow: 0 5px 0 0 #e3e6ed;
   @apply
   text-[#333]
   flex
@@ -2405,6 +2413,7 @@ bg-[#ffea2c]
   border-[#3e61aa]
   rounded-[15px]
   bg-white
+  h-[62px]
 }
 .draft-2nd-title-wrap-textarea {
   @apply
@@ -2413,9 +2422,11 @@ bg-[#ffea2c]
   border-none
   focus:border-none
   focus:ring-0
-  py-[9px]
-  px-[10px]
   rounded-[15px]
+  text-center
+  max-h-[62px]
+  h-fit
+  p-0
 }
 .draft-2nd-body-wrap-textarea {
   @apply
@@ -2430,10 +2441,12 @@ bg-[#ffea2c]
 }
 .draft-title-paragragh-wrap {
   @apply
-  text-left
+  text-start
 }
 .draft-hover-tooltip-content-wrap {
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.1);
   @apply
+  max-w-[600px]
   w-fit
   h-fit
   p-[10px]
@@ -2461,6 +2474,7 @@ bg-[#ffea2c]
   h-[73px]
   bg-no-repeat
   bg-draft-2nd-fresh-page-button-svg
+  bg-contain
   hover:cursor-pointer
 }
 .draft-2nd-select-button-revise {
@@ -2469,6 +2483,7 @@ bg-[#ffea2c]
   h-[73px]
   bg-no-repeat
   bg-draft-2nd-revise-1st-button-svg
+  bg-contain
   hover:cursor-pointer
 }
 .draft-2nd-button-wrap {

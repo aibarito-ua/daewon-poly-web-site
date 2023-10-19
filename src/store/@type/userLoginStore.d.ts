@@ -54,3 +54,27 @@ type TSetUserInfoData = {
 }
 
 type TRole = "student" | "teacher" | "admin" | "logout";
+
+// type TLoginResponse = {
+//     "isPasswordCorrect": boolean,
+//     "hasPermission": boolean,
+//     "isUserLogged": boolean,
+//     "isNeedPasswordUpdate": boolean,
+//     "isCurrentlyEnrolled": boolean,
+//     "isWithdrawn": boolean,
+//     "isFiveTimesWrong": boolean,
+//     "webId": string,
+//     "year": number,
+//     "semester": number,
+//     "memberType": string,
+//     "memberNameKr": string,
+//     "memberNameEn": string,
+//     "userCode": string,
+//     "courseCode": string,
+//     "courseName": string,
+//     "grade": string,
+//     "userImagePath": string,
+//     "accessToken": string,
+//     "last_location_url": string,
+//     "className": string,
+// }

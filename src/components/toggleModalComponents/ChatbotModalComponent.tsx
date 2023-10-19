@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 // import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
+import { CommonEmoji, CommonInputValidate } from '../../util/common/commonFunctions';
 // import buttonImage from './img/buttonEllaImg.png'
 // import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
 
@@ -25,9 +26,12 @@ export default function FormDialog() {
   // before total token
   const [beforeTurnTotalToken, setBeforeTurnTotalToken] = React.useState<number>(217);
 
+  // input box controller
+  const [isInputFocus, setIsInptFocus] = React.useState<boolean>(false);
+
   
   const {
-    name, userInfo
+    name, userInfo, isMobile
   } = useLoginStore();
   const ai_name = 'Ella';
   // const user_name = name;
@@ -132,10 +136,11 @@ export default function FormDialog() {
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     // console.log('current value =',e.currentTarget.value)
     // [ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]
-    const value = e.currentTarget.value.replace(/[ㄱ-ㅎ가-힣]|[{}:\"'\\]/gmi,'');
+    // const removeE = CommonEmoji.remove(e.currentTarget.value);
+    // const value = removeE.text.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]|[{}`\\]||(&#)|/gmi,'');
+    const value = CommonInputValidate.chat(e.currentTarget.value);
     e.currentTarget.style.height = 'auto';
     e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-    
     const inputValue = value.replace(/\n{2,}/gm, '\n')
     const countInputLength = inputValue.length
     setInputLength(countInputLength)
@@ -167,12 +172,16 @@ export default function FormDialog() {
       <Dialog className=''
       sx={{ '.MuiDialog-container':{ backgroundColor: 'rgba(0,0,0,0.5)'},
         '.MuiDialog-paper': { 
+          minWidth:'700px',
           width: '700px',
-          minHeight: '390px',
+          minHeight: isInputFocus ? '390px':'650px',
+          // minHeight: '390px',
+          height: '390px',
           padding: '32px 0 0',
           borderRadius: '20px',
           backgroundColor: '#fff',
-          marginTop: '-200px',
+          marginTop: isInputFocus ? '30px': '-50px',
+          // marginTop: '-310px',
         }
       }}
       open={open} onClose={handleClose}>
@@ -183,7 +192,7 @@ export default function FormDialog() {
         >
         <div className='flex flex-1 h-[290px]'>
 
-        <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto'>
+        <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'>
         {chatHistory.slice(0).reverse().map((hist, idx)=>{
             const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
             const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
@@ -221,6 +230,16 @@ export default function FormDialog() {
               placeholder='Type here or tap on the mic button to begin.'
               onChange={(e)=>onChangeValue(e)}
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
+              onFocus={()=>{
+                if (isMobile) {
+                  setIsInptFocus(true);
+                } else {
+                  setIsInptFocus(false)
+                }
+              }}
+              onBlur={()=>{
+                setIsInptFocus(false)
+              }}
               value={inputText}
             />
             {/* <div className='flex w-full justify-center'>{`Number of characters: ${inputLength} / 1000`}</div>

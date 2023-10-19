@@ -2,6 +2,7 @@ import React from 'react';
 import useLoginStore from "../../../store/useLoginStore";
 import { commonIconSvgs } from "../../../util/svgs/commonIconsSvg";
 import useProgressPageStore from '../../../store/useProgressPageStore';
+import NoImage from './no_image_profile.png';
 
 export default function SmallHead (props: {
     mainTitle: string,
@@ -14,6 +15,7 @@ export default function SmallHead (props: {
         // 'free writing'
     ];
     // console.log('subTitle ==',props.subTitle)
+    const testUrl = 'http://file.koreapolyschool.com'
     return (
         <div className='flex flex-row justify-between'>
             <div className="flex flex-col">
@@ -50,8 +52,8 @@ export default function SmallHead (props: {
                     <div className='top-right-user-info-text-en-name select-none'>{userInfo.memberNameEn}</div>
                     <div className='top-right-user-info-text-class select-none'>{userInfo.courseName}</div>
                 </div>
-                <div className={`top-right-user-info-img`} style={{
-                    backgroundImage: 'url("'+userInfo.userImagePath+'")',
+                <div className={`top-right-user-info-img bg-user-no-profile-image-view`} style={{
+                    backgroundImage: userInfo.userImagePath !== testUrl ? 'url("'+userInfo.userImagePath+'")': NoImage,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     backgroundSize: 'cover'

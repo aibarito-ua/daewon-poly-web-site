@@ -19,7 +19,7 @@ export default function SelectUnit () {
     const {role, userInfo} = useLoginStore();
     const {
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen,
-        goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage
+        goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage,
     } = useNavStore()
     const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
     const {
@@ -39,7 +39,9 @@ export default function SelectUnit () {
         setUnitReportModal,
         // test
         unitReportsData, unitReportData, unitRubricScoresData, reportModalRubricData
-        ,reportSelectedOverallBarChart, reportSelectedOverallPieChart
+        ,reportSelectedOverallBarChart, reportSelectedOverallPieChart,
+
+        commonAlertClose, commonAlertOpen
     } = useControlAlertStore();
 
     React.useEffect(()=>{
@@ -84,10 +86,23 @@ export default function SelectUnit () {
         
         const getReportAll = await getReportsAPI(student_code, userInfo.accessToken);
         if (goBackFromDraftInUnitPage) {
-            const exitFunc = () => {
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-            };
-            setGoBackFromDraftInUnitPage(()=>exitFunc());
+            // const exitFunc = () => {
+            //     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+            // };
+            // setGoBackFromDraftInUnitPage(()=>exitFunc());
+            setGoBackFromDraftInUnitPage(()=>{
+                commonAlertOpen({
+                    messages: ['Do you want to exit?'],
+                    alertType: 'warningContinue',
+                    yesButtonLabel:'Yes',
+                    noButtonLabel: 'No',
+                    yesEvent: async () => {
+                        commonAlertClose();
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    },
+                    
+                })
+            })
         }
         if (getReportAll && allUnitsDataFromAPI) {
             console.log('getReportAll ==',getReportAll)
@@ -313,7 +328,20 @@ export default function SelectUnit () {
                     <div key={topicsIndex} 
                     className={lastUnitIndex === item.unit_index ? 'select-none select-writing-topic-item-button-last':`select-none select-writing-topic-item-button`}
                     onClick={async ()=>{
-                        
+                        // init back event
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    commonAlertClose();
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                
+                            })
+                        })
                         if ( !firstFeedback && !secondFeedback ) {
                             // 1차 진입 가능
                             if (firstDraft === 0) {

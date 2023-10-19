@@ -52,21 +52,28 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     React.useEffect(()=>{
         if (setCommentFocusId) {
             if (isOpen) {
-                console.log('tooltip main key ')
                 setCommentFocusId(mainTagkey)
+            } else {
+                setCommentFocusId('')
             }
         }
+        console.log('tooltip main key ',mainTagkey)
+        console.log('isOpen =',isOpen,)
     }, [isOpen])
     React.useEffect(()=>{
         if (commentFocusId === mainTagkey) {
+            setIsOpen(true)
             refs.domReference.current?.scrollIntoView({
                 behavior: "auto",
                 block: 'nearest'
             })
+        } else {
+            setIsOpen(false)
         }
     }, [commentFocusId])
 
     const {refs, floatingStyles, context} = useFloating({
+        
         open: isOpen,
         onOpenChange: setIsOpen,
         placement,
@@ -76,11 +83,14 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             flip({
                 // crossAxis: placement.includes("-"),
 
-                fallbackAxisSideDirection: "end",
+                // fallbackAxisSideDirection: "end",
+                fallbackPlacements:['top-start','right','bottom-start'],
                 padding: 20
             }),
-            shift({ padding: 20 })
-        ]
+            shift({ padding: 20 }),
+            
+        ],
+        
     });
     const focus = useFocus(context,{
         keyboardOnly:false,
@@ -97,14 +107,16 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         dismiss,
         role,
         // hover,
-        click
+        click,
+        
+        
     ]);
     return (
         <span key={mainTagkey} 
         className={`whitespace-pre-line hover:cursor-pointer z-[9999] relative rounded-[5px]`}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
-            className={commentFocusId === mainTagkey ? 'border-[2px] border-[#f1b02e]':''}
+            className={isOpen ? 'border-[2px] border-[#f1b02e] rounded-[2px]':'border-0 hover:border-[2px] hover:border-[#f1b02e] rounded-[2px]'}
             >{compareResultText}</span>
             <FloatingPortal>
                 {isOpen && (

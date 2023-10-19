@@ -228,7 +228,7 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
         >
           <div className='flex flex-row justify-center items-center text-[16px] text-[#ffffff] bg-[#7861bb] font-bold h-[50px] w-[1024px] relative rounded-t-[30px]'>
             {title}
-            <div className='bg-modal-close-button-svg w-[50px] h-[50px] bg-no-repeat absolute -right-[24px] -top-[24px] hover:cursor-pointer'
+            <div className='w-[50px] h-[50px] bg-modal-close-button-svg bg-contain bg-no-repeat absolute -right-[24px] -top-[24px] hover:cursor-pointer'
                 onClick={handleClose}
                 
             />
@@ -244,13 +244,13 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
         >
         <div className='flex flex-1 h-full w-full bg-white rounded-b-[30px] border-x-[6px] border-b-[6px] border-x-[#7861bb] border-b-[#7861bb] relative'>
             <div className={!isPrev
-                ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                : 'absolute top-[215px] -left-[25px] bg-tab-rubric-modal-left w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
+                ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                : 'absolute top-[215px] -left-[25px] bg-tab-rubric-modal-left bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
                 onClick={()=>handlePrev(selectUnitIndex)}
             />
             <div className={!isNext
-                ? 'absolute top-[215px] -right-[25px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                : 'absolute top-[215px] -right-[25px] bg-tab-rubric-modal-right w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
+                ? 'absolute top-[215px] -right-[25px] bg-tab-next-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                : 'absolute top-[215px] -right-[25px] bg-tab-rubric-modal-right bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
             }
                 onClick={()=>handleNext(selectUnitIndex)}
             />

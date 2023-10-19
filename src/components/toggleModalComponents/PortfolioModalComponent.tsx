@@ -101,7 +101,7 @@ export default function PortfolioModalComponent() {
             }
         }
         return <div className={ 'absolute bottom-[20px] right-[50px] flex flex-row items-center gap-[5px] h-[9px]'}>
-            <div className='report-chart-right-complete-date-title font-bold'>{`Completion Date`}</div>
+            <div className='report-chart-right-complete-date-title font-bold '>{`Completion Date`}</div>
             <div className='report-chart-right-complete-date-title'>{':'}</div>
             <div className='report-chart-right-complete-date-title'>{firstDate}</div>
             <div className='w-[1px] h-[9px] bg-[#bbb]'/>
@@ -152,7 +152,7 @@ export default function PortfolioModalComponent() {
                         zIndex: 1301
                     }}
                 >
-                    <ReportClose className='w-[50px] h-[50px] m-0 p-0'
+                    <div className='w-[50px] h-[50px] m-0 p-0 bg-modal-close-button-svg bg-contain bg-no-repeat'
                     onClick={()=>setPortfolioModalClose()}/>
                 </button>
             </div>
@@ -189,9 +189,14 @@ export default function PortfolioModalComponent() {
                     <div className='flex flex-row report-by-unit-page-title-font'>
                         {portfolioModal.displayTitle}
                     </div>
-                    <div className='flex flex-col gap-[15px] w-[943px] h-[425px] border-[1px] border-[#ddd] rounded-[20px] relative px-[25px] pt-[45px] overflow-y-auto'>
+                    <div className={
+                        portfolioModal.isCrown 
+                        ? 'flex flex-col gap-[15px] w-[943px] h-[425px] border-[1px] border-[#ddd] rounded-[20px] relative px-[25px] pt-[45px] overflow-y-auto'
+                        : 'flex flex-col gap-[15px] w-[943px] h-[425px] border-[1px] border-[#ddd] rounded-[20px] px-[25px] pt-[30px] overflow-y-auto justify-start'
+                    }>
                         {/* small crown */}
-                        <div className={portfolioModal.isCrown? 'bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat w-[50px] h-[45px] absolute top-0 right-[20px]':''} />
+                        {portfolioModal.isCrown && <div className='bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat w-[50px] h-[45px] absolute top-0 right-[20px]' />}
+                        
 
                         {/* title */}
                         <div className='portfolio-modal-unit-box-content-title flex flex-row justify-center'>{portfolioModal.contentTitle}</div>
@@ -212,13 +217,13 @@ export default function PortfolioModalComponent() {
                     
 
                     <div className={!portfolioModal.isPrev
-                        ? 'absolute top-[265px] left-[0px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                        : 'absolute top-[265px] left-[0px] bg-tab-rubric-modal-left w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
+                        ? 'absolute top-[265px] left-[0px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                        : 'absolute top-[265px] left-[0px] bg-tab-rubric-modal-left bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
                         onClick={handlePrev}
                     />
                     <div className={!portfolioModal.isNext
-                        ? 'absolute top-[265px] right-[0px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                        : 'absolute top-[265px] right-[0px] bg-tab-rubric-modal-right w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
+                        ? 'absolute top-[265px] right-[0px] bg-tab-next-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                        : 'absolute top-[265px] right-[0px] bg-tab-rubric-modal-right bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
                     }
                         onClick={handleNext}
                     />

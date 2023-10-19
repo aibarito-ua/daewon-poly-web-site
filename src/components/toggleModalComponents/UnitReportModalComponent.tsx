@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled } from '@mui/material';
 import useControlAlertStore from '../../store/useControlAlertStore';
-import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
+// import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
 
 import ReportByUnitComponent from '../chartComponents/reportByUnit/ReportByUnitComponent';
 import ReportItemComponents from '../chartComponents/reportByUnit/ItemComponents/ReportItemComponents';
@@ -152,7 +152,7 @@ export default function UnitReportModalComponent() {
                         zIndex: 1301
                     }}
                 >
-                    <ReportClose className='w-[50px] h-[50px] m-0 p-0'
+                    <div className='w-[50px] h-[50px] m-0 p-0 bg-modal-close-button-svg bg-contain bg-no-repeat'
                     onClick={()=>setUnitReportModal(initializeUnitReportModal)}/>
                 </button>
             </div>
@@ -225,13 +225,13 @@ export default function UnitReportModalComponent() {
                 <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData} isActivityPage={true}/>
 
                 <div className={!isPrev
-                    ? 'absolute top-[240px] left-[0px] bg-tab-prev-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                    : 'absolute top-[240px] left-[0px] bg-tab-rubric-modal-left w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
+                    ? 'absolute top-[240px] left-[0px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                    : 'absolute top-[240px] left-[0px] bg-tab-rubric-modal-left bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'}
                     onClick={()=>handlePrev(reportSelectUnit)}
                 />
                 <div className={!isNext
-                    ? 'absolute top-[240px] right-[0px] bg-tab-next-btn-disabled w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
-                    : 'absolute top-[240px] right-[0px] bg-tab-rubric-modal-right w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
+                    ? 'absolute top-[240px] right-[0px] bg-tab-next-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
+                    : 'absolute top-[240px] right-[0px] bg-tab-rubric-modal-right bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-pointer'
                 }
                     onClick={()=>handleNext(reportSelectUnit)}
                 />

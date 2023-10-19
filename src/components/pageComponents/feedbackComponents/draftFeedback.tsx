@@ -61,14 +61,14 @@ const loadFeedbackDraftTitle = (
                         returnValue=[];
                     } else {
                         const currentCommentItem = findCommentByCommentIndex(currentCommentIdx);
-                        const createSpan = <span className={'hover:border-[2px] hover:border-[#f1b02e]'}
+                        const createSpan = <span className={'rounded-[2px]'}
                         id={currentCommentItem.comment_className}
                         key={currentCommentItem.comment_className}
                         style={{
                             backgroundColor:'yellow',
                             userSelect:'none',
                             height: 'fit-content',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
                         }}
                         >{returnValue}</span>;
                         const tooltipSpans = <CommentTooltipCustom 
@@ -85,7 +85,7 @@ const loadFeedbackDraftTitle = (
 
             return <div className='draft-title-paragragh-wrap'
             id={'Title'} key={paragraphKey}
-            ><span className='pl-[10px]'/>
+            >
             {jsxElements}
             </div>
         }
@@ -176,7 +176,7 @@ const loadFeedbackDraftBody = (
 
             return <div className='draft-title-paragragh-wrap'
             id={'Title'} key={paragraphKey}
-            ><span className='pl-[10px]'/>
+            >
             {jsxElements}
             </div>
         }

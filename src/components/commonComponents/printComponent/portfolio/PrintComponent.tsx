@@ -152,7 +152,7 @@ const PortfolioPrintComponent = (props: {
             </div>
             {/* print button */}
             {/* bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px] */}
-            <button onClick={handlePrint} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'}></button>
+            <button onClick={handlePrint} className={'bg-btn-report-modal-print-ic-svg bg-no-repeat bg-contain w-[100px] h-[48px]'}></button>
             <div style={{display:'none'}} ref={divRef}>
                 
                 <div className='flex flex-col justify-start items-start w-[160.588mm] h-[202.676mm]'>

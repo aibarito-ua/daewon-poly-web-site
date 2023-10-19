@@ -66,7 +66,7 @@ export default function App() {
     >
       <CartesianGrid strokeDasharray="3 3" vertical={false}/>
       <XAxis dataKey="name" tick={<CustomXAxisTick />} minTickGap={0} ticks={['ideas','organization','voice','word', 'sentence','conventions']} 
-        tickLine={false} tickMargin={10} axisLine={false} 
+        tickLine={false} tickMargin={10} axisLine={false} interval={0}
       />
       <YAxis tickCount={5} ticks={[0,1,2,3,4,5,6,7,8,9,10,11]} tickLine={false} axisLine={false} tickFormatter={()=>''} />
       <Bar dataKey="unit1" fill="#3dbcbf" label={check.unit1?{position:'top'}:''} barSize={10} radius={[5,5,0,0]} />
