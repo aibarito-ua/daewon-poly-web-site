@@ -133,25 +133,22 @@ const PreviewSparkWriting = (props:any) => {
         let reloadData:boolean;
         
         if (params.unit && params.draft) {
-            const beforePath = document.referrer.replace(window.location.origin, '');
-            const beforeIsWritingPage = '/student/WritingClinic/SparkWriting'
-            // const beforeUrl = document.referrer+`/${params.unit}/${params.draft}`;
             
-            if (beforePath === beforeIsWritingPage) {
-                // console.log('location test =',window.location.protocol, '\n',window.location)
-                // console.log('params =',params)
-                // console.log('beforePath =',beforePath)
+            const isBeforePathCheck = sparkWritingData[unitIndex].draft_1_status.status;
+            if (isBeforePathCheck === 0) {
+                
                 const response = {
                     book_name: sparkWritingBookName,
                     units: sparkWritingData
                 };
+                console.log('response ==',response)
                 setSparkWritingDataFromAPI(response.units, response.book_name);
                 setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
                 reloadData = true;
             } else {
                 // data reload 
                 reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
-                    
+                    console.log('response ==',response)
                     if (response.book_name!=='') {
                         setSparkWritingDataFromAPI(response.units, response.book_name);
                         setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
