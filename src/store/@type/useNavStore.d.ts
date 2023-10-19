@@ -18,6 +18,8 @@ interface INavItem {
     // unit에서 back버튼 클릭 이벤트
     goBackFromDraftInUnitPage: Function|null;
     setGoBackFromDraftInUnitPage: (event:Function|null) => void;
+
+    // 작성 후 
 }
 type TStudentNavItem = "MyPage" | "EssayWriting" | "Portfolio";
 // type TTeacherNavItem = ""

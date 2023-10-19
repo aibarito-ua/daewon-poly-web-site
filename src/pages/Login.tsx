@@ -151,7 +151,7 @@ export const Login = () => {
                             // confirm
                             commonAlertOpen({
                                 alertType: 'warning',
-                                messages: ['동일한 ID로 다른 기기에 도그인 되어 있습니다. 이 기기에서 로그인할까요?'],
+                                messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다. 이 기기에서 로그인할까요?'],
                                 yesButtonLabel: 'Yes',
                                 yesEvent: () => forceLogin(loginValues, device_id, saveId),
                                 noButtonLabel: 'No',

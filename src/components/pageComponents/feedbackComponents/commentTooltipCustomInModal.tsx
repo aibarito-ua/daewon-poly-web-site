@@ -27,7 +27,7 @@ interface IGrammarTooltipCustomProps {
     
     [key:string]: any;
 }
-const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
+const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
     const {
         mainTagkey,
         textTagid,
@@ -38,7 +38,7 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
     const {
-        commentFocusId, setCommentFocusId,
+        commentFocusIdInModal, setCommentFocusIdInModal,
     } = useSparkWritingStore();
 
     React.useEffect(()=>{
@@ -55,28 +55,30 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         }
     })
     React.useEffect(()=>{
-        
-        if (setCommentFocusId) {
+        if (setCommentFocusIdInModal) {
             if (isOpen) {
-                setCommentFocusId(mainTagkey)
+                setCommentFocusIdInModal(mainTagkey)
             } else {
-                setCommentFocusId('')
+                setCommentFocusIdInModal('')
             }
         }
+
         console.log('tooltip main key ',mainTagkey)
         console.log('isOpen =',isOpen,)
     }, [isOpen])
     React.useEffect(()=>{
-        if (commentFocusId === mainTagkey) {
-            setIsOpen(true)
-            refs.domReference.current?.scrollIntoView({
-                behavior: "auto",
-                block: 'nearest'
-            })
-        } else {
-            setIsOpen(false)
-        }
-    }, [commentFocusId])
+        
+            if (commentFocusIdInModal === mainTagkey) {
+                setIsOpen(true)
+                refs.domReference.current?.scrollIntoView({
+                    behavior: "auto",
+                    block: 'nearest'
+                })
+            } else {
+                setIsOpen(false)
+            }
+        
+    }, [commentFocusIdInModal])
 
     const {refs, floatingStyles, context} = useFloating({
         
@@ -125,20 +127,10 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             className={isOpen ? 'border-[2px] border-[#f1b02e] rounded-[2px]':'border-0 hover:border-[2px] hover:border-[#f1b02e] rounded-[2px]'}
             >{compareResultText}</span>
             <FloatingPortal>
-                {isOpen && (
-                    <span
-                        className='draft-hover-tooltip-content-wrap'
-                        ref={refs.setFloating}
-                        style={floatingStyles}
-                        {...getFloatingProps}
-                    >
-                        <span className='flex w-full justify-center'>{tooltipText}</span>
-                    </span>
-                )}
                 
             </FloatingPortal>
         </span>
     )
 }
 
-export default CommentTooltipCustom;
+export default CommentTooltipCustomInModal;

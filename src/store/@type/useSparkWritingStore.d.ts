@@ -40,6 +40,10 @@ interface ISparkWritingStore {
     commentFocusId: string;
     setCommentFocusId: (setCommentFocusId:string) => void;
 
+    // 모달과 페이지 분리
+    commentFocusIdInModal: string;
+    setCommentFocusIdInModal: (commentFocusIdInModal:string) => void;
+
     // progress select box
     progressLevelBoxValue: string;
     progressAllLevelsValue: string[];
@@ -48,7 +52,15 @@ interface ISparkWritingStore {
 
     // preview페이지 강제 이동 -> history data delete
     historyDataDelete: (unitIndex:number, draftIndex:number) => void;
+
+    // preview 페이지 이동처리
+    // "UPDATE_WRITE" -> 내용 수정 후
+    // "PREVIEW" -> 프리뷰 뷰잉
+    // "ETC" -> 그 외
+    previewPageInitFlag: TPreviewPageInitFlag;
+    setPreviewPageInitFlag: (flag: TPreviewPageInitFlag) => void;
 }
+type TPreviewPageInitFlag = "UPDATE_WRITE"|"PREVIEW"|"ETC"|"";
 type TDraft2ndPageSet = 'fresh'|'revise'|'';
 type TSparkWritingDatas = TSparkWritingData[]
 type TSparkWritingData = {

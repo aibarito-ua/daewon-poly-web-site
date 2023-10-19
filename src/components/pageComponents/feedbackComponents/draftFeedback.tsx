@@ -1,12 +1,14 @@
 import React from 'react';
 import CommentTooltipCustom from './commentTooltipCustom';
+import CommentTooltipCustomInModal from './commentTooltipCustomInModal';
 
 const loadFeedbackDraftTitle = (
     props: {
         feedbackDataInStudent: TSparkWritingData;
+        usePage?: 'Modal'|''; 
     }
 ) => {
-    const {feedbackDataInStudent} = props;
+    const {feedbackDataInStudent,usePage} = props;
     const draftOutline = feedbackDataInStudent.draft_1_outline;
     const comments = feedbackDataInStudent.draft_1_comment;
 
@@ -71,7 +73,13 @@ const loadFeedbackDraftTitle = (
                             cursor: 'pointer',
                         }}
                         >{returnValue}</span>;
-                        const tooltipSpans = <CommentTooltipCustom 
+                        const tooltipSpans = usePage 
+                        ? <CommentTooltipCustomInModal 
+                            compareResultText={createSpan}
+                            mainTagkey={currentCommentItem.comment_className}
+                            tooltipText={currentCommentItem.comment}
+                        /> 
+                        : <CommentTooltipCustom 
                             compareResultText={createSpan}
                             mainTagkey={currentCommentItem.comment_className}
                             tooltipText={currentCommentItem.comment}
@@ -94,9 +102,10 @@ const loadFeedbackDraftTitle = (
 const loadFeedbackDraftBody = (
     props: {
         feedbackDataInStudent: TSparkWritingData;
+        usePage?: 'Modal'|'';
     }
 ) => {
-    const {feedbackDataInStudent} = props;
+    const {feedbackDataInStudent,usePage} = props;
     const draftOutline = feedbackDataInStudent.draft_1_outline;
     const comments = feedbackDataInStudent.draft_1_comment;
 
@@ -162,7 +171,13 @@ const loadFeedbackDraftBody = (
                             cursor: 'pointer'
                         }}
                         >{returnValue}</span>;
-                        const tooltipSpans = <CommentTooltipCustom 
+                        const tooltipSpans = usePage 
+                        ? <CommentTooltipCustomInModal 
+                            compareResultText={createSpan}
+                            mainTagkey={currentCommentItem.comment_className}
+                            tooltipText={currentCommentItem.comment}
+                        /> 
+                        : <CommentTooltipCustom 
                             compareResultText={createSpan}
                             mainTagkey={currentCommentItem.comment_className}
                             tooltipText={currentCommentItem.comment}

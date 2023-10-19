@@ -26,6 +26,9 @@ const PreviewSparkWriting = (props:any) => {
         setSparkWritingDataFromAPI,
         setProofreadingCountReset,
         sparkWritingBookName,
+        // page init set
+        previewPageInitFlag,
+        setPreviewPageInitFlag,
     } = useSparkWritingStore();
     // Nav Store
     const {
@@ -134,9 +137,9 @@ const PreviewSparkWriting = (props:any) => {
         
         if (params.unit && params.draft) {
             
-            const isBeforePathCheck = sparkWritingData[unitIndex].draft_1_status.status;
-            if (isBeforePathCheck === 0) {
-                
+            // const isBeforePathCheck = sparkWritingData[unitIndex].draft_1_status.status;
+            const isBeforePathCheck = previewPageInitFlag;
+            if (isBeforePathCheck === "UPDATE_WRITE") {
                 const response = {
                     book_name: sparkWritingBookName,
                     units: sparkWritingData
@@ -388,7 +391,7 @@ const PreviewSparkWriting = (props:any) => {
     }
 
     const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
-      //  console.log('main div =',mainDiv)
+       console.log('main div =',mainDiv)
         if (mainDiv === 'Body') {
             let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
             let dumybodyHistory = dumyBodyHist.body.present;
@@ -1019,6 +1022,7 @@ const PreviewSparkWriting = (props:any) => {
             setSubNavTitleString('')
             setGrammarResultInit()
             setSubRightNavTitleString('')
+            setPreviewPageInitFlag('')
         }
     },[
         // page state

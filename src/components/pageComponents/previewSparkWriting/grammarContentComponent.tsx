@@ -248,6 +248,7 @@ const GrammarContentComponent = {
                         let reason:any = '';
                         let checkSelected = false;
                         let selectedWord = '';
+                        let isAccept = false;
                         
                         for (let innerWordIdx = 0; innerWordIdx < word.length; innerWordIdx++) {
                             const targetInnerWord = word[innerWordIdx];
@@ -296,7 +297,8 @@ const GrammarContentComponent = {
                         ]
                         if (checkSelected) {
                             const textTagId = 'title-'+mainTagKey + '-change'
-                            returnValue = <span key={mainTagKey} className='text-[#00be91]'><span id={textTagId}>{selectedWord}</span></span>
+                            isAccept = selectedWord === addWord;
+                            returnValue = <span key={mainTagKey} className={isAccept ? 'text-[#00be91]':''}><span id={textTagId}>{selectedWord}</span></span>
                         } else {
                             returnValue = (
                                 <span key={mainTagKey+'-both'}>

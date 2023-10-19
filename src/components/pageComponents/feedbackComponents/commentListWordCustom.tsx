@@ -28,25 +28,25 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
         comment
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
-    const {commentFocusId, setCommentFocusId} = useSparkWritingStore();
+    const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
     React.useEffect(()=>{
-        if (setCommentFocusId) {
+        if (setCommentFocusIdInModal) {
             if (isOpen) {
                 console.log('tooltip main key ')
-                setCommentFocusId(commentClassName)
+                setCommentFocusIdInModal(commentClassName)
             } else {
-                setCommentFocusId('')
+                setCommentFocusIdInModal('')
             }
         }
         console.log('isOpen =',commentClassName)
     }, [isOpen])
     React.useEffect(()=>{
-        if (commentFocusId === commentClassName) {
+        if (commentFocusIdInModal === commentClassName) {
             setIsOpen(true)
         } else {
             setIsOpen(false)
         }
-    }, [commentFocusId])
+    }, [commentFocusIdInModal])
 
     const {refs, floatingStyles, context} = useFloating({
         

@@ -89,6 +89,8 @@ const EssayWriting = () => {
         commentFocusId,
         sparkWritingDataDumy,
         historyDataDelete,
+        previewPageInitFlag,
+        setPreviewPageInitFlag
     } = useSparkWritingStore();
     const params = useParams();
     // console.log('params : unit =',params.unit,': draft =',params.draft)
@@ -115,6 +117,7 @@ const EssayWriting = () => {
         console.log('essay writing 102 | draft test =',)
         setCommonStandbyScreen({openFlag:true})
         const init = await pageInitSetting()
+        setPreviewPageInitFlag('')
         if (init) {
             if (currentDraft === '1') {
                 const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
@@ -342,7 +345,7 @@ const EssayWriting = () => {
                     })
                     if (titleMaxLengthCheck) {
                         commonAlertOpen({
-                            messages:['“Title” can be up to 120 characters including spaces.'],
+                            messages:['The title cannot be more than 120 characters.'],
                             useOneButton: true,
                             yesButtonLabel: 'OK',
                             yesEvent: () => {
@@ -486,7 +489,7 @@ const EssayWriting = () => {
                 
                 if (titleMaxLengthCheck) {
                     commonAlertOpen({
-                        messages:['The title cannot exceed one line.'],
+                        messages:['The Enter/Return key cannot be used in this section.'],
                         useOneButton: true,
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
@@ -627,7 +630,7 @@ const EssayWriting = () => {
 
                 if (titleMaxLengthCheck) {
                     commonAlertOpen({
-                        messages:['The title cannot exceed one line.'],
+                        messages:['The Enter/Return key cannot be used in this section.'],
                         useOneButton: true,
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
@@ -1054,6 +1057,7 @@ const EssayWriting = () => {
                                         const unitIndex = parseInt(UnitIndex);
                                         const draftIndex = parseInt(DraftIndex);
                                         historyDataDelete(unitIndex, draftIndex)
+                                        setPreviewPageInitFlag('UPDATE_WRITE');
                                         if (isSaved) {
                                             CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             commonAlertClose();

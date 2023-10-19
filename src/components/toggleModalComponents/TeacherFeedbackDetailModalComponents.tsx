@@ -14,7 +14,7 @@ export default function TeacherFeedbackDetailModalComponents (props: {
     draftItem: TSparkWritingData,
 }) {
     const [open, setOpen] = React.useState(false);
-    const {commentFocusId, setCommentFocusId} = useSparkWritingStore();
+    const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
     const {draftItem} = props;
     const handleOpen = () => {
         console.log('test ==',draftItem)
@@ -24,8 +24,8 @@ export default function TeacherFeedbackDetailModalComponents (props: {
         setOpen(false)
     }
     React.useEffect(()=>{
-        console.log( 'commentFocusId ==', commentFocusId)
-    }, [commentFocusId])
+        console.log( 'commentFocusIdInModal ==', commentFocusIdInModal)
+    }, [commentFocusIdInModal])
     return (
         <div className='flex'>
             <div className={`draft-teacher-feedback-title-docs-find-button hover:cursor-pointer`}
@@ -78,10 +78,10 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                     <div className='flex flex-row h-full'>
                         <div className='wrap-content-2nd-spark-writing flex-1' style={{height: '100%'}}>
                             <div className='teacher-feedback-title-font'>{
-                                draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem})
+                                draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem,usePage:'Modal'})
                             }</div>
                             <div className='teacher-feedback-body-font'>{
-                                draftViewBox.loadFeedbackDraftBody({feedbackDataInStudent:draftItem})
+                                draftViewBox.loadFeedbackDraftBody({feedbackDataInStudent:draftItem,usePage:'Modal'})
                             }</div>
                         </div>
                         <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px]'>
