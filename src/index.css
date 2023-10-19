@@ -1477,10 +1477,28 @@ bg-[#ffea2c]
   justify-center
 }
 .progress-page-view-box-list-icon {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 12px;
+  flex-grow: 0;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
   @apply
   inline-flex w-[60px] h-[30px] 
   items-center justify-center capitalize 
-  rounded-[15px] bg-[#3E61AA] text-white text-[12px]
+  rounded-[15px] bg-[#3E61AA] text-white
+}
+.progress-page-view-box-list-label {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: 16px;
+  flex-grow: 0;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 }
 .progress-page-view-box-list-date {
   font-family: 'Roboto';
@@ -1497,6 +1515,16 @@ bg-[#ffea2c]
   h-[10px]
   text-center
   text-[#222222]
+}
+.progress-page-view-gothamRounded-bold {
+  font-family: 'GothamRounded';
+  font-weight: 700;
+  font-size: '12px';
+  flex-grow: 0;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
 }
 .progress-page-view-box-table-body-icons {
   @apply
@@ -1531,12 +1559,16 @@ bg-[#ffea2c]
 .progress-page-view-box-table-header {
   font-family: 'Roboto';
   font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 16px;
+  letter-spacing: normal;
+  text-align: center;
   @apply
   w-[70px]
   text-[#222]
   text-[15px]
   capitalize
-  leading-[16px]
 }
 .progress-page-view-box-table-body-cell {
   @apply

@@ -639,8 +639,8 @@ const EssayWriting = () => {
 
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
-                console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
-                console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
+                // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
+                // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                 let questionOpenSave = false;
                 if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
                     questionOpenSave = true;
@@ -705,8 +705,8 @@ const EssayWriting = () => {
             if (DraftIndex==='2') {
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
-                console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
-                console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
+                // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
+                // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                 let questionOpenSave = false;
                 if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
                     questionOpenSave = true;

@@ -87,26 +87,6 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
         
     ]);
     return (
-        // <span key={mainTagkey} 
-        // className={`whitespace-pre-line hover:cursor-pointer z-[9999] relative rounded-[5px]`}>
-        //     <span id={textTagid}
-        //     ref={refs.setReference} {...getReferenceProps()}
-        //     className={isOpen ? 'border-[2px] border-[#f1b02e] rounded-[2px]':'border-0 hover:border-[2px] hover:border-[#f1b02e] rounded-[2px]'}
-        //     >{compareResultText}</span>
-        //     <FloatingPortal>
-        //         {isOpen && (
-        //             <span
-        //                 className='draft-hover-tooltip-content-wrap'
-        //                 ref={refs.setFloating}
-        //                 style={floatingStyles}
-        //                 {...getFloatingProps}
-        //             >
-        //                 <span className='flex w-full justify-center'>{tooltipText}</span>
-        //             </span>
-        //         )}
-                
-        //     </FloatingPortal>
-        // </span>
         <div className={!isOpen 
             ?'flex w-[300px] border-[1px] border-[#dbdbdb] bg-white rounded-[15px] p-[10px]'
             : 'flex w-[300px] border-[2px] border-[#f1b02e] bg-white rounded-[15px] p-[10px]'

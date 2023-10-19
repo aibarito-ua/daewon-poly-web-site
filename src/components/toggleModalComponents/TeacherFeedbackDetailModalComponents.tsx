@@ -61,7 +61,7 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                 >
                     <div className='relative'>
                         <div className='flex h-[50px] items-center justify-center'>{'Teacher Feedback'}</div>
-                        <div className='w-[50px] h-[55px] -top-[25px] -right-[25px] hover:cursor-pointer absolute bg-no-repeat bg-modal-close-button-svg'
+                        <div className='w-[50px] h-[55px] -top-[25px] -right-[25px] hover:cursor-pointer absolute bg-no-repeat bg-contain bg-modal-close-button-svg'
                         onClick={handleClose}/>
                     </div>
                 </DialogTitle>
@@ -87,24 +87,6 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                         <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px]'>
                             {draftItem.draft_1_comment.map((item,draftCommentIndex) => {
                                 const key = 'teacherFeedbackModalComment-'+draftCommentIndex
-                                // return (
-                                //     <div className={commentFocusId!==item.comment_className 
-                                //         ?'flex w-[300px] border-[1px] border-[#dbdbdb] bg-white rounded-[15px] p-[10px]'
-                                //         : 'flex w-[300px] border-[2px] border-[#f1b02e] bg-white rounded-[15px] p-[10px]'
-                                //     } key={key}
-                                //     style={{
-                                //         fontFamily: 'Roboto',
-                                //         fontSize: '16px',
-                                //         color: '#333',
-                                //         lineHeight: 1.38,
-                                //         textAlign:'left'
-                                //     }}
-                                //     onClick={()=>{
-                                //         setCommentFocusId(item.comment_className);
-                                //     }}
-                                    
-                                //     >{item.comment}</div>
-                                // )
                                 return <CommentListWordCustom 
                                     comment={item.comment}
                                     commentClassName={item.comment_className}

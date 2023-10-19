@@ -27,7 +27,7 @@ const DateText = (props:{dateString:string}) => {
         textAlign: 'center',
         color: '#222',
         maxHeight: '10px',
-        width: '55px',
+        width: '58px',
         height: '10px',
         flexGrow: 0,
         lineHeight: 'normal',
@@ -144,7 +144,7 @@ const ProgressTable = (props:any) => {
                             <td className='text-start pl-[20px] h-[60px] max-h-[60px] py-0 my-0 bg-white'>
                                 <span className='inline-flex gap-[10px] h-[60px] items-center'>
                                     <span className='progress-page-view-box-list-icon'>unit {unitItem.unit_index}</span>
-                                    <span className=''>{unitItem.topic}</span>
+                                    <span className='progress-page-view-box-list-label'>{unitItem.topic}</span>
                                 </span>
                             </td>
                             <td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>

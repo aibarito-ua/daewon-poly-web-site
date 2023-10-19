@@ -71,6 +71,10 @@ export default function SelectLabels() {
               },
               '& .MuiSelect-icon': {
                 right: '14px'
+              },
+              '& .MuiSelect-select': {
+                textAlign: 'left',
+                paddingLeft: '14px'
               }
             }}
             value={progressLevelBoxValue}

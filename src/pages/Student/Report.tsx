@@ -147,7 +147,6 @@ const Report = () => {
             setReportSelectedFinder(dumyFinderData);
             setReportAPIData(getReportAll);
             setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
-            
         }
     }
     useComponentWillMount(async()=>{
@@ -233,7 +232,7 @@ const Report = () => {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >{!isNoData ? reportSelectBookName:''}</span>
+                        <span className='writing-activity-page-title-text' >{ reportSelectBookName }</span>
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
                         <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>

@@ -158,10 +158,11 @@ export default function App(props: any) {
     height: '24px',
     fontFamily: 'GothamRounded',
     fontSize: '14px',
-    fontWeight: '400',
-    fontStyle: 'normal',
+    fontWeight: '700',
+    fontStyle: 'bold',
     lineHeight: 'normal',
     letterSpacing: '-0.98px',
+    textAlign: 'center',
     
 }
 const text2Css:React.CSSProperties = {
@@ -169,12 +170,15 @@ const text2Css:React.CSSProperties = {
     height: '24px',
     fontFamily: 'GothamRounded',
     fontSize: '10px',
-    fontWeight: '400',
-    fontStyle: 'normal',
+    fontWeight: 700,
+    fontStyle: 'bold',
     lineHeight: 'normal',
     letterSpacing: '-0.7px',
+    textAlign: 'center',
 }
-
+const percentValue = Math.round(data.data[0].value*10)/10;
+const checkValueLength = percentValue.toString().length;
+const percentX = checkValueLength===3 ? cx+18 : (checkValueLength===2 ? cx+15 : cx+11)
   return (
     <PieChart width={50} height={50}>
         <circle 
@@ -205,9 +209,9 @@ const text2Css:React.CSSProperties = {
         <text x={cx} y={cy} dy={0} textAnchor="middle" style={textmainCss} width={26} height={17} 
         className="shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={10} textAnchor="middle" style={text1Css}>
-                {Math.round(data.data[0].value*10)/10}
+                {percentValue}
             </tspan>
-            <tspan x={cx+18} y={cy} dy={10} style={text2Css}>%</tspan>
+            <tspan x={percentX} y={cy} dy={10} style={text2Css}>%</tspan>
         </text>
 
         

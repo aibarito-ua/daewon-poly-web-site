@@ -151,10 +151,10 @@ export const Login = () => {
                             // confirm
                             commonAlertOpen({
                                 alertType: 'warning',
-                                messages: ['다른 기기에서 로그인 중입니다.','강제 로그아웃하고 현재 기기에서 로그인하시겠습니까?'],
-                                yesButtonLabel: 'yes',
+                                messages: ['동일한 ID로 다른 기기에 도그인 되어 있습니다. 이 기기에서 로그인할까요?'],
+                                yesButtonLabel: 'Yes',
                                 yesEvent: () => forceLogin(loginValues, device_id, saveId),
-                                noButtonLabel: 'no',
+                                noButtonLabel: 'No',
                                 
                             })
                         } else {

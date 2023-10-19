@@ -64,7 +64,7 @@ export default function CommonAlertModalComponent(
             paddingX: 0
           }}
         >
-        <div className='flex flex-1 flex-col h-[400px] justify-center border-t border-t-[#dddddd]'>
+        <div className='flex flex-1 flex-col h-full justify-center border-t border-t-[#dddddd]'>
             {(commonAlertType==='warning'||commonAlertType==='warningContinue') && <commonSvgs.ExclamationMarkIcon className='w-[100px] h-[100px] mt-[36px] ml-[145px]'/>}
             
             {commonAlertHeadTitle !== '' && <div className={`text-center font-[Roboto] text-[20px] font-[700] text-[#222222] ${(commonAlertType==='warning'||commonAlertType==='warningContinue')? 'mt-[20px]': 'mt-[39.4px]'}`}>{commonAlertHeadTitle}</div>}
