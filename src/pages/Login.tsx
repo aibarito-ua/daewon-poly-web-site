@@ -363,21 +363,21 @@ export const Login = () => {
     React.useEffect(()=>{
         const isMaintenanceCheck = IS_MAINTENANCE;
         // console.log('isMain =',isMaintenanceCheck)
-        if (isMaintenanceCheck==='YES') {
-            setIsUnderMaintenance(true);
-            commonAlertOpen({
-                useOneButton:true,
-                alertType: 'warningContinue',
-                yesButtonLabel: 'OK',
-                messages: [
-                    "서비스 안정화를 위한 점검중이에요."
-                ],
-                yesEvent: () => {
-                    commonAlertClose();
+        // if (isMaintenanceCheck==='YES') {
+        //     setIsUnderMaintenance(true);
+        //     commonAlertOpen({
+        //         useOneButton:true,
+        //         alertType: 'warningContinue',
+        //         yesButtonLabel: 'OK',
+        //         messages: [
+        //             "서비스 안정화를 위한 점검중이에요."
+        //         ],
+        //         yesEvent: () => {
+        //             commonAlertClose();
                     
-                }
-            })
-        } else {
+        //         }
+        //     })
+        // } else {
             setIsUnderMaintenance(false)
             // in ENV should update 
             // REACT_APP_ANDROID_VERSION=1.0.5
@@ -410,25 +410,25 @@ export const Login = () => {
                     setIsShouldChangeVersion(false);
                 }
             }
-        }
+        // }
     }, [version])
 
-    React.useEffect(()=>{
-        if (isShouldChangeVersion) {
-            commonAlertOpen({
-                useOneButton:true,
-                alertType: 'warningContinue',
-                yesButtonLabel: 'OK',
-                messages: [
-                    "새로운 버전으로 업데이트를 진행해주세요."
-                ],
-                yesEvent: () => {
-                    commonAlertClose();
-                }
-            })
-        } else {
-        }
-    }, [isShouldChangeVersion])
+    // React.useEffect(()=>{
+        // if (isShouldChangeVersion) {
+        //     commonAlertOpen({
+        //         useOneButton:true,
+        //         alertType: 'warningContinue',
+        //         yesButtonLabel: 'OK',
+        //         messages: [
+        //             "새로운 버전으로 업데이트를 진행해주세요."
+        //         ],
+        //         yesEvent: () => {
+        //             commonAlertClose();
+        //         }
+        //     })
+        // } else {
+        // }
+    // }, [isShouldChangeVersion])
 
     
 
@@ -448,7 +448,8 @@ export const Login = () => {
             />
             {/* content */}
             <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
-                <form onSubmit={isShouldChangeVersion ? confirmUpdateNewVersion : handleSubmit}>
+                {/* <form onSubmit={isShouldChangeVersion ? confirmUpdateNewVersion : handleSubmit}> */}
+                <form onSubmit={handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>
                         {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
                         <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain'></div>
