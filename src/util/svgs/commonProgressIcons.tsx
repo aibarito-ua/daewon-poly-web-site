@@ -31,16 +31,7 @@ function SaveYellowCircleIcon(props: React.SVGAttributes<SVGElement>) {
 
     )
 }
-// function RecycleRedCircleIcon(props: React.SVGAttributes<SVGElement>) {
-//     return (
-//         <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-//         <rect width="30" height="30" rx="15" fill="#F03063"/>
-//         <path d="M19.0899 7.88455C15.8999 6.08504 11.9737 6.65761 9.35621 9.02969V7.63916C9.38187 7.21254 9.0579 6.84687 8.63128 6.8196C8.6008 6.818 8.56873 6.818 8.53825 6.8196C8.11163 6.79394 7.74596 7.11792 7.72029 7.54454C7.71869 7.57501 7.71869 7.60709 7.72029 7.63756V11.3184C7.69463 11.745 8.01861 12.1107 8.44523 12.1363C8.4757 12.1379 8.50778 12.1379 8.53825 12.1363H12.2191C12.6457 12.162 13.0114 11.838 13.037 11.4114C13.0386 11.3809 13.0386 11.3488 13.037 11.3184C13.0627 10.8918 12.7387 10.5261 12.3121 10.5004C12.2816 10.4988 12.2495 10.4988 12.2191 10.5004H10.256C11.4861 9.19168 13.2038 8.45231 15.0001 8.45552C18.6104 8.46675 21.5326 11.3889 21.5438 14.9992C21.5181 15.4258 21.8421 15.7915 22.2687 15.8172C22.2992 15.8188 22.3313 15.8188 22.3618 15.8172C22.7884 15.8428 23.1541 15.5188 23.1797 15.0922C23.1813 15.0617 23.1813 15.0297 23.1797 14.9992C23.1861 12.0674 21.6272 9.35367 19.0899 7.88295V7.88455ZM21.462 17.8637H17.7812C17.3289 17.8637 16.9632 18.2309 16.9632 18.6816C16.9632 19.1323 17.3289 19.498 17.7812 19.4996H19.7443C18.5141 20.8083 16.7964 21.5477 15.0001 21.5445C11.3899 21.5332 8.46768 18.611 8.45646 15.0008C8.48212 14.5742 8.15814 14.2085 7.73152 14.1828C7.70105 14.1812 7.66897 14.1812 7.6385 14.1828C7.21188 14.1572 6.8462 14.4812 6.82054 14.9078C6.81893 14.9382 6.81893 14.9703 6.82054 15.0008C6.80771 19.506 10.45 23.1676 14.9536 23.1804C17.0755 23.1868 19.1172 22.364 20.644 20.8901V22.3624C20.6184 22.7891 20.9424 23.1547 21.369 23.1804C21.3995 23.182 21.4315 23.182 21.462 23.1804C21.8886 23.2061 22.2543 22.8821 22.28 22.4555C22.2816 22.425 22.2816 22.3929 22.28 22.3624V18.6816C22.28 18.2309 21.9127 17.8653 21.462 17.8637Z" fill="white"/>
-//         </svg>
 
-//     )
-// }
-const RecycleRedCircleIcon = <div className='bg-progress-status-ic-red-recycle-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>
 function RejectRedRectIcon(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,6 +133,8 @@ function NoEntryGrayRectIcon(props: React.SVGAttributes<SVGElement>) {
     )
 }
 const EntryBlueIcon = <div className='bg-progress-status-ic-blue-entry-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>;
+const WaitFeedbackBlueRectIcon = <div className='bg-progress-status-ic-blue-wait-rect bg-no-repeat bg-cover w-[30px] h-[30px]' />
+const RecycleRedCircleIcon = <div className='bg-progress-status-ic-red-recycle-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>
 
 export const progressIcons = {
     CheckGreenCircleIcon,
@@ -154,5 +147,6 @@ export const progressIcons = {
     FeedbackEmptyGrayRectIcon,
     LevelSelectToggleDownArrowIcon,
     LevelSelectToggleUpArrowIcon,
+    WaitFeedbackBlueRectIcon,
     EntryBlueIcon
 }

@@ -523,6 +523,18 @@ body {
   gap-[15px]
   p-[20px]
 }
+.wrap-content-2nd-spark-writing-teacher-modal {
+  @apply
+  flex flex-col 
+  bg-white
+  w-full
+  h-[594px]
+  overflow-y-auto
+  z-0
+  rounded-b-[20px]
+  gap-[15px]
+  p-[20px]
+}
 .wrap-content-spark-writing {
   @apply
   flex flex-col 
@@ -2427,9 +2439,9 @@ bg-[#ffea2c]
   flex-col
   justify-start
   justify-items-start
-  
   gap-[13px]
   bg-white
+  h-full
 }
 .draft-2nd-title-font {
   font-family: 'Roboto';

@@ -255,13 +255,13 @@ const PreviewSparkWriting = (props:any) => {
                     setIsPreview(false)
                     setIsGrammarProceed(true);
                   //  console.log('res grammar =',res)
+                    setGuideFlag(1)
                     setInitHistorys({
                         title: res.result_title,
                         body: res.result_body
                     })
                 }
             }
-            setGuideFlag(1)
             // console.log('preview res ===',res)
         } else {
             // submit
@@ -441,33 +441,33 @@ const PreviewSparkWriting = (props:any) => {
             }
         }
     }
-    const onSubmitEvent = () => {
-        if (!openSubmitButton) {
-            return;
-        } else {
-            let draftText = '';
-            const unitTitle_1 = selectUnitInfo.main.replace(/\.$/gi,'');
-            if (params.draft === '1') {
-                draftText='1st draft'
-            } else { draftText='2nd draft'}
-            const yesMessage = <p className='ordinal'>{`Your ${unitTitle_1} ${selectUnitInfo.sub}'s ${draftText} has been submitted.`}</p>
+    // const onSubmitEvent = () => {
+    //     if (!openSubmitButton) {
+    //         return;
+    //     } else {
+    //         let draftText = '';
+    //         const unitTitle_1 = selectUnitInfo.main.replace(/\.$/gi,'');
+    //         if (params.draft === '1') {
+    //             draftText='1st draft'
+    //         } else { draftText='2nd draft'}
+    //         const yesMessage = <p className='ordinal'>{`Your ${unitTitle_1} ${selectUnitInfo.sub}'s ${draftText} has been submitted.`}</p>
             
-            commonAlertOpen({
-                head: `${unitTitle_1}: ${selectUnitInfo.sub}`,
-                alertType: 'continue',
-                messages: ['Are you ready to submit?'],
-                yesButtonLabel: 'Yes',
-                noButtonLabel: 'No',
-                yesEvent: () => {
-                    commonAlertOpen({
-                        useOneButton: true,
-                        messages: [yesMessage],
-                        yesButtonLabel: 'OK',
-                    })
-                }
-            })
-        }
-    }
+    //         commonAlertOpen({
+    //             head: `${unitTitle_1}: ${selectUnitInfo.sub}`,
+    //             alertType: 'continue',
+    //             messages: ['Are you ready to submit?'],
+    //             yesButtonLabel: 'Yes',
+    //             noButtonLabel: 'No',
+    //             yesEvent: () => {
+    //                 commonAlertOpen({
+    //                     useOneButton: true,
+    //                     messages: [yesMessage],
+    //                     yesButtonLabel: 'OK',
+    //                 })
+    //             }
+    //         })
+    //     }
+    // }
     const replaceUpdateSparkWritingTitle = () => {
         const unitId = sparkWritingData[unitIndex].unit_id
       //  console.log('unit index =',sparkWritingData[unitIndex])
@@ -619,7 +619,7 @@ const PreviewSparkWriting = (props:any) => {
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
         if (isSaveTemporary) {
-            if (isGrammarSave) {
+            // if (isGrammarSave) {
                 commonAlertClose()
                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
                 // commonAlertOpen({
@@ -631,18 +631,18 @@ const PreviewSparkWriting = (props:any) => {
                         
                 //     }
                 // })
-            } else {
-                commonAlertOpen({
-                    useOneButton:true,
-                    yesButtonLabel: 'OK',
-                    alertType: 'continue',
-                    messages: ['Temporary saving is complete.'],
-                    yesEvent: async () => {
-                        commonAlertClose();
-                        navigate(-1)
-                    }
-                })
-            }
+            // } else {
+            //     commonAlertOpen({
+            //         useOneButton:true,
+            //         yesButtonLabel: 'OK',
+            //         alertType: 'continue',
+            //         messages: ['Temporary saving is complete.'],
+            //         yesEvent: async () => {
+            //             commonAlertClose();
+            //             navigate(-1)
+            //         }
+            //     })
+            // }
         } else {
             await forcedTemporarySave();
         }
@@ -1144,9 +1144,10 @@ const PreviewSparkWriting = (props:any) => {
                         <button className={`save-button-active`} onClick={()=>{
                             commonAlertOpen({
                                 messages: ['Do you want to return to edit your writing?'],
-                                yesButtonLabel: "Yes",
+                                yesButtonLabel: "No",
+                                noButtonLabel: "Yes",
                                 alertType: 'continue',
-                                yesEvent: async ()=>{
+                                closeEvent: async ()=>{
                                     
                                     // grammar 시작 전
                                     commonAlertClose();
@@ -1164,10 +1165,9 @@ const PreviewSparkWriting = (props:any) => {
                                     setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
                                     const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
                                     // console.log('path =',path)
-                                    CommonFunctions.goLink(path, navigate, role);
-                                    
+                                    CommonFunctions.goLink(path, navigate, role);  
                                 },
-                                noButtonLabel: "No"
+                                yesEvent: () => commonAlertClose()
                             })
                         }}>Edit</button>
                     }
@@ -1214,9 +1214,13 @@ const PreviewSparkWriting = (props:any) => {
                                         'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
                                         `(${sparkWritingData[unitIndex].proofreading_count+1}/2)`
                                     ],
-                                    yesButtonLabel: 'Yes',
-                                    noButtonLabel: 'No',
-                                    yesEvent: async () => await AIProofreadingYesOnClick()
+                                    yesButtonLabel: 'No',
+                                    noButtonLabel: 'Yes',
+                                    closeEvent: async () => {
+                                        commonAlertClose();
+                                        await AIProofreadingYesOnClick();
+                                    },
+                                    yesEvent: () => commonAlertClose(),
                                 })
                             }
                         }}>Proofreading</button>
@@ -1311,15 +1315,15 @@ const PreviewSparkWriting = (props:any) => {
                                 // onSubmitEvent()
 
                                 commonAlertOpen({
-                                    yesButtonLabel: 'Yes',
+                                    yesButtonLabel: 'No',
                                     alertType: 'continue',
                                     head: `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
                                     messages: [
                                         // `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
                                         'Are you ready to submit?'
                                     ],
-                                    noButtonLabel: 'No',
-                                    yesEvent: async () => {
+                                    noButtonLabel: 'Yes',
+                                    closeEvent: async () => {
 
                                         // submit
                                         // make contents 
@@ -1371,7 +1375,7 @@ const PreviewSparkWriting = (props:any) => {
                                             })
                                         }
                                     },
-                                    closeEvent: async() => {
+                                    yesEvent: async() => {
                                         commonAlertClose();
                                     }
                                 })

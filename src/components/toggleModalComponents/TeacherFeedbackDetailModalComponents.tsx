@@ -73,26 +73,34 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                         border: '6px solid #7861bb',
                         borderTop: 'none',
                         padding:0,
+                        overflow: 'hidden'
                     }}
                 >
-                    <div className='flex flex-row h-full'>
-                        <div className='wrap-content-2nd-spark-writing flex-1' style={{height: '100%'}}>
-                            <div className='teacher-feedback-title-font'>{
-                                draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem,usePage:'Modal'})
-                            }</div>
-                            <div className='teacher-feedback-body-font'>{
-                                draftViewBox.loadFeedbackDraftBody({feedbackDataInStudent:draftItem,usePage:'Modal'})
-                            }</div>
+                    <div className='flex flex-row'>
+                        <div className='wrap-content-2nd-spark-writing-teacher-modal flex-1'
+                            id={'teacher-feedback-detail-modal-content-left'}
+                        >
+                            <div className='flex flex-col h-full'>
+                                <div className='teacher-feedback-title-font items-center'>{
+                                    draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem,usePage:'Modal'})
+                                }</div>
+                                <div className='teacher-feedback-body-font py-[20px]'>{
+                                    draftViewBox.loadFeedbackDraftBody({feedbackDataInStudent:draftItem,usePage:'Modal'})
+                                }</div>
+                            </div>
                         </div>
-                        <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px]'>
-                            {draftItem.draft_1_comment.map((item,draftCommentIndex) => {
-                                const key = 'teacherFeedbackModalComment-'+draftCommentIndex
-                                return <CommentListWordCustom 
-                                    comment={item.comment}
-                                    commentClassName={item.comment_className}
-                                    mainTagkey={key}
-                                />
-                            })}
+                        <div className='flex flex-col w-[340px] h-[594px] overflow-y-scroll'>
+                            <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px] h-fit'>
+                                
+                                {draftItem.draft_1_comment.map((item,draftCommentIndex) => {
+                                    const key = 'teacherFeedbackModalComment-'+draftCommentIndex
+                                    return <CommentListWordCustom 
+                                        comment={item.comment}
+                                        commentClassName={item.comment_className}
+                                        mainTagkey={key}
+                                    />
+                                })}
+                            </div>
                         </div>
                     </div>
 

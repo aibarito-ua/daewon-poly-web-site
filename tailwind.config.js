@@ -100,7 +100,8 @@ module.exports = {
         // progress small icons
         'progress-status-ic-blue-entry-circle': "url(/src/util/png/progress/ic_entry_3x.png)",
         'progress-status-ic-green-check-circle': "url(/src/util/png/progress/checkGreenCircleIcon.png)",
-        'progress-status-ic-red-recycle-circle': "rul(/src/util/png/progress/recycleRedCircleIcon.png)",
+        'progress-status-ic-red-recycle-circle': "url(/src/util/png/progress/recycleRedCircleIcon.png)",
+        'progress-status-ic-blue-wait-rect' : "url(/src/util/png/progress/ic_blue_wait_rect.png)",
       }
     },
     borderWidth: {

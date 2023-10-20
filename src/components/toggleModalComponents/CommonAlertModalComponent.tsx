@@ -35,18 +35,32 @@ export default function CommonAlertModalComponent(
     
   }, [commonAlertOpenFlag])
 
-  const handleClickYes = () => {
+  const handleLeft = () => {
     if (commonAlertYesFunctionEvent!==null) {
       commonAlertYesFunctionEvent();
+    } else {
+      if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+        commonAlertClose();
+      }
     }
-    if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
-      commonAlertClose();
+  };
+
+  const handleRight = () => {
+    if (commonAlertCloseEvent!==null) {
+      commonAlertCloseEvent();
+    } else {
+      if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+        commonAlertClose();
+      }
+    
     }
   };
 
   const handleClose = () => {
-    commonAlertClose();
-  };
+    if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+      commonAlertClose();
+    }
+  }
 
   return (
     <div className='flex'>
@@ -92,16 +106,16 @@ export default function CommonAlertModalComponent(
             {commonAlertOneButton ? (
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] items-center'>
                   <div className='flex flex-1 h-full justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'
-                    onClick={handleClickYes}
+                    onClick={handleLeft}
                   >{commonAlertYesLabel}</div>
                 </div>
               ):(
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] gap-[10px] items-center'>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#dcdadf] rounded-[15px] text-[#959aaa] hover:cursor-pointer items-center'
-                  onClick={handleClickYes}
+                  onClick={handleLeft}
                   >{commonAlertYesLabel}</div>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'
-                    onClick={commonAlertCloseEvent!==null? ()=>commonAlertCloseEvent(): handleClose}
+                    onClick={handleRight}
                   >{commonAlertNoLabel}</div>
                 </div>
             )}

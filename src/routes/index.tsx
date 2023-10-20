@@ -27,7 +27,6 @@ import PortfolioModalComponent from '../components/toggleModalComponents/Portfol
 
 export default function Roter() {
     const { role, isOpen } = useLoginStore();
-    
     const publicRoutes = () => {
         const routeValue = routeValues.publicRoutes;
         // 각 권한별 기본 페이지

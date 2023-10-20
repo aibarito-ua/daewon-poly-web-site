@@ -11,6 +11,10 @@ import useNavStore from '../store/useNavStore';
 import { detect } from 'detect-browser';
 
 export const Login = () => {
+    const ANDROID_VERSION=process.env.REACT_APP_ANDROID_VERSION ? process.env.REACT_APP_ANDROID_VERSION:'';
+    const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
+    const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
+    const IS_MAINTENANCE = process.env.REACT_APP_MAINTENANCE ? process.env.REACT_APP_MAINTENANCE:'NO';
     const { userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id } = useLoginStore();
     const {setSelectMenu} = useNavStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
@@ -20,9 +24,12 @@ export const Login = () => {
     const [saveId, setSaveId] = React.useState<boolean>(false)
     const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
     const [version, setVersion] = React.useState<string>('');
+    const [checkDevice, setCheckDevice] = React.useState<"Android"|"iOS"|"Electron"|"">("");
+    const [isShouldChangeVersion, setIsShouldChangeVersion] = React.useState<boolean>(false);
+    const [isUnderMaintenance, setIsUnderMaintenance] = React.useState<boolean>(false);
 
     const {
-        commonAlertOpen
+        commonAlertOpen, commonAlertClose
     } = useControlAlertStore();
     
     const validate=()=>{
@@ -60,6 +67,40 @@ export const Login = () => {
         }
         setSelectMenu('WritingClinic')
         setUserInfo(response)
+    }
+    const confirmUpdateNewVersion = () => {
+        if (isUnderMaintenance) {
+            confirmUnderMaintenanceAlert();
+        } else {
+            if (isShouldChangeVersion) {
+                commonAlertOpen({
+                    useOneButton:true,
+                    alertType: 'warningContinue',
+                    yesButtonLabel: 'OK',
+                    messages: [
+                        "새로운 버전으로 업데이트를 진행해주세요."
+                    ],
+                    yesEvent: () => {
+                        commonAlertClose();
+                        
+                    }
+                })
+            }
+        }
+    }
+    const confirmUnderMaintenanceAlert = () => {
+        commonAlertOpen({
+            useOneButton:true,
+            alertType: 'warningContinue',
+            yesButtonLabel: 'OK',
+            messages: [
+                "서비스 안정화를 위한 점검중이에요."
+            ],
+            yesEvent: () => {
+                commonAlertClose();
+                
+            }
+        })
     }
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -153,7 +194,11 @@ export const Login = () => {
                                 alertType: 'warning',
                                 messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다. 이 기기에서 로그인할까요?'],
                                 yesButtonLabel: 'Yes',
-                                yesEvent: () => forceLogin(loginValues, device_id, saveId),
+                                yesEvent: () => {
+                                    forceLogin(loginValues, device_id, saveId)
+                                    commonAlertClose()
+                                },
+                                closeEvent: () => commonAlertClose(),
                                 noButtonLabel: 'No',
                                 
                             })
@@ -275,13 +320,20 @@ export const Login = () => {
         // alert(window.navigator.userAgent)
         const browser = detect()
         // alert(JSON.stringify(browser))
-        if (browser?.name === 'chromium-webview'||browser?.name==='ios-webview') {
+        if (browser?.name === 'chromium-webview') {
             // mobile
             // alert('mobile')
+            setCheckDevice('Android')
+            setMobile(true)
+            window.addEventListener('message', receiveMessage, true);
+            sendMessage(sendData)
+        } else if (browser?.name==='ios-webview') {
+            setCheckDevice('iOS')
             setMobile(true)
             window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
         } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            setCheckDevice('Electron')
             const electronData = (window as any).api.toElectron.sendSync('autologin')
             console.log('electron data:', electronData)
             receiveElectronData(electronData)
@@ -308,6 +360,78 @@ export const Login = () => {
         }
     }, [loginValues])
 
+    React.useEffect(()=>{
+        const isMaintenanceCheck = IS_MAINTENANCE;
+        // console.log('isMain =',isMaintenanceCheck)
+        if (isMaintenanceCheck==='YES') {
+            setIsUnderMaintenance(true);
+            commonAlertOpen({
+                useOneButton:true,
+                alertType: 'warningContinue',
+                yesButtonLabel: 'OK',
+                messages: [
+                    "서비스 안정화를 위한 점검중이에요."
+                ],
+                yesEvent: () => {
+                    commonAlertClose();
+                    
+                }
+            })
+        } else {
+            setIsUnderMaintenance(false)
+            // in ENV should update 
+            // REACT_APP_ANDROID_VERSION=1.0.5
+            // REACT_APP_IOS_VERSION=1.0.3
+            // REACT_APP_ELECTRON_VERSION=1.0.0
+            if (checkDevice === 'Android') {
+                if (version !== ANDROID_VERSION) {
+                    setIsShouldChangeVersion(true);
+                } else {
+                    setIsShouldChangeVersion(false);
+                }
+            } else if (checkDevice === 'iOS') {
+                if (version !== IOS_VERSION) {
+                    setIsShouldChangeVersion(true);
+                } else {
+                    setIsShouldChangeVersion(false);
+                }
+            } else if (checkDevice === 'Electron') {
+                if (version !== ELECTRON_VERSION) {
+                    setIsShouldChangeVersion(true);
+                } else {
+                    setIsShouldChangeVersion(false);
+                }
+            } else {
+                // version check 무시
+                console.log('version =',version)
+                if (version !== '') {
+                    setIsShouldChangeVersion(true);
+                } else {
+                    setIsShouldChangeVersion(false);
+                }
+            }
+        }
+    }, [version])
+
+    React.useEffect(()=>{
+        if (isShouldChangeVersion) {
+            commonAlertOpen({
+                useOneButton:true,
+                alertType: 'warningContinue',
+                yesButtonLabel: 'OK',
+                messages: [
+                    "새로운 버전으로 업데이트를 진행해주세요."
+                ],
+                yesEvent: () => {
+                    commonAlertClose();
+                }
+            })
+        } else {
+        }
+    }, [isShouldChangeVersion])
+
+    
+
 
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right bg-cover justify-center items-center bg-login-img relative'>
@@ -324,7 +448,7 @@ export const Login = () => {
             />
             {/* content */}
             <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={isShouldChangeVersion ? confirmUpdateNewVersion : handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>
                         {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
                         <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain'></div>

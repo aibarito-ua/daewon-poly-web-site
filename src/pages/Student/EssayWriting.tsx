@@ -350,6 +350,7 @@ const EssayWriting = () => {
                             yesButtonLabel: 'OK',
                             yesEvent: () => {
                                 setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
+                                commonAlertClose();
                             }
                         })
                         return;
@@ -363,11 +364,82 @@ const EssayWriting = () => {
     
                         setIsSaveButtonOpen(true)
                         setIsPreviewButtonOpen(true);
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    callbackCheckValues()
+                                    commonAlertOpen({
+                                        messages: ['Do you want to save your current progress before you leave?'],
+                                        alertType: 'warningContinue',
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
+                                            await temporarySaveFunction();
+                                            commonAlertClose();
+                                        },
+                                        yesEvent: () => {
+                                            commonAlertClose();
+                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                        }
+                                    })
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
                     } else if (sum > 0 && sum < targetFlags.length) {
                         setIsSaveButtonOpen(true)
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    callbackCheckValues()
+                                    commonAlertOpen({
+                                        messages: ['Do you want to save your current progress before you leave?'],
+                                        alertType: 'warningContinue',
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
+                                            await temporarySaveFunction();
+                                            commonAlertClose();
+                                        },
+                                        yesEvent: () => {
+                                            commonAlertClose();
+                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                        }
+                                    })
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
                     } else {
                         setIsPreviewButtonOpen(false);
                         setIsSaveButtonOpen(false)
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    commonAlertClose();
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
                     }
                 }
             }
@@ -498,11 +570,12 @@ const EssayWriting = () => {
                     })
                     return;
                 } else {
+                    
                     const sum = targetFlags.reduce((a,b) => (a+b));
                     // sum === 0 => Preview && save 활성화
                     // sum >0, sum < targetFlags.length; -> save 활성화
                     // else -> 모든 버튼 비활성화
-                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags)
+                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
     
                     if (sum === 0) {
     
@@ -519,13 +592,13 @@ const EssayWriting = () => {
                                     commonAlertOpen({
                                         messages: ['Do you want to save your current progress before you leave?'],
                                         alertType: 'warningContinue',
-                                        yesButtonLabel: `Yes`,
-                                        noButtonLabel: `No`,
-                                        yesEvent: async ()=> {
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
                                             await temporarySaveFunction();
                                             commonAlertClose();
                                         },
-                                        closeEvent: () => {
+                                        yesEvent: () => {
                                             commonAlertClose();
                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                         }
@@ -551,13 +624,13 @@ const EssayWriting = () => {
                                     commonAlertOpen({
                                         messages: ['Do you want to save your current progress before you leave?'],
                                         alertType: 'warningContinue',
-                                        yesButtonLabel: `Yes`,
-                                        noButtonLabel: `No`,
-                                        yesEvent: async ()=> {
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
                                             await temporarySaveFunction();
                                             commonAlertClose();
                                         },
-                                        closeEvent: () => {
+                                        yesEvent: () => {
                                             commonAlertClose();
                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                         }
@@ -663,15 +736,15 @@ const EssayWriting = () => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         setCommonStandbyScreen({openFlag:true})
                                         setDraft2ndPageSet('')
                                         await temporarySaveFunction();
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -729,15 +802,15 @@ const EssayWriting = () => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         setCommonStandbyScreen({openFlag:true})
                                         setDraft2ndPageSet('')
                                         await temporarySaveFunction();
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1039,8 +1112,8 @@ const EssayWriting = () => {
                             callbackCheckValues()
                             commonAlertOpen({
                                 messages: ['Do you want to save your current progress and return to the main menu?'],
-                                yesButtonLabel: `Yes, I'm sure.`,
-                                noButtonLabel: `No, Cancel.`,
+                                yesButtonLabel: `Yes`,
+                                noButtonLabel: `No`,
                                 yesEvent: async ()=> await temporarySaveFunction()
                             })
                         }
@@ -1051,31 +1124,20 @@ const EssayWriting = () => {
                                 commonAlertOpen({
                                     messages:['Are you ready to preview your writing?'],
                                     alertType: 'continue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=>{
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=>{
                                         const unitIndex = parseInt(UnitIndex);
                                         const draftIndex = parseInt(DraftIndex);
                                         historyDataDelete(unitIndex, draftIndex)
                                         setPreviewPageInitFlag('UPDATE_WRITE');
-                                        if (isSaved) {
-                                            CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                            commonAlertClose();
-                                        } else {
-                                            // const check = checkNewLine();
-                                            // if (check) {
-                                            //     await temporarySaveFunction().then((res)=>{
-                                            //         commonAlertClose();
-                                            //         CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                            //     });
-                                            // } else {
-                                                commonAlertClose();
-                                                CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                            // }
-                                        }
+                                        CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                        commonAlertClose();
+                                    },
+                                    yesEvent: async () => {
+                                        commonAlertClose();
                                     }
                                 })
-                            
                         }
                     }}>Preview</div>
                 </div>

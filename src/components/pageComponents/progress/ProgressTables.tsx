@@ -98,6 +98,7 @@ const ProgressTable = (props:any) => {
                         console.log(2)
                         progressPercentValue+=25;
                         firstDraftState=progressIcons.CheckGreenCircleIcon;
+                        firstDraftFeedbackState=progressIcons.WaitFeedbackBlueRectIcon;
                         firstDraftStateData=unitItem.draft_1_status.submit_date ? formatDateforStringData(unitItem.draft_1_status.submit_date): '';
                     } else if (firstDraftStatus===4) {
                         console.log(4)
@@ -124,6 +125,7 @@ const ProgressTable = (props:any) => {
                     } else if (secondDraftStatus === 2||secondDraftStatus===3) {
                         progressPercentValue+=25;
                         secondDrafteState=progressIcons.CheckGreenCircleIcon;
+                        finalEvaluationState = progressIcons.WaitFeedbackBlueRectIcon;
                         secondDrafteStateData=unitItem.draft_2_status.submit_date? formatDateforStringData(unitItem.draft_2_status.submit_date):'';
                     } else if (secondDraftStatus===4) {
                         progressPercentValue+=50;

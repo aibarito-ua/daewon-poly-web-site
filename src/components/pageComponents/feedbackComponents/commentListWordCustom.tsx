@@ -12,7 +12,9 @@ import {
     FloatingPortal, 
     useClick,
     useHover,
+    
 } from '@floating-ui/react'
+import type {Placement} from '@floating-ui/react'
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
 
 interface ICommentListWordCustomProps {
@@ -29,6 +31,8 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
     const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
+    const [placement, setPlacement] = React.useState<Placement>('bottom-start');
+    
     React.useEffect(()=>{
         if (setCommentFocusIdInModal) {
             if (isOpen) {
@@ -43,15 +47,34 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
     React.useEffect(()=>{
         if (commentFocusIdInModal === commentClassName) {
             setIsOpen(true)
+            refs.domReference.current?.scrollIntoView({
+                behavior: "auto",
+                block: 'nearest'
+            })
         } else {
             setIsOpen(false)
         }
     }, [commentFocusIdInModal])
 
+    React.useEffect(()=>{
+        // console.log('tooltip opened', thisIndex)
+        const target = document.getElementById(mainTagkey+'-inModal');
+        const windowXWidth = document.getElementById('teacher-feedback-detail-modal-content-left')?.clientWidth;
+        let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
+        let testWidth = windowXWidth !== undefined ? windowXWidth : 0;
+        let testValue = targetLeft/testWidth > 0.6;
+        if (testValue) {
+            setPlacement('bottom-end')
+        } else {
+            setPlacement('bottom-start')
+        }
+    })
+
     const {refs, floatingStyles, context} = useFloating({
         
         open: isOpen,
         onOpenChange: setIsOpen,
+        placement,
         whileElementsMounted: autoUpdate,
         middleware: [
             offset(10),
@@ -99,10 +122,9 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
             lineHeight: 1.38,
             textAlign:'left'
         }}
-        onClick={()=>{
-            setIsOpen(true)
-        }}
-        
+        // onClick={()=>{
+        //     setIsOpen(true)
+        // }}
         >{comment}
             <FloatingPortal></FloatingPortal>
         </div>
