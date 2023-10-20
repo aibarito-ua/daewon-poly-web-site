@@ -114,7 +114,8 @@ const ProgressTable = (props:any) => {
                         progressPercentValue+=0;
                         firstDraftState=progressIcons.RecycleRedCircleIcon;
                         firstDraftFeedbackState=<progressIcons.RejectRedRectIcon/>;
-                        firstDraftStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
+                        // firstDraftStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
+                        firstDraftStateData=''
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
                     } else {} // 0 values
                     // second
@@ -137,7 +138,8 @@ const ProgressTable = (props:any) => {
                         progressPercentValue+=0;
                         secondDrafteState=progressIcons.RecycleRedCircleIcon;
                         finalEvaluationState=<progressIcons.RejectRedRectIcon/>;
-                        secondDrafteStateData=unitItem.draft_2_status.review_reject_date? formatDateforStringData(unitItem.draft_2_status.review_reject_date):'';
+                        // secondDrafteStateData=unitItem.draft_2_status.review_reject_date? formatDateforStringData(unitItem.draft_2_status.review_reject_date):'';
+                        secondDrafteStateData=''
                         finalEvaluationStateData=unitItem.draft_2_status.review_reject_date? formatDateforStringData(unitItem.draft_2_status.review_reject_date): '';
                     } else {} // 0 values
 

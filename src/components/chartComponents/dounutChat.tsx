@@ -330,15 +330,38 @@ const mouseOffEvent = (e:any) => {
     setTooltipData({value: 0, outerRadius: 0})
     setAllData(dumpAllData)
 }
+// const testPercent = 100;
+const mainPercent = Math.round(average*10)/10;
+// const mainPercent = Math.round(testPercent*10)/10;
+const mainPercentString = mainPercent.toString();
+const replaceDot = mainPercentString.replace('.','')
+const checkPercentDigit = mainPercent === 100 ? '3': (
+    mainPercent >= 0 && mainPercent < 10 ? '1': '2'
+)
+const checkDot = mainPercentString === replaceDot;
+
+// checkMainPercent 
+// 1 : 1자리 2: 2자리 3: 100 or 소수점 4 소수점
+const cx2dot1 = cx+30;
+const cx2dotN = cx+20;
+const cx1dot1 = cx+25;
+const cx1dotN = cx+15;
+const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
+    checkPercentDigit === '2' ? (
+        checkDot ? cx2dotN : cx2dot1
+    ) : (
+        checkDot ? cx1dotN : cx1dot1
+    )
+)
 
   return (
     <PieChart width={350} height={300}>
 
         <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={12} textAnchor="middle" style={text1Css}>
-                {Math.round(average*10)/10}
+                {mainPercent}
             </tspan>
-            <tspan x={cx+30} y={cy} dy={12} style={text2Css}>%</tspan>
+            <tspan x={percentCharacterPositionX} y={cy} dy={12} textAnchor="middle" style={text2Css}>%</tspan>
         </text>
         {allData.map((dataItem, dataIndex)=>{
             const currentR = radiusDatas[dataIndex]

@@ -24,7 +24,7 @@ const textmainCss:React.CSSProperties = {
 const text1Css:React.CSSProperties = {
 width: '54px',
 height: '24px',
-textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
+// textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
 fontFamily: 'GothamRounded',
 fontSize: '20px',
 fontWeight: 'bold',
@@ -35,7 +35,7 @@ letterSpacing: 'normal',
 const text2Css:React.CSSProperties = {
 width: '54px',
 height: '24px',
-textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
+// textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
 fontFamily: 'GothamRounded',
 fontSize: '14px',
 fontWeight: 'bold',
@@ -84,7 +84,10 @@ const textLabelCss:React.CSSProperties = {
     textTransform: 'capitalize'
 }
 const percentValue = Math.round(payload.value*10)/10;
-const percentDotCheck = Math.round(payload.value*10)%10 === 0;
+// const percentDotCheck = Math.round(payload.value*10)%10 === 0;
+const percentLengthCheck = percentValue===100 ? '3': (
+    percentValue >=0 && percentValue < 10 ? '1':'2'
+)
 
 const titleName:string[] = payload.name.split(' ')
 // console.log('test pie ===',props)
@@ -104,10 +107,12 @@ const titleName:string[] = payload.name.split(' ')
         })}</text>
         <text x={cx} y={cy} dy={0} dx={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
-            <tspan x={percentValue===100?cx-6:cx} y={cy} dy={15} dx={-5} textAnchor="middle" style={text1Css}>
+            <tspan x={percentValue===100?cx:cx} y={cy} dy={15} dx={-5} textAnchor="middle" style={text1Css}>
                 {percentValue}
             </tspan>
-            <tspan x={percentDotCheck ? cx+20: cx+30} y={cy} dy={15} dx={-5} style={text2Css}>%</tspan>
+            <tspan x={percentLengthCheck === '2' ? cx+20: (
+                percentLengthCheck === '3' ? cx+25 : cx+15
+            )} y={cy} dy={15} dx={-5} style={text2Css}>%</tspan>
         </text>
         {payload.selectName!=='' && (
             <Sector
@@ -299,6 +304,7 @@ const mouseOffEvent = (e:any) => {
         fontWeight={700}
         fontSize={35}
         fill="#333"
+        style={{textShadow: '2px 2px 0 rgba(0,0,0,0.16)'}}
         >{average}
         <tspan 
         fontSize={28}

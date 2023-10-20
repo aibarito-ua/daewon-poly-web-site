@@ -161,7 +161,7 @@ const loadFeedbackDraftBody = (
                     } else {
                         const currentCommentItem = findCommentByCommentIndex(currentCommentIdx);
 
-                        const createSpan = <span className={`hover:border-[2px] border-[#f1b02e]`}
+                        const createSpan = <span className={`rounded-[2px]`}
                         id={currentCommentItem.comment_className}
                         key={currentCommentItem.comment_className}
                         style={{

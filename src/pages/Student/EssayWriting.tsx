@@ -298,16 +298,16 @@ const EssayWriting = () => {
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
         const target = sparkWritingData[unitIndex].draft_2_outline;
         // 2nd draft check
-        if (target[0].input_content!=='' && target[1].input_content!=='' ) {
-            setDraft2ndSubmitActive(true);
-            setDraft2ndSaveActive(true);
-        } else if (target[0].input_content!=='' || target[1].input_content!=='' ) {
-            setDraft2ndSaveActive(true);
-            setDraft2ndSubmitActive(false);
-        } else {
-            setDraft2ndSubmitActive(false);
-            setDraft2ndSaveActive(false);
-        }
+        // if (target[0].input_content!=='' && target[1].input_content!=='' ) {
+        //     setDraft2ndSubmitActive(true);
+        //     setDraft2ndSaveActive(true);
+        // } else if (target[0].input_content!=='' || target[1].input_content!=='' ) {
+        //     setDraft2ndSaveActive(true);
+        //     setDraft2ndSubmitActive(false);
+        // } else {
+        //     setDraft2ndSubmitActive(false);
+        //     setDraft2ndSaveActive(false);
+        // }
         if (params.draft && params.draft==='1') {
 
             if (sparkWritingData !== undefined) {
@@ -711,68 +711,99 @@ const EssayWriting = () => {
                         }
                     })
                     return;
-                } 
+                } else {
+                    const sum = targetFlags.reduce((a,b) => (a+b));
+                    // sum 0 -> submit
+                    // sum 1 -> save
+                    // sum 2 -> 버튼 비활성화
+                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
+                    
+                    
+                    console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
+                    if (sum === 0) {
+                        setDraft2ndSubmitActive(true);
+                        setDraft2ndSaveActive(true);
+                    } else if (sum === 1) {
+                        setDraft2ndSubmitActive(false);
+                        setDraft2ndSaveActive(true);
+                    } else {
+                        setDraft2ndSubmitActive(false);
+                        setDraft2ndSaveActive(false);
+                    }
+                }
 
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
-                // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
-                // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                 let questionOpenSave = false;
-                if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
-                    questionOpenSave = true;
+                if (draft2ndSaveActive) {
+                    if (draft2ndSubmitActive) {
+                        if (isUpdateDraft2Inputs ) {
+                            questionOpenSave = true;
+                        } else {
+                            questionOpenSave = false;
+                        }
+                    } else {
+                        questionOpenSave = false;
+                    }
                 } else {
                     questionOpenSave = false;
                 }
-                if (questionOpenSave) {
-                    console.log('setGoBackFromDraftInUnitPage 4')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                callbackCheckValues()
-                                commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel: `No`,
-                                    noButtonLabel: `Yes`,
-                                    closeEvent: async ()=> {
-                                        setCommonStandbyScreen({openFlag:true})
-                                        setDraft2ndPageSet('')
-                                        await temporarySaveFunction();
-                                        commonAlertClose();
-                                    },
-                                    yesEvent: () => {
-                                        commonAlertClose();
-                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                    }
-                                })
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
-                } else {
-                    console.log('setGoBackFromDraftInUnitPage 5')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                commonAlertClose();
-                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
-                }
+                // if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
+                    //     questionOpenSave = true;
+                    // } else {
+                        //     questionOpenSave = false;
+                        // }
+                        console.log('test callback flags =',questionOpenSave)
+                // if (questionOpenSave) {
+                //     console.log('setGoBackFromDraftInUnitPage 4')
+                //     setGoBackFromDraftInUnitPage(()=>{
+                //         commonAlertOpen({
+                //             messages: ['Do you want to exit?'],
+                //             alertType: 'warningContinue',
+                //             yesButtonLabel:'Yes',
+                //             noButtonLabel: 'No',
+                //             yesEvent: async () => {
+                //                 callbackCheckValues()
+                //                 commonAlertOpen({
+                //                     messages: ['Do you want to save your current progress before you leave?'],
+                //                     alertType: 'warningContinue',
+                //                     yesButtonLabel: `No`,
+                //                     noButtonLabel: `Yes`,
+                //                     closeEvent: async ()=> {
+                //                         setCommonStandbyScreen({openFlag:true})
+                //                         setDraft2ndPageSet('')
+                //                         await temporarySaveFunction();
+                //                         commonAlertClose();
+                //                     },
+                //                     yesEvent: () => {
+                //                         commonAlertClose();
+                //                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                //                     }
+                //                 })
+                //             },
+                //             closeEvent: () => {
+                //                 commonAlertClose();
+                //             }
+                //         })
+                //     })
+                // } else {
+                //     console.log('setGoBackFromDraftInUnitPage 5')
+                //     setGoBackFromDraftInUnitPage(()=>{
+                //         commonAlertOpen({
+                //             messages: ['Do you want to exit?'],
+                //             alertType: 'warningContinue',
+                //             yesButtonLabel:'Yes',
+                //             noButtonLabel: 'No',
+                //             yesEvent: async () => {
+                //                 commonAlertClose();
+                //                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                //             },
+                //             closeEvent: () => {
+                //                 commonAlertClose();
+                //             }
+                //         })
+                //     })
+                // }
             }
         }
     },[]);
@@ -784,45 +815,63 @@ const EssayWriting = () => {
                 // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
                 // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                 let questionOpenSave = false;
-                if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
+                if (draft2ndSaveActive||draft2ndSubmitActive) {
                     questionOpenSave = true;
                 } else {
                     questionOpenSave = false;
                 }
-                if (questionOpenSave) {
-                    console.log('setGoBackFromDraftInUnitPage 6')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                callbackCheckValues()
-                                commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel: `No`,
-                                    noButtonLabel: `Yes`,
-                                    closeEvent: async ()=> {
-                                        setCommonStandbyScreen({openFlag:true})
-                                        setDraft2ndPageSet('')
-                                        await temporarySaveFunction();
-                                        commonAlertClose();
-                                    },
-                                    yesEvent: () => {
-                                        commonAlertClose();
-                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                    }
-                                })
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
+                if (isUpdateDraft2Inputs) {
+                    if (questionOpenSave) {
+                        console.log('setGoBackFromDraftInUnitPage 6')
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    callbackCheckValues()
+                                    commonAlertOpen({
+                                        messages: ['Do you want to save your current progress before you leave?'],
+                                        alertType: 'warningContinue',
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
+                                            setCommonStandbyScreen({openFlag:true})
+                                            setDraft2ndPageSet('')
+                                            await temporarySaveFunction();
+                                            commonAlertClose();
+                                        },
+                                        yesEvent: () => {
+                                            commonAlertClose();
+                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                        }
+                                    })
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
                         })
-                    })
+                    } else {
+                        console.log('setGoBackFromDraftInUnitPage 7')
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    commonAlertClose();
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
+                    }
                 } else {
-                    console.log('setGoBackFromDraftInUnitPage 7')
                     setGoBackFromDraftInUnitPage(()=>{
                         commonAlertOpen({
                             messages: ['Do you want to exit?'],
@@ -839,6 +888,7 @@ const EssayWriting = () => {
                         })
                     })
                 }
+                
             }
         }
     },[
@@ -1191,7 +1241,7 @@ const EssayWriting = () => {
                         {/* Fresh Page */}
                         {draft2ndPageSet === 'fresh' &&
                             <div className='wrap-content-2nd-spark-writing'>
-                            <div className='draft-2nd-title-font'>
+                            <div className='draft-2nd-title-font items-center'>
                                 {/* 2nd draft title content */}
                                 <textarea className='draft-2nd-title-wrap-textarea'
                                     maxLength={120}
@@ -1308,7 +1358,7 @@ const EssayWriting = () => {
         <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
             {/* draft 1 => chat */}
             {DraftIndex === '1' && (
-                <div className='absolute w-fit h-fit top-[15px] right-[20px] overfl'>
+                <div className='absolute w-fit h-fit top-[15px] right-[20px] overflow-auto'>
                     <FormDialog />
                 </div>
             )}

@@ -278,17 +278,42 @@ export default function SelectUnit () {
             )
 
             if (progress === 0) {
-                return  <CircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                // return  <CircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                return <div className={
+                    currentlyInProgress 
+                    ? 'draft-icon-in-progress bg-unit-box-status-ic-entry bg-no-repeat bg-cover' 
+                    : 'draft-icon-not-progress bg-unit-box-status-ic-entry bg-no-repeat bg-cover'
+                } />
             } else if (progress === 1) {
-                return <SavedCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                // return <SavedCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                return <div className={
+                    currentlyInProgress 
+                    ? 'draft-icon-in-progress bg-unit-box-status-ic-save bg-no-repeat bg-cover' 
+                    : 'draft-icon-not-progress bg-unit-box-status-ic-save bg-no-repeat bg-cover'
+                } />
             } else if (progress >1 && progress < 5) {
                 //  2, 3, 4
-                return <CompleteCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                // return <CompleteCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                return <div className={
+                    currentlyInProgress 
+                    ? 'draft-icon-in-progress bg-unit-box-status-ic-complete bg-no-repeat bg-cover' 
+                    : 'draft-icon-not-progress bg-unit-box-status-ic-complete bg-no-repeat bg-cover'
+                } />
             } else if (progress === 5) {
-                return <ReLearningCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                // return <ReLearningCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                return <div className={
+                    currentlyInProgress 
+                    ? 'draft-icon-in-progress bg-unit-box-status-ic-reject bg-no-repeat bg-cover' 
+                    : 'draft-icon-not-progress bg-unit-box-status-ic-reject bg-no-repeat bg-cover'
+                } />
             } else {
                 // -1
-                return <NoEntryCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                // return <NoEntryCircleIcon className={currentlyInProgress ? 'draft-icon-in-progress' : 'draft-icon-not-progress'} />
+                return <div className={
+                    currentlyInProgress 
+                    ? 'draft-icon-in-progress bg-unit-box-status-ic-no_entry bg-no-repeat bg-cover' 
+                    : 'draft-icon-not-progress bg-unit-box-status-ic-no_entry bg-no-repeat bg-cover'
+                } />
             }
         }
         
@@ -436,6 +461,9 @@ export default function SelectUnit () {
                             )}
                         {(firstDraft === 4 && secondDraft === 4) && (
                             <div className='unit-complete-flower-icon'></div>
+                        )}
+                        {lastUnitIndex===item.unit_index && (
+                            <div className='unit-select-bookmark'></div>
                         )}
                         </div>
                         {/* <span className='absolute top-0 right-0'>{(firstDraft && secondFeedback) ? SvgIconCheck: ''}</span> */}

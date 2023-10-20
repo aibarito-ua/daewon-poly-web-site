@@ -843,13 +843,13 @@ const PreviewSparkWriting = (props:any) => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         await forcedTemporarySave(true)
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -892,13 +892,13 @@ const PreviewSparkWriting = (props:any) => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         await forcedTemporarySave(true)
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -942,13 +942,13 @@ const PreviewSparkWriting = (props:any) => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         await forcedTemporarySave(true)
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -990,13 +990,13 @@ const PreviewSparkWriting = (props:any) => {
                                 commonAlertOpen({
                                     messages: ['Do you want to save your current progress before you leave?'],
                                     alertType: 'warningContinue',
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> {
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
                                         await forcedTemporarySave(true)
                                         commonAlertClose();
                                     },
-                                    closeEvent: () => {
+                                    yesEvent: () => {
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1043,13 +1043,13 @@ const PreviewSparkWriting = (props:any) => {
                     commonAlertOpen({
                         messages: ['Do you want to save your current progress before you leave?'],
                         alertType: 'warningContinue',
-                        yesButtonLabel: `Yes`,
-                        noButtonLabel: `No`,
-                        yesEvent: async ()=> {
+                        yesButtonLabel: `No`,
+                        noButtonLabel: `Yes`,
+                        closeEvent: async ()=> {
                             await forcedTemporarySave(true)
                             commonAlertClose();
                         },
-                        closeEvent: () => {
+                        yesEvent: () => {
                             commonAlertClose();
                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                         }
@@ -1110,15 +1110,15 @@ const PreviewSparkWriting = (props:any) => {
                             {bodyHistory.title && (
                                 <div className='flex flex-1 w-full h-fit justify-center z-0'>
                                     <div className='flex flex-row w-full h-fit max-h-full text-start'>
-                                        <div className='flow-root w-full overflow-y-auto'>
+                                        <div className='flow-root w-full overflow-y-auto' style={{fontWeight:700}}>
                                         {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
                                         </div>
                                     </div>
                                 </div>
                             )}
-                            <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
+                            <div className='flex flex-col text-start w-[1160px] max-w-[1160px] h-full max-h-full pt-[26px] overflow-y-auto overflow-x-hidden z-0'>
                             {(draftIndex!==2 && isStandbyFeedback==='') && bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
-                                return <span className='pb-[20px]' key={bodyRemakeStructIndex}>
+                                return <span className='pb-[20px] w-[1160px]' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
                                         // console.log('==test draft jsx ===',v)

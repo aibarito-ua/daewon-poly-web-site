@@ -261,7 +261,7 @@ const handleNext = (currentIndex:number) => {
                 color: '#192878',
             },
           }} 
-          className={value===0? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':''}
+          className={value===0? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':'opacity-[0.5]'}
           label="Overall Report" />
           <Tab sx={{
             height: '55px',
@@ -282,7 +282,7 @@ const handleNext = (currentIndex:number) => {
                 color: '#192878',
             }
           }} 
-          className={value===1? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':''} 
+          className={value===1? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':'opacity-[0.5]'} 
           label="Report by Unit" />
           
         </StyledTabs>

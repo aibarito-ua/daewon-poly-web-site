@@ -53,10 +53,11 @@ export default function SmallHead (props: {
                     <div className='top-right-user-info-text-class select-none'>{userInfo.courseName}</div>
                 </div>
                 <div className={`top-right-user-info-img bg-user-no-profile-image-view`} style={{
-                    backgroundImage: userInfo.userImagePath !== testUrl ? 'url("'+userInfo.userImagePath+'")': NoImage,
+                    // backgroundImage: userInfo.userImagePath !== testUrl ? 'url("'+userInfo.userImagePath+'")': NoImage,
+                    backgroundImage: 'url("'+userInfo.userImagePath+'")',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundSize: 'cover'
+                    backgroundSize: 'contain'
                 }}/>
             </div>
         </div>

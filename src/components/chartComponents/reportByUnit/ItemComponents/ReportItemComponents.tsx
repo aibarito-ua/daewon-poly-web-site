@@ -98,7 +98,15 @@ const ReportCorrectionSummaryComponent = (
             }}
             >
                 <div className='flex flex-row select-none'>
-                    <span className='report-chart-righ-correction-content-item-title'>{`- grammar`}</span>
+                    <span className={selectReason === 'grammar' 
+                            ? 'report-chart-righ-correction-content-item-title-selected'
+                            : 'report-chart-righ-correction-content-item-title'}>
+                        {`-`}
+                        <span className={selectReason === 'grammar' 
+                            ? 'pl-[4px] underline'
+                            : 'pl-[4px]'}>{'grammar'}
+                        </span>
+                    </span>
                     <span className='report-chart-righ-correction-content-item-value'>{grammar.sentences_count}</span>
                     { selectReason === 'grammar' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
@@ -130,7 +138,16 @@ const ReportCorrectionSummaryComponent = (
             }}
             >
                 <div className='flex flex-row select-none'>
-                    <span className='report-chart-righ-correction-content-item-title'>{`- punctuation`}</span>
+                    <span className={selectReason === 'punctuation' 
+                            ? 'report-chart-righ-correction-content-item-title-selected'
+                            : 'report-chart-righ-correction-content-item-title'}>
+                        {`-`}
+                        <span className={selectReason === 'punctuation' 
+                            ? 'pl-[4px] underline'
+                            : 'pl-[4px]'}>{'punctuation'}
+                        </span>
+                    </span>
+                    {/* <span className='report-chart-righ-correction-content-item-title'>{`- punctuation`}</span> */}
                     <span className='report-chart-righ-correction-content-item-value'>{punctuation.sentences_count}</span>
                     { selectReason === 'punctuation' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
@@ -166,7 +183,16 @@ const ReportCorrectionSummaryComponent = (
             }}
             >
                 <div className='flex flex-row select-none'>
-                    <span className='report-chart-righ-correction-content-item-title'>{`- spelling`}</span>
+                    <span className={selectReason === 'spelling' 
+                            ? 'report-chart-righ-correction-content-item-title-selected'
+                            : 'report-chart-righ-correction-content-item-title'}>
+                        {`-`}
+                        <span className={selectReason === 'spelling' 
+                            ? 'pl-[4px] underline'
+                            : 'pl-[4px]'}>{'spelling'}
+                        </span>
+                    </span>
+                    {/* <span className='report-chart-righ-correction-content-item-title'>{`- spelling`}</span> */}
                     <span className='report-chart-righ-correction-content-item-value'>{punctuation.sentences_count}</span>
                     { selectReason === 'spelling' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
@@ -185,7 +211,7 @@ const ReportCorrectionSummaryComponent = (
             <div className='report-chart-righ-correction-content'>
 
                 <div className='report-chart-righ-correction-content-wrap-1'>
-                    <div className='report-chart-righ-word-count-content-title select-none w-fit'>1st drafts</div>
+                    <div className='report-chart-righ-word-count-content-title select-none w-fit'>1st draft</div>
                     <div className='report-chart-righ-correction-content-items'>
                         {item.grammar_correction.grammar && GrammarSentence(item.grammar_correction.grammar)}
                         {item.grammar_correction.spelling && SpellingSentence(item.grammar_correction.spelling)}

@@ -83,46 +83,47 @@ function FeedbackEmptyGrayRectIcon(props: React.SVGAttributes<SVGElement>) {
         </svg>
     )
 }
-function LevelSelectToggleDownArrowIcon(props: React.SVGAttributes<SVGElement>) {
-    return (
-        <svg {...props} width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g filter="url(#filter0_d_482_870)">
-        <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
-        </g>
-        <defs>
-        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dy="1"/>
-        <feComposite in2="hardAlpha" operator="out"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_482_870"/>
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_482_870" result="shape"/>
-        </filter>
-        </defs>
-        </svg>
-    )
-}
-function LevelSelectToggleUpArrowIcon(props: React.SVGAttributes<SVGElement>) {
-    return (
-        <svg {...props} style={{transform: 'rotate(180deg)'}} width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g filter="url(#filter0_d_482_870)">
-        <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
-        </g>
-        <defs>
-        <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dy="1"/>
-        <feComposite in2="hardAlpha" operator="out"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_482_870"/>
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_482_870" result="shape"/>
-        </filter>
-        </defs>
-        </svg>
-    )
-}
+// function LevelSelectToggleDownArrowIcon(props: React.SVGAttributes<SVGElement>) {
+//     return (
+//         <svg {...props} width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+//         <g filter="url(#filter0_d_482_870)">
+//         <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
+//         </g>
+//         <defs>
+//         <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+//         <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+//         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+//         <feOffset dy="1"/>
+//         <feComposite in2="hardAlpha" operator="out"/>
+//         <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+//         <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_482_870"/>
+//         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_482_870" result="shape"/>
+//         </filter>
+//         </defs>
+//         </svg>
+//     )
+// }
+// function LevelSelectToggleUpArrowIcon(props: React.SVGAttributes<SVGElement>) {
+//     return (
+//         <svg {...props} style={{transform: 'rotate(180deg)'}} width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+//         <g filter="url(#filter0_d_482_870)">
+//         <path d="M0.362179 5.07226C0.210026 4.27922 0.514514 2.47629 3.13783 2.25512C6.16156 2.00019 9.16156 2.00008 12.1472 2.17673C14.6616 2.25517 18.4638 2.96055 13.8301 9.21268C10.0447 14.326 7.93758 15.0729 5.15732 12.7307C2.38167 10.3838 0.790975 7.33612 0.362179 5.07226Z" fill="#757D9A"/>
+//         </g>
+//         <defs>
+//         <filter id="filter0_d_482_870" x="0.330078" y="2.05273" width="15.6826" height="12.9473" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+//         <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+//         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+//         <feOffset dy="1"/>
+//         <feComposite in2="hardAlpha" operator="out"/>
+//         <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+//         <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_482_870"/>
+//         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_482_870" result="shape"/>
+//         </filter>
+//         </defs>
+//         </svg>
+//     )
+// }
+
 function NoEntryGrayRectIcon(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
@@ -135,6 +136,8 @@ function NoEntryGrayRectIcon(props: React.SVGAttributes<SVGElement>) {
 const EntryBlueIcon = <div className='bg-progress-status-ic-blue-entry-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>;
 const WaitFeedbackBlueRectIcon = <div className='bg-progress-status-ic-blue-wait-rect bg-no-repeat bg-cover w-[30px] h-[30px]' />
 const RecycleRedCircleIcon = <div className='bg-progress-status-ic-red-recycle-circle bg-no-repeat bg-cover w-[30px] h-[30px]'/>
+const LevelSelectToggleDownArrowIcon = () => <div className='bg-select-box-down-ic-arrow bg-no-repeat bg-contain w-[24px] h-[16px] mr-[13px]'/>
+const LevelSelectToggleUpArrowIcon = () => <div className='bg-select-box-down-ic-arrow bg-no-repeat bg-contain w-[24px] h-[16px] mr-[13px] rotate-180'/>
 
 export const progressIcons = {
     CheckGreenCircleIcon,

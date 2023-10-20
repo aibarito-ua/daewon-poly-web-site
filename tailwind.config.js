@@ -31,7 +31,7 @@ module.exports = {
         'unit-complete-flower-icon': "url('/src/util/svgs/unit-complete-flower-icon.png')",
         'back-in-draft-icon': "url('/src/util/svgs/commonIconPNG/btn-back-page-icon.png')",
         'draft-background-image': "url('/src/util/svgs/draft-background-image.svg')",
-        'chatbot-ella-button-icon': "url('/src/util/svgs/btn-chatbot-ella.svg')",
+        'chatbot-ella-button-icon': "url('/src/util/png/bt_chatbot.png')",
         'report-rechart-custom-tooltip-box-organization': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipOrganization.svg')",
         'report-rechart-custom-tooltip-box-voice': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipVoice.svg')",
         'report-rechart-custom-tooltip-box-sentencefluency': "url('/src/components/chartComponents/tooltips/polygons/reportTooltipSentenceFluency.svg')",
@@ -102,6 +102,20 @@ module.exports = {
         'progress-status-ic-green-check-circle': "url(/src/util/png/progress/checkGreenCircleIcon.png)",
         'progress-status-ic-red-recycle-circle': "url(/src/util/png/progress/recycleRedCircleIcon.png)",
         'progress-status-ic-blue-wait-rect' : "url(/src/util/png/progress/ic_blue_wait_rect.png)",
+
+        // unit select icons
+        'unit-box-status-ic-entry':"url('/src/util/png/unitSelect/ic_entry.png')",
+        'unit-box-status-ic-no_entry':"url('/src/util/png/unitSelect/ic_no_entry.png')",
+        'unit-box-status-ic-reject':"url('/src/util/png/unitSelect/ic_reject.png')",
+        'unit-box-status-ic-save':"url('/src/util/png/unitSelect/ic_save.png')",
+        'unit-box-status-ic-complete':"url('/src/util/png/unitSelect/ic_complete.png')",
+        'unit-box-status-ic-ing':"url('/src/util/png/unitSelect/ing_border.png')",
+        'unit-box-bookmark':"url('/src/util/png/unitSelect/bookmark.png')",
+
+        // select box down arrow
+        'select-box-down-ic-arrow': "url('/src/util/png/selectBox/ic_arrow_down.png')",
+
+        // 
       }
     },
     borderWidth: {
