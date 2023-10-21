@@ -239,6 +239,7 @@ function SparkWritingEnterButton(props: React.SVGAttributes<SVGElement>) {
 
     )   
 }
+// const SparkWritingEnterButton = () => <div
 function FreeWritingEnterButton(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} width="322" height="358" viewBox="0 0 322 358" fill="none" xmlns="http://www.w3.org/2000/svg">

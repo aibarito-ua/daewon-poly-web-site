@@ -115,7 +115,8 @@ module.exports = {
         // select box down arrow
         'select-box-down-ic-arrow': "url('/src/util/png/selectBox/ic_arrow_down.png')",
 
-        // 
+        // writing activity enter icons
+        'spark-writing-enter-img': "url('/src/util/png/spark_writing_enter.png')",
       }
     },
     borderWidth: {

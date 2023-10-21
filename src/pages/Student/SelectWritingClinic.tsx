@@ -48,12 +48,12 @@ const SelectWritingClinic = () => {
             <SmallHead mainTitle='Writing Activity'/>
             <div className='flex flex-1 flex-col justify-center w-full h-2/3 pt-[141px] px-[4vw]'>
                 <div className="flex flex-1 pr-[2rem] gap-[5%] w-full justify-center">
-                    <commonIconSvgs.SparkWritingEnterButton className={buttonActive? 'select-writing-item-button': 'hidden'} onClick={()=>{
+                    <div className={buttonActive? 'select-writing-item-button select-spark-writing-img': 'hidden'} onClick={()=>{
                         if (buttonActive) {
                             CommonFunctions.goLink( 'WritingClinic/SparkWriting', navigate, role)}
                         }
                     }
-                    ><span className="text-xl select-none">{'Spark Writing'}</span></commonIconSvgs.SparkWritingEnterButton>
+                    ></div>
                     <Button className={`select-writing-item-button ${secondGenerationOpen? '':'hidden'}`}><span className="text-xl">{'Free Writing'}</span></Button>
                 </div>
             </div>

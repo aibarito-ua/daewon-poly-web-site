@@ -246,21 +246,22 @@ const PreviewSparkWriting = (props:any) => {
           //  console.log('res ====',res)
             if (res.result_body.length>0) {
                 const unitId = sparkWritingData[unitIndex].unit_id
-                const proofReadingCountUpdateValue = ProofReadingCountValue+1;
                 // const proofReadingCountUpdateValue = 1;
-                const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue, userInfo.accessToken);
-                if (updateCountAPI.statusCode === 200) {
-                    setProofreadingCount(unitId)
-                    setCommonStandbyScreen({openFlag:false})
-                    setIsPreview(false)
-                    setIsGrammarProceed(true);
-                  //  console.log('res grammar =',res)
-                    setGuideFlag(1)
-                    setInitHistorys({
-                        title: res.result_title,
-                        body: res.result_body
-                    })
-                }
+                setProofreadingCount(unitId)
+                setCommonStandbyScreen({openFlag:false})
+                setIsPreview(false)
+                setIsGrammarProceed(true);
+                //  console.log('res grammar =',res)
+                setGuideFlag(1)
+                setInitHistorys({
+                    title: res.result_title,
+                    body: res.result_body
+                })
+
+                // const proofReadingCountUpdateValue = ProofReadingCountValue+1;
+                // const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue, userInfo.accessToken);
+                // if (updateCountAPI.statusCode === 200) {
+                // }
             }
             // console.log('preview res ===',res)
         } else {
@@ -618,6 +619,7 @@ const PreviewSparkWriting = (props:any) => {
         };
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
+        
         if (isSaveTemporary) {
             // if (isGrammarSave) {
                 commonAlertClose()
@@ -1226,7 +1228,7 @@ const PreviewSparkWriting = (props:any) => {
                         }}>Proofreading</button>
                     }
                     {/* 임시 버튼 - will del */}
-                    {!isSubmitted &&
+                    {process.env.REACT_APP_IS_DEV==='ISDEVUA' &&
                         <button className={
                             
                             !isSubmitted 

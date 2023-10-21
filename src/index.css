@@ -749,10 +749,18 @@ bg-[#ffea2c]
 /* 1. Select */
 .select-writing-item-button {
   @apply 
-  w-[320px]
-  h-[322px]
+  /* w-[320px]
+  h-[322px] */
   hover:cursor-pointer
   
+}
+.select-spark-writing-img {
+  @apply
+  bg-spark-writing-enter-img
+  bg-no-repeat
+  bg-cover
+  w-[322px]
+  h-[358px]
 }
 .left-top-text-title {
   font-family: 'Pathfinder';
