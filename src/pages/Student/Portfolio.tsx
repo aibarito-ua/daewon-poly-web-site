@@ -9,6 +9,7 @@ import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import PortfolioContents from '../../components/pageComponents/portfolio/PortfolioContents';
 import PortfolioModalComponent from '../../components/toggleModalComponents/PortfolioModalComponent';
 import PortfolioSelectButton from '../../components/pageComponents/portfolio/PortfolioSelectButton';
+import useSparkWritingStore from '../../store/useSparkWritingStore';
 
 
 export const Portfolio = () => {
@@ -33,6 +34,9 @@ export const Portfolio = () => {
         forceReadOnlyPortfolioSelectBox,
         setForceReadOnlyPortfolioSelectBox,
     } = usePortfolioStore();
+    const {
+        sparkWritingBookName
+    } = useSparkWritingStore();
 
     const beforeRenderedFn = async () => {
         const student_code = userInfo.userCode;
@@ -59,7 +63,7 @@ export const Portfolio = () => {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >{displayPortfolioData.book_name}</span>
+                        <span className='writing-activity-page-title-text' >{displayPortfolioData.book_name==='' ? sparkWritingBookName : displayPortfolioData.book_name}</span>
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
                         <PortfolioSelectButton 

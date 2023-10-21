@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useNavStore from '../../store/useNavStore';
 import useEssayWritingCenterDTStore from '../../store/useEssayWritingCenterDTStore';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
 import { useNavigate, useParams } from 'react-router-dom';
-import textBoxImg from '../../util/png/textKeyBox.png'
-import textSubBoxImg from '../../util/png/outlinTextSubBox.png'
-import {PopupModalComponent} from '../../components/toggleModalComponents/popupModalComponent'
 import useLoginStore from '../../store/useLoginStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
 import FormDialog from '../../components/toggleModalComponents/ChatbotModalComponent';
@@ -13,15 +10,8 @@ import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import { callUnitInfobyStudent, draft2ndSubmit, draftSaveTemporary } from './api/EssayWriting.api';
-import TooltipOverallCommentComponent, { ArrowBubble } from '../../components/toggleModalComponents/TooltipOverallCommentComponent';
 import draftViewBox from '../../components/pageComponents/feedbackComponents/draftFeedback';
 import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
-import { FloatingNode } from '@floating-ui/react';
-interface IDUMPOutlineItem {
-    name:string;
-    CheckWriting: string;
-    [key:string]: any[]|any;
-}
 
 const EssayWriting = () => {
 
@@ -103,26 +93,20 @@ const EssayWriting = () => {
     const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen} = useControlAlertStore();
 
     const pageInitSetting = async () => {
-        return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
+        const init = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             const data = response.units
             console.log('response page init set api =',response)
             setOriginalTargetData(data);
             setIsSaved(false);
             return true;
         })
-    }
-    useComponentWillMount(async ()=>{
-        const currentDraft = params.draft ? params.draft : '';
-        console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
-        console.log('essay writing 102 | draft test =',)
-        setCommonStandbyScreen({openFlag:true})
-        const init = await pageInitSetting()
         setPreviewPageInitFlag('')
+        const currentDraft = params.draft ? params.draft : '';
         if (init) {
             if (currentDraft === '1') {
                 const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
                 if (draft1stStatus.status === 5) {
-                    setCommonStandbyScreen({openFlag:false})
+                    // setCommonStandbyScreen({openFlag:false})
                     // return submit
                     setReturn1stDraftReasonAlertOpen({
                         openFlag:true, 
@@ -142,6 +126,7 @@ const EssayWriting = () => {
                     console.log(' == targetPageFlag=1=',targetPageFlag)
                     setDraft2ndPageSet(targetPageFlag);
                 }
+                setCommonStandbyScreen({openFlag:false})
             } else if (currentDraft === '2') {
                 const currentData = sparkWritingData[parseInt(UnitIndex)-1];
                 if (currentData) {
@@ -155,13 +140,16 @@ const EssayWriting = () => {
                         console.log(' == targetPageFlag=2=',targetPageFlag)
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
-                        setCommonStandbyScreen({openFlag:false})
+                        
                         // return submit
                         setReturn1stDraftReasonAlertOpen({
                             openFlag:true, 
                             returnReason: draft2ndStatus.return_reason,
                             returnTeacherComment: draft2ndStatus.return_teacher_comment,
                             NoEvent:()=>{
+                                setDraft2ndPageSet('')
+                                setDraft2ndSaveActive(false)
+                                setDraft2ndSubmitActive(false)
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
                             yesEvent:()=>{
@@ -180,17 +168,26 @@ const EssayWriting = () => {
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
                     }
+                    setCommonStandbyScreen({openFlag:false})
                 }
             }
-        
-            setCommonStandbyScreen({openFlag:false})
         }
-        
+        return init;
+    }
+    useComponentWillMount(async ()=>{
+        const currentDraft = params.draft ? params.draft : '';
+        console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
+        console.log('essay writing 102 | draft test =',)
+        setCommonStandbyScreen({openFlag:true})
+        const initEnd = await pageInitSetting().then((init) => {
+            
+            return init;
+        })
         
         
         return ()=>{
-            setIsSaved(false);
             console.log('is did un mout?')
+            setIsSaved(false);
             // setDraft2ndPageSet('')
         }
     })
@@ -275,7 +272,6 @@ const EssayWriting = () => {
             setIsPreviewButtonOpen(false);
             setIsSaveButtonOpen(false);
             setIsUpdateDraft2Inputs(false);
-            
         }
     },[
         // page state
@@ -383,6 +379,9 @@ const EssayWriting = () => {
                                         },
                                         yesEvent: () => {
                                             commonAlertClose();
+                                            setDraft2ndPageSet('')
+                                            setDraft2ndSaveActive(false)
+                                            setDraft2ndSubmitActive(false)
                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                         }
                                     })
@@ -413,6 +412,9 @@ const EssayWriting = () => {
                                         },
                                         yesEvent: () => {
                                             commonAlertClose();
+                                            setDraft2ndPageSet('')
+                                            setDraft2ndSaveActive(false)
+                                            setDraft2ndSubmitActive(false)
                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                         }
                                     })
@@ -433,6 +435,9 @@ const EssayWriting = () => {
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {
                                     commonAlertClose();
+                                    setDraft2ndPageSet('')
+                                    setDraft2ndSaveActive(false)
+                                    setDraft2ndSubmitActive(false)
                                     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                 },
                                 closeEvent: () => {
@@ -444,7 +449,8 @@ const EssayWriting = () => {
                 }
             }
         }
-    }, [sparkWritingData])
+    }, [sparkWritingData]);
+
     React.useEffect(()=>{
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
         const target = sparkWritingData[unitIndex]
@@ -507,6 +513,8 @@ const EssayWriting = () => {
             
                     setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
                     setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
+                    setDraft2ndSaveActive(true)
+                    setDraft2ndSubmitActive(true)
                 } else if (draft2ndPageSet==='fresh') {
                     setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
                     setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
@@ -700,13 +708,15 @@ const EssayWriting = () => {
                         return 1;
                     }
                 })
-
+                console.log('titleMaxLengthCheck = ',titleMaxLengthCheck)
                 if (titleMaxLengthCheck) {
+
                     commonAlertOpen({
                         messages:['The Enter/Return key cannot be used in this section.'],
                         useOneButton: true,
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
+                            commonAlertClose();
                             setOutlineInputText(redoTitleText, unitId, unitIndex, 1,2)
                         }
                     })
@@ -748,68 +758,15 @@ const EssayWriting = () => {
                 } else {
                     questionOpenSave = false;
                 }
-                // if (draft2ndSaveActive||draft2ndSubmitActive||isUpdateDraft2Inputs) {
-                    //     questionOpenSave = true;
-                    // } else {
-                        //     questionOpenSave = false;
-                        // }
-                        console.log('test callback flags =',questionOpenSave)
-                // if (questionOpenSave) {
-                //     console.log('setGoBackFromDraftInUnitPage 4')
-                //     setGoBackFromDraftInUnitPage(()=>{
-                //         commonAlertOpen({
-                //             messages: ['Do you want to exit?'],
-                //             alertType: 'warningContinue',
-                //             yesButtonLabel:'Yes',
-                //             noButtonLabel: 'No',
-                //             yesEvent: async () => {
-                //                 callbackCheckValues()
-                //                 commonAlertOpen({
-                //                     messages: ['Do you want to save your current progress before you leave?'],
-                //                     alertType: 'warningContinue',
-                //                     yesButtonLabel: `No`,
-                //                     noButtonLabel: `Yes`,
-                //                     closeEvent: async ()=> {
-                //                         setCommonStandbyScreen({openFlag:true})
-                //                         setDraft2ndPageSet('')
-                //                         await temporarySaveFunction();
-                //                         commonAlertClose();
-                //                     },
-                //                     yesEvent: () => {
-                //                         commonAlertClose();
-                //                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                //                     }
-                //                 })
-                //             },
-                //             closeEvent: () => {
-                //                 commonAlertClose();
-                //             }
-                //         })
-                //     })
-                // } else {
-                //     console.log('setGoBackFromDraftInUnitPage 5')
-                //     setGoBackFromDraftInUnitPage(()=>{
-                //         commonAlertOpen({
-                //             messages: ['Do you want to exit?'],
-                //             alertType: 'warningContinue',
-                //             yesButtonLabel:'Yes',
-                //             noButtonLabel: 'No',
-                //             yesEvent: async () => {
-                //                 commonAlertClose();
-                //                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                //             },
-                //             closeEvent: () => {
-                //                 commonAlertClose();
-                //             }
-                //         })
-                //     })
-                // }
+                console.log('test callback flags =',questionOpenSave)
             }
         }
     },[]);
+
     React.useEffect(()=>{
         if (sparkWritingData !== undefined) {
             if (DraftIndex==='2') {
+                callbackCheckValues()
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
                 // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
@@ -844,6 +801,9 @@ const EssayWriting = () => {
                                         },
                                         yesEvent: () => {
                                             commonAlertClose();
+                                            setDraft2ndPageSet('')
+                                            setDraft2ndSaveActive(false)
+                                            setDraft2ndSubmitActive(false)
                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                         }
                                     })
@@ -863,6 +823,9 @@ const EssayWriting = () => {
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {
                                     commonAlertClose();
+                                    setDraft2ndPageSet('')
+                                    setDraft2ndSaveActive(false)
+                                    setDraft2ndSubmitActive(false)
                                     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                 },
                                 closeEvent: () => {
@@ -880,6 +843,9 @@ const EssayWriting = () => {
                             noButtonLabel: 'No',
                             yesEvent: async () => {
                                 commonAlertClose();
+                                setDraft2ndPageSet('')
+                                setDraft2ndSaveActive(false)
+                                setDraft2ndSubmitActive(false)
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
                             closeEvent: () => {
@@ -930,6 +896,9 @@ const EssayWriting = () => {
                 return response;
             });
             if (isSaveTemporary) {
+                setDraft2ndPageSet('')
+                setDraft2ndSaveActive(false)
+                setDraft2ndSubmitActive(false)
                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             } else {
                 commonAlertOpen({
@@ -968,6 +937,9 @@ const EssayWriting = () => {
                 setCommonStandbyScreen({openFlag:false});
                 setIsSaved(true);
                 commonAlertClose();
+                setDraft2ndPageSet('')
+                setDraft2ndSaveActive(false)
+                setDraft2ndSubmitActive(false)
                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                 // commonAlertOpen({
                 //     useOneButton: true,
@@ -1028,6 +1000,9 @@ const EssayWriting = () => {
                 ],
                 yesEvent: async () => {
                     commonAlertClose();
+                    setDraft2ndPageSet('')
+                    setDraft2ndSaveActive(false)
+                    setDraft2ndSubmitActive(false)
                     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
                 }
             })
@@ -1198,6 +1173,9 @@ const EssayWriting = () => {
     const Draft2ndWritingPage = () => {
         const draftItem = sparkWritingData[parseInt(UnitIndex)-1];
         console.log(' 2ND DRAFT draftItem :',draftItem)
+        console.log('draft2ndSaveActive =',draft2ndSaveActive)
+        console.log('draft2ndSubmitActive',draft2ndSubmitActive)
+        console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
         return (
             <div className='wrap-contain-2nd-spark-writing'>
                 <div className='wrap-guide-2nd-top-text-spark-writing'>{'Check your teacher’s feedback and work on your 2nd draft.'}</div>
@@ -1233,7 +1211,12 @@ const EssayWriting = () => {
                                         setOutlineInputText('', draftItem.unit_id, draftItem.unit_index, 2,2)
                                         setDraft2ndPageSet('fresh')
                                     }}/>
-                                    <div className='draft-2nd-select-button-revise' onClick={()=>{setDraft2ndPageSet('revise')}}/>
+                                    <div className='draft-2nd-select-button-revise' onClick={()=>{
+                                        setDraft2ndPageSet('revise')
+                                        setDraft2ndSaveActive(true)
+                                        setDraft2ndSubmitActive(true)
+                                        callbackCheckValues();
+                                    }}/>
                                 </div>
                             </div>
                         }
@@ -1317,13 +1300,13 @@ const EssayWriting = () => {
                     <div className={`${draft2ndSaveActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSaveActive) {
                             commonAlertOpen({
-                                messages:['Do you want to return to edit your writing?'],
+                                messages:['Do you want to save your current progress and return to the main menu?'],
                                 yesButtonLabel: 'Yes',
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {
                                     commonAlertClose();
                                     setCommonStandbyScreen({openFlag:true})
-                                    setDraft2ndPageSet('')
+                                    // setDraft2ndPageSet('')
                                     await temporarySaveFunction();
                                 }
                             })
@@ -1344,7 +1327,7 @@ const EssayWriting = () => {
                                 yesEvent: async () => {
                                     commonAlertClose();
                                     setCommonStandbyScreen({openFlag:true})
-                                    setDraft2ndPageSet('')
+                                    // setDraft2ndPageSet('')
                                     await submit2ndDraftFunction();
                                 },
                             })
@@ -1363,7 +1346,8 @@ const EssayWriting = () => {
                 </div>
             )}
             {/* draft 2 => overall comment */}
-            {DraftIndex === '2' && overallComment1stDraft.content!=='' && (
+            {/* {DraftIndex === '2' && overallComment1stDraft.content!=='' && ( */}
+            {DraftIndex === '2' && (
                 <div className='flex flex-row absolute w-fit h-[80px] overflow-auto top-[30px] right-[35px] gap-[50px] z-[50]'>
                     <div className={overallComment1stDraft.open? 'overall-comment-2nd-draft-write-top-tooltip-content':'hidden'}>
                         <span></span>

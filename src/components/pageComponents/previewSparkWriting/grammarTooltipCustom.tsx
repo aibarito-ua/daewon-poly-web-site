@@ -124,7 +124,7 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
                         style={floatingStyles}
                         {...getFloatingProps}
                     >
-                        <span className='grammar-tooltip-custom-title'>{tooltipText[0]}</span>
+                        <span className='grammar-tooltip-custom-title capitalize'>{tooltipText[0]}</span>
                         {typeof(tooltipText[1])==='string'? (
                             <span className='flex w-full justify-center'>{tooltipText[1]}</span>
                         ): tooltipText[1]}

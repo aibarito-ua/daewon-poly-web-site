@@ -20,6 +20,7 @@ const Report = () => {
     const {role, userInfo} = useLoginStore();
     const {
         setCommonStandbyScreen,
+        
         // api data
         reportAPIData, setReportAPIData,
         setSelectReportData,
@@ -38,6 +39,7 @@ const Report = () => {
         setSparkWritingDataFromAPI,
         setProgressLevelBoxValue,
         setProgressAllLevelBoxValues,
+        sparkWritingBookName
     } = useSparkWritingStore();
 
     const beforeRenderFn1 = async () => {
@@ -232,7 +234,7 @@ const Report = () => {
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
                         </div>
-                        <span className='writing-activity-page-title-text' >{ reportSelectBookName }</span>
+                        <span className='writing-activity-page-title-text' >{ reportSelectBookName==='' ? sparkWritingBookName: reportSelectBookName }</span>
                     </div>
                     <div className='flex flex-1 h-[45px] items-center justify-end'>
                         <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>

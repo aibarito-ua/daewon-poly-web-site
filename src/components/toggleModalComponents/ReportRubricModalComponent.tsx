@@ -188,9 +188,9 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
   }
 
   const handleClickOpen = () => {
-    if (!isNoData) {
+    // if (!isNoData) {
       setOpen(true);
-    }
+    // }
   };
 
   const handleClose = () => {

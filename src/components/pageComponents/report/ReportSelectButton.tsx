@@ -95,7 +95,7 @@ export default function ReportSelectButton(props:{
 
   return (
     <div className='flex items-center h-[45px]' >
-      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1 }} >
+      <FormControl sx={{ width: '240px', height: '45px', padding:0, minHeight:'45px', m: 1 }} >
         <Select
             sx={
               disabled 
@@ -152,8 +152,10 @@ export default function ReportSelectButton(props:{
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
             
         >
-            {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
-            {isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
+            {/* {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
+            
+            {isLevel && } */}
+            <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
 
             {data.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={isLevel?dataItem.level:dataItem.label}>{isLevel?dataItem.level:dataItem.label}</MenuItem>
