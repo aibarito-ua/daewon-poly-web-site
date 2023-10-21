@@ -282,9 +282,20 @@ code {
   min-w-fit
 }
 body {
-  /* width: 100vw;
-  height: 100vh;
-  background-color: black; */
+  *::-webkit-scrollbar {
+    width: 9px;
+  };
+  *::-webkit-scrollbar-thumb {
+    
+    background-color: #cccccc;
+    background-clip: padding-box;
+    border-right: 7px solid transparent;
+  };
+  /* *::-webkit-scrollbar-track {
+    
+    background-color: #222;
+  } */
+
   @apply
   w-[100vw]
   h-[100vh]
