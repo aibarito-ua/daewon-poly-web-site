@@ -27,7 +27,7 @@ const DateText = (props:{dateString:string}) => {
         textAlign: 'center',
         color: '#222',
         maxHeight: '10px',
-        width: '58px',
+        width: '65px',
         height: '10px',
         flexGrow: 0,
         lineHeight: 'normal',
