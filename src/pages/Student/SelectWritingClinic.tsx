@@ -27,10 +27,11 @@ const SelectWritingClinic = () => {
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
         const response = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
+            console.log('writing clinic response =',response)
             return response;
         });
         // alert(JSON.stringify(response))
-        if (response.book_name!=='') {
+        if (response) {
             setButtonActive(true)
         }
         setSparkWritingDataFromAPI(response.units, response.book_name)
@@ -48,7 +49,7 @@ const SelectWritingClinic = () => {
             <SmallHead mainTitle='Writing Activity'/>
             <div className='flex flex-1 flex-col justify-center w-full h-2/3 pt-[141px] px-[4vw]'>
                 <div className="flex flex-1 pr-[2rem] gap-[5%] w-full justify-center">
-                    <div className={buttonActive? 'select-writing-item-button select-spark-writing-img': 'hidden'} onClick={()=>{
+                    <div className={buttonActive? 'select-writing-item-button bg-spark-writing-enter-img bg-no-repeat bg-cover w-[322px] h-[358px]': 'hidden'} onClick={()=>{
                         if (buttonActive) {
                             CommonFunctions.goLink( 'WritingClinic/SparkWriting', navigate, role)}
                         }

@@ -422,6 +422,7 @@ body {
   @apply
   w-[calc(100%-30px)]
   h-[calc(100%-60px)]
+  min-w-[1060px]
   /* bg-white */
   bg-menu-inner-img
   mt-[30px]
@@ -1478,8 +1479,9 @@ bg-[#ffea2c]
   @apply
   flex
   flex-col
-  h-[445px]
+  h-[395px]
   max-w-[1010px]
+  min-w-[1010px]
   rounded-[24px]
   bg-white
 }
@@ -1487,8 +1489,9 @@ bg-[#ffea2c]
   @apply
   flex
   flex-col
-  h-[445px]
+  h-[395px]
   w-full
+  min-w-[1010px]
   rounded-[24px]
   bg-white
   
@@ -1501,11 +1504,11 @@ bg-[#ffea2c]
   @apply
   flex
   w-full
-  h-[400px]
+  h-full
   rounded-b-[24px]
   bg-[#f0f3f9]
-  px-[15px]
-  pb-[15px]
+  px-[10px]
+  pb-[10px]
   border-b-[5px]
   border-x-[5px]
   border-white
@@ -1576,31 +1579,45 @@ bg-[#ffea2c]
 }
 .progress-page-view-box-table-head-row {
   @apply
-  h-[60px]
+  h-[55px]
+  pl-[440px]
+  /* pr-[140px] */
+  flex
+  flex-row
+  items-center
 }
 .progress-page-view-box-table-body-row {
-  > td:first-child {
+  /* > td:first-child {
     border-radius: 30px 0 0 30px;
   };
   > td:last-child {
     border-radius: 0 30px 30px 0;
-  };
+  }; */
   
   width: 980px;
+  min-width: 980px;
   max-height: 60px;
   height: 60px;
-  border-bottom: solid 5px #f0f3f9;
+  /* border-bottom: solid 5px #f0f3f9; */
+  @apply
+  flex flex-row
+  bg-white
+  rounded-[30px]
 }
 .progress-page-view-box-table-header {
   font-family: 'Roboto';
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
-  line-height: 16px;
+  line-height: 1.07;
   letter-spacing: normal;
   text-align: center;
   @apply
+  flex
+  justify-center
   w-[70px]
+  min-w-[70px]
+  max-w-[70px]
   text-[#222]
   text-[15px]
   capitalize

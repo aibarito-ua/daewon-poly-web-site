@@ -121,7 +121,7 @@ const Progress = () => {
             <div className='flex flex-1 flex-col w-full h-fit px-[25px] pb-[25px]'>
             
                 {/* page titles */}
-                <div className='flex flex-row font-bold w-full justify-start pt-[93.4px] text-black h-1/5 pb-[15px]'>
+                <div className='flex flex-row font-bold w-full justify-start mt-[128px] text-black h-[45px] mb-[15px]'>
                     <div className='writing-activity-page-title-div'>
                         <div className='writing-activity-page-title-icon'>
                             <commonIconSvgs.SparkWritingTitleBookIcon/>
@@ -178,7 +178,7 @@ const Progress = () => {
                         <ProgressTable data={sparkWritingData}/>
                     </div> */}
                     {/* 1차 개발로 대체 사용 */}
-                    <div className='progress-page-view-box-content rounded-t-[24px] border-t-[5px]' style={{height: '450px'}}>
+                    <div className='progress-page-view-box-content rounded-t-[24px] border-t-[5px]'>
                         <ProgressTable data={sparkWritingData}/>
                     </div>
                 </div>

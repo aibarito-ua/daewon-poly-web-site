@@ -24,7 +24,7 @@ const DateText = (props:{dateString:string}) => {
         fontFamily: 'Roboto',
         fontWeight: 400,
         fontSize: '14px',
-        textAlign: 'center',
+        justifyContent: 'center',
         color: '#222',
         maxHeight: '10px',
         width: '65px',
@@ -51,22 +51,21 @@ const ProgressTable = (props:any) => {
         return a.unit_index - b.unit_index
     });
     return (
-        <table className={
+        <div className={
             isElectron
-            ?'w-[1010px] p-[10px]'
-            :'w-full p-[10px]'
+            ?'w-[1010px] min-w-[1010px] h-[395px]'
+            :'w-full min-2-[1010px] h-[395px]'
         }>
-            <thead className='table-header-group'>
-                <tr className='progress-page-view-box-table-head-row'>
-                    <td className='w-[440px]'></td>
-                    <THeadText str1='1st' str2='draft'/>
-                    <THeadText str1='1st' str2='feedback'/>
-                    <THeadText str1='2nd' str2='draft'/>
-                    <THeadText str1='final' str2='evaluation'/>
-                    <td className='w-[140px]'></td>
-                </tr>
-            </thead>
-            <tbody className=''>
+            
+            <div className='progress-page-view-box-table-head-row gap-[40px] pr-[140px]'>
+                {/* <div className='w-[440px] min-w-[440px] h-1'></div> */}
+                <THeadText str1='1st' str2='draft'/>
+                <THeadText str1='1st' str2='feedback'/>
+                <THeadText str1='2nd' str2='draft'/>
+                <THeadText str1='final' str2='evaluation'/>
+            </div>
+            
+            <div className='flex flex-col gap-[5px]'>
                 {unitDataArray.map((unitItem, unitIndex) => {
                     const firstDraftStatus = unitItem.draft_1_status.status;
                     const secondDraftStatus = unitItem.draft_2_status.status;
@@ -144,45 +143,47 @@ const ProgressTable = (props:any) => {
                     } else {} // 0 values
 
                     return (
-                        <tr key={unitItem.unit_id} className='progress-page-view-box-table-body-row'>
-                            <td className='text-start pl-[20px] h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                        <div key={unitItem.unit_id} className='progress-page-view-box-table-body-row'>
+                            <div className='text-start pl-[20px] h-[60px] max-h-[60px] w-[440px] min-w-[440px] py-0 my-0'>
                                 <span className='inline-flex gap-[10px] h-[60px] items-center'>
                                     <span className='progress-page-view-box-list-icon'>unit {unitItem.unit_index}</span>
                                     <span className='progress-page-view-box-list-label'>{unitItem.topic}</span>
                                 </span>
-                            </td>
-                            <td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                            </div>
+                            <div className='w-[70px] h-[60px] max-h-[60px] mr-[40px]'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {firstDraftState}
                                     <DateText dateString={firstDraftStateData}/>
                                 </span>
-                            </td>
-                            <td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                            </div>
+                            <div className='w-[70px] h-[60px] max-h-[60px] mr-[40px]'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {firstDraftFeedbackState}
                                     <DateText dateString={firstDraftFeedbackStateData}/>
                                 </span>
-                            </td><td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                            </div>
+                            <div className='w-[70px] h-[60px] max-h-[60px] mr-[40px]'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {secondDrafteState}
                                     <DateText dateString={secondDrafteStateData}/>
                                 </span>
-                            </td><td className='h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                            </div>
+                            <div className='w-[70px] h-[60px] max-h-[60px]'>
                                 <span className='progress-page-view-box-table-body-icons'>
                                     {finalEvaluationState}
                                     <DateText dateString={finalEvaluationStateData}/>
                                 </span>
-                            </td>
-                            <td className='w-[140px] h-[60px] max-h-[60px] py-0 my-0 bg-white'>
+                            </div>
+                            <div className='w-[140px] h-[60px] max-h-[60px]'>
                                 <span className='inline-flex items-center justify-center h-[60px]'>
                                 <ProgressPercent itemName={'unit1'} value={progressPercentValue}/>
                                 </span>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     )
                 })}
-            </tbody>
-        </table>
+            </div>
+        </div>
     )
 }
 
