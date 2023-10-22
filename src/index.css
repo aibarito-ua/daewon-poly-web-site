@@ -284,13 +284,25 @@ code {
 body {
   *::-webkit-scrollbar {
     width: 9px;
+    height: 9px;
   };
   *::-webkit-scrollbar-thumb {
-    
     background-color: #cccccc;
     background-clip: padding-box;
     border-right: 7px solid transparent;
+    border-bottom: 7px solid transparent;
   };
+  *::-webkit-scrollbar-corner {
+    display: none;
+  }
+  /* *::-webkit-scrollbar:vertical {
+    height: 9px;
+  };
+  *::-webkit-scrollbar-thumb:vertical {
+    background-color: #cccccc;
+    background-clip: padding-box;
+    border-bottom: 7px solid transparent;
+  }; */
   /* *::-webkit-scrollbar-track {
     
     background-color: #222;

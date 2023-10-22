@@ -4,6 +4,8 @@ interface ISparkWritingStore {
     lastUnitIndex: number;
     setLastUnitIndex: (unit_index:number) => void;
 
+    setIsOpenFold: (unitIndex:number, title:string) => void;
+
     selectBoxUnit : TSelectBoxUnit;
     setSelectBoxUnit: (unitIndex:number, count: number)=>void;
     
@@ -94,6 +96,7 @@ type TSparkWritingDataOutline = {
     input_content:string;
     grammar_correction_content_student: string;
     screen_data: TScreenData[];
+    is_input_open: boolean;
 }
 type TScreenData = {
     type: number;
@@ -119,6 +122,7 @@ type TSparkWritingSaveTemporaryContent = {
     heading_name: string;
     grammar_correction_content_student: string;
     order_index: number;
+    is_input_open: boolean;
 }
 
 

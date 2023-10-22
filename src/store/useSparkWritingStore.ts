@@ -515,7 +515,25 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     setPreviewPageInitFlag: (flag) => {
         set(()=>({previewPageInitFlag: flag}))
     },
-
+    setIsOpenFold: (unitIndex,title) => {
+        const dumpSparkWritingData:TSparkWritingDatas = get().sparkWritingData.map((unitItem) => {
+            
+            if (unitItem.unit_index === unitIndex) {
+                unitItem.draft_1_outline = unitItem.draft_1_outline.map((outlineItem)=>{
+                    const targetName = outlineItem.name.split('_')[0];
+                    if (targetName === title) {
+                        outlineItem.is_input_open = true;
+                    }
+                    return outlineItem;
+                    // outlineItem.is_input_open
+                    // unitItem.draft_1_outline[order_index-1].is_input_open = true;
+                })
+            }
+            return unitItem;
+        })
+        set(()=>({sparkWritingData: dumpSparkWritingData}))
+        
+    },
 }))
 
 export default useSparkWritingStore;

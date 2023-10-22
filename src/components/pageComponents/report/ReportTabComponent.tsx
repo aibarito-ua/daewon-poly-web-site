@@ -223,7 +223,7 @@ const handleNext = (currentIndex:number) => {
     }}> 
         <StyledTabs
           value={value}
-          onChange={!isNoData?handleChange:()=>{}}
+          onChange={handleChange}
           aria-label="styled tabs"
           
           sx={{
@@ -313,7 +313,16 @@ const handleNext = (currentIndex:number) => {
                 width: '100px',
                 height: '48px'
             }}>
-                <PrintReportExportButton />
+              {
+                isNoData 
+                ? <div className={
+                  // isActivityPage 
+                  // ? 'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]'
+                  // : 
+                  "bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px]"
+                }></div>
+                : <PrintReportExportButton />
+              }
                 {/* <TestModalComponent /> */}
             </Box>
         )}

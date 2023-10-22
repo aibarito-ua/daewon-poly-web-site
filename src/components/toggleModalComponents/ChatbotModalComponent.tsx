@@ -227,7 +227,8 @@ export default function FormDialog() {
               autoFocus
               maxLength={1000}
               rows={1}
-              placeholder='Type here or tap on the mic button to begin.'
+              // placeholder='Type here or tap on the mic button to begin.'
+              placeholder='Type your question here.'
               onChange={(e)=>onChangeValue(e)}
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
               onFocus={()=>{

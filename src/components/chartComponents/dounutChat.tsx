@@ -253,7 +253,7 @@ const text2Css:React.CSSProperties = {
 
 const textTooltip = () => {
     const addDump = addWidth;
-    const decDump = decText;
+    const decDump = decText +12;
     const RADIAN = Math.PI / 180;
     const midAngle = 45;
     const startAngle = 90;
@@ -267,30 +267,179 @@ const textTooltip = () => {
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
     const textAnchor = cos >= 0 ? "start" : "end";
-    const pathX = sx-18;
+    const pathX = sx-40;
     const pathY = sy-24;
-    const pathX_right = pathX + addDump + 10;
+    const pathX_right = pathX + addDump -10;
     const pathX_left = pathX - addDump;
-    
+    const vX = pathX_right+pathX_left
     // 소수점 변경
     const currentScore = tooltipData.value;
     const scoreReplace1 = Math.round(currentScore*10);
     const scoreResult = scoreReplace1/10;
 
+
     return (
-        <g>
-            <path stroke="none" fill="#fff" 
-            d={`M ${pathX+34.85430145263672} ${pathY+42.68537902832031} L ${pathX+32.26688766479492} ${pathY+39.48196029663086} L ${pathX+31.96669960021973} ${pathY+39.11030197143555} L ${pathX+31.48894882202148} ${pathY+39.11030197143555} L ${pathX_left+13.00049877166748} ${pathY+39.11030197143555} C ${pathX_left+9.794979095458984} ${pathY+39.11030197143555} ${pathX_left+6.781349182128906} ${pathY+37.86209106445312} ${pathX_left+4.514759063720703} ${pathY+35.59561157226562} C ${pathX_left+2.248229265213013} ${pathY+33.32919311523438} ${pathX_left+0.9999991655349731} ${pathY+30.31586265563965} ${pathX_left+0.9999991655349731} ${pathY+27.11070251464844} L ${pathX_left+0.9999991655349731} ${pathY+12.99960231781006} C ${pathX_left+0.9999991655349731} ${pathY+9.794442176818848} ${pathX_left+2.248229265213013} ${pathY+6.781112194061279} ${pathX_left+4.514759063720703} ${pathY+4.514692306518555} C ${pathX_left+6.781349182128906} ${pathY+2.248212099075317} ${pathX_left+9.794979095458984} ${pathY+1.000002145767212} ${pathX_left+13.00049877166748} ${pathY+1.000002145767212} L ${pathX_right+57.0005989074707} ${pathY+1.000002145767212} C ${pathX_right+60.20571899414062} ${pathY+1.000002145767212} ${pathX_right+63.21905899047852} ${pathY+2.248202085494995} ${pathX_right+65.48552703857422} ${pathY+4.51467227935791} C ${pathX_right+67.75199890136719} ${pathY+6.781142234802246} ${pathX_right+69.00019836425781} ${pathY+9.794482231140137} ${pathX_right+69.00019836425781} ${pathY+12.99960231781006} L ${pathX_right+69.00019836425781} ${pathY+27.11070251464844} C ${pathX_right+69.00019836425781} ${pathY+30.31582260131836} ${pathX_right+67.75199890136719} ${pathY+33.32916259765625} ${pathX_right+65.48552703857422} ${pathY+35.59563064575195} C ${pathX_right+63.21905899047852} ${pathY+37.86210250854492} ${pathX_right+60.20571899414062} ${pathY+39.11030197143555} ${pathX_right+57.0005989074707} ${pathY+39.11030197143555} L ${pathX+38.21965789794922} ${pathY+39.11030197143555} L ${pathX+37.74190902709961} ${pathY+39.11030197143555} L ${pathX+37.44171905517578} ${pathY+39.48196029663086} L ${pathX+34.85430145263672} ${pathY+42.68537902832031} Z`}/>
-            <path  stroke="none" fill={tooltipLineColor} 
-            d={`M ${pathX+34.85429763793945} ${pathY+41.09388732910156} L ${pathX+37.26416397094727} ${pathY+38.11030578613281} L ${pathX_right+57.0005989074707} ${pathY+38.11030578613281} C ${pathX_right+59.9386100769043} ${pathY+38.11030578613281} ${pathX_right+62.70083236694336} ${pathY+36.96612930297852} ${pathX_right+64.77841949462891} ${pathY+34.88852691650391} C ${pathX_right+66.85601806640625} ${pathY+32.81092834472656} ${pathX_right+68.00019836425781} ${pathY+30.0487174987793} ${pathX_right+68.00019836425781} ${pathY+27.11069488525391} L ${pathX_right+68.00019836425781} ${pathY+12.99959564208984} C ${pathX_right+68.00019836425781} ${pathY+10.06158447265625} ${pathX_right+66.85601806640625} ${pathY+7.299362182617188} ${pathX_right+64.77841949462891} ${pathY+5.221773147583008} C ${pathX_right+62.70083236694336} ${pathY+3.144173145294189} ${pathX_right+59.9386100769043} ${pathY+1.999995470046997} ${pathX_right+57.0005989074707} ${pathY+1.999995470046997} L ${pathX_left+13.00049877166748} ${pathY+1.999995470046997} C ${pathX_left+10.06207656860352} ${pathY+1.999995470046997} ${pathX_left+7.29956579208374} ${pathY+3.144184350967407} ${pathX_left+5.221854686737061} ${pathY+5.221806526184082} C ${pathX_left+3.144210338592529} ${pathY+7.299351215362549} ${pathX_left+1.999999165534973} ${pathY+10.06155109405518} ${pathX_left+1.999999165534973} ${pathY+12.99959564208984} L ${pathX_left+1.999999165534973} ${pathY+27.11069488525391} C ${pathX_left+1.999999165534973} ${pathY+30.04874038696289} ${pathX_left+3.144210338592529} ${pathY+32.81095123291016} ${pathX_left+5.221854686737061} ${pathY+34.88849639892578} C ${pathX_left+7.29956579208374} ${pathY+36.96610641479492} ${pathX+10.06207656860352} ${pathY+38.11030578613281} ${pathX+13.00049877166748} ${pathY+38.11030578613281} L ${pathX+32.44443130493164} ${pathY+38.11030578613281} L ${pathX+34.85429763793945} ${pathY+41.09388732910156} 
-                M ${pathX+34.85429763793945} ${pathY+44.00032806396484} C ${pathX+34.73189926147461} ${pathY+44.00032806396484} ${pathX+34.60950088500977} ${pathY+43.95285034179688} ${pathX+34.51589965820312} ${pathY+43.85790634155273} L ${pathX+31.48894309997559} ${pathY+40.11030578613281} L ${pathX_left+13.00049877166748} ${pathY+40.11030578613281} C ${pathX_left+5.82029914855957} ${pathY+40.11030578613281} ${pathX_left+(-8.178710686479462e-07)} ${pathY+34.29000473022461} ${pathX_left+(-8.178710686479462e-07)} ${pathY+27.11069488525391} L ${pathX_left+(-8.178710686479462e-07)} ${pathY+12.99959564208984} C ${pathX_left+(-8.178710686479462e-07)} ${pathY+5.820295333862305} ${pathX_left+5.82029914855957} ${pathY+(-4.542032911558636e-06)} ${pathX_left+13.00049877166748} ${pathY+(-4.542032911558636e-06)} L ${pathX_right+57.0005989074707} ${pathY+(-4.542032911558636e-06)} C ${pathX_right+64.17990112304688} ${pathY+(-4.542032911558636e-06)} ${pathX_right+70.00019836425781} ${pathY+5.820295333862305} ${pathX_right+70.00019836425781} ${pathY+12.99959564208984} L ${pathX_right+70.00019836425781} ${pathY+27.11069488525391} C ${pathX_right+70.00019836425781} ${pathY+34.29000473022461} ${pathX_right+64.17990112304688} ${pathY+40.11030578613281} ${pathX_right+57.0005989074707} ${pathY+40.11030578613281} L ${pathX+38.21965408325195} ${pathY+40.11030578613281} L ${pathX+35.19269943237305} ${pathY+43.85790634155273} C ${pathX+35.09909820556641} ${pathY+43.95285034179688} ${pathX+34.97669982910156} ${pathY+44.00032806396484} ${pathX+34.85429763793945} ${pathY+44.00032806396484} Z`}/>
-            
-            <text 
-                x={sx-decDump}
-                y={sy}
-                textAnchor={textAnchor}
-                fill="#333"
-            >{`${clickIndex}: ${scoreResult}%`}</text>
+        
+        <g id="Union" filter="url(#filter0_d_620_3639)">
+            <defs>
+<filter id="filter0_d_620_3639" x={pathX_left} y={pathY} width={vX} height="59" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_620_3639"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_620_3639" result="shape"/>
+</filter>
+</defs>
+        <mask id="path-1-inside-1_620_3639" fill="white">
+            {/* <path stroke="none" fill="#fff"  */}
+        <path fillRule="evenodd" clipRule="evenodd"
+            d={
+            `M${pathX_left+16} ${pathY+0}
+            C${pathX_left+9.37258} ${pathY+0} ${pathX_left+4} ${pathY+5.37258} ${pathX_left+4} ${pathY+12}
+            V${pathY+32}
+            C${pathX_left+4} ${pathY+38.6274} ${pathX_left+9.37258} ${pathY+44} ${pathX_left+16} ${pathY+44}
+
+            H${pathX+54}
+            L${pathX+58.134} ${pathY+50.5}
+            C${pathX+58.5189} ${pathY+51.1667} ${pathX+59.4811} ${pathY+51.1667} ${pathX+59.866} ${pathY+50.5}
+            L${pathX+63.6188} ${pathY+44}
+
+            H${pathX_right+102}
+            C${pathX_right+108.627} ${pathY+44} ${pathX_right+114} ${pathY+38.6274} ${pathX_right+114} ${pathY+32}
+            V${pathY+12}
+            C${pathX_right+114} ${pathY+5.37258} ${pathX_right+108.627} ${pathY+0} ${pathX_right+102} ${pathY+0}
+            H${pathY}
+            Z`
+            }/>
+        </mask>
+
+<path fillRule="evenodd" clipRule="evenodd"
+fill="white"
+d={
+    `M${pathX_left+16} ${pathY+0}
+    C${pathX_left+9.37258} ${pathY+0} ${pathX_left+4} ${pathY+5.37258} ${pathX_left+4} ${pathY+12}
+    V${pathY+32}
+    C${pathX_left+4} ${pathY+38.6274} ${pathX_left+9.37258} ${pathY+44} ${pathX_left+16} ${pathY+44}
+    
+    H${pathX+54}
+    L${pathX+58.134} ${pathY+50.5}
+    C${pathX+58.5189} ${pathY+51.1667} ${pathX+59.4811} ${pathY+51.1667} ${pathX+59.866} ${pathY+50.5}
+    L${pathX+63.6188} ${pathY+44}
+    
+    H${pathX_right+102}
+    C${pathX_right+108.627} ${pathY+44} ${pathX_right+114} ${pathY+38.6274} ${pathX_right+114} ${pathY+32}
+    V${pathY+12}
+    C${pathX_right+114} ${pathY+5.37258} ${pathX_right+108.627} ${pathY+0} ${pathX_right+102} ${pathY+0}
+    H${pathY}
+    Z`
+}/>
+<path fill={tooltipLineColor}
+mask={"url(#path-1-inside-1_620_3639)"}
+d={
+`
+M${pathX+54.3812} ${pathY+44}
+L${pathX+56.9793} ${pathY+42.5}
+C${pathX+56.4434} ${pathY+41.5718} ${pathX+55.453} ${pathY+41} ${pathX+54.3812} ${pathY+41}
+V${pathX+44}
+
+ZM${pathX+58.134} ${pathY+50.5}
+L${pathX+60.7321} ${pathY+49}
+L${pathX+60.7321} ${pathY+49}
+L${pathX+58.134} ${pathY+50.5}
+
+ZM${pathX+59.866} ${pathY+50.5}
+L${pathX+57.2679} ${pathY+49}
+L${pathX+57.2679} ${pathY+49}
+L${pathX+59.866} ${pathY+50.5}
+
+ZM${pathX+63.6188} ${pathY+44}
+V${pathY+41}
+C${pathX+62.547} ${pathY+41} ${pathX+61.5566} ${pathY+41.5718} ${pathX+61.0207} ${pathY+42.5}
+L${pathX+63.6188} ${pathY+44}
+
+ZM${pathX_left+7} ${pathY+12}
+C${pathX_left+7} ${pathY+7.02944} ${pathX_left+11.0294} ${pathY+3} ${pathX_left+16} ${pathY+3}
+V${pathY-3}
+C${pathX_left+7.71573} ${pathY-3} ${pathX_left+1} ${pathY+3.71573} ${pathX_left+1} ${pathY+12}
+H${pathX_left+7}
+
+ZM${pathX_left+7} ${pathY+32}
+V${pathY+12}
+H${pathX_left+1}
+V${pathY+32}
+H${pathY+7}
+
+ZM${pathX_left+16} ${pathY+41}
+C${pathX_left+11.0294} ${pathY+41} ${pathX_left+7} ${pathY+36.9706} ${pathX_left+7} ${pathY+32}
+H${pathX_left+1}
+C${pathX_left+1} ${pathY+40.2843} ${pathX_left+7.71573} ${pathY+47} ${pathX_left+16} ${pathY+47}
+V${pathY+41}
+
+ZM${pathX_left+54.3812} ${pathY+41}
+H${pathX_left+16}
+V${pathY+47}
+H${pathX+54.3812}
+V${pathY+41}
+
+ZM${pathX+60.7321} ${pathY+49}
+L${pathX+56.9793} ${pathY+42.5}
+L${pathX+51.7831} ${pathY+45.5}
+L${pathX+55.5359} ${pathY+52}
+L${pathX+60.7321} ${pathY+49}
+
+ZM${pathX+57.2679} ${pathY+49}
+C${pathX+58.0377} ${pathY+47.6667} ${pathX+59.9623} ${pathY+47.6667} ${pathX+60.7321} ${pathY+49}
+L${pathX+55.5359} ${pathY+52}
+C${pathX+57.0755} ${pathY+54.6667} ${pathX+60.9245} ${pathY+54.6667} ${pathX+62.4641} ${pathY+52}
+L${pathX+57.2679} ${pathY+49}
+
+ZM${pathX+61.0207} ${pathY+42.5}
+L${pathX+57.2679} ${pathY+49}
+L${pathX+62.4641} ${pathY+52}
+L${pathX+66.2169} ${pathY+45.5}
+L${pathX+61.0207} ${pathY+42.5}
+
+ZM${pathX+102} ${pathY+41}
+H${pathX+63.6188}
+V${pathY+47}
+H${pathX_right+102}
+V${pathY+41}
+
+ZM${pathX_right+111} ${pathY+32}
+C${pathX_right+111} ${pathY+36.9706} ${pathX_right+106.971} ${pathY+41} ${pathX_right+102} ${pathY+41}
+V${pathY+47}
+C${pathX_right+110.284} ${pathY+47} ${pathX_right+117} ${pathY+40.2843} ${pathX_right+117} ${pathY+32}
+H${pathX_right+111}
+
+ZM${pathX_right+111} ${pathY+12}
+V${pathY+32}
+H${pathX_right+117}
+V${pathY+12}
+H${pathX_right+111}
+
+ZM${pathX_right+102} ${pathY+3}
+C${pathX_right+106.971} ${pathY+3} ${pathX_right+111} ${pathY+7.02944} ${pathX_right+111} ${pathY+12}
+H${pathX_right+117}
+C${pathX_right+117} ${pathY+3.71573} ${pathX_right+110.284} ${pathY-3} ${pathX_right+102} ${pathY-3}
+V${pathY+3}
+
+ZM${pathX_right+16} ${pathY+3}
+H${pathX_right+102}
+V${pathY-3}
+H${pathX_left+16}
+V${pathY+3}
+Z
+`
+} />
+<text 
+    x={sx-decDump}
+    y={sy+4}
+    textAnchor={textAnchor}
+    fill="#333"
+>{`${clickIndex}: ${scoreResult}%`}</text>
         </g>
     )
 
@@ -356,6 +505,7 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
 
   return (
     <PieChart width={350} height={300}>
+        
 
         <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={12} textAnchor="middle" style={text1Css}>
@@ -383,6 +533,7 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
 
         })}
         {clickIndex!=='' && textTooltip()}
+        {/* <Tooltip content={textTooltip} /> */}
     </PieChart>
   );
 }

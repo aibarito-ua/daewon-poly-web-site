@@ -604,7 +604,8 @@ const PreviewSparkWriting = (props:any) => {
                 heading_name: item.name,
                 input_content: item.input_content,
                 grammar_correction_content_student,
-                order_index: item.order_index
+                order_index: item.order_index,
+                is_input_open: true
             }
         });
         const data:TSparkWritingTemporarySaveData = {

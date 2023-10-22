@@ -80,7 +80,8 @@ const EssayWriting = () => {
         sparkWritingDataDumy,
         historyDataDelete,
         previewPageInitFlag,
-        setPreviewPageInitFlag
+        setPreviewPageInitFlag,
+        setIsOpenFold,
     } = useSparkWritingStore();
     const params = useParams();
     // console.log('params : unit =',params.unit,': draft =',params.draft)
@@ -190,7 +191,14 @@ const EssayWriting = () => {
             setIsSaved(false);
             // setDraft2ndPageSet('')
         }
-    })
+    });
+    React.useEffect(()=>{
+        if (draft1stRefs.current) {
+            if (draft1stRefs.current.length === foldFlag.length) {
+                handleResizeHeightDraft1stInputs();
+            }
+        }
+    },[draft1stRefs])
 
     React.useEffect(()=>{
         setTopNavHiddenFlagged(true);
@@ -205,18 +213,26 @@ const EssayWriting = () => {
         // fold
         if (foldFlag.length === 0) {
             const data = sparkWritingData[unitIndex];
-            // console.log('fold 0', data)
-            const leng = data.draft_1_outline.length;
+            let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
+            let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
+        
+            const leng = allNames.length;
             let isFirstComeHere = false;
+            let dumyFold = Array.from({length:leng}, () =>false);
+
             for (let i = 0; i < data.draft_1_outline.length; i++) {
-                const targetInput = data.draft_1_outline[i].input_content;
-                if (targetInput.length > 0) {
-                    isFirstComeHere=true;
-                    break;
+                const title = data.draft_1_outline[i].name.split('_')[0];
+                if (allNames[i] === title) {
+                    if (data.draft_1_outline[i].is_input_open===true) {
+                        dumyFold.splice(i, 1, true)
+                    } else {
+                        dumyFold.splice(i,1,false)
+                    }
                 }
             }
-            const foldInit = isFirstComeHere ? Array.from({length: leng}, ()=>true) : Array.from({length: leng}, ()=>false)
-            setFoldFlag(foldInit)
+            console.log('dumyFold == ',dumyFold)
+            // const foldInit = isFirstComeHere ? Array.from({length: leng}, ()=>true) : Array.from({length: leng}, ()=>false)
+            setFoldFlag(dumyFold)
         } else {
             if (updateFoldIndex !== undefined) {
                 const controllClass = `foldFlag:::[${updateFoldIndex}]`;
@@ -239,6 +255,7 @@ const EssayWriting = () => {
         if (params.draft === '1') {
             const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
             setSubRightNavTitleString(rightTitle)
+            handleResizeHeightDraft1stInputs();
         } else {
             if (originalTargetData.length>0) {
                 console.log('draft 2 value update')
@@ -264,6 +281,7 @@ const EssayWriting = () => {
         }
         
         callbackCheckValues();
+        
         return () => {
             // console.log('did unmount in Essay Writing Page')
             setTopNavHiddenFlagged(false)
@@ -290,6 +308,7 @@ const EssayWriting = () => {
         sparkWritingData
         // Spark Store
     ])
+
     React.useEffect(()=>{
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
         const target = sparkWritingData[unitIndex].draft_2_outline;
@@ -304,6 +323,7 @@ const EssayWriting = () => {
         //     setDraft2ndSubmitActive(false);
         //     setDraft2ndSaveActive(false);
         // }
+        
         if (params.draft && params.draft==='1') {
 
             if (sparkWritingData !== undefined) {
@@ -351,7 +371,9 @@ const EssayWriting = () => {
                         })
                         return;
                     }
+                    handleResizeHeightDraft1stInputs();
                     const sum = targetFlags.reduce((a,b) => (a+b));
+                    
                     // sum === 0 => Preview && save 활성화
                     // sum >0, sum < targetFlags.length; -> save 활성화
                     // else -> 모든 버튼 비활성화
@@ -449,6 +471,7 @@ const EssayWriting = () => {
                 }
             }
         }
+        
     }, [sparkWritingData]);
 
     React.useEffect(()=>{
@@ -861,17 +884,33 @@ const EssayWriting = () => {
         draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs
     ])
 
+    const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
+        // console.log(' === handleResizeHeightDraft1stInputs ===')
+        const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+        const inputIds = outlines.map((item,idx) => {
+            const targetRef = draft1stRefs.current[idx];
+            if (targetRef) {
+                targetRef.style.height = 'auto';
+                targetRef.style.height = targetRef.scrollHeight + 'px';
+                return targetRef.id;
+            }
+        })
+    },[])
+
     const temporarySaveFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
         if (draftIndex === 1){
+            console.log('foldFlag ==',foldFlag)
             const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
                 const input_content = item.input_content.replace(/\s{2,}/g, ' ');
+                console.log('item[',item.order_index-1,'] =',item)
                 return {
                     heading_name: item.name,
                     input_content,
                     grammar_correction_content_student: item.grammar_correction_content_student!==''? (isSaveButtonOpen?'':item.grammar_correction_content_student):'',
                     order_index: item.order_index,
+                    is_input_open: item.is_input_open
                 }
             })
 
@@ -917,7 +956,8 @@ const EssayWriting = () => {
                     grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                     input_content,
                     heading_name: item.name,
-                    order_index: item.order_index
+                    order_index: item.order_index,
+                    is_input_open: false
                 }
             });
             
@@ -1019,18 +1059,18 @@ const EssayWriting = () => {
             })
         }
     }
-    const foldFlagFunction = (i:number) => {
-        // console.log('fold settings ==',foldFlag)
+    const foldFlagFunction = (i:number, title:string,unitIndex:number) => {
+        
         const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
             if (foldIndex === i) {
                 if (!foldItem) {
-                    return !foldItem
-                } else {
-                    return foldItem
-                }
+                    return true
+                } else return true;
             } else return foldItem;
         })
+        console.log('fold settings ==',dumpFlags)
         setFoldFlag(dumpFlags)
+        setIsOpenFold(unitIndex, title);
         setUpdateFoldIndex(i);
     }
     // 수정된 데이터인지 체크
@@ -1052,6 +1092,7 @@ const EssayWriting = () => {
                 input_content,
                 grammar_correction_content_student: item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                 order_index: item.order_index,
+                is_input_open: item.is_input_open
             }
         })
         return checkFlag;
@@ -1065,6 +1106,7 @@ const EssayWriting = () => {
         // 데이터 폼 만들기
         let manufactureItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(allNames, outlineOrigin);
         // console.log('data =',manufactureItem)
+        
         return allNames.map((title, i) => {
             const controllClass = `foldFlag:::[${i}]`
             return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} 
@@ -1072,7 +1114,7 @@ const EssayWriting = () => {
                 <div className='outline-accordion-div-wrap'>
                     <button type="button" 
                         className="outline-accordion-button"
-                        onClick={()=>foldFlagFunction(i)}
+                        onClick={()=>foldFlagFunction(i,title,outlineItem.unit_index)}
                     >
                         <span className='outline-accordion-button-inner'>
                             <span className='outline-accordion-button-inner-text'>{title}</span>
@@ -1082,23 +1124,26 @@ const EssayWriting = () => {
                     <div className="text-left">
                         <div className={`${foldFlag[i]? 'pt-[5px] pb-[20px]': 'hidden'}`} id={`fold-div-${i}`}>
                             { manufactureItem[i].map((item, itemIndex) => {
-                                // console.log('manufacture item [',itemIndex,'] =',item, )
                                 const manuKey = 'menufactureItem-'+item.name+item.order_index+itemIndex;
+                                
                                 return <div key={manuKey}>
                                     <div className='outline-content-box-item'
                                     key={i+'-'+itemIndex+'-body-'+item.order_index}><span className=''></span>{item.heading_content}</div>
                                     <div 
                                         className='outline-content-box-item'>
                                             
-                                            <textarea rows={1} style={{'resize':'none','overflow':'hidden'}}
+                                            <textarea style={{'resize':'none','overflow':'hidden'}}
+                                                rows={1}
                                                 ref={(el) => {
-                                                    draft1stRefs.current[i]= el
+                                                    draft1stRefs.current[item.order_index-1]= el
                                                 }}
+                                                
                                                 id={item.name+item.order_index}
                                                 className={`${controllClass} block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`} 
-                                                // placeholder={`Start typing in your ${item.name}...`}
+                                                
                                                 placeholder={`Write here.`}
                                                 onChange={(e)=>{
+                                                    // console.log('test textarea === ',e.target.value)
                                                     e.currentTarget.style.height = 'auto';
                                                     e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
                                                     const unitId = outlineItem.unit_id

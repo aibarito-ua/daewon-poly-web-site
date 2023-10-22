@@ -69,11 +69,21 @@ export default function SelectUnit () {
             response.units = response.units.map((item)=>{
                 item.draft_1_outline = item.draft_1_outline.sort((a,b) => {
                     return a.order_index - b.order_index;
+                }).map((item) => {
+                    if (typeof(item.is_input_open) !== 'boolean') {
+                        item.is_input_open = false;
+                    }
+                    return item;
                 });
                 if (item.draft_1_status.status===4) {
                     item.draft_2_outline = item.draft_2_outline.sort((a,b) => {
                         return a.order_index - b.order_index;
-                    })
+                    }).map((item) => {
+                        if (typeof(item.is_input_open) !== 'boolean') {
+                            item.is_input_open = false;
+                        }
+                        return item;
+                    });
                 }
                 return item;
             })
