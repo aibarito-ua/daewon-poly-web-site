@@ -97,27 +97,27 @@ export default function ReportSelectButton(props:{
     <div className='flex items-center h-[45px]' >
       <FormControl sx={{ width: '240px', height: '45px', padding:0, minHeight:'45px', m: 1 }} >
         <Select
-            sx={{
+            sx={
+            {
               color: disabled? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
               borderRadius: '15px',
-              padding:0,
               '& .MuiInputBase-input': {
-                padding:0,
-                textAlign: 'left',
+                padding:0
               },
               '& .MuiSelect-icon': {
                 right: '14px'
               },
-              ":disabled": {
-                padding:0
+              '& .MuiSelect-select': {
+                textAlign: 'left',
+                paddingLeft: '14px'
               },
               '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
-                padding:0,
-                paddingLeft: '14px'
+                padding:'0px 0px 0px 14px',
               }
-            }}
+            }
+          }
             
             placeholder='test'
             value={isLevel? reportLevel: reportSemester}

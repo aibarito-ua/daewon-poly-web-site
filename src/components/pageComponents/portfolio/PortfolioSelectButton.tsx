@@ -65,31 +65,27 @@ export default function PortfolioSelectButton(props:{
         }} >
         <Select
             sx={
-              isReadOnly
-              ? {
-              color: '#aeaeae',
-              height: '45px',
-              backgroundColor: '#fff',
-              borderRadius: '15px',
-              '& .MuiInputBase-input': {
-                padding:0
-              },
-              '& .MuiSelect-icon': {
-                right: '14px'
-              },
-            } : {
-              color: selectValue()===''? '#aeaeae': '#222',
-              height: '45px',
-              backgroundColor: '#fff',
-              borderRadius: '15px',
-              '& .MuiInputBase-input': {
-                padding:0
-              },
-              '& .MuiSelect-icon': {
-                right: '14px'
+              {
+                color: isReadOnly? '#aeaeae': '#222',
+                height: '45px',
+                backgroundColor: '#fff',
+                borderRadius: '15px',
+                '& .MuiInputBase-input': {
+                  padding:0
+                },
+                '& .MuiSelect-icon': {
+                  right: '14px'
+                },
+                '& .MuiSelect-select': {
+                  textAlign: 'left',
+                  paddingLeft: '14px'
+                },
+                '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
+                  padding:'0px 0px 0px 14px',
+                }
               }
             }
-          }
+          
             
             placeholder='test'
             value={selectValue()}
