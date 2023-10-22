@@ -59,13 +59,14 @@ export default function SelectLabels() {
 
   return (
     <div className='flex items-center h-[45px] '>
-      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m:1}}>
+      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m:1,}}>
         <Select
             sx={{
               color: progressLevelBoxValue===''? '#aeaeae': '#222',
               height: '45px',
               backgroundColor: '#fff',
               borderRadius: '15px',
+              paddingLeft: '14px',
               '& .MuiInputBase-input': {
                 padding:0
               },
@@ -75,6 +76,9 @@ export default function SelectLabels() {
               '& .MuiSelect-select': {
                 textAlign: 'left',
                 paddingLeft: '14px'
+              },
+              '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
+                padding:0,
               }
             }}
             value={progressLevelBoxValue}

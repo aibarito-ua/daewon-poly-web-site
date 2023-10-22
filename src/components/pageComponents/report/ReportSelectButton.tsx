@@ -95,7 +95,7 @@ export default function ReportSelectButton(props:{
 
   return (
     <div className='flex items-center h-[45px]' >
-      <FormControl sx={{ width: '240px', height: '45px', padding:0, minHeight:'45px', m: 1 }} >
+      <FormControl sx={{ width: '240px', height: '45px', minHeight:'45px', m: 1 }} >
         <Select
             sx={
             {
@@ -103,6 +103,7 @@ export default function ReportSelectButton(props:{
               height: '45px',
               backgroundColor: '#fff',
               borderRadius: '15px',
+              paddingLeft: '14px',
               '& .MuiInputBase-input': {
                 padding:0
               },
@@ -114,7 +115,7 @@ export default function ReportSelectButton(props:{
                 paddingLeft: '14px'
               },
               '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
-                padding:'0px 0px 0px 14px',
+                padding:0,
               }
             }
           }
