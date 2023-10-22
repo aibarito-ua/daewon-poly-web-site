@@ -83,6 +83,16 @@ export default function PortfolioSelectButton(props:{
                 },
                 '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input': {
                   padding:0,
+                  fontFamily: 'NotoSansCJKKR',
+                  fontWeight: isReadOnly ? 'normal': 'bold',
+                  fontSize: '18px',
+                  fontStretch: 'normal',
+                  fontStyle: 'normal',
+                  lineHeight: 'normal',
+                  letterSpacing: 'normal',
+                  display: 'flex',
+                  justifyContent: 'left',
+                  alignItems: 'center'
                 }
               }
             }
