@@ -608,6 +608,7 @@ const EssayWriting = () => {
                         useOneButton: true,
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
+                            commonAlertClose();
                             setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
                         }
                     })
@@ -1158,7 +1159,6 @@ const EssayWriting = () => {
                                                 
                                                 placeholder={`Write here.`}
                                                 onChange={(e)=>{
-                                                    // console.log('test textarea === ',e.target.value)
                                                     e.currentTarget.style.height = 'auto';
                                                     e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
                                                     const unitId = outlineItem.unit_id
@@ -1167,15 +1167,9 @@ const EssayWriting = () => {
                                                     setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
                                                     callbackCheckValues()
                                                 }}
-                                                onFocus={()=>{
-                                                    const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
-                                                    const inputIds = outlines.map((item,idx) => {
-                                                        const targetRef = draft1stRefs.current[idx];
-                                                        if (targetRef) {
-                                                            targetRef.scrollIntoView({behavior:'auto', block: 'end'})
-                                                            return targetRef.id;
-                                                        }
-                                                    })
+                                                onFocus={(e)=>{
+                                                    console.log('focus =',e.currentTarget.id)
+                                                    e.currentTarget.scrollIntoView({behavior:'auto', block: 'nearest'})
                                                 }}
                                                 value={item.input_content}
                                             />
