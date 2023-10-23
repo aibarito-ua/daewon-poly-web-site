@@ -215,38 +215,50 @@ const EssayWriting = () => {
             const data = sparkWritingData[unitIndex];
             let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
             let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-        
-            const leng = allNames.length;
-            let isFirstComeHere = false;
-            let dumyFold = Array.from({length:leng}, () =>false);
-
-            for (let i = 0; i < data.draft_1_outline.length; i++) {
-                const title = data.draft_1_outline[i].name.split('_')[0];
-                if (allNames[i] === title) {
-                    if (data.draft_1_outline[i].is_input_open===true) {
-                        dumyFold.splice(i, 1, true)
-                    } else {
-                        dumyFold.splice(i,1,false)
+            
+            let dumyFold = allNames.map((nameItem)=>{
+                let foldItem = false;
+                for (let i = 0; i < data.draft_1_outline.length; i++) {
+                    const title = data.draft_1_outline[i].name.replace(/(_)?([0-9]{1,})/gmi,'');
+                    console.log('title =',title);
+                    if (nameItem === title) {
+                        foldItem = data.draft_1_outline[i].is_input_open;
+                        break;
                     }
                 }
-            }
-            console.log('dumyFold == ',dumyFold)
-            // const foldInit = isFirstComeHere ? Array.from({length: leng}, ()=>true) : Array.from({length: leng}, ()=>false)
+                return foldItem;
+            })
+            
             setFoldFlag(dumyFold)
         } else {
             if (updateFoldIndex !== undefined) {
                 const controllClass = `foldFlag:::[${updateFoldIndex}]`;
-                for (let i = 0; i < foldFlag.length; i++) {
+                const data = sparkWritingData[unitIndex];
+                let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
+                let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
+                // console.log('all names ==',allNames)
+                for (let i = 0; i < outlineOrigin.length; i++) {
                     const target = draft1stRefs.current[i];
                     if (target) {
+                        const targetBeforeIdName = target.id.replace(/(_)?([0-9]{1,})/gmi,'');
+                        const targetTitleName = target.id.replace(/\d$/gmi,'').split('_');
+                        // console.log('targetBeforeIdName =',targetBeforeIdName)
+                        // console.log('target.className =',target.className)
                         if (target.className.includes(controllClass)) {
                             target.style.height='auto';
                             target.style.height = target.scrollHeight+'px';
                             
                         }
-                        if (updateFoldIndex === i) {
-                            target.scrollIntoView({behavior:'auto', block: 'end'})
-                        }
+
+                        // if (allNames[updateFoldIndex] === targetBeforeIdName) {
+                        //     if (targetTitleName.length > 1) {
+                        //         if (targetTitleName[1] === '1') {
+                        //             target.scrollIntoView({behavior:'auto', block: 'center'})
+                        //         }
+                        //     } else {
+                        //         target.scrollIntoView({behavior:'auto', block: 'center'})
+                        //     }
+                        // }
                     }
                 }
             }
@@ -885,16 +897,18 @@ const EssayWriting = () => {
     ])
 
     const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
-        // console.log(' === handleResizeHeightDraft1stInputs ===')
+        console.log(' === handleResizeHeightDraft1stInputs ===')
         const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
         const inputIds = outlines.map((item,idx) => {
             const targetRef = draft1stRefs.current[idx];
             if (targetRef) {
                 targetRef.style.height = 'auto';
                 targetRef.style.height = targetRef.scrollHeight + 'px';
+                // targetRef.scrollIntoView({behavior:'auto', block: 'start'})
                 return targetRef.id;
             }
         })
+        console.log('inputIds ==',inputIds)
     },[])
 
     const temporarySaveFunction = async () => {
@@ -1125,7 +1139,8 @@ const EssayWriting = () => {
                         <div className={`${foldFlag[i]? 'pt-[5px] pb-[20px]': 'hidden'}`} id={`fold-div-${i}`}>
                             { manufactureItem[i].map((item, itemIndex) => {
                                 const manuKey = 'menufactureItem-'+item.name+item.order_index+itemIndex;
-                                
+                                const inputId = item.name+item.order_index;
+                                console.log('== inputId ==',inputId)
                                 return <div key={manuKey}>
                                     <div className='outline-content-box-item'
                                     key={i+'-'+itemIndex+'-body-'+item.order_index}><span className=''></span>{item.heading_content}</div>
@@ -1138,7 +1153,7 @@ const EssayWriting = () => {
                                                     draft1stRefs.current[item.order_index-1]= el
                                                 }}
                                                 
-                                                id={item.name+item.order_index}
+                                                id={inputId}
                                                 className={`${controllClass} block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`} 
                                                 
                                                 placeholder={`Write here.`}
@@ -1151,6 +1166,16 @@ const EssayWriting = () => {
                                                     const orderIndex = item.order_index
                                                     setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
                                                     callbackCheckValues()
+                                                }}
+                                                onFocus={()=>{
+                                                    const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+                                                    const inputIds = outlines.map((item,idx) => {
+                                                        const targetRef = draft1stRefs.current[idx];
+                                                        if (targetRef) {
+                                                            targetRef.scrollIntoView({behavior:'auto', block: 'end'})
+                                                            return targetRef.id;
+                                                        }
+                                                    })
                                                 }}
                                                 value={item.input_content}
                                             />

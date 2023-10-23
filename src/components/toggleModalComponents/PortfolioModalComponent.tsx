@@ -195,7 +195,7 @@ export default function PortfolioModalComponent() {
                         : 'flex flex-col gap-[15px] w-[943px] h-[425px] border-[1px] border-[#ddd] rounded-[20px] px-[25px] pt-[30px] overflow-y-auto justify-start'
                     }>
                         {/* small crown */}
-                        {portfolioModal.isCrown && <div className='bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat w-[50px] h-[45px] absolute top-0 right-[20px]' />}
+                        {portfolioModal.isCrown && <div className='bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat bg-cover w-[50px] h-[45px] absolute top-0 right-[20px]' />}
                         
 
                         {/* title */}

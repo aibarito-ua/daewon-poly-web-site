@@ -68,7 +68,7 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
                         <span className="portfolio-contents-label-font">{unitLabel}</span>
                         <span className="portfolio-contents-label-font">{topicLabel}</span>
                     </div>
-                    {checkCrown && <div className="absolute top-0 right-[20px] w-[60px] h-[65px] bg-portfolio-unit-crown-ic-svg bg-no-repeat"/>}
+                    {checkCrown && <div className="absolute top-0 right-[20px] w-[60px] h-[65px] bg-portfolio-unit-crown-ic-svg bg-cover bg-no-repeat"/>}
                 </div>;
                 break;
             }

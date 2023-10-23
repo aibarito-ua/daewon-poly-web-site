@@ -520,7 +520,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             
             if (unitItem.unit_index === unitIndex) {
                 unitItem.draft_1_outline = unitItem.draft_1_outline.map((outlineItem)=>{
-                    const targetName = outlineItem.name.split('_')[0];
+                    const targetName = outlineItem.name.replace(/(_)?([0-9]{1,})/gmi,'');
                     if (targetName === title) {
                         outlineItem.is_input_open = true;
                     }

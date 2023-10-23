@@ -204,9 +204,9 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
       <Dialog className=''
       fullWidth={true}
       PaperProps={{sx:{
-        width: '1075x',
-        maxWidth: '1075px',
-        minWidth: '1075px',
+        width: '1074x',
+        maxWidth: '1074px',
+        minWidth: '1074px',
         height: '605px',
         backgroundColor: 'rgba(0.4,0,0.2, 0)',
         boxShadow: 'none',
@@ -254,7 +254,7 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
             }
                 onClick={()=>handleNext(selectUnitIndex)}
             />
-        <div className='flex flex-grow flex-col w-full overflow-y-auto px-[45px] py-[30px]'>
+        <div className='flex flex-grow flex-col w-[1012px] overflow-y-auto overflow-x-hidden pl-[39px] pr-[30px] py-[30px]'>
           <table className=' text-left w-full border border-[#808080] table-fixed'>
             <RubricTableHeader 
               tableHeader={viewRubricHead}

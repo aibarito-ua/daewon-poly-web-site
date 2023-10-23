@@ -256,7 +256,7 @@ code {
   font-family: "Pathfinder";
   font-style: normal;
   font-weight: 400;
-  src: local("Roboto"),
+  src: local("Pathfinder"),
       url('./font/Pathfinder/Pathfinder-R.otf') format('woff2'),
       url('./font/Pathfinder/Pathfinder-R.otf') format('woff'),
       url('./font/Pathfinder/Pathfinder-R.otf') format('truetype');
@@ -265,7 +265,7 @@ code {
   font-family: "Pathfinder";
   font-style: bold;
   font-weight: 700;
-  src: local("Roboto"),
+  src: local("Pathfinder"),
       url('./font/Pathfinder/Pathfinder-B.otf') format('woff2'),
       url('./font/Pathfinder/Pathfinder-B.otf') format('woff'),
       url('./font/Pathfinder/Pathfinder-B.otf') format('truetype');

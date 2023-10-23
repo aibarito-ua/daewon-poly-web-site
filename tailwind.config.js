@@ -84,9 +84,9 @@ module.exports = {
         'portfolio-unit-open-bg-svg': "url('/src/util/png/portfolio/unitBG.png')",
         'portfolio-unit-lock-bg-svg': "url('/src/util/png/portfolio/unitLock.png')",
         // portfolio crown
-        'portfolio-unit-crown-ic-svg': "url('/src/components/pageComponents/portfolio/svgs/ic_medal.svg')",
+        'portfolio-unit-crown-ic-svg': "url('/src/util/png/portfolio/crown_68x68.png')",
         // portfolio modal small crown
-        'portfolio-unit-modal-crown-ic-svg':"url('/src/components/pageComponents/portfolio/svgs/smallCrown.svg')",
+        'portfolio-unit-modal-crown-ic-svg':"url('/src/util/png/portfolio/crown_56x48.png')",
         // nav side icons
         'nav-writing-activity-on': "url('/src/util/svgs/commonIconPNG/nav_writing_activity_on.png')",
         'nav-writing-activity-off': "url('/src/util/svgs/commonIconPNG/nav_writing_activity_off.png')",

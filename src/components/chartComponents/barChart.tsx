@@ -69,11 +69,11 @@ export default function App() {
         tickLine={false} tickMargin={10} axisLine={false} interval={0}
       />
       <YAxis tickCount={5} ticks={[0,1,2,3,4,5,6,7,8,9,10,11]} tickLine={false} axisLine={false} tickFormatter={()=>''} />
-      <Bar dataKey="unit1" fill="#3dbcbf" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333'}:''} barSize={10} radius={[5,5,0,0]} />
-      <Bar dataKey="unit2" fill="#f77488" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333'}:''} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit3" fill="#f9a77c" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333'}:''} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit4" fill="#43d39a" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333'}:''} barSize={10} radius={[5,5,0,0]}/>
-      <Bar dataKey="unit5" fill="#5a91c8" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333'}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit1" fill="#3dbcbf" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''} barSize={10} radius={[5,5,0,0]} />
+      <Bar dataKey="unit2" fill="#f77488" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit3" fill="#f9a77c" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit4" fill="#43d39a" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''} barSize={10} radius={[5,5,0,0]}/>
+      <Bar dataKey="unit5" fill="#5a91c8" label={check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''} barSize={10} radius={[5,5,0,0]}/>
     </BarChart>
   );
 }

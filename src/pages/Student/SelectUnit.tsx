@@ -264,11 +264,13 @@ export default function SelectUnit () {
             CommonFunctions.goLink(path, navigate, role);
         }
         const selectTemporaryPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
+            setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview`
             CommonFunctions.goLink(path, navigate, role)
         }
         const selectPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
+            setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview/submit`
             CommonFunctions.goLink(path, navigate, role)

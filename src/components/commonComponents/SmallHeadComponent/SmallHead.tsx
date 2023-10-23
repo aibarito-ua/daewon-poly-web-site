@@ -3,6 +3,7 @@ import useLoginStore from "../../../store/useLoginStore";
 import { commonIconSvgs } from "../../../util/svgs/commonIconsSvg";
 import useProgressPageStore from '../../../store/useProgressPageStore';
 import NoImage from './no_image_profile.png';
+import axios from 'axios';
 
 export default function SmallHead (props: {
     mainTitle: string,
@@ -10,12 +11,28 @@ export default function SmallHead (props: {
 }) {
     const { userInfo } = useLoginStore();
     const {progressTabActiveIndex, setProgressTabActiveIndex} = useProgressPageStore();
+    const [isProfileImage, setIsProfileImage] = React.useState<boolean>(false);
     const progressButtonLabel = [
         'spark writing',
         // 'free writing'
     ];
     // console.log('subTitle ==',props.subTitle)
     const testUrl = 'http://file.koreapolyschool.com'
+    // console.log('userInfo.userImagePath =',userInfo.userImagePath)
+    React.useEffect(()=>{
+        console.log('')
+        if (userInfo.userImagePath === testUrl) {
+            setIsProfileImage(false)
+        } else {
+            axios.get(userInfo.userImagePath).then((response) => {
+                // console.log('res img: ',response)
+                setIsProfileImage(true)
+            }).catch((reject) => {
+                // console.log('rej img: ',reject)
+                setIsProfileImage(false)
+            })
+        }
+    }, [])
     return (
         <div className='flex flex-row justify-between'>
             <div className="flex flex-col">
@@ -53,8 +70,7 @@ export default function SmallHead (props: {
                     <div className='top-right-user-info-text-class select-none'>{userInfo.courseName}</div>
                 </div>
                 <div className={`top-right-user-info-img bg-user-no-profile-image-view`} style={{
-                    // backgroundImage: userInfo.userImagePath !== testUrl ? 'url("'+userInfo.userImagePath+'")': NoImage,
-                    backgroundImage: 'url("'+userInfo.userImagePath+'")',
+                    backgroundImage: isProfileImage ? 'url("'+userInfo.userImagePath+'")': NoImage,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     backgroundSize: 'contain'

@@ -161,7 +161,7 @@ class PortfolioComponentToPrint extends React.PureComponent<IPortfolioComponentT
                 
                     {/* content */}
                     <div className='flex px-[12.353mm] w-[185.294mm] h-[231.215mm] bg-white mt-[4.837mm] ml-[12.353mm] border-[0.24mm] border-[#0fa9cb] rounded-[7.3mm] relative z-0'>
-                        {portfolioModal.isCrown && <div className='absolute right-[40px] bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat w-[60px] h-[50px] ' />}
+                        {portfolioModal.isCrown && <div className='absolute right-[40px] bg-portfolio-unit-modal-crown-ic-svg bg-cover bg-no-repeat w-[60px] h-[50px] ' />}
                         {multi.currentPageNum===1 && portfolioModal.contentTitle.length > 0 &&
                             <div className='absolute top-[14.511mm] -left-[4.941mm] h-[13.060mm] flex items-center px-[4.447mm] rounded-r-[6.530mm] bg-[#0fa9cb] text-white'>
                                 {/* <span className='export-lm-wh-content-title-value'></span> */}

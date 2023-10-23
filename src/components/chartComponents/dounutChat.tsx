@@ -439,7 +439,17 @@ Z
     y={sy+4}
     textAnchor={textAnchor}
     fill="#333"
->{`${clickIndex}: ${scoreResult}%`}</text>
+    
+>
+    <tspan
+    fontFamily="GothamRounded"
+    fontSize={14}
+    >{`${clickIndex}: ${scoreResult}`}</tspan>
+    <tspan
+    fontFamily="GothamRounded"
+    fontSize={12}
+    >{'%'}</tspan>
+    </text>
         </g>
     )
 
