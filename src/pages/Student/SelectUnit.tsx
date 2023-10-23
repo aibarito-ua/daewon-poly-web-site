@@ -94,7 +94,7 @@ export default function SelectUnit () {
         // report
         const student_code = userInfo.userCode;
         
-        const getReportAll = await getReportsAPI(student_code, userInfo.accessToken);
+        const getReportAll = await getReportsAPI(student_code, userInfo.accessToken,userInfo.courseName);
         if (goBackFromDraftInUnitPage) {
             // const exitFunc = () => {
             //     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
@@ -137,7 +137,7 @@ export default function SelectUnit () {
 
     const reportOpen = async (data:TSparkWritingData) => {
         const student_code = userInfo.userCode;
-        const getAllReport = await getReportsAPI(student_code,userInfo.accessToken);
+        const getAllReport = await getReportsAPI(student_code,userInfo.accessToken, userInfo.courseName);
         if (getAllReport) {
             const reportByYears = getAllReport.periods;
             for (let i = 0; i < reportByYears.length; i++) {
@@ -150,7 +150,7 @@ export default function SelectUnit () {
         semester:number,
         level:string ) => {
         let dumyData:TReportByStudentPeriodLevel= {
-            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
         }
 
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(unitRubricScoresData));

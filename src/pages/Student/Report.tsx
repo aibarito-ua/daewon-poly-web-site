@@ -62,7 +62,7 @@ const Report = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName);
             if (getAPIs) getReportAll = getAPIs;
         }
         
@@ -121,7 +121,7 @@ const Report = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName);
             if (getAPIs) getReportAll = getAPIs;
         }
         if (getReportAll) {

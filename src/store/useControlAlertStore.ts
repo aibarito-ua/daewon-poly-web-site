@@ -720,12 +720,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         },
     ],
     reportSelectData: {
-        book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+        book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
     },
     setSelectReportData: (data, year, semester, level) => {
         // find data
         let dumyData:TReportByStudentPeriodLevel= {
-            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: []
+            book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
         }
 
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));

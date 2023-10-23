@@ -161,9 +161,9 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessTok
     })
 }
 
-export async function getReportsAPI(student_code: string, accessToken: string): Promise<TReportByStudentResponse|null> {
+export async function getReportsAPI(student_code: string, accessToken: string, levelName:string): Promise<TReportByStudentResponse|null> {
     console.log(student_code)
-    const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code);
+    const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, levelName);
     return await axios.get(reqUrl, {
         headers: {
             'Content-Type': 'application/json',

@@ -205,6 +205,7 @@ type TReportByStudentPeriod = {
 type TReportByStudentPeriodLevel = {
     level_name:string;
     book_name:string;
+    class_name:string;
     rubric_info: TRubricInfo[];
     overall_report: TOverallReport[];
     unit_reports: TUnitReportsData[];
