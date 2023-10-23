@@ -153,7 +153,7 @@ const PrintReportExportButton = (props: {
                 </div>
             </div>
             {/* print button */}
-            <button onClick={reportByUnitMainTitle!==''?handlePrint:()=>{}} className={isActivityPage ? 'bg-btn-report-modal-print-ic-svg bg-no-repeat w-[100px] h-[48px]': "bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px]"}></button>
+            <button onClick={reportByUnitMainTitle!==''?handlePrint:()=>{}} className={isActivityPage ? 'bg-btn-report-modal-print-ic-svg bg-cover bg-no-repeat w-[100px] h-[51px]': "bg-tab-print-btn-ic-svg bg-no-repeat w-[100px] h-[48px]"}></button>
             <div style={{display:'none'}} ref={divRef}>
                 
                 <div className='flex flex-col justify-start items-start w-[200.118mm] h-[20.558mm] border-[0.24mm] rounded-[4.88mm] px-[3.706mm] py-[3.628mm]'>

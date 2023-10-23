@@ -192,7 +192,7 @@ export default function UnitReportModalComponent() {
                     )}
                     {menuControll===1 && (
                         <div className='absolute top-[0px] right-[25px]'>
-                            <PrintReportExportButton isActivityPage={false}/>
+                            <PrintReportExportButton isActivityPage={true}/>
                         </div>
                     )}
                 </div>
