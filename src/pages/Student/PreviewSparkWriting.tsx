@@ -672,8 +672,7 @@ const PreviewSparkWriting = (props:any) => {
         } else if (guideFlag === 1) {
             
             const guideTextData = [
-                'Before you submit, check the revised writing.',
-                'Tap the colored text and choose whether to make changes or not.',
+                'Before you submit, check the revised writing. Tap the colored text and choose whether to make changes or not.',
             ];
             setGuideText(guideTextData)
         }
@@ -1316,7 +1315,7 @@ const PreviewSparkWriting = (props:any) => {
                                 const submitDate = currentSparkWritingData.draft_1_status.submit_date;
                                 let noMessages = '';
                                 if (submitDate && submitDate!=='') {
-                                    noMessages = `Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
+                                    noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
                                 }
                                 // onSubmitEvent()
 
@@ -1373,7 +1372,7 @@ const PreviewSparkWriting = (props:any) => {
                                                 useOneButton:true,
                                                 yesButtonLabel: 'OK',
                                                 alertType: 'continue',
-                                                messages: [`Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`],
+                                                messages: [`Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`],
                                                 yesEvent: () => {
                                                     commonAlertClose()
                                                     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);

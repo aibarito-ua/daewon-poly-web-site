@@ -587,33 +587,10 @@ const EssayWriting = () => {
             if (DraftIndex==='1') {
                 const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
                 const max_leng = targetDataOutline.length;
-                let titleMaxLengthCheck = false;
-
-                let orderIndex = -1;
-                let unitId = -1;
-                let unitIndex = -1;
-                let redoTitleText = '';
 
                 let targetFlags = Array.from({length:max_leng},()=>1)
                 targetFlags = targetDataOutline.map((v,i) => {
                     const target_leng = v.input_content.replaceAll(' ','').length;
-                    if (v.name === 'Title') {
-                        console.log('input =',target_leng,', ',v.input_content,)
-                        const lengthTitle = v.input_content.length;
-                        orderIndex = v.order_index;
-                        unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
-                        unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
-                        if (lengthTitle > 120) {
-                            redoTitleText = v.input_content.substring(0, 120);
-                            titleMaxLengthCheck = true;
-                        }
-                        // check line break
-                        const checkLineBreakTitle = v.input_content.match(/\n/gmi);
-                        if (checkLineBreakTitle) {
-                            redoTitleText = v.input_content.replace(/\n/gmi, '');
-                            titleMaxLengthCheck = true;
-                        }
-                    }
                     if (target_leng >= 10) {
                         // 10자 이상
                         return 0;
@@ -623,140 +600,105 @@ const EssayWriting = () => {
                     }
                 })
                 
-                if (titleMaxLengthCheck) {
-                    commonAlertOpen({
-                        messages:['The Enter/Return key cannot be used in this section.'],
-                        useOneButton: true,
-                        yesButtonLabel: 'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
-                            setOutlineInputText(redoTitleText, unitId, unitIndex, 1, 1)
-                        }
-                    })
-                    return;
-                } else {
                     
-                    const sum = targetFlags.reduce((a,b) => (a+b));
-                    // sum === 0 => Preview && save 활성화
-                    // sum >0, sum < targetFlags.length; -> save 활성화
-                    // else -> 모든 버튼 비활성화
-                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
-    
-                    if (sum === 0) {
-    
-                        setIsSaveButtonOpen(true)
-                        console.log('setGoBackFromDraftInUnitPage 1')
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    callbackCheckValues()
-                                    commonAlertOpen({
-                                        messages: ['Do you want to save your current progress before you leave?'],
-                                        alertType: 'warningContinue',
-                                        yesButtonLabel: `No`,
-                                        noButtonLabel: `Yes`,
-                                        closeEvent: async ()=> {
-                                            await temporarySaveFunction();
-                                            commonAlertClose();
-                                        },
-                                        yesEvent: () => {
-                                            commonAlertClose();
-                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                        }
-                                    })
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                        setIsPreviewButtonOpen(true);
-                    } else if (sum > 0 && sum < targetFlags.length) {
-                        setIsSaveButtonOpen(true)
-                        console.log('setGoBackFromDraftInUnitPage 2')
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    callbackCheckValues()
-                                    commonAlertOpen({
-                                        messages: ['Do you want to save your current progress before you leave?'],
-                                        alertType: 'warningContinue',
-                                        yesButtonLabel: `No`,
-                                        noButtonLabel: `Yes`,
-                                        closeEvent: async ()=> {
-                                            await temporarySaveFunction();
-                                            commonAlertClose();
-                                        },
-                                        yesEvent: () => {
-                                            commonAlertClose();
-                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                        }
-                                    })
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                    } else {
-                        console.log('setGoBackFromDraftInUnitPage 3')
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    commonAlertClose();
-                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                        setIsPreviewButtonOpen(false);
-                        setIsSaveButtonOpen(false)
-                    }
+                const sum = targetFlags.reduce((a,b) => (a+b));
+                // sum === 0 => Preview && save 활성화
+                // sum >0, sum < targetFlags.length; -> save 활성화
+                // else -> 모든 버튼 비활성화
+                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
 
+                if (sum === 0) {
+
+                    setIsSaveButtonOpen(true)
+                    console.log('setGoBackFromDraftInUnitPage 1')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    yesEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                    setIsPreviewButtonOpen(true);
+                } else if (sum > 0 && sum < targetFlags.length) {
+                    setIsSaveButtonOpen(true)
+                    console.log('setGoBackFromDraftInUnitPage 2')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    yesEvent: () => {
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                } else {
+                    console.log('setGoBackFromDraftInUnitPage 3')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                    setIsPreviewButtonOpen(false);
+                    setIsSaveButtonOpen(false)
                 }
             } else if (DraftIndex==='2') {
 
                 // title validate
                 const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_2_outline;
                 const max_leng = targetDataOutline.length;
-                let titleMaxLengthCheck = false;
-                let orderIndex = -1;
-                let unitId = -1;
-                let unitIndex = -1;
-                let redoTitleText = '';
                 let targetFlags = Array.from({length:max_leng},()=>1)
                 targetFlags = targetDataOutline.map((item,i) => {
                     const target_length = item.input_content.replaceAll(' ','').length;
-                    if (item.name === 'Title') {
-                        const titleLength = item.input_content.length;
-                        orderIndex = item.order_index;
-                        unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
-                        unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
-                        if (titleLength > 120) {
-                            redoTitleText = item.input_content.substring(0, 120);
-                            titleMaxLengthCheck = true;
-                        }
-                        const checkTitleLineBreak = item.input_content.match(/\n/gmi);
-                        
-                        if (checkTitleLineBreak) {
-                            redoTitleText = item.input_content.replace(/\n/gmi,'');
-                            titleMaxLengthCheck = true;
-                        }
-                    }
                     if (target_length >= 10) {
                         // 10자 이상
                         return 0;
@@ -765,39 +707,25 @@ const EssayWriting = () => {
                         return 1;
                     }
                 })
-                console.log('titleMaxLengthCheck = ',titleMaxLengthCheck)
-                if (titleMaxLengthCheck) {
-
-                    commonAlertOpen({
-                        messages:['The Enter/Return key cannot be used in this section.'],
-                        useOneButton: true,
-                        yesButtonLabel: 'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
-                            setOutlineInputText(redoTitleText, unitId, unitIndex, 1,2)
-                        }
-                    })
-                    return;
+                const sum = targetFlags.reduce((a,b) => (a+b));
+                // sum 0 -> submit
+                // sum 1 -> save
+                // sum 2 -> 버튼 비활성화
+                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
+                
+                
+                console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
+                if (sum === 0) {
+                    setDraft2ndSubmitActive(true);
+                    setDraft2ndSaveActive(true);
+                } else if (sum === 1) {
+                    setDraft2ndSubmitActive(false);
+                    setDraft2ndSaveActive(true);
                 } else {
-                    const sum = targetFlags.reduce((a,b) => (a+b));
-                    // sum 0 -> submit
-                    // sum 1 -> save
-                    // sum 2 -> 버튼 비활성화
-                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
-                    
-                    
-                    console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
-                    if (sum === 0) {
-                        setDraft2ndSubmitActive(true);
-                        setDraft2ndSaveActive(true);
-                    } else if (sum === 1) {
-                        setDraft2ndSubmitActive(false);
-                        setDraft2ndSaveActive(true);
-                    } else {
-                        setDraft2ndSubmitActive(false);
-                        setDraft2ndSaveActive(false);
-                    }
+                    setDraft2ndSubmitActive(false);
+                    setDraft2ndSaveActive(false);
                 }
+                
 
                 // draft2ndSaveActive
                 // draft2ndSubmitActive
@@ -1179,7 +1107,7 @@ const EssayWriting = () => {
                             { manufactureItem[i].map((item, itemIndex) => {
                                 const manuKey = 'menufactureItem-'+item.name+item.order_index+itemIndex;
                                 const inputId = item.name+item.order_index;
-                                console.log('== inputId ==',inputId)
+                                // console.log('== inputId ==',inputId)
                                 return <div key={manuKey}>
                                     <div className='outline-content-box-item'
                                     key={i+'-'+itemIndex+'-body-'+item.order_index}><span className=''></span>{item.heading_content}</div>
@@ -1197,21 +1125,49 @@ const EssayWriting = () => {
                                                 
                                                 placeholder={`Write here.`}
                                                 onChange={(e)=>{
+                                                    
                                                     const val = e.currentTarget.value;
-                                                    const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                    const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                    if (checkNotSC!==null) {
-                                                        console.log('불가 문자 입력')
-                                                      } else if (checkOneSC!==null) {
-                                                        console.log('2개 이상 금지')
-                                                      } else {
-                                                        e.currentTarget.style.height = 'auto';
-                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                        const unitId = outlineItem.unit_id
-                                                        const unitIndex = outlineItem.unit_index
-                                                        const orderIndex = item.order_index
-                                                        setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-                                                        callbackCheckValues()
+                                                    const alertCheckCH = val.match(/[\n]/gmi);
+                                                    const lengthCheck = val.length >= 120;
+                                                    console.log('length =',val.length)
+                                                    const unitId = outlineItem.unit_id
+                                                    const unitIndex = outlineItem.unit_index
+                                                    const orderIndex = item.order_index
+
+                                                    if (lengthCheck ) {
+                                                        const cutting120Character = val.substring(0, 120);
+                                                        
+                                                        setOutlineInputText(cutting120Character, unitId, unitIndex, orderIndex, 1)
+                                                        commonAlertOpen({
+                                                            messages:['The title cannot be more than 120 characters.'],
+                                                            useOneButton: true,
+                                                            yesButtonLabel: 'OK',
+                                                            yesEvent: () => {
+                                                                commonAlertClose();
+                                                            }
+                                                        })
+                                                    } else if (alertCheckCH!==null) {
+                                                        commonAlertOpen({
+                                                            messages:['The Enter/Return key cannot be used in this section.'],
+                                                            useOneButton: true,
+                                                            yesButtonLabel: 'OK',
+                                                            yesEvent: () => {
+                                                                commonAlertClose();
+                                                            }
+                                                        })
+                                                    } else {
+                                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                        if (checkNotSC!==null) {
+                                                            console.log('불가 문자 입력')
+                                                          } else if (checkOneSC!==null) {
+                                                            console.log('2개 이상 금지')
+                                                          } else {
+                                                            e.currentTarget.style.height = 'auto';
+                                                            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                            setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                            callbackCheckValues()
+                                                        }
                                                     }
                                                 }}
                                                 onFocus={(e)=>{
@@ -1350,7 +1306,19 @@ const EssayWriting = () => {
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const alertCheckCH = val.match(/[\n]/gmi);
-                                        if (val.length >= 120 || alertCheckCH!==null) {
+                                        if (val.length >= 120 ) {
+                                            const cutting120Character = val.substring(0, 120);
+                                            
+                                            setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            commonAlertOpen({
+                                                messages:['The title cannot be more than 120 characters.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else if (alertCheckCH!==null) {
                                             commonAlertOpen({
                                                 messages:['The Enter/Return key cannot be used in this section.'],
                                                 useOneButton: true,
@@ -1369,8 +1337,7 @@ const EssayWriting = () => {
                                               } else {
                                                 // e.currentTarget.style.height='auto';
                                                 // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                const value = e.currentTarget.value;
-                                                setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                             }
                                         }
                                     }}
@@ -1386,11 +1353,12 @@ const EssayWriting = () => {
                                         const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
                                         if (checkNotSC!==null) {
                                             console.log('불가 문자 입력')
-                                          } else if (checkOneSC!==null) {
+                                            } else if (checkOneSC!==null) {
                                             console.log('2개 이상 금지')
-                                          } else {
+                                            } else {
                                             setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                         }
+                                        
                                     }}
                                     placeholder='Start typing'
                                     value={draftItem.draft_2_outline[1].input_content}
@@ -1415,7 +1383,18 @@ const EssayWriting = () => {
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const alertCheckCH = val.match(/[\n]/gmi);
-                                        if (val.length >= 120 || alertCheckCH!==null) {
+                                        if (val.length >= 120 ) {
+                                            const cutting120Character = val.substring(0, 120);
+                                            setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            commonAlertOpen({
+                                                messages:['The title cannot be more than 120 characters.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else if (alertCheckCH!==null) {
                                             commonAlertOpen({
                                                 messages:['The Enter/Return key cannot be used in this section.'],
                                                 useOneButton: true,
@@ -1448,12 +1427,13 @@ const EssayWriting = () => {
                                         const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
                                         if (checkNotSC!==null) {
                                             console.log('불가 문자 입력')
-                                          } else if (checkOneSC!==null) {
+                                            } else if (checkOneSC!==null) {
                                             console.log('2개 이상 금지')
-                                          } else {
+                                            } else {
                                             // const value = e.currentTarget.value;
                                             setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                         }
+                                        
                                     }}
                                     placeholder='Start typing'
                                     value={draftItem.draft_2_outline[1].input_content}
@@ -1483,7 +1463,7 @@ const EssayWriting = () => {
                     <div className={`${draft2ndSubmitActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSubmitActive) {
                             commonAlertOpen({
-                                head: `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                                head: `Unit ${draftItem.unit_index}: ${draftItem.topic}`,
                                 messages: ['Are you ready to submit?'],
                                 // messages: [
                                 //     `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
