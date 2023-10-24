@@ -2496,6 +2496,7 @@ bg-[#ffea2c]
   text-[#333]
   flex
   justify-center
+  items-center
   py-[9px]
   px-[10px]
   border-[2px]
@@ -2569,9 +2570,8 @@ bg-[#ffea2c]
 }
 .draft-title-paragragh-wrap {
   @apply
-  flex flex-row 
-  justify-start
-  items-center
+  text-left
+  align-middle
 }
 .draft-hover-tooltip-content-wrap {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.1);

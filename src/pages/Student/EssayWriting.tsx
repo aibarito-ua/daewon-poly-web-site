@@ -1078,6 +1078,17 @@ const EssayWriting = () => {
         })
         return checkFlag;
     }
+    // 문장 안의 글자수 제한
+    const wordLengthLimit = (sentence:string) => {
+        const targetValue = sentence.split(/[\n|\s]/gmi);
+        for (let i = 0; i < targetValue.length; i++) {
+            const word = targetValue[i].length;
+            if (word >= 45) {
+                return false;
+            }
+        }
+        return true;
+    }
     const outlineBody = (outlineItem: TSparkWritingData ) => {
         let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
         const targetMaxLength = outlineOrigin.length;
@@ -1127,28 +1138,10 @@ const EssayWriting = () => {
                                                 onChange={(e)=>{
                                                     
                                                     const val = e.currentTarget.value;
-                                                    const alertCheckCH = val.match(/[\n]/gmi);
-                                                    const lengthCheck = val.length >= 120;
-                                                    console.log('length =',val.length)
-                                                    const unitId = outlineItem.unit_id
-                                                    const unitIndex = outlineItem.unit_index
-                                                    const orderIndex = item.order_index
-
-                                                    if (lengthCheck ) {
-                                                        const cutting120Character = val.substring(0, 120);
-                                                        
-                                                        setOutlineInputText(cutting120Character, unitId, unitIndex, orderIndex, 1)
+                                                    const checkWordLength = wordLengthLimit(val);
+                                                    if (!checkWordLength) {
                                                         commonAlertOpen({
-                                                            messages:['The title cannot be more than 120 characters.'],
-                                                            useOneButton: true,
-                                                            yesButtonLabel: 'OK',
-                                                            yesEvent: () => {
-                                                                commonAlertClose();
-                                                            }
-                                                        })
-                                                    } else if (alertCheckCH!==null) {
-                                                        commonAlertOpen({
-                                                            messages:['The Enter/Return key cannot be used in this section.'],
+                                                            messages:['You have exceeded the maximum number of characters allowed per word.'],
                                                             useOneButton: true,
                                                             yesButtonLabel: 'OK',
                                                             yesEvent: () => {
@@ -1156,19 +1149,67 @@ const EssayWriting = () => {
                                                             }
                                                         })
                                                     } else {
-                                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                        if (checkNotSC!==null) {
-                                                            console.log('불가 문자 입력')
-                                                          } else if (checkOneSC!==null) {
-                                                            console.log('2개 이상 금지')
-                                                          } else {
-                                                            e.currentTarget.style.height = 'auto';
-                                                            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                            setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-                                                            callbackCheckValues()
+                                                        const alertCheckCH = val.match(/[\n]/gmi);
+                                                        const lengthCheck = val.length >= 120;
+                                                        console.log('length =',val.length)
+                                                        const unitId = outlineItem.unit_id
+                                                        const unitIndex = outlineItem.unit_index
+                                                        const orderIndex = item.order_index
+    
+                                                        // const maxWordLength = val.match
+                                                        console.log('input name =',item.name)
+                                                        if (item.name==='Title') {
+                                                            if (lengthCheck ) {
+                                                                const cutting120Character = val.substring(0, 120);
+                                                                
+                                                                setOutlineInputText(cutting120Character, unitId, unitIndex, orderIndex, 1)
+                                                                commonAlertOpen({
+                                                                    messages:['The title cannot be more than 120 characters.'],
+                                                                    useOneButton: true,
+                                                                    yesButtonLabel: 'OK',
+                                                                    yesEvent: () => {
+                                                                        commonAlertClose();
+                                                                    }
+                                                                })
+                                                            } else if (alertCheckCH!==null) {
+                                                                commonAlertOpen({
+                                                                    messages:['The Enter/Return key cannot be used in this section.'],
+                                                                    useOneButton: true,
+                                                                    yesButtonLabel: 'OK',
+                                                                    yesEvent: () => {
+                                                                        commonAlertClose();
+                                                                    }
+                                                                })
+                                                            } else {
+                                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                                if (checkNotSC!==null) {
+                                                                    console.log('불가 문자 입력')
+                                                                  } else if (checkOneSC!==null) {
+                                                                    console.log('2개 이상 금지')
+                                                                  } else {
+                                                                    e.currentTarget.style.height = 'auto';
+                                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                                    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                                    callbackCheckValues()
+                                                                }
+                                                            }    
+                                                        } else {
+                                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                            if (checkNotSC!==null) {
+                                                                console.log('불가 문자 입력')
+                                                                } else if (checkOneSC!==null) {
+                                                                console.log('2개 이상 금지')
+                                                                } else {
+                                                                e.currentTarget.style.height = 'auto';
+                                                                e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                                setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                                callbackCheckValues()
+                                                            }
                                                         }
                                                     }
+                                                    
                                                 }}
                                                 onFocus={(e)=>{
                                                     console.log('focus =',e.currentTarget.id)
@@ -1305,22 +1346,10 @@ const EssayWriting = () => {
                                     }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
-                                        const alertCheckCH = val.match(/[\n]/gmi);
-                                        if (val.length >= 120 ) {
-                                            const cutting120Character = val.substring(0, 120);
-                                            
-                                            setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                        const checkWordLength = wordLengthLimit(val);
+                                        if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['The title cannot be more than 120 characters.'],
-                                                useOneButton: true,
-                                                yesButtonLabel: 'OK',
-                                                yesEvent: () => {
-                                                    commonAlertClose();
-                                                }
-                                            })
-                                        } else if (alertCheckCH!==null) {
-                                            commonAlertOpen({
-                                                messages:['The Enter/Return key cannot be used in this section.'],
+                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1328,16 +1357,40 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                            if (checkNotSC!==null) {
-                                                console.log('불가 문자 입력')
-                                              } else if (checkOneSC!==null) {
-                                                console.log('2개 이상 금지')
-                                              } else {
-                                                // e.currentTarget.style.height='auto';
-                                                // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            const alertCheckCH = val.match(/[\n]/gmi);
+                                            if (val.length >= 120 ) {
+                                                const cutting120Character = val.substring(0, 120);
+                                                
+                                                setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                                commonAlertOpen({
+                                                    messages:['The title cannot be more than 120 characters.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                            } else if (alertCheckCH!==null) {
+                                                commonAlertOpen({
+                                                    messages:['The Enter/Return key cannot be used in this section.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                            } else {
+                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                if (checkNotSC!==null) {
+                                                    console.log('불가 문자 입력')
+                                                  } else if (checkOneSC!==null) {
+                                                    console.log('2개 이상 금지')
+                                                  } else {
+                                                    // e.currentTarget.style.height='auto';
+                                                    // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                    setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                                }
                                             }
                                         }
                                     }}
@@ -1349,14 +1402,26 @@ const EssayWriting = () => {
                                 <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
-                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                        if (checkNotSC!==null) {
-                                            console.log('불가 문자 입력')
-                                            } else if (checkOneSC!==null) {
-                                            console.log('2개 이상 금지')
-                                            } else {
-                                            setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        const checkWordLength = wordLengthLimit(val);
+                                        if (!checkWordLength) {
+                                            commonAlertOpen({
+                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else {
+                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                            if (checkNotSC!==null) {
+                                                console.log('불가 문자 입력')
+                                                } else if (checkOneSC!==null) {
+                                                console.log('2개 이상 금지')
+                                                } else {
+                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                            }
                                         }
                                         
                                     }}
@@ -1382,21 +1447,10 @@ const EssayWriting = () => {
                                     }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
-                                        const alertCheckCH = val.match(/[\n]/gmi);
-                                        if (val.length >= 120 ) {
-                                            const cutting120Character = val.substring(0, 120);
-                                            setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                        const checkWordLength = wordLengthLimit(val);
+                                        if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['The title cannot be more than 120 characters.'],
-                                                useOneButton: true,
-                                                yesButtonLabel: 'OK',
-                                                yesEvent: () => {
-                                                    commonAlertClose();
-                                                }
-                                            })
-                                        } else if (alertCheckCH!==null) {
-                                            commonAlertOpen({
-                                                messages:['The Enter/Return key cannot be used in this section.'],
+                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1404,14 +1458,37 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                            if (checkNotSC!==null) {
-                                                console.log('불가 문자 입력')
-                                              } else if (checkOneSC!==null) {
-                                                console.log('2개 이상 금지')
-                                              } else {
-                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            const alertCheckCH = val.match(/[\n]/gmi);
+                                            if (val.length >= 120 ) {
+                                                const cutting120Character = val.substring(0, 120);
+                                                setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                                commonAlertOpen({
+                                                    messages:['The title cannot be more than 120 characters.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                            } else if (alertCheckCH!==null) {
+                                                commonAlertOpen({
+                                                    messages:['The Enter/Return key cannot be used in this section.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                            } else {
+                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                if (checkNotSC!==null) {
+                                                    console.log('불가 문자 입력')
+                                                  } else if (checkOneSC!==null) {
+                                                    console.log('2개 이상 금지')
+                                                  } else {
+                                                    setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                                }
                                             }
                                         }
                                     }}
@@ -1423,15 +1500,27 @@ const EssayWriting = () => {
                                 <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
-                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                        if (checkNotSC!==null) {
-                                            console.log('불가 문자 입력')
-                                            } else if (checkOneSC!==null) {
-                                            console.log('2개 이상 금지')
-                                            } else {
-                                            // const value = e.currentTarget.value;
-                                            setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        const checkWordLength = wordLengthLimit(val);
+                                        if (!checkWordLength) {
+                                            commonAlertOpen({
+                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else {
+                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                            if (checkNotSC!==null) {
+                                                console.log('불가 문자 입력')
+                                                } else if (checkOneSC!==null) {
+                                                console.log('2개 이상 금지')
+                                                } else {
+                                                // const value = e.currentTarget.value;
+                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                            }
                                         }
                                         
                                     }}

@@ -91,7 +91,7 @@ const loadFeedbackDraftTitle = (
                 }
             });
 
-            return <div className='draft-title-paragragh-wrap'
+            return <div className='draft-title-paragragh-wrap h-fit'
             id={'Title'} key={paragraphKey}
             >
             {jsxElements}
@@ -190,7 +190,7 @@ const loadFeedbackDraftBody = (
             });
 
             return <div className='draft-title-paragragh-wrap'
-            id={'Title'} key={paragraphKey}
+            id={'Body'} key={paragraphKey}
             >
             {jsxElements}
             </div>
