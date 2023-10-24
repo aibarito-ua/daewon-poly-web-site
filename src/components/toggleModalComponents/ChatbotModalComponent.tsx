@@ -35,8 +35,8 @@ export default function FormDialog() {
   } = useLoginStore();
   const ai_name = 'Ella';
   // const user_name = name;
-  const user_name = 'UaTester';
-  // const user_name = userInfo.memberNameEn;
+  // const user_name = 'UaTester';
+  const user_name = `${userInfo.memberNameEn}`;
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -139,12 +139,20 @@ export default function FormDialog() {
     // const removeE = CommonEmoji.remove(e.currentTarget.value);
     // const value = removeE.text.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]|[{}`\\]||(&#)|/gmi,'');
     const value = CommonInputValidate.chat(e.currentTarget.value);
-    e.currentTarget.style.height = 'auto';
-    e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-    const inputValue = value.replace(/\n{2,}/gm, '\n')
-    const countInputLength = inputValue.length
-    setInputLength(countInputLength)
-    setInputText(inputValue)
+    const checkNotSC = value.match(/[\{\}|\\`]{1,}/gmi)
+    const checkOneSC = value.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+    if (checkNotSC!==null) {
+      console.log('불가 문자 입력')
+    } else if (checkOneSC!==null) {
+      console.log('2개 이상 금지')
+    } else {
+      e.currentTarget.style.height = 'auto';
+      e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
+      const inputValue = value.replace(/\n{2,}/gm, '\n')
+      const countInputLength = inputValue.length
+      setInputLength(countInputLength)
+      setInputText(inputValue)
+    }
   }
 
   const onKeyUpEvent = async (e:React.KeyboardEvent<HTMLTextAreaElement>) => {

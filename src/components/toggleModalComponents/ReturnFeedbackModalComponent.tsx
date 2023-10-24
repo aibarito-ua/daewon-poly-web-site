@@ -87,8 +87,8 @@ export default function ReturnFeedbackModalComponent (
 
                     }}>{`Do you want to redo your writing now?`}</div>
                     <div className='flex flex-row justify-center gap-[12px]'>
-                        <div className='return-1st-draft-alert-button-no' onClick={noButtonHandler}>{'no'}</div>
-                        <div className='return-1st-draft-alert-button-yes' onClick={yesButtonHandler}>{'yes'}</div>
+                        <div className='return-1st-draft-alert-button-no' onClick={noButtonHandler}>{'No'}</div>
+                        <div className='return-1st-draft-alert-button-yes' onClick={yesButtonHandler}>{'Yes'}</div>
                     </div>
                 </DialogContent>
             </Dialog>

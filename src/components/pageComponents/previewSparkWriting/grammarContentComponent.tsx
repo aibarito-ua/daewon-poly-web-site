@@ -59,6 +59,7 @@ const GrammarContentComponent = {
                     // console.log('paragraghIDX =',paragraphIndex,'\nsentenceIDX =',sentenceIndex,'\nwordIDX =',wordIndex,'\nwordLength =',wordElementsLength)
                     if (wordElementsLength < 2) {
                         
+                        
                         const compareWordFlag = word[0].type;
                         const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                         const dataKey = word[0].key;
@@ -84,6 +85,7 @@ const GrammarContentComponent = {
                                 displayText = currentWord.replace(/\s$/gmi, '');
                                 return 'after'
                             } else {
+                                
                                 displayText = currentWord
                                 return undefined;
                             }
@@ -144,6 +146,10 @@ const GrammarContentComponent = {
                                 reasons,
                                 displayWordInModal
                             ]
+
+                            if (word[0].word===' ') {
+                                console.log('is empty spacein=[',word,'], [',displayText,']')
+                            }
 
                             returnValue = (
                                 <GrammarTooltipCustom 

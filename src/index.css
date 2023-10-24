@@ -2503,6 +2503,7 @@ bg-[#ffea2c]
   rounded-[15px]
   bg-white
   h-[62px]
+  min-h-[62px]
 }
 .teacher-feedback-body-font {
   font-family: 'Roboto';
@@ -2516,7 +2517,7 @@ bg-[#ffea2c]
   flex-col
   justify-start
   justify-items-start
-  gap-[13px]
+  gap-[26px]
   bg-white
   h-full
 }
@@ -2550,6 +2551,12 @@ bg-[#ffea2c]
   p-0
 }
 .draft-2nd-body-wrap-textarea {
+  font-family: 'Roboto';
+  font-size: 18px;
+  text-align: left;
+  font-weight: 400;
+  line-height: 1.22;
+  color: #333333;
   @apply
   w-full
   h-full
@@ -2562,7 +2569,9 @@ bg-[#ffea2c]
 }
 .draft-title-paragragh-wrap {
   @apply
-  text-start
+  flex flex-row 
+  justify-start
+  items-center
 }
 .draft-hover-tooltip-content-wrap {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.1);

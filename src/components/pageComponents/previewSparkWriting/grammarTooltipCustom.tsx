@@ -103,6 +103,9 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         role,
         click
     ]);
+    console.log(compareResultText.toString().length)
+    console.log('compareResultText=[',compareResultText,']')
+    const displayResultText = compareResultText!==' ' ? compareResultText : <span>&nbsp;</span>
     return (
         <span key={mainTagkey} 
         className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] 
@@ -110,11 +113,10 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}
             ${addEmpty!==undefined && (
                 addEmpty==='before'? 'ml-[3px]': (addEmpty==='after'? 'mr-[3px]':'')
-            )}`}>
+            )} `}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
-            >{compareResultText}
-                {/* <span className={`font-sans inline-block whitespace-pre-line ${tagType==='delete'? 'line-through': ''}`}>{compareResultText}</span> */}
+            >{compareResultText.toString().length===0 ? ' ' : compareResultText } 
             </span>
             <FloatingPortal>
                 {isOpen && (

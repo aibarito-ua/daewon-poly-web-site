@@ -243,7 +243,7 @@ const PreviewSparkWriting = (props:any) => {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
             const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken);
-          //  console.log('res ====',res)
+           console.log('res ====',res)
             if (res.result_body.length>0) {
                 const unitId = sparkWritingData[unitIndex].unit_id
                 // const proofReadingCountUpdateValue = 1;
@@ -251,7 +251,7 @@ const PreviewSparkWriting = (props:any) => {
                 setCommonStandbyScreen({openFlag:false})
                 setIsPreview(false)
                 setIsGrammarProceed(true);
-                //  console.log('res grammar =',res)
+                 console.log('res grammar =',res)
                 setGuideFlag(1)
                 setInitHistorys({
                     title: res.result_title,
@@ -273,7 +273,7 @@ const PreviewSparkWriting = (props:any) => {
     const checkSelectedGrammarModals = () => {
         const checkTitle = checkSelectedTitleGrammarModals();
         const checkBody = checkSelectedBodyGrammarModals();
-      //  console.log('check title =',checkTitle,' body =',checkBody)
+       console.log('check title =',checkTitle,' body =',checkBody)
         return checkTitle? true: (checkBody?true:false);
     }
     // check title select grammars
@@ -747,16 +747,18 @@ const PreviewSparkWriting = (props:any) => {
         // check grammar modal select
         if (bodyHistory.body.present.length > 0 && bodyHistory.title.present) {
             // grammar 진행 시작
+            console.log('bodyHistory 1==',bodyHistory)
             const checkGrammarsSelectAll = checkSelectedGrammarModals();
+            console.log('checkGrammarsSelectAll ==',checkGrammarsSelectAll)
             if (countofUseAIProofreading===2) {
                 if (checkGrammarsSelectAll) {
-                  //  console.log('grammar 진행 중')
+                   console.log('grammar 진행 중 1')
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
                     
                     setOpenSubmitButton(false)
                 } else {
-                  //  console.log('grammar 진행 종료')
+                   console.log('grammar 진행 종료 1')
                     replaceUpdateSparkWritingTitle()
                     replaceUpdateSparkWritingBody()
                     setIsGrammarProceed(false)
@@ -766,14 +768,14 @@ const PreviewSparkWriting = (props:any) => {
               //  console.log(bodyHistory)
                 if (checkGrammarsSelectAll) {
                     // grammar 진행중
-                  //  console.log('grammar 진행 중')
+                   console.log('grammar 진행 중 2')
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
                     
                     setOpenSubmitButton(false);
                 } else {
                     // grammar 종료
-                  //  console.log('grammar 진행 종료')
+                   console.log('grammar 진행 종료 2')
                     replaceUpdateSparkWritingTitle()
                     replaceUpdateSparkWritingBody()
                     setIsGrammarProceed(false)
@@ -782,7 +784,8 @@ const PreviewSparkWriting = (props:any) => {
             }
         } else {
             // grammar 진행 전
-          //  console.log('grammar 진행 전')
+           console.log('grammar 진행 전')
+            console.log('bodyHistory 1==',bodyHistory)
             console.log('countofUseAIProofreading =',countofUseAIProofreading)
             
             if (countofUseAIProofreading>0) {

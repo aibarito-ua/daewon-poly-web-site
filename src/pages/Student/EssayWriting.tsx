@@ -17,6 +17,8 @@ const EssayWriting = () => {
 
     // 1nd draft에서 완료 후 툴팁 제어
     const tooltipControlDivRef = React.useRef(null);
+    // Draft2ndWritingPage check
+    const draft2ndWritingPageRef = React.useRef(null);
     
     // input text
     const [essayTopicInput, setEssayTopicInput] = React.useState<string>('');
@@ -91,7 +93,10 @@ const EssayWriting = () => {
     const navigate = useNavigate();
     // current role
     const {role} = useLoginStore();
-    const {commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen} = useControlAlertStore();
+    const {
+        commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen,
+        commonStandbyScreen
+    } = useControlAlertStore();
 
     const pageInitSetting = async () => {
         const init = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
@@ -127,7 +132,7 @@ const EssayWriting = () => {
                     console.log(' == targetPageFlag=1=',targetPageFlag)
                     setDraft2ndPageSet(targetPageFlag);
                 }
-                setCommonStandbyScreen({openFlag:false})
+                
             } else if (currentDraft === '2') {
                 const currentData = sparkWritingData[parseInt(UnitIndex)-1];
                 if (currentData) {
@@ -169,7 +174,7 @@ const EssayWriting = () => {
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
                     }
-                    setCommonStandbyScreen({openFlag:false})
+                    
                 }
             }
         }
@@ -181,9 +186,13 @@ const EssayWriting = () => {
         console.log('essay writing 102 | draft test =',)
         setCommonStandbyScreen({openFlag:true})
         const initEnd = await pageInitSetting().then((init) => {
-            
+            console.log('=====> useComponentWillMount last')
+            setCommonStandbyScreen({openFlag:false})
             return init;
         })
+        if (initEnd) {
+            setCommonStandbyScreen({openFlag:false})
+        }
         
         
         return ()=>{
@@ -197,6 +206,9 @@ const EssayWriting = () => {
             if (draft1stRefs.current.length === foldFlag.length) {
                 handleResizeHeightDraft1stInputs();
             }
+        }
+        return () => {
+            console.log('=== RETURE [draft1stRefs] ')
         }
     },[draft1stRefs])
 
@@ -295,14 +307,18 @@ const EssayWriting = () => {
         callbackCheckValues();
         
         return () => {
-            // console.log('did unmount in Essay Writing Page')
+            console.log('did unmount in Essay Writing Page')
             setTopNavHiddenFlagged(false)
             setSubNavTitleString('')
             setSubRightNavTitleString('')
             setIsPreviewButtonOpen(false);
             setIsSaveButtonOpen(false);
             setIsUpdateDraft2Inputs(false);
+
+            // setDraft2ndSaveActive(false);
+            // setDraft2ndSubmitActive(false);
         }
+    
     },[
         // page state
         params,
@@ -483,7 +499,9 @@ const EssayWriting = () => {
                 }
             }
         }
-        
+        return () => {
+            console.log('=== RETURE [sparkWritingData] ')
+        }
     }, [sparkWritingData]);
 
     React.useEffect(()=>{
@@ -559,6 +577,9 @@ const EssayWriting = () => {
             }
             
         }
+        return () => {
+            console.log('=== RETURE [draft2ndPageSet] ')
+        }
     }, [draft2ndPageSet])
     
     const callbackCheckValues = React.useCallback( ()=>{
@@ -609,7 +630,7 @@ const EssayWriting = () => {
                         yesButtonLabel: 'OK',
                         yesEvent: () => {
                             commonAlertClose();
-                            setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
+                            setOutlineInputText(redoTitleText, unitId, unitIndex, 1, 1)
                         }
                     })
                     return;
@@ -797,60 +818,87 @@ const EssayWriting = () => {
                 console.log('test callback flags =',questionOpenSave)
             }
         }
+
+        return () => {
+            console.log('=== RETURE Callback[] ')
+        }
     },[]);
 
     React.useEffect(()=>{
-        if (sparkWritingData !== undefined) {
-            if (DraftIndex==='2') {
-                callbackCheckValues()
-                // draft2ndSaveActive
-                // draft2ndSubmitActive
-                // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
-                // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
-                let questionOpenSave = false;
-                if (draft2ndSaveActive||draft2ndSubmitActive) {
-                    questionOpenSave = true;
-                } else {
-                    questionOpenSave = false;
-                }
-                if (isUpdateDraft2Inputs) {
-                    if (questionOpenSave) {
-                        console.log('setGoBackFromDraftInUnitPage 6')
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    callbackCheckValues()
-                                    commonAlertOpen({
-                                        messages: ['Do you want to save your current progress before you leave?'],
-                                        alertType: 'warningContinue',
-                                        yesButtonLabel: `No`,
-                                        noButtonLabel: `Yes`,
-                                        closeEvent: async ()=> {
-                                            setCommonStandbyScreen({openFlag:true})
-                                            setDraft2ndPageSet('')
-                                            await temporarySaveFunction();
-                                            commonAlertClose();
-                                        },
-                                        yesEvent: () => {
-                                            commonAlertClose();
-                                            setDraft2ndPageSet('')
-                                            setDraft2ndSaveActive(false)
-                                            setDraft2ndSubmitActive(false)
-                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                        }
-                                    })
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
+        console.log(' ==== current ref 2nd draft before!!!')
+        if (draft2ndWritingPageRef.current) {
+            console.log(' ==== current ref 2nd draft set')
+            if (sparkWritingData !== undefined) {
+                if (DraftIndex==='2') {
+                    callbackCheckValues()
+                    // draft2ndSaveActive
+                    // draft2ndSubmitActive
+                    // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
+                    // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
+                    let questionOpenSave = false;
+                    if (draft2ndSaveActive||draft2ndSubmitActive) {
+                        questionOpenSave = true;
                     } else {
-                        console.log('setGoBackFromDraftInUnitPage 7')
+                        questionOpenSave = false;
+                    }
+                    if (isUpdateDraft2Inputs) {
+                        if (questionOpenSave) {
+                            console.log('setGoBackFromDraftInUnitPage 6')
+                            setGoBackFromDraftInUnitPage(()=>{
+                                commonAlertOpen({
+                                    messages: ['Do you want to exit?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel:'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        callbackCheckValues()
+                                        commonAlertOpen({
+                                            messages: ['Do you want to save your current progress before you leave?'],
+                                            alertType: 'warningContinue',
+                                            yesButtonLabel: `No`,
+                                            noButtonLabel: `Yes`,
+                                            closeEvent: async ()=> {
+                                                setCommonStandbyScreen({openFlag:true})
+                                                setDraft2ndPageSet('')
+                                                await temporarySaveFunction();
+                                                commonAlertClose();
+                                            },
+                                            yesEvent: () => {
+                                                commonAlertClose();
+                                                setDraft2ndPageSet('')
+                                                setDraft2ndSaveActive(false)
+                                                setDraft2ndSubmitActive(false)
+                                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                            }
+                                        })
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                    }
+                                })
+                            })
+                        } else {
+                            console.log('setGoBackFromDraftInUnitPage 7')
+                            setGoBackFromDraftInUnitPage(()=>{
+                                commonAlertOpen({
+                                    messages: ['Do you want to exit?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel:'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        commonAlertClose();
+                                        setDraft2ndPageSet('')
+                                        setDraft2ndSaveActive(false)
+                                        setDraft2ndSubmitActive(false)
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                    }
+                                })
+                            })
+                        }
+                    } else {
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
                                 messages: ['Do you want to exit?'],
@@ -870,29 +918,16 @@ const EssayWriting = () => {
                             })
                         })
                     }
-                } else {
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                commonAlertClose();
-                                setDraft2ndPageSet('')
-                                setDraft2ndSaveActive(false)
-                                setDraft2ndSubmitActive(false)
-                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
+                    
                 }
-                
             }
+
         }
+        
+        return () => {
+            console.log('=== RETURE [draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs] ')
+        }
+        
     },[
         draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs
     ])
@@ -910,6 +945,9 @@ const EssayWriting = () => {
             }
         })
         console.log('inputIds ==',inputIds)
+        return () => {
+            console.log('resize callback')
+        }
     },[])
 
     const temporarySaveFunction = async () => {
@@ -1159,13 +1197,22 @@ const EssayWriting = () => {
                                                 
                                                 placeholder={`Write here.`}
                                                 onChange={(e)=>{
-                                                    e.currentTarget.style.height = 'auto';
-                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                    const unitId = outlineItem.unit_id
-                                                    const unitIndex = outlineItem.unit_index
-                                                    const orderIndex = item.order_index
-                                                    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-                                                    callbackCheckValues()
+                                                    const val = e.currentTarget.value;
+                                                    const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                                    const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                                    if (checkNotSC!==null) {
+                                                        console.log('불가 문자 입력')
+                                                      } else if (checkOneSC!==null) {
+                                                        console.log('2개 이상 금지')
+                                                      } else {
+                                                        e.currentTarget.style.height = 'auto';
+                                                        e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                        const unitId = outlineItem.unit_id
+                                                        const unitIndex = outlineItem.unit_index
+                                                        const orderIndex = item.order_index
+                                                        setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                        callbackCheckValues()
+                                                    }
                                                 }}
                                                 onFocus={(e)=>{
                                                     console.log('focus =',e.currentTarget.id)
@@ -1203,7 +1250,8 @@ const EssayWriting = () => {
                                 messages: ['Do you want to save your current progress and return to the main menu?'],
                                 yesButtonLabel: `Yes`,
                                 noButtonLabel: `No`,
-                                yesEvent: async ()=> await temporarySaveFunction()
+                                yesEvent: async ()=> await temporarySaveFunction(),
+                                closeEvent: async () => commonAlertClose()
                             })
                         }
                     }}>Save</div>
@@ -1241,7 +1289,7 @@ const EssayWriting = () => {
         console.log('draft2ndSubmitActive',draft2ndSubmitActive)
         console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
         return (
-            <div className='wrap-contain-2nd-spark-writing'>
+            <div className='wrap-contain-2nd-spark-writing' ref={draft2ndWritingPageRef}>
                 <div className='wrap-guide-2nd-top-text-spark-writing'>{'Check your teacher’s feedback and work on your 2nd draft.'}</div>
                 <div className='flex flex-row w-full gap-[10px] mt-[10px]'>
                     <div className='flex flex-col flex-1' style={{willChange:'transform'}}>
@@ -1300,10 +1348,31 @@ const EssayWriting = () => {
                                         }
                                     }}
                                     onChange={(e) => {
-                                        // e.currentTarget.style.height='auto';
-                                        // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                        const value = e.currentTarget.value;
-                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                        const val = e.currentTarget.value;
+                                        const alertCheckCH = val.match(/[\n]/gmi);
+                                        if (val.length >= 120 || alertCheckCH!==null) {
+                                            commonAlertOpen({
+                                                messages:['The Enter/Return key cannot be used in this section.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else {
+                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                            if (checkNotSC!==null) {
+                                                console.log('불가 문자 입력')
+                                              } else if (checkOneSC!==null) {
+                                                console.log('2개 이상 금지')
+                                              } else {
+                                                // e.currentTarget.style.height='auto';
+                                                // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                const value = e.currentTarget.value;
+                                                setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            }
+                                        }
                                     }}
                                     value={draftItem.draft_2_outline[0].input_content}
                                 />
@@ -1312,8 +1381,16 @@ const EssayWriting = () => {
                                 {/* 2nd draft body content */}
                                 <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
                                     onChange={(e) => {
-                                        const value = e.currentTarget.value;
-                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        const val = e.currentTarget.value;
+                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                        if (checkNotSC!==null) {
+                                            console.log('불가 문자 입력')
+                                          } else if (checkOneSC!==null) {
+                                            console.log('2개 이상 금지')
+                                          } else {
+                                            setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        }
                                     }}
                                     placeholder='Start typing'
                                     value={draftItem.draft_2_outline[1].input_content}
@@ -1336,10 +1413,28 @@ const EssayWriting = () => {
                                         }
                                     }}
                                     onChange={(e) => {
-                                        // e.currentTarget.style.height='auto';
-                                        // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                        const value = e.currentTarget.value;
-                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                        const val = e.currentTarget.value;
+                                        const alertCheckCH = val.match(/[\n]/gmi);
+                                        if (val.length >= 120 || alertCheckCH!==null) {
+                                            commonAlertOpen({
+                                                messages:['The Enter/Return key cannot be used in this section.'],
+                                                useOneButton: true,
+                                                yesButtonLabel: 'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        } else {
+                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                            if (checkNotSC!==null) {
+                                                console.log('불가 문자 입력')
+                                              } else if (checkOneSC!==null) {
+                                                console.log('2개 이상 금지')
+                                              } else {
+                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                            }
+                                        }
                                     }}
                                     value={draftItem.draft_2_outline[0].input_content}
                                 />
@@ -1348,8 +1443,17 @@ const EssayWriting = () => {
                                 {/* 2nd draft body content */}
                                 <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
                                     onChange={(e) => {
-                                        const value = e.currentTarget.value;
-                                        setOutlineInputText(value, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        const val = e.currentTarget.value;
+                                        const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
+                                        const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+                                        if (checkNotSC!==null) {
+                                            console.log('불가 문자 입력')
+                                          } else if (checkOneSC!==null) {
+                                            console.log('2개 이상 금지')
+                                          } else {
+                                            // const value = e.currentTarget.value;
+                                            setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                        }
                                     }}
                                     placeholder='Start typing'
                                     value={draftItem.draft_2_outline[1].input_content}
@@ -1386,14 +1490,17 @@ const EssayWriting = () => {
                                 //     'Are you ready to submit?'
                                 // ],
                                 alertType: 'continue',
-                                yesButtonLabel: 'Yes',
-                                noButtonLabel: 'No',
+                                yesButtonLabel: 'No',
+                                noButtonLabel: 'Yes',
                                 yesEvent: async () => {
+                                    commonAlertClose();
+                                },
+                                closeEvent: async () => {
                                     commonAlertClose();
                                     setCommonStandbyScreen({openFlag:true})
                                     // setDraft2ndPageSet('')
                                     await submit2ndDraftFunction();
-                                },
+                                }
                             })
                         }
                     }}>Submit</div>
