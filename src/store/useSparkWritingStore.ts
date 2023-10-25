@@ -324,7 +324,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                 return unitItem;
             } else {
                 if (draft === 1) {
-                    inputText = inputText.replace(/\s{2,}/g, ' ');
+                    // inputText = inputText.replace(/\s{3,}/g, ' ');
                     const outlineItem = unitItem.draft_1_outline.map((draftItem) => {
                         const targetOrderIdx = draftItem.order_index;
                         if (targetOrderIdx === orderIndex) {
@@ -338,7 +338,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
                     return unitItem;
                 } else {
                     // [^\S\n]{2,}
-                    inputText = inputText.replace(/[^\S\n]{2,}/g, ' ');
+                    // inputText = inputText.replace(/[^\S\n]{2,}/g, ' ');
                     const outlineItem = unitItem.draft_2_outline.map((draftItem) => {
                         const targetOrderIdx = draftItem.order_index;
                         if (targetOrderIdx === orderIndex) {

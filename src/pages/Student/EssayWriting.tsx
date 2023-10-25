@@ -366,6 +366,7 @@ const EssayWriting = () => {
                     let redoTitleText = '';
     
                     let targetFlags = Array.from({length:max_leng},()=>1)
+                    console.log('return 0/1 1')
                     targetFlags = targetDataOutline.map((v,i) => {
                         const target_leng = v.input_content.replaceAll(' ','').length;
                         if (v.name === 'Title') {
@@ -378,14 +379,24 @@ const EssayWriting = () => {
                                 redoTitleText = v.input_content.substring(0, 120);
                                 titleMaxLengthCheck = true;
                             }
-                        }
-                        if (target_leng >= 10) {
-                            // 10자 이상
-                            return 0;
+
+                            if (target_leng > 0) {
+                                // 1자 이상
+                                return 0;
+                            } else {
+                                // 1자 미만
+                                return 1;
+                            }
                         } else {
-                            // 10자 미만
-                            return 1;
+                            if (target_leng >= 10) {
+                                // 10자 이상
+                                return 0;
+                            } else {
+                                // 10자 미만
+                                return 1;
+                            }
                         }
+
                     })
                     if (titleMaxLengthCheck) {
                         commonAlertOpen({
@@ -587,16 +598,26 @@ const EssayWriting = () => {
             if (DraftIndex==='1') {
                 const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
                 const max_leng = targetDataOutline.length;
-
+                console.log('return 0/1 2')
                 let targetFlags = Array.from({length:max_leng},()=>1)
                 targetFlags = targetDataOutline.map((v,i) => {
                     const target_leng = v.input_content.replaceAll(' ','').length;
-                    if (target_leng >= 10) {
-                        // 10자 이상
-                        return 0;
+                    if (v.name==='Title') {
+                        if (target_leng > 0) {
+                            // 1자 이상
+                            return 0;
+                        } else {
+                            // 1자 미만
+                            return 1;
+                        }
                     } else {
-                        // 10자 미만
-                        return 1;
+                        if (target_leng >= 10) {
+                            // 10자 이상
+                            return 0;
+                        } else {
+                            // 10자 미만
+                            return 1;
+                        }
                     }
                 })
                 
@@ -697,14 +718,25 @@ const EssayWriting = () => {
                 const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_2_outline;
                 const max_leng = targetDataOutline.length;
                 let targetFlags = Array.from({length:max_leng},()=>1)
+                console.log('return 0/1 3')
                 targetFlags = targetDataOutline.map((item,i) => {
                     const target_length = item.input_content.replaceAll(' ','').length;
-                    if (target_length >= 10) {
-                        // 10자 이상
-                        return 0;
+                    if (item.name==='Title') {
+                        if (target_length > 0) {
+                            // 1자 이상
+                            return 0;
+                        } else {
+                            // 1자 미만
+                            return 1;
+                        }
                     } else {
-                        // 10자 미만
-                        return 1;
+                        if (target_length >= 10) {
+                            // 10자 이상
+                            return 0;
+                        } else {
+                            // 10자 미만
+                            return 1;
+                        }
                     }
                 })
                 const sum = targetFlags.reduce((a,b) => (a+b));
@@ -1012,12 +1044,13 @@ const EssayWriting = () => {
         const submit = await draft2ndSubmit(submitData, userInfo.accessToken);
         if (submit) {
             setCommonStandbyScreen({openFlag:false})
+            const topicReplace = targetData.topic.replace(/s$/gmi,'');
             commonAlertOpen({
                 useOneButton: true,
                 yesButtonLabel: 'OK',
                 messages: [
-                    `Your Unit ${targetData.unit_index} ${targetData.topic}'s`,
-                    <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup>draft</span> has been submitted.</span>
+                    `Your Unit ${targetData.unit_index} ${topicReplace}'s`,
+                    <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup> draft</span> has been submitted.</span>
                 ],
                 yesEvent: async () => {
                     commonAlertClose();
@@ -1099,6 +1132,8 @@ const EssayWriting = () => {
         const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
         const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
         const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+        const checkDoubleSpace = targetText.match(/\s{3,}/gmi)
+        const checkChangeRow = targetText.match(/\n{3,}/gmi)
         if (checkNotSC!==null) {
             console.log('불가 문자 입력')
             return false;
@@ -1107,6 +1142,12 @@ const EssayWriting = () => {
             return false;
         } else if (checkNotKR!==null) {
             console.log('한국어')
+            return false;
+        } else if (checkDoubleSpace) {
+            console.log('space 2개까지만 허용')
+            return false;
+        } else if (checkChangeRow) {
+            console.log('줄바꿈 2개까지만')
             return false;
         } else {
             return true;

@@ -749,6 +749,7 @@ bg-[#ffea2c]
   shadow-sm
   rounded-t-[15px]
   rounded-bl-[15px]
+  text-left
 }
 .chatbot-chat-textarea {
   font-family: 'GothamRounded';
