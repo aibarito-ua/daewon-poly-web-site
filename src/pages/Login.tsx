@@ -126,6 +126,7 @@ export const Login = () => {
             // response.isPasswordCorrect
             if (!response.isPasswordCorrect) {
                 const count = response.failedTries;
+                console.log('count =',count)
                 if (msgCheck.beforeId !== loginValues.username) {
                     // const count = 1
                     if (count > 1 &&count<4) {
@@ -135,7 +136,7 @@ export const Login = () => {
                     } else if (count === 1) {
                         setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
                         setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
-                    } else {
+                    } else if (count===5) {
                         //count 5
                         commonAlertOpen({
                             alertType: 'warning',

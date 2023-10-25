@@ -51,7 +51,7 @@ const GrammarContentComponent = {
                 const sentence_max_index = sentence.length;
                 const isSentenceEnd = sentenceIndex === sentence_max_index
             return <span className='' key={sentenceKey}>
-                <span className={sentenceIndex===0?'pl-4': 'pl-1'}></span>
+                <span className={''}></span>
                 {sentence.map((word:TGrammarResDiff[], wordIndex:number) => {
                     // console.log('word =',word)
                     let returnValue:any = '';
@@ -360,7 +360,7 @@ const GrammarContentComponent = {
             const sentenceKey = `paragragh-${paragraphIndex}-sentence-${paragraghDataIndex}`;
             // paraghragh mapping
             return  <span className='flow-root' key={sentenceKey}>
-                <span className={paragraghDataIndex===0?'pl-4': 'pl-1'}></span>
+                <span className={''}></span>
                 {paragraghData.map((sentence:TGrammarResDiff[][], sentenceIndex:number) => {
                     // sentence map
                     return sentence.map((word:TGrammarResDiff[], wordIndex:number) => {

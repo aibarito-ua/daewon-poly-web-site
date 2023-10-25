@@ -1481,7 +1481,7 @@ bg-[#ffea2c]
   inline-block
   flex-auto
   overflow-hidden
-  whitespace-pre-wrap
+  break-keep
 }
 .preview-sub-body-text-pre {
   font-family: 'Roboto';

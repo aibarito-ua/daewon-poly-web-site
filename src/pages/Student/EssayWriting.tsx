@@ -1083,11 +1083,34 @@ const EssayWriting = () => {
         const targetValue = sentence.split(/[\n|\s]/gmi);
         for (let i = 0; i < targetValue.length; i++) {
             const word = targetValue[i].length;
-            if (word >= 45) {
+            if (word > 45) {
                 return false;
             }
         }
         return true;
+    }
+    // 입력 제한
+    /**
+     * 
+     * @param targetText string
+     * @returns boolean -> true: 사용 가능 / false: 사용 불가
+     */
+    const checkInputCharactersRegExps = (targetText: string) => {
+        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
+        const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+        if (checkNotSC!==null) {
+            console.log('불가 문자 입력')
+            return false;
+        } else if (checkOneSC!==null) {
+            console.log('2개 이상 금지')
+            return false;
+        } else if (checkNotKR!==null) {
+            console.log('한국어')
+            return false;
+        } else {
+            return true;
+        }
     }
     const outlineBody = (outlineItem: TSparkWritingData ) => {
         let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
@@ -1181,13 +1204,8 @@ const EssayWriting = () => {
                                                                     }
                                                                 })
                                                             } else {
-                                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                                if (checkNotSC!==null) {
-                                                                    console.log('불가 문자 입력')
-                                                                  } else if (checkOneSC!==null) {
-                                                                    console.log('2개 이상 금지')
-                                                                  } else {
+                                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                                if (checkNotCH) {
                                                                     e.currentTarget.style.height = 'auto';
                                                                     e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
                                                                     setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
@@ -1195,13 +1213,8 @@ const EssayWriting = () => {
                                                                 }
                                                             }    
                                                         } else {
-                                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                            if (checkNotSC!==null) {
-                                                                console.log('불가 문자 입력')
-                                                                } else if (checkOneSC!==null) {
-                                                                console.log('2개 이상 금지')
-                                                                } else {
+                                                            const checkNotCH = checkInputCharactersRegExps(val);
+                                                            if (checkNotCH) {
                                                                 e.currentTarget.style.height = 'auto';
                                                                 e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
                                                                 setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
@@ -1380,15 +1393,8 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                if (checkNotSC!==null) {
-                                                    console.log('불가 문자 입력')
-                                                  } else if (checkOneSC!==null) {
-                                                    console.log('2개 이상 금지')
-                                                  } else {
-                                                    // e.currentTarget.style.height='auto';
-                                                    // e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
                                             }
@@ -1413,13 +1419,9 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                            if (checkNotSC!==null) {
-                                                console.log('불가 문자 입력')
-                                                } else if (checkOneSC!==null) {
-                                                console.log('2개 이상 금지')
-                                                } else {
+                                            
+                                            const checkNotCH = checkInputCharactersRegExps(val);
+                                            if (checkNotCH) {
                                                 setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                             }
                                         }
@@ -1480,13 +1482,8 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                                const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                                if (checkNotSC!==null) {
-                                                    console.log('불가 문자 입력')
-                                                  } else if (checkOneSC!==null) {
-                                                    console.log('2개 이상 금지')
-                                                  } else {
+                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
                                             }
@@ -1511,14 +1508,8 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotSC = val.match(/[\{\}|\\`]{1,}/gmi)
-                                            const checkOneSC = val.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-                                            if (checkNotSC!==null) {
-                                                console.log('불가 문자 입력')
-                                                } else if (checkOneSC!==null) {
-                                                console.log('2개 이상 금지')
-                                                } else {
-                                                // const value = e.currentTarget.value;
+                                            const checkNotCH = checkInputCharactersRegExps(val);
+                                            if (checkNotCH) {
                                                 setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                             }
                                         }
