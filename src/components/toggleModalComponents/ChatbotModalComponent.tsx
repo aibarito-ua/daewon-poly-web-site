@@ -83,7 +83,7 @@ export default function FormDialog() {
     // let resultData:string[] = [];
     // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
 
-    return await callDialogAPI(ai_name, user_name, dumyDataHist).then(async (res)=>{
+    return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
 
       let pushValue:any = [ai_name]
       let resultData:string[] = []

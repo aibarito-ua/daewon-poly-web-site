@@ -3,7 +3,7 @@ import { CONFIG } from '../../../config';
 import axios from 'axios';
 import { url } from 'inspector';
 
-export async function callDialogAPI(ai_name:string, user_name:string, history: string[][]):Promise<{
+export async function callDialogAPI(ai_name:string, user_name:string, history: string[][], accessToken:string):Promise<{
     text:string[][],
     usages: {
         completion_tokens:number,
@@ -23,19 +23,20 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
         }, {
             headers: {
                 'Content-Type': 'application/json',
-                Accept: 'application/json'
+                Accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`
             }
         }
     ).then((res)=>{
-        // console.log('axios result =',res)
-        const cmd = res.data.cmd;
+        console.log('axios result =',res.data.data)
+        const cmd = res.data.data.cmd;
         if (cmd===201) {
-            const usage = res.data.usage
+            const usage = res.data.data.usage
             const useStartToken:number = usage.prompt_tokens;
             const createdToken:number = usage.completion_tokens;
             const totalUseToken:number = usage.total_tokens;
             // console.log(`생성에 사용한 토큰:${usage.prompt_tokens}\n생성한 토큰: ${usage.completion_tokens}\n총 사용 토큰: ${usage.total_tokens}`)
-            const textData:string[][] = res.data.text;
+            const textData:string[][] = res.data.data.text;
             return {
                 text:textData,
                 usages: {
