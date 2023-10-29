@@ -530,7 +530,17 @@ export const Login = () => {
                             </div>
                             <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
                         </div>
-                        <div className='flex flex-col mt-[61px] text-[11px] w-[308px] text-[#444444] font-["Noto Sans CJK KR"] select-none' 
+                        <div className='flex flex-row mt-[35px] justify-center w-[308px] text-[#777777] text-[12px] font-normal font-["Noto Sans CJK KR"] select-none' 
+                            style={{
+
+                        }}>
+                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.SERVICE)}}>이용약관</div>
+                            <div className='flex mx-[11.5px] items-center select-none'>
+                                <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
+                            </div>
+                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.PRIVACY)}}>개인정보취급방침</div>
+                        </div>
+                        <div className='flex flex-col mt-[15px] text-[11px] w-[308px] text-[#444444] font-["Noto Sans CJK KR"] select-none' 
                             style={{
 
                         }}>

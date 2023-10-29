@@ -25,6 +25,10 @@ const DRAFT_SUBMIT:string = process.env.REACT_APP_DRAFT_SUBMIT?process.env.REACT
 const SPARK_GET_PORTFOLIO_BY_STUDENT:string = process.env.REACT_APP_SPARK_GET_PORTFOLIO_BY_STUDENT? process.env.REACT_APP_SPARK_GET_PORTFOLIO_BY_STUDENT:'';
 // report overall by student
 const SPARK_GET_REPORT_OVERALL_BY_STUDENT:string = process.env.REACT_APP_SPARK_GET_REPORT_OVERALL_BY_STUDENT?process.env.REACT_APP_SPARK_GET_REPORT_OVERALL_BY_STUDENT:'';
+// 이용 약관
+const POLY_SERVICE = process.env.REACT_APP_POLY_SERVICE ? process.env.REACT_APP_POLY_SERVICE : '';
+// 개인정보처리방침
+const POLY_PRIVACY = process.env.REACT_APP_POLY_PRIVACY ? process.env.REACT_APP_POLY_PRIVACY : '';
 
 export const CONFIG = {
     GRAMMAR: {
@@ -33,7 +37,7 @@ export const CONFIG = {
         PROOF_READING_COUNT_UPDATGE: BACK_HOST+PROOFREADING_COUNT_UPDATE,
     },
     CHATBOT: {
-        URL:CHATBOT_API_URL
+        URL:BACK_HOST+CHATBOT_API_URL
     },
     LOGIN: {
         POST: {
@@ -45,6 +49,8 @@ export const CONFIG = {
                 JOIN: JOIN_URL,
                 FIND_ID:FIND_ID_URL,
                 FIND_PW:FIND_PW_URL,
+                SERVICE: POLY_SERVICE,
+                PRIVACY: POLY_PRIVACY
             }
         }
     },

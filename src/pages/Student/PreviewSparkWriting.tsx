@@ -1346,7 +1346,7 @@ const PreviewSparkWriting = (props:any) => {
                                             return {
                                                 input_content: item.input_content,
                                                 grammar_correction_content_student,
-                                                heading_name: item.heading_content,
+                                                heading_name: item.name,
                                                 order_index: item.order_index
                                             }
                                         })
