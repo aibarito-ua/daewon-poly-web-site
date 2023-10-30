@@ -136,6 +136,8 @@ export default function CustomizedReportTabs(
         let currentUnit = 0;
         let nextUnits = [];
         let prevUnits = [];
+        console.log('reportCompletedUnitIndexArray =',reportCompletedUnitIndexArray)
+        console.log('reportSelectUnit =',reportSelectUnit)
         for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
           if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
               currentUnit = reportCompletedUnitIndexArray[i];
@@ -189,7 +191,7 @@ export default function CustomizedReportTabs(
     </div>
   }
   const handlePrev = (currentIndex:number) => {
-
+    console.log('currentIndex =',currentIndex)
     if (isPrev && currentIndex!==1) {
       for (let i =0; i < reportCompletedUnitIndexArray.length; i++) {
         if (reportCompletedUnitIndexArray[i]===currentIndex) {
@@ -202,6 +204,7 @@ export default function CustomizedReportTabs(
     }
 }
 const handleNext = (currentIndex:number) => {
+  console.log('currentIndex =',currentIndex)
     if (isNext && currentIndex!==5) {
       for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
         if (reportCompletedUnitIndexArray[i]===currentIndex) {

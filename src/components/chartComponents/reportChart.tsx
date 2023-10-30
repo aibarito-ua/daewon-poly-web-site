@@ -141,6 +141,7 @@ const titleName:string[] = payload.name.split(' ')
 };
 const CustomTooltipDIV = (props:any) => {
     const { active, payload, label} = props;
+    console.log('CustomTooltipDIV====',payload)
     if (active && payload && payload.length) {
         const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
         return (
@@ -173,6 +174,7 @@ export default function App() {
         const data = unitRubricScoresData.hexagonChartData;
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
+        console.log('allData ===',data)
         let dumpAvr = 0;
         for (let i =0; i < dumpData.length; i++) {
             dumpAvr += dumpData[i].data[0].value;

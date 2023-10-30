@@ -503,6 +503,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         ]
     },
     setUnitRubricScoresData: (data, unit_idx) => {
+        console.log('=== setUnitRubricScoresData ===')
         const originData = data.units
         // total unit count: default 5
         const unitCount = originData.length;
@@ -511,7 +512,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         const rubricNames = ['ideas','organization','voice','word choice','sentence fluency','conventions']
         let rubric_total_scores = Array.from({length:6}, () => 0);
         const updateTargetData = get().unitRubricScoresData;
-        
+        console.log('updateTargetData =',updateTargetData)
         for (let i =0; i < unitCount; i++) {
             const rubricScoresDataByUnit = originData[i].categories;
             // hexagonChartData by Unit
@@ -762,7 +763,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             }
         }
 
-        
+        const scoreStringName = ['Excellent', 'Very Good', 'Good', 'fair','poor'];
         const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
         let sumData = [
             {name:'conventions', sum: 0},
@@ -778,13 +779,42 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             const targetOverall = dumyData.overall_report[z];
             const targetUnitIdx = targetOverall.unit_index;
             const targetCate = targetOverall.categories;
+            
             reportCompletedUnitIndexArray.push(targetUnitIdx);
             for (let k = 0; k < targetCate.length; k++) {
                 const targetCateName = targetCate[k].category;
                 const targetScore = targetCate[k].score;
+
+                
                 for (let j = 0; j < rubricScoreDataStates.hexagonChartData.length; j++) {
-                    if (rubricScoreDataStates.hexagonChartData[j].target === targetCateName) {
-                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = targetCate[k].description
+                    // find rubric info
+                    for (let k = 0; k < dumySelectReportRubricAllData.length; k++) {
+                        const rubricInfoUnitIdx = dumySelectReportRubricAllData[k].unit_index;
+                        if (rubricInfoUnitIdx === targetUnitIdx) {
+                            const findUnitRubric = dumySelectReportRubricAllData[k].rubric.rubric_description;
+                            // find category
+                            for (let r = 0; r < findUnitRubric.length; r++) {
+                                if (rubricScoreDataStates.hexagonChartData[j].target === findUnitRubric[r].category) {
+                                    const hexaCurrentScore = rubricScoreDataStates.hexagonChartData[j].data[0].value;
+                                    if (hexaCurrentScore === 100) {
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[0];
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].excellent;
+                                    } else if (hexaCurrentScore === 80) {
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[1];
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].very_good;
+                                    } else if (hexaCurrentScore === 60) {
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[2];
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].good;
+                                    } else if (hexaCurrentScore === 40) {
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[3];
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].fair;
+                                    } else if (hexaCurrentScore === 20) {
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[4];
+                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].poor;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 for (let s = 0; s < sumData.length; s++) {
@@ -929,10 +959,15 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     reportByUnitMainTitle: '',
     reportSelectUnit: 1,
     setReportSelectUnit: (unit_index) => {
+        const reportAPIData = get().reportAPIData;
         let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
-
+        console.log('=== setReportSelectUnit ====', reportAPIData)
+        console.log('dumpUnitReportData =',dumpUnitReportData)
+        console.log('rubricScoreDataStates =',rubricScoreDataStates)
+        
         const getUnitReports = get().unitReportsData;
+        console.log('getUnitReports =',getUnitReports)
         for (let i = 0; i < getUnitReports.length; i++) {
             const targetUnit = getUnitReports[i].unit_index;
             if (targetUnit === unit_index) {
