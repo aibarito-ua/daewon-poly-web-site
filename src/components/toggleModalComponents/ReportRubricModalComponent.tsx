@@ -83,8 +83,8 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
                         data: targetRubricData.rubric_description,
                         dataHead: dataHead
                     }
-                    const topic = targetRubricData.name.split('_')
-                    const targetText = `Unit ${selectUnitIndex}. ${topic[1]}`;
+                    const topic = targetRubricData.name
+                    const targetText = `Unit ${selectUnitIndex}. ${topic}`;
                     setTitle(targetText)
                     processTableData(rubric_type_data);
                 }

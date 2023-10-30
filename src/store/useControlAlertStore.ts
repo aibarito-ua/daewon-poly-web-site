@@ -997,8 +997,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         let title = '';
         for (let m = 0; m < modalRubric.length; m++) {
             if (modalRubric[m].unit_index === unit_index) {
-                const findTopic = modalRubric[m].rubric.name.split('_');
-                const topic = findTopic[1];
+                // const findTopic = modalRubric[m].rubric.name.split('_');
+                const findTopic = modalRubric[m].rubric.name
+                const topic = findTopic;
                 title = `Unit ${unit_index}. ${topic}`;
             }
         }
