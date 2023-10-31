@@ -119,108 +119,122 @@ export const Login = () => {
             const response = await loginAPI(loginValues.username, loginValues.password, device_id);
             console.log('login =',response)
             // alert(response)
-            // 1 비밀번호 체크 
-            // count 0 -> 아이디 또는 비밀번호를 다시 확인하세요
-            // count 1~4 -> 비밀번호를 잘못 입력하셨습니다. (2/5)
-            // count 5 -> alert -> 비밀번호 변경 페이지 연결
-            // response.isPasswordCorrect
-            if (!response.isPasswordCorrect) {
-                const count = response.failedTries;
-                console.log('count =',count)
-                if (msgCheck.beforeId !== loginValues.username) {
-                    // const count = 1
-                    if (count > 1 &&count<4) {
-                        const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
-                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
-                        setErrors({displayMessage: msg})
-                    } else if (count === 1) {
-                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
-                        setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
-                    } else if (count===5) {
-                        //count 5
-                        commonAlertOpen({
-                            alertType: 'warning',
-                            messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
-                            useOneButton: true,
-                            yesButtonLabel: 'OK',
-                            yesEvent: goPasswordUpdatePage
-                        })
-                    }
-                } else {
-                    // console.log('count =',msgCheck.incorrectedCount)
-                    // if (msgCheck.incorrectedCount>0&&msgCheck.incorrectedCount<4) {
-                    if (count> 1 &&count<4) {
-                        // console.log('set count =',count)
-                        const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
-                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
-                        setErrors({displayMessage: msg})
-                    } else if (count === 5) {
-                        commonAlertOpen({
-                            alertType: 'warning',
-                            messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
-                            useOneButton: true,
-                            yesButtonLabel: 'OK',
-                            yesEvent: goPasswordUpdatePage
-                        })
-                    } else if (count === 1) {
-                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
-                        setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
-                    }
-                }
-                setLoginValues({...loginValues, ['password']: ''})
-                document.getElementById('password')?.focus();
+            // 231031 최우선 체크 : 탈퇴 회원
+            if (response.isWithdrawn) {
+                commonAlertOpen({
+                    alertType: 'warning',
+                    messages: [
+                        '탈퇴한 계정의 ID입니다.',
+                        '관련 문의 있을 시, 소속 캠퍼스로 연락해주세요.'
+                    ],
+                    useOneButton: true,
+                    yesButtonLabel: 'OK',
+                    yesEvent: () => commonAlertClose()
+                })
             } else {
-                // 2 사용대상이 아닌 경우-> Writing Hub 사용 권한이 없는 계정입니다. 
-                // response.hasPermission
-                if (!response.hasPermission) {
-                    setMsgCheck({beforeId:loginValues.username, incorrectedCount:0})
-                    setErrors({displayMessage: 'Writing Hub 사용 권한이 없는 계정입니다.'})
-                } else {
-                    // 3 동일 비밀번호 6개월 경과
-                    // response.isNeedPasswordUpdate
-                    if (response.isNeedPasswordUpdate) {
-                        commonAlertOpen({
-                            alertType: 'warning',
-                            messages: ['비밀번호 변경 후 6개월이 경과했습니다.','POLY 홈페이지에서 비밀번호를 변경해주세요.'],
-                            useOneButton: true,
-                            yesButtonLabel: 'OK',
-                            yesEvent: goPasswordUpdatePage
-                        })
-                    } else {
-                        // 4
-                        // response.isUserLogged
-                        if (response.isUserLogged) {
-                            // confirm
+                // 1 비밀번호 체크 
+                // count 0 -> 아이디 또는 비밀번호를 다시 확인하세요
+                // count 1~4 -> 비밀번호를 잘못 입력하셨습니다. (2/5)
+                // count 5 -> alert -> 비밀번호 변경 페이지 연결
+                // response.isPasswordCorrect
+                if (!response.isPasswordCorrect) {
+                    const count = response.failedTries;
+                    console.log('count =',count)
+                    if (msgCheck.beforeId !== loginValues.username) {
+                        // const count = 1
+                        if (count > 1 &&count<4) {
+                            const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
+                            setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                            setErrors({displayMessage: msg})
+                        } else if (count === 1) {
+                            setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                            setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
+                        } else if (count===5) {
+                            //count 5
                             commonAlertOpen({
                                 alertType: 'warning',
-                                messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다. 이 기기에서 로그인할까요?'],
-                                yesButtonLabel: 'Yes',
-                                yesEvent: () => {
-                                    forceLogin(loginValues, device_id, saveId)
-                                    commonAlertClose()
-                                },
-                                closeEvent: () => commonAlertClose(),
-                                noButtonLabel: 'No',
-                                
+                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                useOneButton: true,
+                                yesButtonLabel: 'OK',
+                                yesEvent: goPasswordUpdatePage
+                            })
+                        }
+                    } else {
+                        // console.log('count =',msgCheck.incorrectedCount)
+                        // if (msgCheck.incorrectedCount>0&&msgCheck.incorrectedCount<4) {
+                        if (count> 1 &&count<4) {
+                            // console.log('set count =',count)
+                            const msg = `비밀번호를 잘못 입력하셨습니다. (${count}/5)`;
+                            setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                            setErrors({displayMessage: msg})
+                        } else if (count === 5) {
+                            commonAlertOpen({
+                                alertType: 'warning',
+                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                useOneButton: true,
+                                yesButtonLabel: 'OK',
+                                yesEvent: goPasswordUpdatePage
+                            })
+                        } else if (count === 1) {
+                            setMsgCheck({beforeId:loginValues.username, incorrectedCount:count})
+                            setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
+                        }
+                    }
+                    setLoginValues({...loginValues, ['password']: ''})
+                    document.getElementById('password')?.focus();
+                } else {
+                    // 2 사용대상이 아닌 경우-> Writing Hub 사용 권한이 없는 계정입니다. 
+                    // response.hasPermission
+                    if (!response.hasPermission) {
+                        setMsgCheck({beforeId:loginValues.username, incorrectedCount:0})
+                        setErrors({displayMessage: 'Writing Hub 사용 권한이 없는 계정입니다.'})
+                    } else {
+                        // 3 동일 비밀번호 6개월 경과
+                        // response.isNeedPasswordUpdate
+                        if (response.isNeedPasswordUpdate) {
+                            commonAlertOpen({
+                                alertType: 'warning',
+                                messages: ['비밀번호 변경 후 6개월이 경과했습니다.','POLY 홈페이지에서 비밀번호를 변경해주세요.'],
+                                useOneButton: true,
+                                yesButtonLabel: 'OK',
+                                yesEvent: goPasswordUpdatePage
                             })
                         } else {
-                            //  5 비밀번호 5회 틀린경우
-                            if (response.isFiveTimesWrong) {
+                            // 4
+                            // response.isUserLogged
+                            if (response.isUserLogged) {
+                                // confirm
                                 commonAlertOpen({
                                     alertType: 'warning',
-                                    messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
-                                    useOneButton: true,
-                                    yesButtonLabel: 'OK',
-                                    yesEvent: goPasswordUpdatePage
+                                    messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다. 이 기기에서 로그인할까요?'],
+                                    yesButtonLabel: 'Yes',
+                                    yesEvent: () => {
+                                        forceLogin(loginValues, device_id, saveId)
+                                        commonAlertClose()
+                                    },
+                                    closeEvent: () => commonAlertClose(),
+                                    noButtonLabel: 'No',
+                                    
                                 })
                             } else {
-                                // 정상 로그인
-                                forceLogin(loginValues, device_id, saveId)
+                                //  5 비밀번호 5회 틀린경우
+                                if (response.isFiveTimesWrong) {
+                                    commonAlertOpen({
+                                        alertType: 'warning',
+                                        messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                        useOneButton: true,
+                                        yesButtonLabel: 'OK',
+                                        yesEvent: goPasswordUpdatePage
+                                    })
+                                } else {
+                                    // 정상 로그인
+                                    forceLogin(loginValues, device_id, saveId)
+                                }
                             }
-                        }
-                    } // end password 6month check
-                } // end target check
-            } // end password check
+                        } // end password 6month check
+                    } // end target check
+                } // end password check
+            }// end cancel member check
         }
     }
 

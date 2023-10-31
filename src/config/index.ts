@@ -29,6 +29,8 @@ const SPARK_GET_REPORT_OVERALL_BY_STUDENT:string = process.env.REACT_APP_SPARK_G
 const POLY_SERVICE = process.env.REACT_APP_POLY_SERVICE ? process.env.REACT_APP_POLY_SERVICE : '';
 // 개인정보처리방침
 const POLY_PRIVACY = process.env.REACT_APP_POLY_PRIVACY ? process.env.REACT_APP_POLY_PRIVACY : '';
+// 회원 앱 탈퇴 
+const POLY_WITHDRAW = process.env.REACT_APP_POLY_WITHDRAW ? process.env.REACT_APP_POLY_WITHDRAW : '';
 
 export const CONFIG = {
     GRAMMAR: {
@@ -42,7 +44,8 @@ export const CONFIG = {
     LOGIN: {
         POST: {
             URL: BACK_HOST+LOGIN,
-            FORCE_URL: BACK_HOST+FORCE_LOGIN
+            FORCE_URL: BACK_HOST+FORCE_LOGIN,
+            WITHDRAW: BACK_HOST+POLY_WITHDRAW,
         },
         LINK: {
             POLY: {

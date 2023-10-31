@@ -9,7 +9,7 @@ export default function SmallHead (props: {
     mainTitle: string,
     subTitle?: string,
 }) {
-    const { userInfo } = useLoginStore();
+    const { userInfo, setInfoModal } = useLoginStore();
     const {progressTabActiveIndex, setProgressTabActiveIndex} = useProgressPageStore();
     const [isProfileImage, setIsProfileImage] = React.useState<boolean>(false);
     const progressButtonLabel = [
@@ -63,7 +63,7 @@ export default function SmallHead (props: {
                     </div>
                 )}
             </div>
-            <div className='top-right-user-info'>
+            <div className='top-right-user-info' onClick={()=>setInfoModal({isOpen:true})}>
                 <commonIconSvgs.UserInfoRightTopImg />
                 <div className='top-right-user-info-text'>
                     <div className='top-right-user-info-text-en-name select-none'>{userInfo.memberNameEn}</div>

@@ -17,6 +17,20 @@ interface IUserInfo {
     userInfo: TUserInfoData;
     setUserInfo: (userLoginInformation: TSetUserInfoData) => void;
     setLogoutUser: ()=>void;
+
+    // user info modal controll
+    infoModalOpen: TUserInfoModalController;
+    pageName: TUserInfoModalPageName;
+    agree: boolean[];
+    checkPW: string;
+    setCheckPW: (input:string) => void;
+    setAgree: (data:boolean[]) => void;
+    setPageName: (pageName:TUserInfoModalPageName) => void;
+    setInfoModal: (data:TUserInfoModalController) => void;
+}
+type TUserInfoModalPageName = 'MyInfo'|'CancelAccount';
+type TUserInfoModalController = {
+    isOpen: boolean;
 }
 interface IUserLoginInfo {
     name: string;
@@ -38,6 +52,7 @@ type TUserInfoData = {
     className: string;
     year: number;
     semester: number;
+    campusName:string;
 }
 type TSetUserInfoData = {
     accessToken?: string;
@@ -54,6 +69,8 @@ type TSetUserInfoData = {
 }
 
 type TRole = "student" | "teacher" | "admin" | "logout";
+
+
 
 // type TLoginResponse = {
 //     "isPasswordCorrect": boolean,

@@ -48,7 +48,8 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
         userImagePath: '',
         className:'',
         semester:0,
-        year:0
+        year:0,
+        campusName: ''
     },
     setUserInfo: (userInfo:TSetUserInfoData) => {
         const targetData = JSON.parse(JSON.stringify(userInfo));
@@ -64,6 +65,7 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
         data.className = targetData.className? targetData.className:data.className;
         data.semester = targetData.semester? targetData.semester:data.semester;
         data.year = targetData.year ? targetData.year: data.year;
+        data.campusName =targetData.campusName ? targetData.campusName : data.campusName;
 
         set(()=>({userInfo:data, role: 'student'}))
     },
@@ -79,9 +81,34 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
             userImagePath: '',
             className:'',
             semester:0,
-            year:0
+            year:0,
+            campusName: ''
         }
         set(()=>({userInfo, role: 'logout'}))
+    },
+
+    // user info modal controller
+    infoModalOpen: { 
+        isOpen: false,
+        cancelMember: {
+            agree1:false,
+            agree2:false,
+        }
+    },
+    pageName: 'MyInfo',
+    setPageName: (pageName) => {
+        set(()=>({pageName}))
+    },
+    agree: [false,false],
+    setAgree: (data) => {
+        set(()=>({agree:data}))
+    },
+    setInfoModal: (data) => {
+        set(()=>({infoModalOpen: data}))
+    },
+    checkPW:'',
+    setCheckPW: (input) => {
+        set(()=>({checkPW:input}))
     }
 
 }))

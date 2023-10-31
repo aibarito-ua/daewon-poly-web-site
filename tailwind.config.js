@@ -117,6 +117,11 @@ module.exports = {
 
         // writing activity enter icons
         'spark-writing-enter-img': "url('/src/util/png/spark_writing_enter.png')",
+
+        // user info modal images
+        'user-info-modal-back-btn': "url('/src/components/toggleModalComponents/img/userInfoModal/ic_user_info_modal_back.png')",
+        'user-info-modal-checkbox': "url('/src/components/toggleModalComponents/img/userInfoModal/checkbox_none.png')",
+        'user-info-modal-checkbox-active': "url('/src/components/toggleModalComponents/img/userInfoModal/checkbox_checked.png')",
       }
     },
     borderWidth: {

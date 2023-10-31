@@ -48,3 +48,32 @@ export async function logoutAPI(username:string, device_id: string):Promise<any>
         console.log('reject =',reject)
     })
 }
+
+export async function memberWithDraw(username:string, password:string, usercode:string): Promise<{
+    is_withdrawed_successfully:boolean;
+    is_server_error:boolean;
+}>{
+    const reqUrl = CONFIG.LOGIN.POST.WITHDRAW;
+    const data = {
+        "username": username, "password": password, "user_code": usercode
+    };
+    return await axios.post(reqUrl, data, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+    }).then((response)=>{
+        console.log('result =',response.data)
+        const is_withdrawed_successfully = response.data.data.is_withdrawed_successfully;
+        return {
+            is_withdrawed_successfully,
+            is_server_error:false,
+        };
+    }).catch((reject) => {
+        console.log('reject =',JSON.stringify(reject))
+        return {
+            is_withdrawed_successfully:false,
+            is_server_error:true,
+        }
+    })
+}

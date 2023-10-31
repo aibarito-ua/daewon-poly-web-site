@@ -724,6 +724,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
     },
     setSelectReportData: (data, year, semester, level) => {
+        console.log('===setSelectReportData==727')
         // find data
         let dumyData:TReportByStudentPeriodLevel= {
             book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
@@ -786,37 +787,37 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 const targetScore = targetCate[k].score;
 
                 
-                for (let j = 0; j < rubricScoreDataStates.hexagonChartData.length; j++) {
-                    // find rubric info
-                    for (let k = 0; k < dumySelectReportRubricAllData.length; k++) {
-                        const rubricInfoUnitIdx = dumySelectReportRubricAllData[k].unit_index;
-                        if (rubricInfoUnitIdx === targetUnitIdx) {
-                            const findUnitRubric = dumySelectReportRubricAllData[k].rubric.rubric_description;
+                // for (let j = 0; j < rubricScoreDataStates.hexagonChartData.length; j++) {
+                //     // find rubric info
+                //     for (let k = 0; k < dumySelectReportRubricAllData.length; k++) {
+                //         const rubricInfoUnitIdx = dumySelectReportRubricAllData[k].unit_index;
+                //         if (rubricInfoUnitIdx === targetUnitIdx) {
+                            // const findUnitRubric = dumySelectReportRubricAllData[k].rubric.rubric_description;
                             // find category
-                            for (let r = 0; r < findUnitRubric.length; r++) {
-                                if (rubricScoreDataStates.hexagonChartData[j].target === findUnitRubric[r].category) {
-                                    const hexaCurrentScore = rubricScoreDataStates.hexagonChartData[j].data[0].value;
-                                    if (hexaCurrentScore === 100) {
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[0];
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].excellent;
-                                    } else if (hexaCurrentScore === 80) {
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[1];
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].very_good;
-                                    } else if (hexaCurrentScore === 60) {
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[2];
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].good;
-                                    } else if (hexaCurrentScore === 40) {
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[3];
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].fair;
-                                    } else if (hexaCurrentScore === 20) {
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[4];
-                                        rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].poor;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                            // for (let r = 0; r < findUnitRubric.length; r++) {
+                            //     if (rubricScoreDataStates.hexagonChartData[j].target === findUnitRubric[r].category) {
+                            //         const hexaCurrentScore = rubricScoreDataStates.hexagonChartData[j].data[0].value;
+                            //         if (hexaCurrentScore === 100) {
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[0];
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].excellent;
+                            //         } else if (hexaCurrentScore === 80) {
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[1];
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].very_good;
+                            //         } else if (hexaCurrentScore === 60) {
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[2];
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].good;
+                            //         } else if (hexaCurrentScore === 40) {
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[3];
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].fair;
+                            //         } else if (hexaCurrentScore === 20) {
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.title = scoreStringName[4];
+                            //             rubricScoreDataStates.hexagonChartData[j].data[0].tooltip.content = findUnitRubric[r].poor;
+                            //         }
+                            //     }
+                            // }
+                //         }
+                //     }
+                // }
                 for (let s = 0; s < sumData.length; s++) {
                     if (sumData[s].name === targetCateName) {
                         console.log('targetCateName =',targetCateName)
@@ -959,12 +960,55 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     reportByUnitMainTitle: '',
     reportSelectUnit: 1,
     setReportSelectUnit: (unit_index) => {
+    console.log('setReportSelectUnit====962')
         const reportAPIData = get().reportAPIData;
         let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
         console.log('=== setReportSelectUnit ====', reportAPIData)
         console.log('dumpUnitReportData =',dumpUnitReportData)
         console.log('rubricScoreDataStates =',rubricScoreDataStates)
+        const scoreStringName = ['Excellent', 'Very Good', 'Good', 'fair','poor'];
+        const modalRubric = get().reportModalRubricData;
+
+        const findRubricDescription = (unit_index: number, category:string, score:number) => {
+            const scoreName = ['Excellent', 'Very Good', 'Good', 'fair','poor']
+            for (let m = 0; m < modalRubric.length; m++) {
+                if (modalRubric[m].unit_index === unit_index) {
+                    for (let n =0; n < modalRubric[m].rubric.rubric_description.length; n++) {
+                        if (modalRubric[m].rubric.rubric_description[n].category === category) {
+                            console.log('Find Unit Rubric =',modalRubric[m].rubric.rubric_description[n])
+                            if (score===10) {
+                                return {
+                                    title: scoreName[0],
+                                    desc: modalRubric[m].rubric.rubric_description[n].excellent
+                                }
+                            } else if (score===8) {
+                                return {
+                                    title: scoreName[1],
+                                    desc: modalRubric[m].rubric.rubric_description[n].very_good
+                                }
+                            } else if (score===6) {
+                                return {
+                                    title: scoreName[2],
+                                    desc: modalRubric[m].rubric.rubric_description[n].good
+                                }
+                            } else if (score===4) {
+                                return {
+                                    title: scoreName[3],
+                                    desc: modalRubric[m].rubric.rubric_description[n].fair
+                                }
+                            } else if (score===2) {
+                                return {
+                                    title: scoreName[4],
+                                    desc: modalRubric[m].rubric.rubric_description[n].poor
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         
         const getUnitReports = get().unitReportsData;
         console.log('getUnitReports =',getUnitReports)
@@ -986,14 +1030,22 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                     for (let k = 0; k < rubricScoreDataStates.hexagonChartData.length; k++) {
                         const hexaColumn = rubricScoreDataStates.hexagonChartData[k];
                         if (rubricCategories[j].category === hexaColumn.target) {
+                            console.log('rubricCategories[j].category =',rubricCategories[j].category)
+                            console.log('rubricCategories[j].score =',rubricCategories[j].score)
                             rubricScoreDataStates.hexagonChartData[k].data[0].value = rubricCategories[j].score*10;
+                            const findDesc = findRubricDescription(unit_index, hexaColumn.target, rubricCategories[j].score);
+                            if (findDesc) {
+                                rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.title = findDesc.title;
+                                rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.content = findDesc.desc;
+                            }
+                            break;
                         }
                     }
                 }; // set score percent
                 break;
             }
         }
-        const modalRubric = get().reportModalRubricData;
+        
         let title = '';
         for (let m = 0; m < modalRubric.length; m++) {
             if (modalRubric[m].unit_index === unit_index) {
@@ -1003,6 +1055,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 title = `Unit ${unit_index}. ${topic}`;
             }
         }
+        console.log('rubricScoreDataStates ===',rubricScoreDataStates)
         set(()=>({
             reportSelectUnit: unit_index,
             unitRubricScoresData: rubricScoreDataStates,
@@ -1027,6 +1080,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         completion_date: []
     },
     setUnitReportData: (data) => {
+        console.log('setUnitReportData====1031')
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
         const allScoreData = data.rubric.categories;
         

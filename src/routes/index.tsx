@@ -23,6 +23,7 @@ import StandbyScreen from '../components/commonComponents/standby/StandbyScreen'
 import Progress from '../pages/Student/Progress';
 import ReturnFeedbackModalComponent from '../components/toggleModalComponents/ReturnFeedbackModalComponent';
 import PortfolioModalComponent from '../components/toggleModalComponents/PortfolioModalComponent';
+import UserInfoModalComponent from '../components/toggleModalComponents/UserInfoModalComponent';
 
 
 export default function Roter() {
@@ -92,6 +93,7 @@ export default function Roter() {
                 <StandbyScreen />
                 <PortfolioModalComponent />
                 <ReturnFeedbackModalComponent />
+                <UserInfoModalComponent />
             </div>
           
         </div>

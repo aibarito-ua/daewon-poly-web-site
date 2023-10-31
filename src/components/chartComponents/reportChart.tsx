@@ -172,6 +172,7 @@ export default function App() {
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
     React.useEffect(()=>{
         const data = unitRubricScoresData.hexagonChartData;
+        console.log('data ===',data)
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
         console.log('allData ===',data)

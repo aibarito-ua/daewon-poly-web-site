@@ -3138,3 +3138,102 @@ bg-[#ffea2c]
   text-align: left;
   color: #333;
 }
+
+/* user info modal */
+.user-info-modal-title {
+  font-family: 'GothamRounded';
+  font-size: 25px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+  user-select: none;
+}
+.user-info-modal-info-label {
+  font-family: 'GothamRounded';
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.65;
+  letter-spacing: normal;
+  text-align: left;
+  color: #999;
+  user-select: none;
+}
+.user-info-modal-info-value-kr {
+  font-family: 'NotoSansCJKKR';
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.65;
+  letter-spacing: normal;
+  text-align: right;
+  color: #222;
+}
+.user-info-modal-info-value {
+  font-family: 'GothamRounded';
+  font-size: 20px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.65;
+  letter-spacing: normal;
+  text-align: right;
+  color: #222;
+}
+
+.user-info-modal-info-button {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #fff;
+  user-select: none;
+  @apply
+  w-[227px] h-[50px] rounded-[15px]
+  flex justify-center items-center
+}
+
+.user-info-modal-info-cancel-value-title {
+  font-family: 'NotoSansCJKKR';
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: left;
+  color: #222;
+}
+
+.user-info-modal-info-cancel-value-agree-text {
+  font-family: 'NotoSansCJKKR';
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.07;
+  letter-spacing: normal;
+  text-align: left;
+  color: #444;
+  @apply
+  flex
+  flex-col
+  justify-center
+  items-start
+  pl-[18px]
+  w-[588px]
+  h-[83px]
+  min-h-[83px]
+  max-h-[83px]
+  bg-[#f4f4f4]
+  rounded-[10px]
+}

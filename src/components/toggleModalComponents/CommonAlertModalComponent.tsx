@@ -67,6 +67,7 @@ export default function CommonAlertModalComponent(
       <Dialog className=''
       PaperProps={{sx:{
         borderRadius: '20px',
+        zIndex: 2000000000
       }}}
       open={commonAlertOpenFlag} 
     // open={true}
