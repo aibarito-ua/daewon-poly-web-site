@@ -151,15 +151,27 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
 
                 }
             }
-
+            const scoreStringName = ['Excellent', 'Very Good', 'Good', 'fair','poor'];
 
             for (let i = 0; i < rubricSc.length; i++ ) {
                 const currentRubricSc = rubricSc[i];
+                console.log('currentRubricSc ==',currentRubricSc)
                 for (let j = 0; j < rubricDesc.length; j++) {
                     const currentRubricDesc = rubricDesc[j];
                     if (currentRubricSc.category === categoryName && currentRubricDesc.category === categoryName) {
                         aimed_result = currentRubricDesc.explanation;
                         const scNm = currentRubricSc.score;
+                        if (scNm===10) {
+                            console.log(scoreStringName[0])
+                        } else if (scNm===8) {
+                            console.log(scoreStringName[1])
+                        } else if (scNm===6) {
+                            console.log(scoreStringName[2])
+                        } else if (scNm===4) {
+                            console.log(scoreStringName[3])
+                        } else if (scNm===2) {
+                            console.log(scoreStringName[4])
+                        }
                         score_name = scNm=== 10 ? 'excellent': ( scNm===8 ? 'very_good': ( scNm===6 ? 'good': (scNm===4?'fair': 'poor')));
                         score_desc = scNm=== 10 ? currentRubricDesc.excellent: ( 
                             scNm===8 ? currentRubricDesc.very_good: ( 

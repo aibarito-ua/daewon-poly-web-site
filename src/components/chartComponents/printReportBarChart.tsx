@@ -235,6 +235,9 @@ export default function App() {
     // const data = unitRubricScoresData.barChartData;
     React.useEffect(()=>{
        setData(unitRubricScoresData.barChartData) 
+       console.log('in report bar chart print =')
+       console.log('unitRubricScoresData =',unitRubricScoresData)
+       console.log('reportSelectUnit =',reportSelectUnit)
     },[unitRubricScoresData, reportSelectUnit])
     // const data:TBarChartData[] = processChangeDataForm(dataAllProcess);
   return (
@@ -257,6 +260,7 @@ export default function App() {
       />
       <XAxis type="number" axisLine={false} tick={true}
       ticks={['0','10','20','30','40','50','60','70','80','90','100']}
+      
       tickSize={0}
       tickFormatter={()=>''}
       />

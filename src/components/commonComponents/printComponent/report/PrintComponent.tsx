@@ -4,6 +4,7 @@ import useLoginStore from "../../../../store/useLoginStore";
 import ReportComponentToPrint from "./PrintReportComponent";
 import useControlAlertStore from "../../../../store/useControlAlertStore";
 import jsPDF from "jspdf";
+import PrintReportDoughnutChart from "../../../chartComponents/printReportDoughnutChart";
 
 const PrintReportExportButton = (props: {
     isActivityPage?:boolean;
@@ -17,6 +18,9 @@ const PrintReportExportButton = (props: {
     const [replaceBody, setReplaceBody] = React.useState<JSX.Element[][]>([]);
     const [isReplace, setIsReplace] = React.useState<boolean>(false);
     const [isMulti, setIsMulti] = React.useState<boolean>(false);
+    // const [doughnutChatScreen, setDoughnutChatScreen] = React.useState<JSX.Element>();
+    // const []
+    // <PrintReportBarChart />
 
     const {userInfo, isMobile} = useLoginStore();
     const {
@@ -94,6 +98,7 @@ const PrintReportExportButton = (props: {
                 setIsReplace(true);
                 console.log('new tags =',newTags)
                 setReplaceBody(newTags);
+                // setDoughnutChatScreen(<PrintReportDoughnutChart />);
             }
         // }
     }, [reportSelectUnit])
