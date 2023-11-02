@@ -37,6 +37,7 @@ const ProgressTable = (props:any) => {
     const {
         data
     } = props;
+    console.log('progress table ==',data)
     const [isElectron, setIsElectron] = React.useState<boolean>(false);
     React.useEffect(()=>{
         if (window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 ) {

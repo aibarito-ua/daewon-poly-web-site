@@ -172,11 +172,12 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
                     :cellItem.key==='explanation' ? 'bg-[#fffdf7] rubric-modal-body-font' : 'bg-white rubric-modal-body-font'
                   }`}>
                     {typeof(cellItem.value)==='string' ? cellItem.value 
-                    : cellItem.value.map((textItem, textIndex)=>{
+                    : <div className='flex flex-col'>{cellItem.value.map((textItem, textIndex)=>{
                       return (
                         <span key={'explanation-'+textIndex}>{`- ${textItem}`}</span>
                       )
                     })}
+                    </div>}
                   </td>
                 )
               })}
@@ -200,7 +201,7 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
     <div className='flex justify-center'>
     <span className="flex flex-row hover:cursor-pointer text-center items-center min-w-max px-[20px]"
         onClick={handleClickOpen}
-    ><div className={isActivityPage ? 'w-[48px] h-[48px] bg-btn-rubric-modal-ic-svg bg-no-repeat':'w-[48px] h-[48px] bg-tab-overall-rubric-ic-svg bg-no-repeat'}/></span>
+    ><div className={isActivityPage ? 'w-[48px] h-[51px] bg-btn-rubric-modal-ic-svg bg-no-repeat':'w-[48px] h-[51px] bg-tab-overall-rubric-ic-svg bg-no-repeat'}/></span>
       <Dialog className=''
       fullWidth={true}
       PaperProps={{sx:{

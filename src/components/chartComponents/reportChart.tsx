@@ -80,7 +80,7 @@ const textLabelCss:React.CSSProperties = {
     width: '80px',
     height: '80px',
     backgroundColor: '#ffffff',
-    fill: payload.fillBorderColor,
+    fill: payload.fillColor,
     textTransform: 'capitalize'
 }
 const percentValue = Math.round(payload.value*10)/10;
@@ -107,12 +107,12 @@ const titleName:string[] = payload.name.split(' ')
         })}</text>
         <text x={cx} y={cy} dy={0} dx={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
-            <tspan x={percentValue===100?cx:cx} y={cy} dy={15} dx={-5} textAnchor="middle" style={text1Css}>
+            <tspan x={percentValue===100?cx:cx} y={cy} dy={19} dx={-5} textAnchor="middle" style={text1Css}>
                 {percentValue}
             </tspan>
             <tspan x={percentLengthCheck === '2' ? cx+20: (
                 percentLengthCheck === '3' ? cx+25 : cx+15
-            )} y={cy} dy={15} dx={-5} style={text2Css}>%</tspan>
+            )} y={cy} dy={19} dx={-5} style={text2Css}>%</tspan>
         </text>
         {payload.selectName!=='' && (
             <Sector
@@ -140,12 +140,22 @@ const titleName:string[] = payload.name.split(' ')
   );
 };
 const CustomTooltipDIV = (props:any) => {
-    const { active, payload, label} = props;
-    console.log('CustomTooltipDIV====',payload)
+    // console.log('===CustomTooltipDIV===',props)
+    const { active, payload, label, viewBox } = props;
+    // console.log('===payload',payload)
     if (active && payload && payload.length) {
         const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
+        const paddingLeftPX = viewBox.width >= 250 ? '10%': '25px'
+        
         return (
-          <div className={`${classNameStr} z-[1302]`} >
+          <div style={{
+            width: '100%',
+            height: '100%',
+            paddingTop: '10px',
+            paddingBottom: '15px',
+            paddingLeft: paddingLeftPX,
+            paddingRight: '25px'
+          }} className={`${classNameStr} z-[1302]`} >
             <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
             <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
             
@@ -153,6 +163,7 @@ const CustomTooltipDIV = (props:any) => {
         );
     } else return null
 }
+
 export default function App() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [clickIndex, setClickIndex] = useState<string>('');
@@ -172,10 +183,10 @@ export default function App() {
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
     React.useEffect(()=>{
         const data = unitRubricScoresData.hexagonChartData;
-        console.log('data ===',data)
+        // console.log('data ===',data)
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
-        console.log('allData ===',data)
+        // console.log('allData ===',data)
         let dumpAvr = 0;
         for (let i =0; i < dumpData.length; i++) {
             dumpAvr += dumpData[i].data[0].value;
@@ -201,8 +212,6 @@ export default function App() {
         'conventions'
     ];
     // const avr = 90;
-    const cx = 100;
-    const cy = 100;
     
 const mouseOnEvent = (e:any)=>{
     // console.log('click =',e)
@@ -248,7 +257,7 @@ const mouseOffEvent = (e:any) => {
     const radAddX = 58.75
     const radAddY = 101.76
     const stDotX = 165;
-    const stDotY = 175;
+    const stDotY = 170;
     const polygonDotArr = [
         {cx:stDotX, cy:stDotY-rad},
         {cx:stDotX+radAddY, cy:stDotY-radAddX},
@@ -278,7 +287,7 @@ const mouseOffEvent = (e:any) => {
               outerRadius={56}
               fill={dataItem.data[0].fillColor}
               dataKey="value"
-            //   onMouseEnter={mouseOnEvent}
+            //   onClick={mouseOnEvent}
             //   onMouseOut={mouseOffEvent}
               onMouseOver={mouseOnEvent}
               onMouseLeave={mouseOffEvent}
@@ -314,6 +323,8 @@ const mouseOffEvent = (e:any) => {
         >%</tspan>
         </text>
         <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}} content={<CustomTooltipDIV/>}/>
+        {/* <Tooltip content={textTooltip} /> */}
+        {/* {clickIndex!=='' && <CustomTooltipDIV/>} */}
     </PieChart>
   );
 }

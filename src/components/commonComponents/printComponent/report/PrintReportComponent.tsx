@@ -77,15 +77,15 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
                 }}>{category}</div>
 
                 {/* aimed result */}
-                <div className='flex export-report-wr-sa-ar-title uppercase ml-[4.941mm] mt-[1.451mm]'>{'aimed result'}</div>
-                <ul className='list-disc list-inside export-report-wr-sa-ar-value ml-[4.941mm] h-[12.335mm]'>
+                <div className='flex export-report-wr-sa-ar-title uppercase px-[4.941mm] mt-[4.66mm]'>{'aimed result'}</div>
+                <ul className='list-disc list-inside export-report-wr-sa-ar-value px-[4.941mm] h-[12.335mm] mt-[0.233mm]'>
                     {aimed_result.map((aimedResult, aimedResultIdx) => {
                         return <li className='' key={'print-aimed-result-'+aimedResultIdx}>{aimedResult}</li>
                     })}
                 </ul>
                 {/* score */}
-                <div className='flex export-report-wr-sa-ar-title uppercase ml-[4.941mm] mt-[1.451mm]'>{score_name}</div>
-                <p className='export-report-wr-sa-ar-value ml-[4.941mm]'>{score_desc}</p>
+                <div className='flex export-report-wr-sa-ar-title capitalize px-[4.941mm] mt-[1.465mm]'>{score_name}</div>
+                <p className='export-report-wr-sa-ar-value px-[4.941mm]'>{score_desc}</p>
             </div>
 
         </div>
@@ -155,28 +155,33 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
 
             for (let i = 0; i < rubricSc.length; i++ ) {
                 const currentRubricSc = rubricSc[i];
-                console.log('currentRubricSc ==',currentRubricSc)
+                // console.log('currentRubricSc ==',currentRubricSc)
                 for (let j = 0; j < rubricDesc.length; j++) {
                     const currentRubricDesc = rubricDesc[j];
                     if (currentRubricSc.category === categoryName && currentRubricDesc.category === categoryName) {
                         aimed_result = currentRubricDesc.explanation;
                         const scNm = currentRubricSc.score;
                         if (scNm===10) {
-                            console.log(scoreStringName[0])
+                            // console.log(scoreStringName[0])
+                            score_name=scoreStringName[0];
+                            score_desc=currentRubricDesc.excellent;
                         } else if (scNm===8) {
-                            console.log(scoreStringName[1])
+                            // console.log(scoreStringName[1])
+                            score_name=scoreStringName[1];
+                            score_desc=currentRubricDesc.very_good;
                         } else if (scNm===6) {
-                            console.log(scoreStringName[2])
+                            // console.log(scoreStringName[2])
+                            score_name=scoreStringName[2];
+                            score_desc=currentRubricDesc.good;
                         } else if (scNm===4) {
-                            console.log(scoreStringName[3])
+                            // console.log(scoreStringName[3])
+                            score_name=scoreStringName[3];
+                            score_desc=currentRubricDesc.fair;
                         } else if (scNm===2) {
-                            console.log(scoreStringName[4])
+                            // console.log(scoreStringName[4])
+                            score_name=scoreStringName[4];
+                            score_desc=currentRubricDesc.poor;
                         }
-                        score_name = scNm=== 10 ? 'excellent': ( scNm===8 ? 'very_good': ( scNm===6 ? 'good': (scNm===4?'fair': 'poor')));
-                        score_desc = scNm=== 10 ? currentRubricDesc.excellent: ( 
-                            scNm===8 ? currentRubricDesc.very_good: ( 
-                                scNm===6 ? currentRubricDesc.good: (
-                                    scNm===4?currentRubricDesc.fair: currentRubricDesc.poor)));
                         return {
                             category: categoryName,
                             aimed_result, score_name, score_desc
@@ -191,13 +196,14 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
             }
 
         })
+        // console.log('user ====',userInfo)
         // comment
         // const ov_comments = reportByUnitAPIData.teacher_comments[0].draft_index===2? reportByUnitAPIData.teacher_comments[0].comment : reportByUnitAPIData.teacher_comments[1].comment;
         // const ov_comments_split = ov_comments.split('\n');
         // console.log('ov_comments_split ==',ov_comments_split)
         return (
             <div className='print-container'>
-                <div className='flex flex-col w-[210mm] h-[297mm] bg-white'>
+                <div className='flex flex-col w-[210mm] h-[297mm] border-[1px] border-black'>
                     {/* info row */}
                     <div className='flex flex-row gap-[7.659mm]'>
                         {/* icon */}
@@ -222,7 +228,7 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
                                 <div className='flex items-center pl-[2.471mm] w-[27.671mm] h-[12.335mm] bg-[#f2f9ff] export-report-wr-userinfo-font-label'>{'level / class'}</div>
                                 <div className='flex items-start justify-center pl-[2.471mm] w-[61.765mm] flex-col export-report-wr-userinfo-font-value'>
                                     <span>{reportSelectFinder.level}/</span>
-                                    <span>{userInfo.courseName}</span>
+                                    <span>{userInfo.className}</span>
                                 </div>
                                 <div className='flex items-center pl-[2.471mm] w-[17.047mm] h-[12.335mm] bg-[#f2f9ff] export-report-wr-userinfo-font-label'>{'student'}</div>
                                 <div className='flex items-start justify-center flex-col pl-[2.471mm] export-report-wr-userinfo-font-value'>
@@ -272,7 +278,7 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
                                 
                             </div> 
                         </div>
-                    }       
+                    }
 
                     {/* overall comment */}
                     {!isMulti && multi.currentPageNum === 1 && 

@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
+import { callUnitInfobyStudent } from '../../../pages/Student/api/EssayWriting.api';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     '& .MuiInputBase-input': {
@@ -33,13 +34,16 @@ export default function SelectLabels() {
   const {
     reportAPIData,
     reportSelectBoxDatas,
-  } = useControlAlertStore();
-  const {
     progressLevelBoxValue,
     progressAllLevelsValue,
     setProgressLevelBoxValue,
+    setCommonStandbyScreen
+  } = useControlAlertStore();
+  const {
+    setSparkWritingDataFromAPI
   } = useSparkWritingStore();
   React.useEffect(()=>{
+    console.log('progressAllLevelsValue =',progressAllLevelsValue)
     console.log('progress',progressLevelBoxValue)
     if (progressAllLevelsValue.length > 0) {
       if (progressAllLevelsValue.length===1) {
@@ -51,11 +55,35 @@ export default function SelectLabels() {
       setIsReadOnly(true);
     }
   },[progressLevelBoxValue, progressAllLevelsValue,reportAPIData])
+
+  const findCallUnitInfobyStudent = async (studentCode: string,
+    courseName: string,
+    accessToken: string
+) => {
+    return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
+        console.log('callUnitInfobyStudent ===',response)
+        if (response.book_name!=='') {
+            // setLoading(true)
+        }
+        setSparkWritingDataFromAPI(response.units, response.book_name)
+        
+        return response;
+    });
+}
   
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = async (event: SelectChangeEvent) => {
     console.log('user info =',userInfo)
-    setProgressLevelBoxValue(event.target.value);
+    console.log(' event.target.value =',event.target.value)
+    setProgressLevelBoxValue(event.target.value, userInfo, false);
+    
+    setCommonStandbyScreen({openFlag:true})
+    const rsp = await findCallUnitInfobyStudent(userInfo.userCode, event.target.value, userInfo.accessToken)
+    if (rsp) {
+      setCommonStandbyScreen({openFlag:false})
+    }
   };
+
+  
 
   return (
     <div className='flex items-center h-[45px] '>

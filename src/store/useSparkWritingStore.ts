@@ -503,6 +503,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     setCommentFocusIdInModal: (commentFocusIdInModal) => set(()=>({commentFocusIdInModal})),
 
     // progress select box
+    
     progressAllLevelsValue: [],
     progressLevelBoxValue: '',
     setProgressAllLevelBoxValues: (data) => {

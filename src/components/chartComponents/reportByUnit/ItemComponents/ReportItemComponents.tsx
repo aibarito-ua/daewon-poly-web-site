@@ -42,6 +42,8 @@ const ReportCorrectionSummaryComponent = (
     props: {item: TReportByStudent}
 ) => {
     const {item } = props;
+    console.log('===ReportCorrectionSummaryComponent===')
+    console.log('=== props item ==', item)
     const [correctionDiv, setCorrectionDiv] = React.useState<JSX.Element[]>([]);
     
     const [selectReason, setSelectReason]= React.useState<"grammar" | "spelling" | "punctuation"|''>(''); 
@@ -107,7 +109,7 @@ const ReportCorrectionSummaryComponent = (
                             : 'pl-[4px]'}>{'grammar'}
                         </span>
                     </span>
-                    <span className='report-chart-righ-correction-content-item-value'>{grammar.sentences_count}</span>
+                    <span className='report-chart-righ-correction-content-item-value'>{grammar.corrections_count}</span>
                     { selectReason === 'grammar' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
             </div>
@@ -148,7 +150,7 @@ const ReportCorrectionSummaryComponent = (
                         </span>
                     </span>
                     {/* <span className='report-chart-righ-correction-content-item-title'>{`- punctuation`}</span> */}
-                    <span className='report-chart-righ-correction-content-item-value'>{punctuation.sentences_count}</span>
+                    <span className='report-chart-righ-correction-content-item-value'>{punctuation.corrections_count}</span>
                     { selectReason === 'punctuation' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
                 {/* <div className={ selectReason === 'punctuation' ? 'report-chart-righ-correction-content-wrap-2':'hidden'}>
@@ -193,7 +195,7 @@ const ReportCorrectionSummaryComponent = (
                         </span>
                     </span>
                     {/* <span className='report-chart-righ-correction-content-item-title'>{`- spelling`}</span> */}
-                    <span className='report-chart-righ-correction-content-item-value'>{punctuation.sentences_count}</span>
+                    <span className='report-chart-righ-correction-content-item-value'>{punctuation.corrections_count}</span>
                     { selectReason === 'spelling' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
                 {/* <div className={ selectReason === 'spelling' ? 'report-chart-righ-correction-content-wrap-2':'hidden'}>

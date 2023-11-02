@@ -3,248 +3,66 @@ Modern Browsers => woff
 IE6-IE8 => eot */
 
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-style: lighter;
-    font-weight: 100;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Thin.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Thin.otf') format('truetype');
-    font-display: swap;
+  font-family: "Noto Sans CJK KR";
+  font-style: thin;
+  font-weight: 100;
+  src: local("NotoSansCJKKR"),
+      url('../..//NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Thin.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Thin.otf') format('truetype');
+  font-display: swap;
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-weight: 200;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: demiLight;
+  font-weight: 200;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-DemiLight.otf') format('truetype');
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-weight: 300;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: light;
+  font-weight: 300;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Light.otf') format('truetype');
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-style: normal;
-    font-weight: 400;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: normal;
+  font-weight: 400;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Regular.otf') format('truetype');
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-style: medium;
-    font-weight: 500;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff2'),
-        url('/src/font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff'),
-        url('/src/font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: medium;
+  font-weight: 500;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff2'),
+      url('../../public/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('woff'),
+      url('../../public/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('truetype');
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-style: bold;
-    font-weight: 700;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: bold;
+  font-weight: 700;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Bold.otf') format('truetype');
 }
 @font-face {
-    font-family: "Noto Sans CJK KR";
-    font-style: black;
-    font-weight: 900;
-    src: local("NotoSansCJKKR"),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('woff2'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('woff'),
-        url('/src/font/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('truetype');
+  font-family: "Noto Sans CJK KR";
+  font-style: black;
+  font-weight: 900;
+  src: local("NotoSansCJKKR"),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('woff2'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('woff'),
+      url('../../public/NotoSansCJKKr/NotoSansCJKkr-Black.otf') format('truetype');
 }
-/* Font : GothamRounded */
-@font-face {
-    font-family: "GothamRounded";
-    font-style: light;
-    font-weight: 100;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-Light.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-Light.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-Light.otf') format('truetype');
-  }
-  @font-face {
-    font-family: "GothamRounded";
-    font-style: lightItalic;
-    font-weight: 100;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-LightIta.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-LightIta.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-LightIta.otf') format('truetype');
-  }
-  @font-face {
-    font-family: "GothamRounded";
-    font-style: book;
-    font-weight: 300;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-Book.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-Book.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-Book.otf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "GothamRounded";
-    font-style: bookItalic;
-    font-weight: 300;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-BookIta.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-BookIta.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-BookIta.otf') format('truetype');
-  } */
-  @font-face {
-    font-family: "GothamRounded";
-    font-style: medium;
-    font-weight: 500;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-Medium.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-Medium.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-Medium.otf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "GothamRounded";
-    font-style: mediumItalic;
-    font-weight: 500;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-MedIta.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-MedIta.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-MedIta.otf') format('truetype');
-  } */
-  @font-face {
-    font-family: "GothamRounded";
-    font-style: bold;
-    font-weight: 700;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-Bold.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-Bold.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-Bold.otf') format('truetype');
-  }
-  @font-face {
-    font-family: "GothamRounded";
-    font-style:Italic;
-    font-weight: 700;
-    src: local("GothamRounded"),
-        url('/src/font/GothamRnd/GothamRnd-BoldIta.otf') format('woff2'),
-        url('/src/font/GothamRnd/GothamRnd-BoldIta.otf') format('woff'),
-        url('/src/font/GothamRnd/GothamRnd-BoldIta.otf') format('truetype');
-  }
-  /* Font : Roboto */
-  @font-face {
-    font-family: "Roboto";
-    font-style: lighter;
-    font-weight: 100;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Thin.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Thin.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Thin.ttf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "Roboto";
-    font-style: lighterItalic;
-    font-weight: 100;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-ThinItalic.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-ThinItalic.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-ThinItalic.ttf') format('truetype');
-  } */
-  @font-face {
-    font-family: "Roboto";
-    font-style: light;
-    font-weight: 300;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Light.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Light.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Light.ttf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "Roboto";
-    font-style: lightItalic;
-    font-weight: 300;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-LightItalic.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-LightItalic.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-LightItalic.ttf') format('truetype');
-  } */
-  @font-face {
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 400;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Regular.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Regular.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Regular.ttf') format('truetype');
-  }
-  @font-face {
-    font-family: "Roboto";
-    font-style: medium;
-    font-weight: 500;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Medium.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Medium.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Medium.ttf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "Roboto";
-    font-style: mediumItalic;
-    font-weight: 500;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-MediumItalic.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-MediumItalic.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-MediumItalic.ttf') format('truetype');
-  } */
-  @font-face {
-    font-family: "Roboto";
-    font-style: bold;
-    font-weight: 700;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Bold.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Bold.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Bold.ttf') format('truetype');
-  }
-  /* @font-face {
-    font-family: "Roboto";
-    font-style: boldItalic;
-    font-weight: 700;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-BoldItalic.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-BoldItalic.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-BoldItalic.ttf') format('truetype');
-  } */
-  @font-face {
-    font-family: "Roboto";
-    font-style: black;
-    font-weight: 900;
-    src: local("Roboto"),
-        url('/src/font/Roboto/Roboto-Black.ttf') format('woff2'),
-        url('/src/font/Roboto/Roboto-Black.ttf') format('woff'),
-        url('/src/font/Roboto/Roboto-Black.ttf') format('truetype');
-  }
-
-@font-face {
-    font-family: "Pathfinder";
-    font-style: normal;
-    font-weight: 400;
-    src: local("Roboto"),
-        url('/src/font/Pathfinder/Pathfinder-R.otf') format('woff2'),
-        url('/src/font/Pathfinder/Pathfinder-R.otf') format('woff'),
-        url('/src/font/Pathfinder/Pathfinder-R.otf') format('truetype');
-  }
-  @font-face {
-    font-family: "Pathfinder";
-    font-style: bold;
-    font-weight: 700;
-    src: local("Roboto"),
-        url('/src/font/Pathfinder/Pathfinder-B.otf') format('woff2'),
-        url('/src/font/Pathfinder/Pathfinder-B.otf') format('woff'),
-        url('/src/font/Pathfinder/Pathfinder-B.otf') format('truetype');
-  }
-  

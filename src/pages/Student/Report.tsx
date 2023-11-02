@@ -67,21 +67,20 @@ const Report = () => {
         }
         
         if (getReportAll) {
-            let dumpReportSelectBoxDatas=[];
+            let dumpReportSelectBoxDatas:TReportPageSelectBoxDatas[]=[];
             for (let i = 0; i < getReportAll.periods.length; i++) {
                 // find year and semesters
                 const currentReportAll = getReportAll.periods[i];
                 const currentYearData = currentReportAll.year;
                 const currentSemester = currentReportAll.semester===1? '1st': '2nd';
                 const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
-                // const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
-                // dumpReportSelectBoxDatas.push(pushSemesterData);
-                for ( let j = 0; j < currentReportAll.levels.length; j++) {
-                    // find levels
-                    const level = currentReportAll.levels[j].level_name;
-                    const pushLevelsData = {label: pushSemesterString, year: currentYearData, semester:currentReportAll.semester, level:level}
-                    dumpReportSelectBoxDatas.push(pushLevelsData);
-                };
+                let dumpReportSelectBoxDataItem:TReportPageSelectBoxDatas = {
+                    label: pushSemesterString, level: [], semester: currentReportAll.semester, year: currentYearData
+                }
+                dumpReportSelectBoxDataItem.level = currentReportAll.levels.map((item)=>{
+                    return {name: item.level_name}
+                })
+                dumpReportSelectBoxDatas.push(dumpReportSelectBoxDataItem)
             };
             console.log('get report all =', getReportAll)
 // 1
@@ -109,7 +108,7 @@ const Report = () => {
             setReportSelectBoxDatas(dumpReportSelectBoxDatas);
             setReportSelectedFinder(dumyFinderData);
             setReportAPIData(getReportAll);
-            setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
+            // setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
             // setCommonStandbyScreen({openFlag: false})
         }
     }
@@ -125,23 +124,28 @@ const Report = () => {
             if (getAPIs) getReportAll = getAPIs;
         }
         if (getReportAll) {
-            let dumpReportSelectBoxDatas=[];
+            let dumpReportSelectBoxDatas:TReportPageSelectBoxDatas[]=[];
             for (let i = 0; i < getReportAll.periods.length; i++) {
+                
                 // find year and semesters
                 const currentReportAll = getReportAll.periods[i];
-                
+                // console.log('currentReportAll ==',currentReportAll)
                 const currentYearData = currentReportAll.year;
                 const currentSemester = currentReportAll.semester===1? '1st': '2nd';
                 const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
-                // const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
-                // dumpReportSelectBoxDatas.push(pushSemesterData);
-                for ( let j = 0; j < currentReportAll.levels.length; j++) {
-                    // find levels
-                    const level = currentReportAll.levels[j].level_name;
-                    const pushLevelsData = {label: pushSemesterString, year: currentYearData, semester:currentReportAll.semester, level:level}
-                    dumpReportSelectBoxDatas.push(pushLevelsData);
-                };
+                let dumpBoxData:TReportPageSelectBoxDatas = {
+                    label:pushSemesterString,
+                    level:[],
+                    semester:currentReportAll.semester,
+                    year: currentYearData
+                }
+                for (let k = 0; k < currentReportAll.levels.length; k++) {
+                    const levItem = {name: currentReportAll.levels[k].level_name}
+                    dumpBoxData.level.push(levItem);
+                }
+                dumpReportSelectBoxDatas.push(dumpBoxData)
             };
+            console.log('dumpReportSelectBoxDatas1 ===',dumpReportSelectBoxDatas)
             console.log('get report all =', getReportAll)
             let dumyFinderData = {label:'', level:'', semester:0, year:0};
             dumyFinderData.level = userInfo.courseName;
@@ -167,7 +171,12 @@ const Report = () => {
     React.useEffect(()=>{
         if (reportSelectBoxDatas.length === 1) {
             console.log('reportSelectBoxDatas ===',reportSelectBoxDatas)
-            handleChange(reportSelectBoxDatas[0].label, reportAPIData, reportSelectBoxDatas[0], false )
+            handleChange(reportSelectBoxDatas[0].label, reportAPIData, {
+                label: reportSelectBoxDatas[0].label,
+                level: reportSelectBoxDatas[0].level[0].name,
+                semester: reportSelectBoxDatas[0].semester,
+                year: reportSelectBoxDatas[0].year
+            }, false )
             setForcedReadOnlyReportSelectBox([true,true])
         } else if (reportSelectBoxDatas.length === 0) {
             setForcedReadOnlyReportSelectBox([true,true])

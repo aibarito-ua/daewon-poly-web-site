@@ -18,8 +18,8 @@ code {
 
 /* Font : Noto Sans CJK KR */
 @font-face {
-  font-family: "Noto Sans CJK KR";
-  font-style: lighter;
+  font-family: "NotoSansCJKKR";
+  font-style: thin;
   font-weight: 100;
   src: local("NotoSansCJKKR"),
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Thin.otf') format('woff2'),
@@ -28,7 +28,8 @@ code {
   font-display: swap;
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
+  font-style: demi-light;
   font-weight: 200;
   src: local("NotoSansCJKKR"),
       url('./font/NotoSansCJKkr/NotoSansCJKkr-DemiLight.otf') format('woff2'),
@@ -36,7 +37,8 @@ code {
       url('./font/NotoSansCJKkr/NotoSansCJKkr-DemiLight.otf') format('truetype');
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR-italic";
+  font-style: italic;
   font-weight: 300;
   src: local("NotoSansCJKKR"),
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Light.otf') format('woff2'),
@@ -44,7 +46,7 @@ code {
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Light.otf') format('truetype');
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
   font-style: normal;
   font-weight: 400;
   src: local("NotoSansCJKKR"),
@@ -53,7 +55,7 @@ code {
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Regular.otf') format('truetype');
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
   font-style: medium;
   font-weight: 500;
   src: local("NotoSansCJKKR"),
@@ -62,7 +64,7 @@ code {
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Medium.otf') format('truetype');
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
   font-style: bold;
   font-weight: 700;
   src: local("NotoSansCJKKR"),
@@ -71,7 +73,7 @@ code {
       url('./font/NotoSansCJKkr/NotoSansCJKkr-Bold.otf') format('truetype');
 }
 @font-face {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
   font-style: black;
   font-weight: 900;
   src: local("NotoSansCJKKR"),
@@ -90,8 +92,8 @@ code {
       url('./font/GothamRnd/GothamRnd-Light.otf') format('truetype');
 }
 @font-face {
-  font-family: "GothamRounded";
-  font-style: lightItalic;
+  font-family: "GothamRounded-italic";
+  font-style: italic;
   font-weight: 100;
   src: local("GothamRounded"),
       url('./font/GothamRnd/GothamRnd-LightIta.otf') format('woff2'),
@@ -100,22 +102,22 @@ code {
 }
 @font-face {
   font-family: "GothamRounded";
-  font-style: book;
+  font-style: normal;
   font-weight: 300;
   src: local("GothamRounded"),
       url('./font/GothamRnd/GothamRnd-Book.otf') format('woff2'),
       url('./font/GothamRnd/GothamRnd-Book.otf') format('woff'),
       url('./font/GothamRnd/GothamRnd-Book.otf') format('truetype');
 }
-/* @font-face {
-  font-family: "GothamRounded";
-  font-style: bookItalic;
+@font-face {
+  font-family: "GothamRounded-italic";
+  font-style: italic;
   font-weight: 300;
   src: local("GothamRounded"),
       url('./font/GothamRnd/GothamRnd-BookIta.otf') format('woff2'),
       url('./font/GothamRnd/GothamRnd-BookIta.otf') format('woff'),
       url('./font/GothamRnd/GothamRnd-BookIta.otf') format('truetype');
-} */
+}
 @font-face {
   font-family: "GothamRounded";
   font-style: medium;
@@ -125,15 +127,15 @@ code {
       url('./font/GothamRnd/GothamRnd-Medium.otf') format('woff'),
       url('./font/GothamRnd/GothamRnd-Medium.otf') format('truetype');
 }
-/* @font-face {
-  font-family: "GothamRounded";
-  font-style: mediumItalic;
+@font-face {
+  font-family: "GothamRounded-italic";
+  font-style: italic;
   font-weight: 500;
   src: local("GothamRounded"),
       url('./font/GothamRnd/GothamRnd-MedIta.otf') format('woff2'),
       url('./font/GothamRnd/GothamRnd-MedIta.otf') format('woff'),
       url('./font/GothamRnd/GothamRnd-MedIta.otf') format('truetype');
-} */
+}
 @font-face {
   font-family: "GothamRounded";
   font-style: bold;
@@ -144,8 +146,8 @@ code {
       url('./font/GothamRnd/GothamRnd-Bold.otf') format('truetype');
 }
 @font-face {
-  font-family: "GothamRounded";
-  font-style:Italic;
+  font-family: "GothamRounded-italic";
+  font-style:italic;
   font-weight: 700;
   src: local("GothamRounded"),
       url('./font/GothamRnd/GothamRnd-BoldIta.otf') format('woff2'),
@@ -155,22 +157,22 @@ code {
 /* Font : Roboto */
 @font-face {
   font-family: "Roboto";
-  font-style: lighter;
+  font-style: thin;
   font-weight: 100;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-Thin.ttf') format('woff2'),
       url('./font/Roboto/Roboto-Thin.ttf') format('woff'),
       url('./font/Roboto/Roboto-Thin.ttf') format('truetype');
 }
-/* @font-face {
-  font-family: "Roboto";
-  font-style: lighterItalic;
+@font-face {
+  font-family: "Roboto-italic";
+  font-style: italic;
   font-weight: 100;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-ThinItalic.ttf') format('woff2'),
       url('./font/Roboto/Roboto-ThinItalic.ttf') format('woff'),
       url('./font/Roboto/Roboto-ThinItalic.ttf') format('truetype');
-} */
+}
 @font-face {
   font-family: "Roboto";
   font-style: light;
@@ -180,15 +182,15 @@ code {
       url('./font/Roboto/Roboto-Light.ttf') format('woff'),
       url('./font/Roboto/Roboto-Light.ttf') format('truetype');
 }
-/* @font-face {
-  font-family: "Roboto";
-  font-style: lightItalic;
+@font-face {
+  font-family: "Roboto-italic";
+  font-style: italic;
   font-weight: 300;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-LightItalic.ttf') format('woff2'),
       url('./font/Roboto/Roboto-LightItalic.ttf') format('woff'),
       url('./font/Roboto/Roboto-LightItalic.ttf') format('truetype');
-} */
+}
 @font-face {
   font-family: "Roboto";
   font-style: normal;
@@ -207,15 +209,15 @@ code {
       url('./font/Roboto/Roboto-Medium.ttf') format('woff'),
       url('./font/Roboto/Roboto-Medium.ttf') format('truetype');
 }
-/* @font-face {
-  font-family: "Roboto";
-  font-style: mediumItalic;
+@font-face {
+  font-family: "Roboto-italic";
+  font-style: italic;
   font-weight: 500;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-MediumItalic.ttf') format('woff2'),
       url('./font/Roboto/Roboto-MediumItalic.ttf') format('woff'),
       url('./font/Roboto/Roboto-MediumItalic.ttf') format('truetype');
-} */
+}
 @font-face {
   font-family: "Roboto";
   font-style: bold;
@@ -225,33 +227,33 @@ code {
       url('./font/Roboto/Roboto-Bold.ttf') format('woff'),
       url('./font/Roboto/Roboto-Bold.ttf') format('truetype');
 }
-/* @font-face {
-  font-family: "Roboto";
-  font-style: boldItalic;
+@font-face {
+  font-family: "Roboto-italic";
+  font-style: italic;
   font-weight: 700;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-BoldItalic.ttf') format('woff2'),
       url('./font/Roboto/Roboto-BoldItalic.ttf') format('woff'),
       url('./font/Roboto/Roboto-BoldItalic.ttf') format('truetype');
-} */
+}
 @font-face {
   font-family: "Roboto";
-  font-style: black;
   font-weight: 900;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-Black.ttf') format('woff2'),
       url('./font/Roboto/Roboto-Black.ttf') format('woff'),
       url('./font/Roboto/Roboto-Black.ttf') format('truetype');
 }
-/* @font-face {
-  font-family: "Roboto";
-  font-style: blackItalic;
+@font-face {
+  font-family: "Roboto-italic";
+  font-style: italic;
   font-weight: 900;
   src: local("Roboto"),
       url('./font/Roboto/Roboto-BlackItalic.ttf') format('woff2'),
       url('./font/Roboto/Roboto-BlackItalic.ttf') format('woff'),
       url('./font/Roboto/Roboto-BlackItalic.ttf') format('truetype');
-} */
+}
+/* pathfinder */
 @font-face {
   font-family: "Pathfinder";
   font-style: normal;
@@ -269,6 +271,19 @@ code {
       url('./font/Pathfinder/Pathfinder-B.otf') format('woff2'),
       url('./font/Pathfinder/Pathfinder-B.otf') format('woff'),
       url('./font/Pathfinder/Pathfinder-B.otf') format('truetype');
+}
+/* font */
+.font-notoSansCJKKR {
+  font-family: 'NotoSansCJKKR';
+}
+.font-gothamRounded {
+  font-family: 'GothamRounded';
+}
+.font-roboto {
+  font-family: 'Roboto';
+}
+.font-pathfinder {
+  font-family: 'PathFinder';
 }
 
 #root {
@@ -1668,11 +1683,12 @@ bg-[#ffea2c]
   bg-no-repeat
   object-fill
   /* bg-white */
-  max-w-[255px]
+  /* max-w-[255px] */
+  w-full
   h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
+  /* max-h-[130px] */
+  /* pt-[10px]
+  pb-[20px] */
   flow-root
 }
 .custom-tooltip-organization {
@@ -1680,72 +1696,48 @@ bg-[#ffea2c]
   bg-report-rechart-custom-tooltip-box-organization
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-voice {
   @apply
   bg-report-rechart-custom-tooltip-box-voice
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-conventions {
   @apply
   bg-report-rechart-custom-tooltip-box-conventions
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-sentencefluency {
   @apply
   bg-report-rechart-custom-tooltip-box-sentencefluency
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-wordchoice {
   @apply
   bg-report-rechart-custom-tooltip-box-wordchoice
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-ideas {
   @apply
   bg-report-rechart-custom-tooltip-box-ideas
   bg-no-repeat
   object-fill
-  max-w-[255px]
-  h-full
-  px-[25px]
-  pt-[10px]
-  pb-[20px]
-  flow-root
+  bg-cover
+  custom-tooltip
 }
 .custom-tooltip-title {
   font-family: 'GothamRounded';
@@ -1759,7 +1751,7 @@ bg-[#ffea2c]
   
 }
 .custom-tooltip-content {
-  font-family: 'GothamRounded';
+  font-family: 'Roboto';
   font-size: 12px;
   font-weight: 400;
   line-height: 1.33;
@@ -1767,7 +1759,9 @@ bg-[#ffea2c]
   text-align: start;
   @apply
   text-[#222222]
-  h-full 
+  block
+  w-full
+  h-full
 }
 .report-chart-pannel-report-by-unit-wrap {
   @apply
@@ -2109,7 +2103,7 @@ bg-[#ffea2c]
   @apply
   flex
   flex-row
-  h-[95px]
+  h-[70px]
   
 }
 .report-modal-menu-print {
@@ -2427,60 +2421,7 @@ bg-[#ffea2c]
   hover:cursor-pointer
   select-none
 }
-.overall-comment-2nd-draft-write-top-tooltip-content {
-  font-family: 'GothamRounded';
-  font-size: 13px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.38;
-  letter-spacing: normal;
-  text-align: left;
-  border-radius: 10px;
-  border: #21c4cc solid 3px;
 
-  ::after {
-    content: " ";
-    position: absolute;
-    border-style: solid;
-    border-width: 15px 3px 0;
-    border-color: #fff transparent;
-    display: block;
-    width: 0;
-    z-index: 9999;
-    top: 15px;
-    right: 183px;
-    rotate: 270deg;
-  };
-
-  ::before {
-    content: "";
-    position: absolute;
-    border-style: solid;
-    border-width: 25px 5px 0;
-    border-color: #21c4cc transparent;
-    display: block;
-    width: 0;
-    z-index: 0;
-    top: 10px;
-    right: 175px;
-    rotate: 270deg;
-  };
-
-  @apply
-  flex
-  flex-1
-  flex-row
-  px-[10px]
-  py-[10px]
-  w-full
-  h-fit
-  max-w-[900px]
-  max-h-[75px]
-  overflow-y-auto
-  overflow-x-hidden
-  bg-white
-}
 .update-words {
   @apply
   h-fit
@@ -2724,8 +2665,8 @@ bg-[#ffea2c]
   font-stretch: normal;
   font-style: normal;
   letter-spacing: normal;
-  color: #222;
   @apply
+  text-[#222]
   flex
   capitalize
 }
@@ -2751,8 +2692,8 @@ bg-[#ffea2c]
   line-height: 4.353mm;
   letter-spacing: normal;
   text-align: left;
-  color: #999;
   @apply
+  text-[#999]
   capitalize
 }
 .export-report-wr-userinfo-font-label {
@@ -2777,8 +2718,8 @@ bg-[#ffea2c]
   line-height: 1.67;
   letter-spacing: normal;
   text-align: left;
-  color: #999;
   @apply
+  text-[#999]
   capitalize
 }
 .export-portfolio-wr-userinfo-font-value {
@@ -2790,7 +2731,8 @@ bg-[#ffea2c]
   line-height: 1.67;
   letter-spacing: normal;
   text-align: left;
-  color: #222;
+  @apply
+  text-[#222]
 }
 .export-report-wr-userinfo-font-value {
   font-family: 'NotoSansCJKKR';
@@ -2812,7 +2754,8 @@ bg-[#ffea2c]
   line-height: 4.595mm;
   letter-spacing: normal;
   text-align: center;
-  color: #222;
+  @apply
+  text-[#222]
 }
 .export-report-wr-bar-titles {
   font-family: 'NotoSansCJKKR';
@@ -2823,8 +2766,8 @@ bg-[#ffea2c]
   line-height: 5.321mm;
   letter-spacing: normal;
   text-align: left;
-  color: #222;
   @apply
+  text-[#222]
   capitalize
 }
 .export-report-wr-sa-title-font {
@@ -2836,8 +2779,8 @@ bg-[#ffea2c]
   line-height: 4.353mm;
   letter-spacing: normal;
   text-align: center;
-  color: #fff;
   @apply
+  text-[#fff]
   capitalize
 }
 .export-report-wr-sa-ar-title {
@@ -2846,7 +2789,7 @@ bg-[#ffea2c]
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
-  line-height: 8.465mm;
+  line-height: 1.55;
   letter-spacing: normal;
   text-align: left;
   color: #222;
@@ -3236,4 +3179,58 @@ bg-[#ffea2c]
   max-h-[83px]
   bg-[#f4f4f4]
   rounded-[10px]
+}
+
+
+.overall-comment-2nd-draft-write-top-tooltip-content {
+  font-family: 'GothamRounded';
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.38;
+  letter-spacing: normal;
+  text-align: left;
+  border-radius: 10px;
+  border: #21c4cc solid 3px;
+  ::after {
+    content: " ";
+    position: absolute;
+    border-style: solid;
+    border-width: 15px 3px 0;
+    border-color: #fff transparent;
+    display: block;
+    width: 0;
+    z-index: 9999;
+    top: 15px;
+    right: 183px;
+    rotate: 270deg;
+  };
+  ::before {
+    content: "";
+    position: absolute;
+    border-style: solid;
+    border-width: 25px 5px 0;
+    border-color: #21c4cc transparent;
+    display: block;
+    width: 0;
+    z-index: 0;
+    top: 10px;
+    right: 175px;
+    rotate: 270deg;
+  };
+
+  @apply
+  flex
+  flex-1
+  flex-row
+  px-[10px]
+  py-[10px]
+  w-full
+  h-fit
+  max-w-[900px]
+  max-h-[75px]
+  overflow-y-auto
+  overflow-x-hidden
+  bg-white
 }

@@ -32,7 +32,7 @@ const PrintReportExportButton = (props: {
         reportByUnitMainTitle,
     } = useControlAlertStore();
     React.useEffect(() => {
-        console.log('isActi',isReplace)
+        // console.log('isActi',isReplace)
         // if (!isReplace) {
             if (divRef.current) {
                 const checkRef = divRef.current;
@@ -96,7 +96,7 @@ const PrintReportExportButton = (props: {
                     setIsMulti(false);
                 }
                 setIsReplace(true);
-                console.log('new tags =',newTags)
+                // console.log('new tags =',newTags)
                 setReplaceBody(newTags);
                 // setDoughnutChatScreen(<PrintReportDoughnutChart />);
             }

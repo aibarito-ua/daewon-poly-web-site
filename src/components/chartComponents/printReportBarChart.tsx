@@ -144,7 +144,7 @@ const changeDataForm = (unitRubricScoresData:TUnitScoreData) => {
         }; //unit datas for loop End
         barChartData.push(rubricScore)
     };
-    console.log('barChartData =',barChartData)
+    // console.log('barChartData =',barChartData)
     return barChartData;
 }
 // 2차 데이터 가공
@@ -202,8 +202,9 @@ const processChangeDataForm = (data: TBarChartData[]) => {
         <g>
             <text 
             textAnchor="end"
-            fontFamily="Noto Sans CJK KR"
-            fontSize={12}
+            fontFamily="NotoSansCJKKR"
+            // fontSize={12}
+            fontSize={'2.902mm'}
             fontWeight={400}
             fill="#222"
             height={'18px'}
@@ -212,9 +213,44 @@ const processChangeDataForm = (data: TBarChartData[]) => {
         </g>
         );
     };
-// custom bar labels
+// // custom bar labels
+//     const CustomizedBarLabel = (props:any) => {
+//         console.log('label props =',props)
+//         const customBarY = [10, 32, 54, 76, 98, 120]
+//         const {
+//             x, y, fill, value, index,
+//             viewBox
+//         } = props;
+//         const reDy = viewBox.height/2
+//         return <text
+//             x={viewBox.width+viewBox.x+10}
+//             y={customBarY[index]}
+//             dy={10}
+//         >{value}%</text>
+//     }
+export default function App() {
+    const {unitRubricScoresData, reportSelectUnit, unitReportData} = useControlAlertStore();
+    const [ data, setData] = React.useState<TBarChartsData[]>([]);
+    const ideaColor = { start:'#c9defc', end: '#588ee1'}
+    const organizationColor ={ start:'#ffd1b2', end: '#f6914d'}
+    const voiceColor = { start:'#efd6ff', end: '#aa6bd4'}
+    const wordChoiceColor = { start:'#c2f3e4', end: '#30c194'}
+    const sentenceFluencyColor = { start:'#e0dfff', end: '#6865cc'}
+    const conventionsColor = { start:'#ffdcdc', end: '#db5757'}
+    // data form process 1
+    // const dataAllProcess:TBarChartData[] = changeDataForm(unitRubricScoresData);
+    // const data = unitRubricScoresData.barChartData;
+    React.useEffect(()=>{
+       setData(unitRubricScoresData.barChartData) 
+    //    console.log('in report bar chart print =')
+    //    console.log('unitRubricScoresData =',unitRubricScoresData)
+    //    console.log('reportSelectUnit =',reportSelectUnit)
+    },[unitRubricScoresData, reportSelectUnit])
+    // const data:TBarChartData[] = processChangeDataForm(dataAllProcess);
+
+    // custom bar labels
     const CustomizedBarLabel = (props:any) => {
-        console.log('label props =',props)
+        // console.log('label props =',props)
         const customBarY = [10, 32, 54, 76, 98, 120]
         const {
             x, y, fill, value, index,
@@ -227,19 +263,6 @@ const processChangeDataForm = (data: TBarChartData[]) => {
             dy={10}
         >{value}%</text>
     }
-export default function App() {
-    const {unitRubricScoresData, reportSelectUnit, unitReportData} = useControlAlertStore();
-    const [ data, setData] = React.useState<TBarChartsData[]>([]);
-    // data form process 1
-    // const dataAllProcess:TBarChartData[] = changeDataForm(unitRubricScoresData);
-    // const data = unitRubricScoresData.barChartData;
-    React.useEffect(()=>{
-       setData(unitRubricScoresData.barChartData) 
-       console.log('in report bar chart print =')
-       console.log('unitRubricScoresData =',unitRubricScoresData)
-       console.log('reportSelectUnit =',reportSelectUnit)
-    },[unitRubricScoresData, reportSelectUnit])
-    // const data:TBarChartData[] = processChangeDataForm(dataAllProcess);
   return (
     <BarChart
     layout={'vertical'}
@@ -252,17 +275,18 @@ export default function App() {
       left: 50,
       bottom: 0
     }}
-      className="font-[NotoSansCJKKR] capitalize"
+      className="export-report-wr-bar-titles"
     >
       <CartesianGrid strokeDasharray="3 3" 
         height={140}
         horizontal={false}
       />
-      <XAxis type="number" axisLine={false} tick={true}
+      <XAxis type="number" axisLine={false}
+      max={100}
       ticks={['0','10','20','30','40','50','60','70','80','90','100']}
-      
       tickSize={0}
       tickFormatter={()=>''}
+      domain={[0,100]}
       />
       <YAxis dataKey="name" type="category" 
       axisLine={true}

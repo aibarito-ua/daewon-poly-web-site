@@ -6,9 +6,7 @@ import { progressIcons } from '../../../util/svgs/commonProgressIcons';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 
 export default function ReportSelectButton(props:{
-  data:{
-    year: number, semester:number, level:string, label:string
-  }[];
+  data:TReportPageSelectBoxDatas[];
   selectDataFn:Function;
   isLevel:boolean;
   useDefaultEmptyValueFlag?:boolean;
@@ -32,27 +30,35 @@ export default function ReportSelectButton(props:{
     reportSemester,
     setReportSelectBoxValue,
     reportAPIData,
-    forcedReadOnlyReportSelectBox
+    forcedReadOnlyReportSelectBox,
+    setSelectReportData,
+    setReportSelectUnit
   } = useControlAlertStore();
   React.useEffect(()=>{
     // isLevel? (reportSemester===''?true:false):false
     let isDisabled = false;
     if (isLevel) {
-      if (forcedReadOnlyReportSelectBox[1]) {
-        isDisabled = true;
+      // isLevel? reportLevel: reportSemester
+      if (data.length < 1) {
+        isDisabled=true;
       } else {
-        if (reportSemester==='') {
-          isDisabled = true;
-        } else {
-          isDisabled = false;
+        if (reportSemester!=='') {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].label === reportSemester) {
+              if (data[i].level.length < 1) {
+                isDisabled=true;
+              }
+            }
+          }
         }
       }
     } else {
-      if (forcedReadOnlyReportSelectBox[0]) {
+      if (data.length < 1) {
         isDisabled = true;
       } else {
         isDisabled = false;
       }
+
     }
     setDisabled(isDisabled)
   },[forcedReadOnlyReportSelectBox])
@@ -60,12 +66,12 @@ export default function ReportSelectButton(props:{
   const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
     console.log('value ==',value)
     if (value==='') {
-      setReportSelectBoxValue({data, init:true})
+      // setReportSelectBoxValue({data, init:true})
     } else {
       if (isLevel) {
-        setReportSelectBoxValue({data,level:value})
+        // setReportSelectBoxValue({data,level:value})
       } else {
-        setReportSelectBoxValue({data,semester:value})
+        // setReportSelectBoxValue({data,semester:value})
       }
     }
   }
@@ -75,21 +81,64 @@ export default function ReportSelectButton(props:{
     console.log('user info =',data)
     const targetData = event.target.value;
     console.log('target =',targetData);
-    if (targetData === '') {
-      
-      selectDataFn('', reportAPIData, data[0], isLevel, true);
-      // setValue('', data[0])
-      return;
+    if (isLevel) {
+      console.log('isLevel true')
+      for (let i = 0; i < data.length; i++) {
+        console.log('data[i].label ===',data[i].label)
+        if (data[i].label === reportSemester) {
+          for (let l = 0; l < data[i].level.length; l++) {
+            if (data[i].level[l].name === targetData) {
+              // selectDataFn(targetData, reportAPIData, data[i], isLevel);
+              setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
+              const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
+              setReportSelectUnit(init)
+              setReportSelectBoxValue({
+                data: {
+                  label: data[i].label,
+                  semester: data[i].semester,
+                  year: data[i].year,
+                  level: targetData
+                }, level: targetData
+              })
+            }
+          }
+        }
+
+      }
     } else {
+      console.log('isLevel false')
       for (let i = 0; i < data.length; i++) {
         if (data[i].label === targetData) {
-          selectDataFn(event.target.value, reportAPIData, data[i], isLevel);
-           
-          // setValue(event.target.value, data[i]);
-          break;
+          console.log('data[i].label ===',data[i].label)
+          // selectDataFn(targetData, reportAPIData, data[i], isLevel);
+          setReportSelectBoxValue({
+            data: {
+              label: data[i].label,
+              semester: data[i].semester,
+              year: data[i].year,
+              level: ''
+            }, semester: targetData
+          })
         }
+
       }
     }
+    
+    // if (targetData === '') {
+      
+    //   selectDataFn('', reportAPIData, data[0], isLevel, true);
+    //   // setValue('', data[0])
+    //   return;
+    // } else {
+    //   for (let i = 0; i < data.length; i++) {
+    //     if (data[i].label === targetData) {
+    //       selectDataFn(event.target.value, reportAPIData, data[i], isLevel);
+           
+    //       // setValue(event.target.value, data[i]);
+    //       break;
+    //     }
+    //   }
+    // }
   };
 
 
@@ -163,9 +212,20 @@ export default function ReportSelectButton(props:{
             {isLevel && } */}
             <MenuItem sx={{height: '45px', minHeight: '45px',padding:0 }} value=''></MenuItem>
 
-            {data.map((dataItem, dataIndex)=>{
-                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={isLevel?dataItem.level:dataItem.label}>{isLevel?dataItem.level:dataItem.label}</MenuItem>
+            {!isLevel && data.map((dataItem, dataIndex)=>{
+                return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>
+            })}
+            {isLevel && data.map((yearItem, yearIndex)=>{
+              console.log('yearItem===',yearItem)
+              console.log('reportSelectFinder.label ==',reportSelectFinder.label)
+              if (reportSemester === yearItem.label) {
+                return yearItem.level.map((levelItem, levelIndex)=>{
+                  console.log('levelItem ==',levelItem.name)
+                  return <MenuItem key={'reportSelectButtonLevel-'+yearIndex+'-'+levelIndex} sx={{height: '45px', minHeight: '45px'}} value={levelItem.name}>{levelItem.name}</MenuItem>
 
+                })
+              }
+              return null;
             })}
         </Select>
       </FormControl>

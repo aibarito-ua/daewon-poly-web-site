@@ -48,7 +48,7 @@ interface IUseControlAlertStore {
     reportSelectedOverallPieChart: TAllDoughnutDatas;
     // select datas
     reportSelectFinder: TDropdownSelectBoxDataTypes;
-    reportSelectBoxDatas: TDropdownSelectBoxDataTypes[];
+    reportSelectBoxDatas: TReportPageSelectBoxDatas[];
     // report semester
     reportSemester: string;
     reportLevel: string;
@@ -58,8 +58,9 @@ interface IUseControlAlertStore {
         level?:string;
         init?:boolean;
     })=>void;
-    setReportSelectBoxDatas: (data: TDropdownSelectBoxDataTypes[])=>void;
+    setReportSelectBoxDatas: (data: TReportPageSelectBoxDatas[])=>void;
     setReportSelectedFinder: (data:TDropdownSelectBoxDataTypes)=>void;
+    
     // report select unit
     reportSelectUnit: number;
     setReportSelectUnit: (unit_index: number) => void;
@@ -84,10 +85,24 @@ interface IUseControlAlertStore {
     forcedReadOnlyReportSelectBox: boolean[];
     setForcedReadOnlyReportSelectBox: (flags: boolean[]) => void;
     
+    // progress select box
+    progressLevelBoxValue: string;
+    progressAllLevelsValue: string[];
+    setProgressAllLevelBoxValues: (data: string[]) => void;
+    setProgressLevelBoxValue: (level:string, userInfo: TUserInfoData, isDefault:boolean) => void;
     
 }
 type TDropdownSelectBoxDataTypes = {
     year: number, semester:number, level:string, label:string
+}
+// new report select box controller
+type TReportPageSelectBoxDatas = {
+    label: string,
+    semester: number,
+    year: number,
+    level: {
+        name: string
+    }[]
 }
 
 type TAllDoughnutDatas = TAllDoughnutDataItem[];
@@ -179,6 +194,7 @@ type TReportByStudentTeacherComment = {
 type TReportByStudentGrammarCorrectionItem = {
     sentences: TReportByStudentGrammarCorrectionSentencesItem[][];
     sentences_count:number;
+    corrections_count:number;
 }
 type TReportByStudentGrammarCorrectionSentencesItem={
     type:number;

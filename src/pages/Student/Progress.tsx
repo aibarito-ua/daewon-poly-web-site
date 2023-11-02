@@ -23,17 +23,18 @@ const Progress = () => {
         setReportSelectBoxDatas,
         setReportSelectedFinder,
         setReportAPIData,
-        setReportSelectBoxValue
+        setReportSelectBoxValue,
+        setProgressAllLevelBoxValues,
+        setProgressLevelBoxValue,
+        progressLevelBoxValue
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI, 
         sparkWritingBookName,
         sparkWritingData,
-        setProgressAllLevelBoxValues,
-        setProgressLevelBoxValue,
     } = useSparkWritingStore();
     const {
-        progressTabActiveIndex,
+        // progressTabActiveIndex,
     } = useProgressPageStore();
 
     const getReportsData = async () => {
@@ -48,25 +49,23 @@ const Progress = () => {
         }
         
         if (getReportAll) {
-            let dumpReportSelectBoxDatas=[];
-            for (let i = 0; i < getReportAll.periods.length; i++) {
-                // find year and semesters
-                const currentReportAll = getReportAll.periods[i];
-                const currentYearData = currentReportAll.year;
-                const currentSemester = currentReportAll.semester===1? '1st': '2nd';
+            let dumpReportSelectBoxDatas:TReportPageSelectBoxDatas[]=getReportAll.periods.map((periodItem) => {
+                
+                const currentYearData = periodItem.year;
+                const currentSemester = periodItem.semester===1? '1st': '2nd';
                 const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
-                // const pushSemesterData = {label: pushSemesterString, year:currentYearData, semester: currentReportAll.semester, level:''};
-                // dumpReportSelectBoxDatas.push(pushSemesterData);
-                for ( let j = 0; j < currentReportAll.levels.length; j++) {
-                    // find levels
-                    const level = currentReportAll.levels[j].level_name;
-                    const pushLevelsData = {label: pushSemesterString, year: currentYearData, semester:currentReportAll.semester, level:level}
-                    dumpReportSelectBoxDatas.push(pushLevelsData);
-                };
-            };
+                let dumpReportSelectBoxDataItem:TReportPageSelectBoxDatas = {
+                    label: pushSemesterString, level: [], semester: periodItem.semester, year: currentYearData
+                }
+                dumpReportSelectBoxDataItem.level = periodItem.levels.map((item)=>{
+                    return {name: item.level_name}
+                })
+                return dumpReportSelectBoxDataItem;
+            });
             console.log('get report all =', getReportAll)
 // 1
             let allLevels:string[] = [];
+            
             for (let i = 0; getReportAll.periods.length; i++) {
                 if (getReportAll.periods[i].year === userInfo.year && getReportAll.periods[i].semester === userInfo.semester) {
                     const target = getReportAll.periods[i].levels;
@@ -77,9 +76,9 @@ const Progress = () => {
                 };
             };
             if (allLevels.length!==0) {
-                setProgressLevelBoxValue(allLevels[0])
+                setProgressLevelBoxValue(allLevels[0],userInfo, true)
             } else {
-                setProgressLevelBoxValue('');
+                setProgressLevelBoxValue('',userInfo, true);
             }
             setProgressAllLevelBoxValues(allLevels);
 // 2
@@ -90,7 +89,7 @@ const Progress = () => {
             setReportSelectBoxDatas(dumpReportSelectBoxDatas);
             setReportSelectedFinder(dumyFinderData);
             setReportAPIData(getReportAll);
-            setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
+            // setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
             setCommonStandbyScreen({openFlag: false})
         }
     }
@@ -98,7 +97,21 @@ const Progress = () => {
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
+            console.log('callUnitInfobyStudent ===',response)
+            if (response.book_name!=='') {
+                setLoading(true)
+            }
+            setSparkWritingDataFromAPI(response.units, response.book_name)
             
+            return response;
+        });
+    }
+    const findCallUnitInfobyStudent = async (studentCode: string,
+        courseName: string,
+        accessToken: string
+    ) => {
+        return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
+            console.log('callUnitInfobyStudent ===',response)
             if (response.book_name!=='') {
                 setLoading(true)
             }

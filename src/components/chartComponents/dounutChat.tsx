@@ -178,13 +178,13 @@ const trackRadius = innerRadius + cornerRadius;
 };
 
 export default function App() {
-    const {reportSelectedOverallPieChart} = useControlAlertStore();
+    const {reportSelectedOverallPieChart, reportSelectFinder} = useControlAlertStore();
     const [activeIndex, setActiveIndex] = useState(0);
     const [clickIndex, setClickIndex] = useState<string>('');
     const [tooltipData, setTooltipData] = useState<{value:number, outerRadius:number}>({
         value: 0, outerRadius: 0
     });
-    const [allData, setAllData] = useState<TAllDoughnutDatas>(reportSelectedOverallPieChart);
+    const [allData, setAllData] = useState<TAllDoughnutDatas>([]);
     const [addWidth, setAddWidth] = useState<number>(0);
     const [decText, setDecText] = useState<number>(0);
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
@@ -200,7 +200,8 @@ export default function App() {
         const avr = sum_val/length;
         console.log('avr =',avr)
         setAverage(avr)
-    },[reportSelectedOverallPieChart])
+        setAllData(reportSelectedOverallPieChart);
+    },[reportSelectedOverallPieChart, reportSelectFinder])
     const radiusDatas = [
         { innerRadius: 60, outerRadius: 70 },
         { innerRadius: 75, outerRadius: 85 },

@@ -66,10 +66,10 @@ const GrammarContentComponent = {
                         const currentWord = word[0].word;
                         const reasonValue = word[0].correction_reason;
                         const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                            if (reasonValue.length === reasonTextIndex-1) {
+                            if (reasonValue.length-1 === reasonTextIndex) {
                                 return reasonText
                             } else {
-                                return reasonText + '/'
+                                return reasonText + ' / ' 
                             }
                         })):reasonValue[0];
 
@@ -376,10 +376,10 @@ const GrammarContentComponent = {
                             // const reasons = word[0].correction_reason;
                             const reasonValue = word[0].correction_reason;
                             const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                if (reasonValue.length === reasonTextIndex-1) {
+                                if (reasonValue.length-1 === reasonTextIndex) {
                                     return reasonText
                                 } else {
-                                    return reasonText + '/'
+                                    return reasonText + ' / '
                                 }
                             })):reasonValue[0];
                             const emptyCheckStart = currentWord.match(/^\s/gmi);

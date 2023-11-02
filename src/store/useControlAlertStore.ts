@@ -860,12 +860,13 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     setReportSelectBoxValue: (data) => {
         const boxData = get().reportSelectBoxDatas;
         let dumpReportSelectFinder:TDropdownSelectBoxDataTypes = get().reportSelectFinder;
-        
+        console.log('=== setReportSelectBoxValue ====', data) 
         if (data.init) {
             dumpReportSelectFinder.label='';
             dumpReportSelectFinder.semester=0;
             dumpReportSelectFinder.level='';
             dumpReportSelectFinder.year=0;
+            console.log('init ==',dumpReportSelectFinder)
             set(()=>({
                 reportSelectFinder: dumpReportSelectFinder,
                 reportSemester: '',
@@ -879,20 +880,13 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         semester='';
                         dumpReportSelectFinder={label:'',semester:0,level:'',year:0};
                     } else {
-                        for (let i = 0; i < boxData.length; i++) {
-                            if (boxData[i].level === data.level) {
-                                semester = boxData[i].label;
-                                dumpReportSelectFinder.label=boxData[i].label;
-                                dumpReportSelectFinder.semester=boxData[i].semester;
-                                dumpReportSelectFinder.level=boxData[i].level;
-                                dumpReportSelectFinder.year=boxData[i].year;
-                                break;
-                            }
-                        }
+                        semester=dumpReportSelectFinder.label;
+                        dumpReportSelectFinder.level=data.level;
                     }
                 } else {
                     semester = get().reportSemester;
                 }
+                console.log('level!!===',semester, '\ndumpReportSelectFinder==',dumpReportSelectFinder)
                 set(()=>({reportLevel: data.level, reportSemester: semester, reportSelectFinder:dumpReportSelectFinder}))
             } else if (data.semester) {
                 let level = '';
@@ -900,12 +894,13 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                     if (data.semester === '') {
                         level='';
                     } else {
+
                         for (let i = 0; i < boxData.length; i++) {
                             if (boxData[i].label === data.semester) {
-                                level = boxData[i].level;
+                                level = boxData[i].level[0].name;
                                 dumpReportSelectFinder.label=boxData[i].label;
                                 dumpReportSelectFinder.semester=boxData[i].semester;
-                                dumpReportSelectFinder.level=boxData[i].level;
+                                dumpReportSelectFinder.level=boxData[i].level[0].name;
                                 dumpReportSelectFinder.year=boxData[i].year;
                                 break;
                             }
@@ -914,7 +909,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 } else {
                     level = get().reportLevel;
                 }
-                set(()=>({reportSemester: data.semester, reportLevel: level,reportSelectFinder:dumpReportSelectFinder}))
+                console.log('semester ==',data, '\nlevel ==',level, '\ndumpReportSelectFinder==',dumpReportSelectFinder)
+                set(()=>({reportSemester: data.semester, reportLevel: level, reportSelectFinder:dumpReportSelectFinder}))
             }
         }
     },
@@ -949,7 +945,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         }
 
         const findRubricDescription = (unit_index: number, category:string, score:number) => {
-            const scoreName = ['Excellent', 'Very Good', 'Good', 'fair','poor']
+            const scoreName = ['Excellent', 'Very Good', 'Good', 'Fair','Poor']
             for (let m = 0; m < modalRubric.length; m++) {
                 if (modalRubric[m].unit_index === unit_index) {
                     for (let n =0; n < modalRubric[m].rubric.rubric_description.length; n++) {
@@ -1037,9 +1033,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     unitReportData: {
         is_completed: false, word_counts: [], 
         grammar_correction: { 
-            grammar: {sentences:[],sentences_count:0},
-            punctuation: {sentences:[],sentences_count:0},
-            spelling: {sentences:[],sentences_count:0}
+            grammar: {sentences:[],sentences_count:0, corrections_count:0},
+            punctuation: {sentences:[],sentences_count:0, corrections_count:0},
+            spelling: {sentences:[],sentences_count:0, corrections_count:0}
         },
         teacher_comments: [],
         rubric: {
@@ -1075,6 +1071,17 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     forcedReadOnlyReportSelectBox: [false, false],
     setForcedReadOnlyReportSelectBox: (flags) => {
         set(()=>({forcedReadOnlyReportSelectBox:flags}))
+    },
+    // progress select box
+    
+    progressAllLevelsValue: [],
+    progressLevelBoxValue: '',
+    setProgressAllLevelBoxValues: (data) => {
+        set(()=>({progressAllLevelsValue:data}))
+    },
+    setProgressLevelBoxValue: (level) => {
+        set(()=>({progressLevelBoxValue:level}))
+        
     },
 }))
 

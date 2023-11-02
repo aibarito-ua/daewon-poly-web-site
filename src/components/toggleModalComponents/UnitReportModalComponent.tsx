@@ -215,9 +215,9 @@ export default function UnitReportModalComponent() {
             )}
             {/* Report By Unit */}
             {menuControll===1 && (
-                <div className='w-[964px] h-[424px] flex flex-col justify-center items-center pt-[30px] px-[50px]'>
+                <div className='w-[964px] h-[424px] flex flex-col justify-center items-center pt-[15px] px-[50px]'>
                 {/* title */}
-                <div className='flex flex-row report-by-unit-page-title-font pb-[15px]'>
+                <div className='flex flex-row report-by-unit-page-title-font pb-[25px]'>
                     {reportByUnitMainTitle}
                 </div>
                 {/* unit report */}
