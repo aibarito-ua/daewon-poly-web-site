@@ -17,18 +17,20 @@ export default function TeacherFeedbackDetailModalComponents (props: {
     const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
     const {draftItem} = props;
     const handleOpen = () => {
-        console.log('test ==',draftItem)
+        // console.log('test ==',draftItem)
+        // console.log('draftItem.draft_1_comment =',draftItem.draft_1_comment)
         setOpen(true)
     }
     const handleClose = () => {
         setOpen(false)
     }
     React.useEffect(()=>{
-        console.log( 'commentFocusIdInModal ==', commentFocusIdInModal)
+        // console.log( 'commentFocusIdInModal ==', commentFocusIdInModal)
+    
     }, [commentFocusIdInModal])
     return (
         <div className='flex'>
-            <div className={`draft-teacher-feedback-title-docs-find-button hover:cursor-pointer`}
+            <div className={draftItem.draft_1_comment.length > 0 ? `draft-teacher-feedback-title-docs-find-button hover:cursor-pointer`: 'hidden'}
             onClick={handleOpen}
             />
             <Dialog className=''

@@ -200,12 +200,12 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
             const currentPeriod = data.periods[idx];
             const currentYear = currentPeriod.year;
             const currentSemester = currentPeriod.semester === 1? '1st': '2nd';
-            const currentSemeterLabel = `${currentYear} - ${currentSemester} Semeter`;
+            const currentSemesterLabel = `${currentYear} - ${currentSemester} Semester`;
             const currentLevels = currentPeriod.levels.map((item)=>{
                 return {name:item.level_name}
             })
             let finderValueItem:TReportPageSelectBoxDatas = {
-                label: currentSemeterLabel,
+                label: currentSemesterLabel,
                 semester: currentPeriod.semester,
                 year: currentPeriod.year,
                 level: currentLevels

@@ -1295,15 +1295,17 @@ const EssayWriting = () => {
                     <div className={`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
                         console.log('isSaveButtonOpen =',isSaveButtonOpen)
                         if (isSaveButtonOpen) {
-                            // setShowSaveModal(true)
-                            callbackCheckValues()
-                            commonAlertOpen({
-                                messages: ['Do you want to save your current progress and return to the main menu?'],
-                                yesButtonLabel: `Yes`,
-                                noButtonLabel: `No`,
-                                yesEvent: async ()=> await temporarySaveFunction(),
-                                closeEvent: async () => commonAlertClose()
-                            })
+                            if (!commonStandbyScreen.openFlag) {
+                                // setShowSaveModal(true)
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messages: ['Do you want to save your current progress and return to the main menu?'],
+                                    yesButtonLabel: `Yes`,
+                                    noButtonLabel: `No`,
+                                    yesEvent: async ()=> await temporarySaveFunction(),
+                                    closeEvent: async () => commonAlertClose()
+                                })
+                            }
                         }
                     }}>Save</div>
                     <div className={`${isPreviewButtonOpen?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={()=>{
@@ -1568,43 +1570,47 @@ const EssayWriting = () => {
                     {/* <div className='' onClick={()=>setDraft2ndPageSet('')}>test return page set</div> */}
                     <div className={`${draft2ndSaveActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSaveActive) {
-                            commonAlertOpen({
-                                messages:['Do you want to save your current progress and return to the main menu?'],
-                                yesButtonLabel: 'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    commonAlertClose();
-                                    setCommonStandbyScreen({openFlag:true})
-                                    // setDraft2ndPageSet('')
-                                    await temporarySaveFunction();
-                                }
-                            })
+                            if (!commonStandbyScreen.openFlag) {
+                                commonAlertOpen({
+                                    messages:['Do you want to save your current progress and return to the main menu?'],
+                                    yesButtonLabel: 'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        commonAlertClose();
+                                        setCommonStandbyScreen({openFlag:true})
+                                        // setDraft2ndPageSet('')
+                                        await temporarySaveFunction();
+                                    }
+                                })
+                            }
                         }
                     }}>Save</div>
                     <div className={`${draft2ndSubmitActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSubmitActive) {
-                            const replaceTopic = draftItem.topic.replace(/s$/gmi,'');
-                            console.log('replaceTopic =',replaceTopic)
-                            commonAlertOpen({
-                                head: `Unit ${draftItem.unit_index}: ${replaceTopic}`,
-                                messages: ['Are you ready to submit?'],
-                                // messages: [
-                                //     `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
-                                //     'Are you ready to submit?'
-                                // ],
-                                alertType: 'continue',
-                                yesButtonLabel: 'No',
-                                noButtonLabel: 'Yes',
-                                yesEvent: async () => {
-                                    commonAlertClose();
-                                },
-                                closeEvent: async () => {
-                                    commonAlertClose();
-                                    setCommonStandbyScreen({openFlag:true})
-                                    // setDraft2ndPageSet('')
-                                    await submit2ndDraftFunction();
-                                }
-                            })
+                            if (!commonStandbyScreen.openFlag) {
+                                const replaceTopic = draftItem.topic.replace(/s$/gmi,'');
+                                console.log('replaceTopic =',replaceTopic)
+                                commonAlertOpen({
+                                    head: `Unit ${draftItem.unit_index}: ${replaceTopic}`,
+                                    messages: ['Are you ready to submit?'],
+                                    // messages: [
+                                    //     `Unit ${draftItem.unit_index} : ${draftItem.topic}`,
+                                    //     'Are you ready to submit?'
+                                    // ],
+                                    alertType: 'continue',
+                                    yesButtonLabel: 'No',
+                                    noButtonLabel: 'Yes',
+                                    yesEvent: async () => {
+                                        commonAlertClose();
+                                    },
+                                    closeEvent: async () => {
+                                        commonAlertClose();
+                                        setCommonStandbyScreen({openFlag:true})
+                                        // setDraft2ndPageSet('')
+                                        await submit2ndDraftFunction();
+                                    }
+                                })
+                            }
                         }
                     }}>Submit</div>
                 </div>

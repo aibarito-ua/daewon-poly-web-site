@@ -35,33 +35,29 @@ export default function ReportSelectButton(props:{
     setReportSelectUnit
   } = useControlAlertStore();
   React.useEffect(()=>{
+
     // isLevel? (reportSemester===''?true:false):false
     let isDisabled = false;
     if (isLevel) {
-      // isLevel? reportLevel: reportSemester
-      if (data.length < 1) {
-        isDisabled=true;
-      } else {
-        if (reportSemester!=='') {
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].label === reportSemester) {
-              if (data[i].level.length < 1) {
-                isDisabled=true;
-              }
-            }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].label === reportSemester) {
+          if (data[i].level.length > 1) {
+            isDisabled = false;
+          } else {
+            isDisabled = true;
           }
+          break;
         }
       }
     } else {
-      if (data.length < 1) {
-        isDisabled = true;
-      } else {
+      if (data.length > 1) {
         isDisabled = false;
+      } else {
+        isDisabled = true;
       }
-
     }
     setDisabled(isDisabled)
-  },[forcedReadOnlyReportSelectBox])
+  },[reportSelectFinder, reportLevel, reportSemester])
 
   const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
     console.log('value ==',value)
@@ -139,22 +135,6 @@ export default function ReportSelectButton(props:{
 
       }
     }
-    
-    // if (targetData === '') {
-      
-    //   selectDataFn('', reportAPIData, data[0], isLevel, true);
-    //   // setValue('', data[0])
-    //   return;
-    // } else {
-    //   for (let i = 0; i < data.length; i++) {
-    //     if (data[i].label === targetData) {
-    //       selectDataFn(event.target.value, reportAPIData, data[i], isLevel);
-           
-    //       // setValue(event.target.value, data[i]);
-    //       break;
-    //     }
-    //   }
-    // }
   };
 
 
@@ -226,7 +206,9 @@ export default function ReportSelectButton(props:{
             {/* {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
             
             {isLevel && } */}
+            {disabled && 
             <MenuItem sx={{height: '45px', minHeight: '45px',padding:0 }} value=''></MenuItem>
+            }
 
             {!isLevel && data.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>

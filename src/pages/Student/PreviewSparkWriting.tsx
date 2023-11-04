@@ -48,6 +48,7 @@ const PreviewSparkWriting = (props:any) => {
     } = useGrammarStore();
     const {
         commonAlertOpen, setCommonStandbyScreen, commonAlertClose,
+        commonStandbyScreen
     } = useControlAlertStore();
     
 
@@ -1179,13 +1180,14 @@ const PreviewSparkWriting = (props:any) => {
                     {!isSubmitted &&
                         <div className={!isSubmitted ?`${isSaveButtonOpen?'save-button-active div-to-button-hover-effect':'hidden'}`:'hidden'} onClick={()=>{
                             if (isSaveButtonOpen) {
-                                
-                                commonAlertOpen({
-                                    messages: ['Do you want to save your current progress and return to the main menu?'],
-                                    yesButtonLabel: `Yes`,
-                                    noButtonLabel: `No`,
-                                    yesEvent: async ()=> await forcedTemporarySave(true)
-                                })
+                                if (!commonStandbyScreen.openFlag) {
+                                    commonAlertOpen({
+                                        messages: ['Do you want to save your current progress and return to the main menu?'],
+                                        yesButtonLabel: `Yes`,
+                                        noButtonLabel: `No`,
+                                        yesEvent: async ()=> await forcedTemporarySave(true)
+                                    })
+                                }
                             }
 
                         }}>Save</div>
@@ -1206,27 +1208,29 @@ const PreviewSparkWriting = (props:any) => {
                                 )
                         } 
                         onClick={()=>{
-                            if (sparkWritingData[unitIndex].proofreading_count===2) {
-                                commonAlertOpen({
-                                    messages:  ['You have already used AI proofreading twice.'],
-                                    useOneButton:true,
-                                    yesButtonLabel: 'OK',
-                                    // yesEvent: async () => await AIProofreadingYesOnClick()
-                                })
-                            } else {
-                                commonAlertOpen({
-                                    messages: [
-                                        'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
-                                        `(${sparkWritingData[unitIndex].proofreading_count+1}/2)`
-                                    ],
-                                    yesButtonLabel: 'No',
-                                    noButtonLabel: 'Yes',
-                                    closeEvent: async () => {
-                                        commonAlertClose();
-                                        await AIProofreadingYesOnClick();
-                                    },
-                                    yesEvent: () => commonAlertClose(),
-                                })
+                            if (!commonStandbyScreen.openFlag) {
+                                if (sparkWritingData[unitIndex].proofreading_count===2) {
+                                    commonAlertOpen({
+                                        messages:  ['You have already used AI proofreading twice.'],
+                                        useOneButton:true,
+                                        yesButtonLabel: 'OK',
+                                        // yesEvent: async () => await AIProofreadingYesOnClick()
+                                    })
+                                } else {
+                                    commonAlertOpen({
+                                        messages: [
+                                            'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
+                                            `(${sparkWritingData[unitIndex].proofreading_count+1}/2)`
+                                        ],
+                                        yesButtonLabel: 'No',
+                                        noButtonLabel: 'Yes',
+                                        closeEvent: async () => {
+                                            commonAlertClose();
+                                            await AIProofreadingYesOnClick();
+                                        },
+                                        yesEvent: () => commonAlertClose(),
+                                    })
+                                }
                             }
                         }}>Proofreading</button>
                     }
@@ -1299,100 +1303,99 @@ const PreviewSparkWriting = (props:any) => {
                                 )
                         }
                             onClick={()=>{
-                            const checkGrammarsSelectAll = checkSelectedGrammarModals();
-                          //  console.log('select all =',checkGrammarsSelectAll)
-                            // grammar 시작 후
-                            // select 완료 여부
-                            // grammar 시작 전
-                            if (!checkGrammarsSelectAll) {
-                                replaceUpdateSparkWritingTitle();
-                                replaceUpdateSparkWritingBody();
-                            }
-                          //  console.log('openSubmitButton =',openSubmitButton)
-                            if (openSubmitButton&&countofUseAIProofreading>0) {
-                                // submit date check
-                                const currentSparkWritingData = sparkWritingData[unitIndex]
-                                const submitDate = currentSparkWritingData.draft_1_status.submit_date;
-                                let noMessages = '';
-                                if (submitDate && submitDate!=='') {
-                                    noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
-                                }
-                                // onSubmitEvent()
-                                const replaceTopic = currentSparkWritingData.topic.replace(/s$/gmi,'');
-                                console.log('replaceTopic =',replaceTopic)
-                                commonAlertOpen({
-                                    yesButtonLabel: 'No',
-                                    alertType: 'continue',
-                                    head: `Unit ${currentSparkWritingData.unit_index}: ${replaceTopic}`,
-                                    messages: [
-                                        // `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
-                                        'Are you ready to submit?'
-                                    ],
-                                    noButtonLabel: 'Yes',
-                                    closeEvent: async () => {
-
-                                        // submit
-                                        // make contents 
-                                        const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
-                                            
-                                            const currentGrammarIndex = item.order_index-2;
-                                            // console.log('item =',item)
-                                            // console.log('currentGrammarIndex =',currentGrammarIndex)
-                                            const grammar_correction_content_student = guideFlag===1 ? (
-                                                item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
-                                            ):(
-                                                item.grammar_correction_content_student
-                                            );
-                                            
-                                            return {
-                                                input_content: item.input_content,
-                                                grammar_correction_content_student,
-                                                heading_name: item.name,
-                                                order_index: item.order_index
+                                if (!commonStandbyScreen.openFlag) {
+                                    const checkGrammarsSelectAll = checkSelectedGrammarModals();
+                                    //  console.log('select all =',checkGrammarsSelectAll)
+                                    // grammar 시작 후
+                                    // select 완료 여부
+                                    // grammar 시작 전
+                                    if (!checkGrammarsSelectAll) {
+                                        replaceUpdateSparkWritingTitle();
+                                        replaceUpdateSparkWritingBody();
+                                    }
+                                    //  console.log('openSubmitButton =',openSubmitButton)
+                                    if (openSubmitButton&&countofUseAIProofreading>0) {
+                                        // submit date check
+                                        const currentSparkWritingData = sparkWritingData[unitIndex]
+                                        const submitDate = currentSparkWritingData.draft_1_status.submit_date;
+                                        let noMessages = '';
+                                        if (submitDate && submitDate!=='') {
+                                            noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
+                                        }
+                                        // onSubmitEvent()
+                                        const replaceTopic = currentSparkWritingData.topic.replace(/s$/gmi,'');
+                                        console.log('replaceTopic =',replaceTopic)
+                                        commonAlertOpen({
+                                            yesButtonLabel: 'No',
+                                            alertType: 'continue',
+                                            head: `Unit ${currentSparkWritingData.unit_index}: ${replaceTopic}`,
+                                            messages: [
+                                                // `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
+                                                'Are you ready to submit?'
+                                            ],
+                                            noButtonLabel: 'Yes',
+                                            closeEvent: async () => {
+        
+                                                // submit
+                                                // make contents 
+                                                const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
+                                                    
+                                                    const currentGrammarIndex = item.order_index-2;
+                                                    // console.log('item =',item)
+                                                    // console.log('currentGrammarIndex =',currentGrammarIndex)
+                                                    const grammar_correction_content_student = guideFlag===1 ? (
+                                                        item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
+                                                    ):(
+                                                        item.grammar_correction_content_student
+                                                    );
+                                                    
+                                                    return {
+                                                        input_content: item.input_content,
+                                                        grammar_correction_content_student,
+                                                        heading_name: item.name,
+                                                        order_index: item.order_index
+                                                    }
+                                                })
+                                                const submitData:TSubmit1stDraftRequestData = {
+                                                    student_code: userInfo.userCode,
+                                                    student_name_en: userInfo.memberNameEn,
+                                                    student_name_kr: userInfo.memberNameKr,
+                                                    class_name: userInfo.className,
+                                                    unit_id: currentSparkWritingData.unit_id,
+                                                    draft_index: 1,
+                                                    contents: contentsData,
+                                                    proofreading_count: currentSparkWritingData.proofreading_count
+                                                }
+                                              //  console.log('submit item = ',submitData)
+                                                commonAlertClose();
+                                                setCommonStandbyScreen({openFlag:true})
+                                                const submit = await draft1stSubmit(submitData, userInfo.accessToken);
+                                                
+                                              //  console.log('submit return data =',submit)
+                                                if (submit) {
+                                                    setCommonStandbyScreen({openFlag:false})
+                                                    commonAlertOpen({
+                                                        useOneButton:true,
+                                                        yesButtonLabel: 'OK',
+                                                        alertType: 'continue',
+                                                        messages: [
+                                                            `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
+                                                            <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
+                                                        ],
+                                                        yesEvent: () => {
+                                                            commonAlertClose()
+                                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                                                        }
+                                                    })
+                                                }
+                                            },
+                                            yesEvent: async() => {
+                                                commonAlertClose();
                                             }
                                         })
-                                        const submitData:TSubmit1stDraftRequestData = {
-                                            student_code: userInfo.userCode,
-                                            student_name_en: userInfo.memberNameEn,
-                                            student_name_kr: userInfo.memberNameKr,
-                                            class_name: userInfo.className,
-                                            unit_id: currentSparkWritingData.unit_id,
-                                            draft_index: 1,
-                                            contents: contentsData,
-                                            proofreading_count: currentSparkWritingData.proofreading_count
-                                        }
-                                      //  console.log('submit item = ',submitData)
-                                        commonAlertClose();
-                                        setCommonStandbyScreen({openFlag:true})
-                                        const submit = await draft1stSubmit(submitData, userInfo.accessToken);
-                                        
-                                      //  console.log('submit return data =',submit)
-                                        if (submit) {
-                //                             messages: [
-                //     `Your Unit ${targetData.unit_index} ${topicReplace}'s`,
-                //     <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup> draft</span> has been submitted.</span>
-                // ],
-                                            setCommonStandbyScreen({openFlag:false})
-                                            commonAlertOpen({
-                                                useOneButton:true,
-                                                yesButtonLabel: 'OK',
-                                                alertType: 'continue',
-                                                messages: [
-                                                    `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
-                                                    <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
-                                                ],
-                                                yesEvent: () => {
-                                                    commonAlertClose()
-                                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
-                                                }
-                                            })
-                                        }
-                                    },
-                                    yesEvent: async() => {
-                                        commonAlertClose();
                                     }
-                                })
-                            }
+
+                                }
                         }}>Submit</button>
                     }
                 </div>

@@ -21,16 +21,25 @@ export default function PortfolioSelectButton(props:{
     // portfolioSelectFinder
   } = usePortfolioStore();
   React.useEffect(()=>{
-    // if (levels.length>0) {
-    //   if (levels.length===1) {
-    //     setIsReadOnly(true);
-    //   } else {
-    //     setIsReadOnly(false)
-    //   }
-    // } else {
-    //   setIsReadOnly(true);
-    // }
-  }, [selectLevel, selectSemester])
+    let readOnlyFlag = false;
+    if (isUse === 'level') {
+      for (let i = 0; i < portfolioSelectBoxValue.length; i++) {
+        if (portfolioSelectBoxValue[i].level.length > 1) {
+          readOnlyFlag = false;  
+        } else {
+          readOnlyFlag = true;
+        }
+        break;
+      }
+    } else if (isUse==='semester') {
+      if (portfolioSelectBoxValue.length > 1) {
+        readOnlyFlag = false;
+      } else {
+        readOnlyFlag = true;
+      }
+    }
+    setIsReadOnly(readOnlyFlag)
+  }, [selectLevel, selectSemester, portfolioSelectBoxValue])
 
   const selectValue = () => {
     if (isUse==='level') {
@@ -57,6 +66,7 @@ export default function PortfolioSelectButton(props:{
       setSelectValue(targetValue)
     }
   };
+  
   const returnDisplayValue = () => {
     let returnDisplayValue:JSX.Element[] = [];
     for (let i = 0; i < portfolioSelectBoxValue.length; i++) {
@@ -139,7 +149,9 @@ export default function PortfolioSelectButton(props:{
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
             
         >
-            <MenuItem disabled={isReadOnly} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
+            {isReadOnly && 
+              <MenuItem disabled={isReadOnly} sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>
+            }
             {isUse==='level' && returnDisplayValue()}
             {isUse==='semester' && portfolioSelectBoxValue.map((dataItem, dataIndex)=>{
                 return <MenuItem key={dataIndex} sx={{height: '45px', minHeight: '45px'}} value={dataItem.label}>{dataItem.label}</MenuItem>

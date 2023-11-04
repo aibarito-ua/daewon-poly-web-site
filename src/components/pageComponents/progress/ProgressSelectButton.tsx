@@ -135,7 +135,7 @@ export default function SelectLabels() {
             onClose={()=>setOpen(false)}
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
         >
-            {<MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
+            {isReadOnly && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
 
             {progressAllLevelsValue.map((levelItem, levelIndex)=>{
                 return <MenuItem key={levelIndex} sx={{height: '45px', minHeight: '45px'}} value={levelItem}>{levelItem}</MenuItem>
