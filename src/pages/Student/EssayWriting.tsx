@@ -964,7 +964,9 @@ const EssayWriting = () => {
         } else if (draftIndex === 2) {
             
             const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
+                // console.log('item.input_content length =',item.input_content.length)
                 const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
+                // console.log('input_content ====',input_content.length)
                 return {
                     grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                     input_content,
@@ -986,6 +988,7 @@ const EssayWriting = () => {
                 draft_init_page_flag: draft2ndPageSet
             };
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
+            // const isSaveTemporary = false
             if (isSaveTemporary) {
                 setCommonStandbyScreen({openFlag:false});
                 setIsSaved(true);
@@ -1133,6 +1136,31 @@ const EssayWriting = () => {
         const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
         const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
         const checkDoubleSpace = targetText.match(/\s{4,}/gmi)
+        const checkChangeRow = targetText.match(/\n{3,}/gmi)
+        if (checkNotSC!==null) {
+            console.log('불가 문자 입력')
+            return false;
+        } else if (checkOneSC!==null) {
+            console.log('2개 이상 금지')
+            return false;
+        } else if (checkNotKR!==null) {
+            console.log('한국어')
+            return false;
+        } else if (checkDoubleSpace) {
+            console.log('space 2개까지만 허용')
+            return false;
+        } else if (checkChangeRow) {
+            console.log('줄바꿈 2개까지만')
+            return false;
+        } else {
+            return true;
+        }
+    }
+    const checkInputCharactersRegExps2 = (targetText: string) => {
+        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
+        const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
         const checkChangeRow = targetText.match(/\n{3,}/gmi)
         if (checkNotSC!==null) {
             console.log('불가 문자 입력')
@@ -1436,7 +1464,7 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                const checkNotCH = checkInputCharactersRegExps2(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
@@ -1463,7 +1491,7 @@ const EssayWriting = () => {
                                             })
                                         } else {
                                             
-                                            const checkNotCH = checkInputCharactersRegExps(val);
+                                            const checkNotCH = checkInputCharactersRegExps2(val);
                                             if (checkNotCH) {
                                                 setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                             }
@@ -1525,7 +1553,7 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                const checkNotCH = checkInputCharactersRegExps2(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
@@ -1551,7 +1579,7 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotCH = checkInputCharactersRegExps(val);
+                                            const checkNotCH = checkInputCharactersRegExps2(val);
                                             if (checkNotCH) {
                                                 setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                             }
