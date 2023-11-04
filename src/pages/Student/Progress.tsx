@@ -60,8 +60,13 @@ const Progress = () => {
                 dumpReportSelectBoxDataItem.level = periodItem.levels.map((item)=>{
                     return {name: item.level_name}
                 })
+                dumpReportSelectBoxDataItem.level = [
+                    ...dumpReportSelectBoxDataItem.level.filter(d => d.name === userInfo.courseName),
+                    ...dumpReportSelectBoxDataItem.level.filter(d => d.name !== userInfo.courseName)
+                ]
                 return dumpReportSelectBoxDataItem;
             });
+            console.log('dumpReportSelectBoxDatas== ',dumpReportSelectBoxDatas)
             console.log('get report all =', getReportAll)
 // 1
             let allLevels:string[] = [];
@@ -75,6 +80,10 @@ const Progress = () => {
                     break;
                 };
             };
+            allLevels = [
+                ...allLevels.filter(d => d === userInfo.courseName),
+                ...allLevels.filter(d => d !== userInfo.courseName)
+            ]
             if (allLevels.length!==0) {
                 setProgressLevelBoxValue(allLevels[0],userInfo, true)
             } else {

@@ -1318,11 +1318,12 @@ const PreviewSparkWriting = (props:any) => {
                                     noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
                                 }
                                 // onSubmitEvent()
-
+                                const replaceTopic = currentSparkWritingData.topic.replace(/s$/gmi,'');
+                                console.log('replaceTopic =',replaceTopic)
                                 commonAlertOpen({
                                     yesButtonLabel: 'No',
                                     alertType: 'continue',
-                                    head: `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
+                                    head: `Unit ${currentSparkWritingData.unit_index}: ${replaceTopic}`,
                                     messages: [
                                         // `Unit ${currentSparkWritingData.unit_index}: ${currentSparkWritingData.topic}`,
                                         'Are you ready to submit?'
@@ -1367,12 +1368,19 @@ const PreviewSparkWriting = (props:any) => {
                                         
                                       //  console.log('submit return data =',submit)
                                         if (submit) {
+                //                             messages: [
+                //     `Your Unit ${targetData.unit_index} ${topicReplace}'s`,
+                //     <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup> draft</span> has been submitted.</span>
+                // ],
                                             setCommonStandbyScreen({openFlag:false})
                                             commonAlertOpen({
                                                 useOneButton:true,
                                                 yesButtonLabel: 'OK',
                                                 alertType: 'continue',
-                                                messages: [`Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`],
+                                                messages: [
+                                                    `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
+                                                    <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
+                                                ],
                                                 yesEvent: () => {
                                                     commonAlertClose()
                                                     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);

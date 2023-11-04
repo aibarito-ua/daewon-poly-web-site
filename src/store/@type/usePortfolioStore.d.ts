@@ -1,13 +1,20 @@
 interface IUsePortfolioProps {
     // in portfolio states
     // getter
-    semesters:TDropdownSelectBoxDataTypes[];
-    levels:TDropdownSelectBoxDataTypes[];
+    // semesters:TDropdownSelectBoxDataTypes[];
+    // levels:TDropdownSelectBoxDataTypes[];
+    portfolioSelectFinder: TDropdownSelectBoxDataTypes;
+    portfolioSelectBoxValue: TReportPageSelectBoxDatas[];
+
     selectSemester: string;
     selectLevel: string;
+
     // setter
-    setSemesters: (data:TDropdownSelectBoxDataTypes[])=>void;
-    setLevels: (data:TDropdownSelectBoxDataTypes[]) => void;
+    // setSemesters: (data:TDropdownSelectBoxDataTypes[])=>void;
+    // setLevels: (data:TDropdownSelectBoxDataTypes[]) => void;
+    setPortfolioSelectFinder: (data:TDropdownSelectBoxDataTypes) => void;
+    setPortfolioSelectBoxValue: (data: TReportPageSelectBoxDatas[]) => void;
+     
     setSelectSemester: (data:string) => void;
     setSelectLevel: (data:string) => void;
 
@@ -24,6 +31,8 @@ interface IUsePortfolioProps {
     // force readonly select box
     forceReadOnlyPortfolioSelectBox: boolean[];
     setForceReadOnlyPortfolioSelectBox: (flags:boolean[]) => void;
+
+    
 }
 // portfolio modal control
 type TPortfolioModal = {

@@ -20,10 +20,11 @@ export const Portfolio = () => {
     } = useControlAlertStore();
     const {
         // states
-        semesters, setSemesters,
-        levels, setLevels,
         selectSemester, setSelectSemester,
         selectLevel, setSelectLevel,
+
+        portfolioSelectBoxValue,
+        portfolioSelectFinder,
 
         // apis
         portfolioApiData,
@@ -43,6 +44,12 @@ export const Portfolio = () => {
         setCommonStandbyScreen({openFlag:true});
         await getPortfoliosAPI(student_code, userInfo.accessToken).then((response) => {
             if (response) {
+                for (let i = 0; i < response.periods.length;i++) {
+                    response.periods[i].levels = [
+                        ...response.periods[i].levels.filter(d => d.level_name === userInfo.courseName),
+                        ...response.periods[i].levels.filter(d => d.level_name !== userInfo.courseName)
+                    ]
+                }
                 setPortfolioApiData(response, userInfo);
                 setCommonStandbyScreen({openFlag:false});
             }

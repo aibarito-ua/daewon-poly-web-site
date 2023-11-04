@@ -190,8 +190,9 @@ export default function App() {
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
     const [average, setAverage] = useState<number>(0);
     React.useEffect(()=>{
+        
         console.log('pie chart reportSelectedOverallPieChart =',reportSelectedOverallPieChart)
-        const dumpData:TAllDoughnutDatas = JSON.parse(JSON.stringify(allData));
+        const dumpData:TAllDoughnutDatas = JSON.parse(JSON.stringify(reportSelectedOverallPieChart));
         const length = dumpData.length
         let sum_val = 0;
         for (let i = 0; i < length; i++) {
@@ -283,8 +284,8 @@ const textTooltip = () => {
         
         <g id="Union" filter="url(#filter0_d_620_3639)">
             <defs>
-<filter id="filter0_d_620_3639" x={pathX_left} y={pathY} width={vX} height="59" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter0_d_620_3639" x={pathX_left} y={pathY} width={vX} height="59" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="4"/>
 <feGaussianBlur stdDeviation="2"/>
@@ -445,6 +446,7 @@ Z
     <tspan
     fontFamily="GothamRounded"
     fontSize={14}
+    style={{textTransform:'capitalize'}}
     >{`${clickIndex}: ${scoreResult}`}</tspan>
     <tspan
     fontFamily="GothamRounded"
@@ -458,8 +460,9 @@ Z
 const mouseOnEvent = (e:any)=>{
     console.log('click =',e)
     console.log('active',activeIndex)
-    setClickIndex(e.name)
+
     let value= e.value;
+    setClickIndex(e.name)
     //   let outerR = e.outerRadius;
     let outerR = e.innerRadius;
       let dumpAllData:TAllDoughnutDatas = JSON.parse(JSON.stringify(allData));
@@ -492,6 +495,8 @@ const mouseOffEvent = (e:any) => {
 }
 // const testPercent = 100;
 const mainPercent = Math.round(average*10)/10;
+console.log('average =',average)
+console.log('mainPercent ==',mainPercent)
 // const mainPercent = Math.round(testPercent*10)/10;
 const mainPercentString = mainPercent.toString();
 const replaceDot = mainPercentString.replace('.','')

@@ -1132,7 +1132,7 @@ const EssayWriting = () => {
         const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
         const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
         const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
-        const checkDoubleSpace = targetText.match(/\s{3,}/gmi)
+        const checkDoubleSpace = targetText.match(/\s{4,}/gmi)
         const checkChangeRow = targetText.match(/\n{3,}/gmi)
         if (checkNotSC!==null) {
             console.log('불가 문자 입력')
@@ -1583,8 +1583,10 @@ const EssayWriting = () => {
                     }}>Save</div>
                     <div className={`${draft2ndSubmitActive?'save-button-active div-to-button-hover-effect':'save-button'}`} onClick={async () => {
                         if (draft2ndSubmitActive) {
+                            const replaceTopic = draftItem.topic.replace(/s$/gmi,'');
+                            console.log('replaceTopic =',replaceTopic)
                             commonAlertOpen({
-                                head: `Unit ${draftItem.unit_index}: ${draftItem.topic}`,
+                                head: `Unit ${draftItem.unit_index}: ${replaceTopic}`,
                                 messages: ['Are you ready to submit?'],
                                 // messages: [
                                 //     `Unit ${draftItem.unit_index} : ${draftItem.topic}`,

@@ -9,13 +9,14 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
     const {
         displayPortfolioData,
         portfolioModal, setPortfolioModal,
-        selectSemester, selectLevel,
-        semesters,
+        // selectSemester, selectLevel,
+        portfolioSelectFinder
+
     } = usePortfolioStore();
     const [viewJSX, setViewJSX] = React.useState<JSX.Element[]>([]);
     React.useEffect(()=>{
         console.log('displayPortfolioData ==',displayPortfolioData)
-        console.log('semesters all data =',semesters)
+        // console.log('semesters all data =',semesters)
         let dumpViewJSX=[]
         for (let i = 0; i < 5; i++) {
             const data = displayRow(i+1);

@@ -3,63 +3,111 @@ import { create } from "zustand";
 const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
     // portfolio states
     // getter
-    semesters: [],
-    levels: [],
+    // semesters: [],
+    // levels: [],
+    portfolioSelectFinder: {
+        label:'', level:'', semester:0, year:0
+    },
+    portfolioSelectBoxValue: [],
     selectSemester: '',
     selectLevel: '',
-
+    
     // setter
-    setSemesters: (data) => {
-        set(()=>({semesters: data}))
+    // 전체 검색 데이터
+    setPortfolioSelectBoxValue: (data) => {
+        set(()=>({portfolioSelectBoxValue:data}))
     },
-    setLevels: (data) => {
-        set(()=>({levels:data}))  
+    // select된 데이터
+    setPortfolioSelectFinder: (data) => {
+        set(()=>({portfolioSelectFinder:data}))
     },
+    // setSemesters: (data) => {
+    //     set(()=>({semesters: data}))
+    // },
+    // setLevels: (data) => {
+    //     set(()=>({levels:data}))  
+    // },
     setSelectSemester: (semesterLabel)=> {
-        const semesters = get().semesters;
-        let selectTargetData:TDropdownSelectBoxDataTypes = {
+        const dumpPortfolioSelectBoxValue: TReportPageSelectBoxDatas[] = get().portfolioSelectBoxValue;
+        
+        const data = get().portfolioApiData;
+        // default set selected finder 
+        let dumySelectedFinder:TDropdownSelectBoxDataTypes = {
             label:'',level:'',semester:0,year:0
         }
-        let dumpSelectLevel = '';
-        let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
-        if (semesterLabel==='') {
+        if (dumpPortfolioSelectBoxValue.length > 0) {
+            let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
             dumpDisplayPortfolioData={
                 book_name:'',
                 level_name:'',
                 unit_portfolios:[]
             }
-        } else {
-            for (let j = 0; j < semesters.length; j++) {
-                if (semesters[j].label === semesterLabel) {
-                    selectTargetData = semesters[j];
-                    const data = get().portfolioApiData;
-                    for (let i = 0; i < data.periods.length; i++) {
-                        if (data.periods[i].semester === selectTargetData.semester && data.periods[i].year === selectTargetData.year) {
-                            const currentPeriod = data.periods[i];
-                            for (let l = 0; l < currentPeriod.levels.length; l++) {
-                                if (currentPeriod.levels[l].level_name === selectTargetData.level) {
-                                    dumpDisplayPortfolioData = currentPeriod.levels[l];
-                                    dumpSelectLevel=currentPeriod.levels[l].level_name;
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    
-                    break;
+            for (let i = 0; i < dumpPortfolioSelectBoxValue.length; i++) {
+                if (dumpPortfolioSelectBoxValue[i].label === semesterLabel) {
+                    dumySelectedFinder.year = dumpPortfolioSelectBoxValue[i].year
+                    dumySelectedFinder.semester = dumpPortfolioSelectBoxValue[i].semester
+                    dumySelectedFinder.label = dumpPortfolioSelectBoxValue[i].label
+                    dumySelectedFinder.level = ''
                 }
             }
-        }
-        set(()=>({
-            selectSemester:semesterLabel,
-            selectLevel: dumpSelectLevel,
             
-            displayPortfolioData: dumpDisplayPortfolioData,
-        }))
+            set(()=>({
+                selectSemester:semesterLabel,
+                selectLevel: '',
+                portfolioSelectFinder: dumySelectedFinder,
+                displayPortfolioData: dumpDisplayPortfolioData,
+            }))
+        }
     },
     setSelectLevel: (level) => {
-        set(()=>({selectLevel:level}))
+        // let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
+        // for (let i = 0; i < data.periods.length; i++) {
+        //     if (data.periods[i].semester === userInfo.semester && data.periods[i].year === userInfo.year) {
+        //         const currentPeriod = data.periods[i];
+        //         for (let l = 0; l < currentPeriod.levels.length; l++) {
+        //             if (currentPeriod.levels[l].level_name === userInfo.courseName) {
+        //                 dumpDisplayPortfolioData = currentPeriod.levels[l];
+        //                 break;
+        //             }
+        //         }
+        //         break;
+        //     }
+        // }
+        const dumpPortfolioSelectBoxValue: TReportPageSelectBoxDatas[] = get().portfolioSelectBoxValue;
+        const semesterLabel = get().selectSemester;
+        let currentSelectedFinder = get().portfolioSelectFinder;
+        
+        const data = get().portfolioApiData;
+        if (dumpPortfolioSelectBoxValue.length > 0) {
+            let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
+            if (level!== '') {
+                for (let i = 0; i < data.periods.length; i++) {
+                    if (data.periods[i].semester === currentSelectedFinder.semester && data.periods[i].year === currentSelectedFinder.year) {
+                        const currentPeriod = data.periods[i];
+                        for (let l = 0; l < currentPeriod.levels.length; l++) {
+                            if (currentPeriod.levels[l].level_name === level) {
+                                currentSelectedFinder.level = level;
+                                dumpDisplayPortfolioData = currentPeriod.levels[l];
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                dumpDisplayPortfolioData={
+                    book_name:'',
+                    level_name:'',
+                    unit_portfolios:[]
+                }
+            }
+            
+            set(()=>({
+                selectLevel: level,
+                portfolioSelectFinder: currentSelectedFinder,
+                displayPortfolioData: dumpDisplayPortfolioData,
+            }))
+        }
+
     },
 
     // portfolio modal control
@@ -143,33 +191,53 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
         unit_portfolios: []
     },
     setPortfolioApiData: (data, userInfo) => {
-        let dumpSemester:TDropdownSelectBoxDataTypes[] = [];
-        let dumpLevel:TDropdownSelectBoxDataTypes[] = [];
+        // let dumpSemester:TDropdownSelectBoxDataTypes[] = [];
+        // let dumpLevel:TDropdownSelectBoxDataTypes[] = [];
+        
+        let dumySelectFinderValue: TReportPageSelectBoxDatas[] = [];
+
         for (let idx = 0; idx < data.periods.length; idx++) {
             const currentPeriod = data.periods[idx];
             const currentYear = currentPeriod.year;
             const currentSemester = currentPeriod.semester === 1? '1st': '2nd';
             const currentSemeterLabel = `${currentYear} - ${currentSemester} Semeter`;
-
-            for (let lIdx = 0; lIdx < currentPeriod.levels.length; lIdx++) {
-                const currentLevel = currentPeriod.levels[lIdx].level_name;
-                const currentLevelLabel:TDropdownSelectBoxDataTypes = {
-                    label: currentLevel,
-                    year: currentYear,
-                    semester: currentPeriod.semester,
-                    level: currentLevel
-                }
-                dumpLevel.push(currentLevelLabel);
-                const currentPushDataRow:TDropdownSelectBoxDataTypes ={
-                    label: currentSemeterLabel,
-                    year: currentYear,
-                    semester: currentPeriod.semester,
-                    level: currentLevel,
-                }
-                dumpSemester.push(currentPushDataRow)
-            }
-
+            const currentLevels = currentPeriod.levels.map((item)=>{
+                return {name:item.level_name}
+            })
+            let finderValueItem:TReportPageSelectBoxDatas = {
+                label: currentSemeterLabel,
+                semester: currentPeriod.semester,
+                year: currentPeriod.year,
+                level: currentLevels
+            };
+            // resort 0 index to current level
+            finderValueItem.level = [
+                ...finderValueItem.level.filter(d => d.name === userInfo.courseName),
+                ...finderValueItem.level.filter(d => d.name !== userInfo.courseName)
+            ];
+            dumySelectFinderValue.push(finderValueItem);
+        };
+        // default set selected finder 
+        let dumySelectedFinder:TDropdownSelectBoxDataTypes = {
+            label:'',level:'',semester:0,year:0
         }
+        for (let dIdx = 0; dIdx < dumySelectFinderValue.length; dIdx++) {
+            const currentDumySelectedFinderValue = dumySelectFinderValue[dIdx];
+            if (currentDumySelectedFinderValue.year === userInfo.year && currentDumySelectedFinderValue.semester === userInfo.semester) {
+                for (let innerIdx = 0; innerIdx < currentDumySelectedFinderValue.level.length; innerIdx++) {
+                    const currentInnerData = currentDumySelectedFinderValue.level[innerIdx];
+                    if (currentInnerData.name === userInfo.courseName) {
+                        dumySelectedFinder.label = currentDumySelectedFinderValue.label;
+                        dumySelectedFinder.level = currentInnerData.name;
+                        dumySelectedFinder.semester = currentDumySelectedFinderValue.semester;
+                        dumySelectedFinder.year = currentDumySelectedFinderValue.year;
+                        break;
+                    }
+                }
+                break;
+            }
+        };
+
         let dumpDisplayPortfolioData:TPortfolioLevel = JSON.parse(JSON.stringify(get().displayPortfolioData));
         for (let i = 0; i < data.periods.length; i++) {
             if (data.periods[i].semester === userInfo.semester && data.periods[i].year === userInfo.year) {
@@ -183,15 +251,15 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
                 break;
             }
         }
-        const checkSemester = dumpSemester.length === 0 ? false:true;
+        // const checkSemester = dumpSemester.length === 0 ? false:true;
 
         set(()=>({
             portfolioApiData:data,
             displayPortfolioData: dumpDisplayPortfolioData,
-            semesters: dumpSemester,
-            levels: dumpLevel,
-            selectSemester: checkSemester ? dumpSemester[0].label:'',
-            selectLevel: checkSemester ? dumpSemester[0].level:'',
+            portfolioSelectBoxValue: dumySelectFinderValue,
+            portfolioSelectFinder: dumySelectedFinder,
+            selectLevel: dumySelectedFinder.level,
+            selectSemester: dumySelectedFinder.label,
         }))
     },
     forceReadOnlyPortfolioSelectBox: [],

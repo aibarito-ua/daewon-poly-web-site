@@ -143,6 +143,10 @@ const Report = () => {
                     const levItem = {name: currentReportAll.levels[k].level_name}
                     dumpBoxData.level.push(levItem);
                 }
+                dumpBoxData.level = [
+                    ...dumpBoxData.level.filter(d => d.name === userInfo.courseName),
+                    ...dumpBoxData.level.filter(d => d.name !== userInfo.courseName)
+                ]
                 dumpReportSelectBoxDatas.push(dumpBoxData)
             };
             console.log('dumpReportSelectBoxDatas1 ===',dumpReportSelectBoxDatas)
@@ -188,7 +192,7 @@ const Report = () => {
         console.log('data =',data)
         console.log('selectData =',selectData)
         console.log('isLevel =',isLevel)
-
+        
         const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
             if (value==='') {
                 setReportSelectBoxValue({data, init:true})
@@ -209,6 +213,7 @@ const Report = () => {
             for (let i = 0; i < reportAPIData.periods.length; i++) {
                 const currentPeriod = reportAPIData.periods[i];
                 if (currentPeriod.year === selectData.year && currentPeriod.semester === selectData.semester) {
+
                     for (let j = 0; j < currentPeriod.levels.length; j++) {
                         const currentLevelInPeriod = currentPeriod.levels[j];
                         if (currentLevelInPeriod.overall_report.length > 0) {

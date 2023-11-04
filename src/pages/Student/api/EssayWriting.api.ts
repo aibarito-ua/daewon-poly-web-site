@@ -188,7 +188,8 @@ export async function getPortfoliosAPI (student_code:string, accessToken: string
             Authorization: `Bearer ${accessToken}`
         }
     }).then((response) => {
-        const rsp = response.data.data;
+        const rsp:TPortfolioAPIData = response.data.data;
+        
         return rsp;
     }).catch((reject) => {
         console.log('reject ==',reject)

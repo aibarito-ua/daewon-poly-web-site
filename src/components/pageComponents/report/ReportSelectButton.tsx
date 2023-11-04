@@ -89,17 +89,33 @@ export default function ReportSelectButton(props:{
           for (let l = 0; l < data[i].level.length; l++) {
             if (data[i].level[l].name === targetData) {
               // selectDataFn(targetData, reportAPIData, data[i], isLevel);
-              setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
-              const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
-              setReportSelectUnit(init)
-              setReportSelectBoxValue({
-                data: {
-                  label: data[i].label,
-                  semester: data[i].semester,
-                  year: data[i].year,
-                  level: targetData
-                }, level: targetData
-              })
+              console.log('reportAPIData.periods[i].levels[l].overall_report.length =',reportAPIData.periods[i].levels[l].overall_report.length)
+              if (reportAPIData.periods[i].levels[l].overall_report.length > 0) {
+                setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
+                const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
+                setReportSelectUnit(init)
+                setReportSelectBoxValue({
+                  data: {
+                    label: data[i].label,
+                    semester: data[i].semester,
+                    year: data[i].year,
+                    level: targetData
+                  }, level: targetData
+                })
+              } else {
+
+                setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
+                // const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
+                // setReportSelectUnit(init)
+                setReportSelectBoxValue({
+                  data: {
+                    label: data[i].label,
+                    semester: data[i].semester,
+                    year: data[i].year,
+                    level: targetData
+                  }, level: targetData
+                })
+              }
             }
           }
         }
