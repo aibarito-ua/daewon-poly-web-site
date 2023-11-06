@@ -1083,6 +1083,31 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         set(()=>({progressLevelBoxValue:level}))
         
     },
+    // feedback check
+    setTeacherFeedbackModalChecked: (isChecked, unitIndex) => {
+        let teacherFeedbackData = get().teacherFeedbackModalChecked.map((item)=>{
+            if (item.index === unitIndex) {
+                item.isChecked = isChecked;
+            }
+            return item;
+        });
+        set(()=>({teacherFeedbackModalChecked: teacherFeedbackData}))
+
+    },
+    teacherFeedbackModalChecked: [
+        {index:1, isChecked:false},
+        {index:2, isChecked:false},
+        {index:3, isChecked:false},
+        {index:4, isChecked:false},
+        {index:5, isChecked:false},
+    ],
+    setTeacherFeedbackInit: () => {
+        let teacherFeedbackData = get().teacherFeedbackModalChecked.map((item)=>{
+            item.isChecked = false;
+            return item;
+        });
+        set(()=>({teacherFeedbackModalChecked: teacherFeedbackData}))
+    }
 }))
 
 export default useControlAlertStore;

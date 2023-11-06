@@ -91,6 +91,14 @@ interface IUseControlAlertStore {
     setProgressAllLevelBoxValues: (data: string[]) => void;
     setProgressLevelBoxValue: (level:string, userInfo: TUserInfoData, isDefault:boolean) => void;
     
+    // teacher feedback modal checked
+    teacherFeedbackModalChecked: TTeacherFeedbackModalChecked[];
+    setTeacherFeedbackModalChecked: (isChecked:boolean, index:number) => void;
+    setTeacherFeedbackInit: () => void;
+}
+type TTeacherFeedbackModalChecked = {
+    index:number;
+    isChecked: boolean;
 }
 type TDropdownSelectBoxDataTypes = {
     year: number, semester:number, level:string, label:string

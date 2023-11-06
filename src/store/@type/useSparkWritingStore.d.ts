@@ -61,6 +61,8 @@ interface ISparkWritingStore {
     // "ETC" -> 그 외
     previewPageInitFlag: TPreviewPageInitFlag;
     setPreviewPageInitFlag: (flag: TPreviewPageInitFlag) => void;
+
+    
 }
 type TPreviewPageInitFlag = "UPDATE_WRITE"|"PREVIEW"|"ETC"|"";
 type TDraft2ndPageSet = 'fresh'|'revise'|'';

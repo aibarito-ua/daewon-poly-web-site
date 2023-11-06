@@ -41,7 +41,9 @@ export default function SelectUnit () {
         unitReportsData, unitReportData, unitRubricScoresData, reportModalRubricData
         ,reportSelectedOverallBarChart, reportSelectedOverallPieChart,
 
-        commonAlertClose, commonAlertOpen
+        commonAlertClose, commonAlertOpen,
+        // feedback initialize
+        setTeacherFeedbackInit
     } = useControlAlertStore();
 
     React.useEffect(()=>{
@@ -90,6 +92,9 @@ export default function SelectUnit () {
             
             return response;
         });
+        // always currently page init feedback flags
+
+        setTeacherFeedbackInit();
 
         // report
         const student_code = userInfo.userCode;

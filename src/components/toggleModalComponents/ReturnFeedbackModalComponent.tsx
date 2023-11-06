@@ -12,7 +12,9 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 export default function ReturnFeedbackModalComponent (
 
 ) {
-    const {return1stDraftReasonAlert, setReturn1stDraftReasonAlertOpen} = useControlAlertStore();
+    const {
+        return1stDraftReasonAlert, setReturn1stDraftReasonAlertOpen,
+    } = useControlAlertStore();
     React.useEffect(() => {
 
     },[])
@@ -44,7 +46,8 @@ export default function ReturnFeedbackModalComponent (
                 height: '623.4px',
             }}}
             open={return1stDraftReasonAlert.openFlag}
-            onClose={handleClose}>
+            // onClose={handleClose}
+            >
                 <DialogTitle
                     sx={{
                         borderBottom: '1px solid #ddd',

@@ -95,6 +95,7 @@ const EssayWriting = () => {
     const {role} = useLoginStore();
     const {
         commonAlertOpen, commonAlertClose,setCommonStandbyScreen, setReturn1stDraftReasonAlertOpen,
+        teacherFeedbackModalChecked, setTeacherFeedbackModalChecked,
         commonStandbyScreen
     } = useControlAlertStore();
 
@@ -113,18 +114,28 @@ const EssayWriting = () => {
                 const draft1stStatus = sparkWritingData[parseInt(UnitIndex)-1].draft_1_status;
                 if (draft1stStatus.status === 5) {
                     // setCommonStandbyScreen({openFlag:false})
-                    // return submit
-                    setReturn1stDraftReasonAlertOpen({
-                        openFlag:true, 
-                        returnReason: draft1stStatus.return_reason,
-                        returnTeacherComment: draft1stStatus.return_teacher_comment,
-                        NoEvent:()=>{
-                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                        },
-                        yesEvent:()=>{
-        
+                    let feedChecked = false;
+                    for (let feedbackIdx = 0; feedbackIdx < teacherFeedbackModalChecked.length; feedbackIdx++) {
+                        if (teacherFeedbackModalChecked[feedbackIdx].index === parseInt(UnitIndex)) {
+                            feedChecked = teacherFeedbackModalChecked[feedbackIdx].isChecked;
+                            break;
                         }
-                    })
+                    };
+                    if (!feedChecked) {
+                        // return submit
+                        setReturn1stDraftReasonAlertOpen({
+                            openFlag:true, 
+                            returnReason: draft1stStatus.return_reason,
+                            returnTeacherComment: draft1stStatus.return_teacher_comment,
+                            NoEvent:()=>{
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            yesEvent:()=>{
+                                const currentUnitIndex = parseInt(UnitIndex);
+                                setTeacherFeedbackModalChecked(true, currentUnitIndex);
+                            }
+                        })
+                    }
                 } else if (draft1stStatus.status===4) {
                     // 1차 완료 , 2차 시작 init 
                     setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
@@ -147,20 +158,31 @@ const EssayWriting = () => {
                         setOverallComment1stDraft({open:false, content: draft1stStatus.overall_comment});
                         setDraft2ndPageSet(targetPageFlag);
                         
-                        // return submit
-                        setReturn1stDraftReasonAlertOpen({
-                            openFlag:true, 
-                            returnReason: draft2ndStatus.return_reason,
-                            returnTeacherComment: draft2ndStatus.return_teacher_comment,
-                            NoEvent:()=>{
-                                setDraft2ndPageSet('')
-                                setDraft2ndSaveActive(false)
-                                setDraft2ndSubmitActive(false)
-                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                            },
-                            yesEvent:()=>{
+                        let feedChecked = false;
+                        for (let feedbackIdx = 0; feedbackIdx < teacherFeedbackModalChecked.length; feedbackIdx++) {
+                            if (teacherFeedbackModalChecked[feedbackIdx].index === parseInt(UnitIndex)) {
+                                feedChecked = teacherFeedbackModalChecked[feedbackIdx].isChecked;
+                                break;
                             }
-                        })
+                        };
+                        if (!feedChecked) {
+                            // return submit
+                            setReturn1stDraftReasonAlertOpen({
+                                openFlag:true, 
+                                returnReason: draft2ndStatus.return_reason,
+                                returnTeacherComment: draft2ndStatus.return_teacher_comment,
+                                NoEvent:()=>{
+                                    setDraft2ndPageSet('')
+                                    setDraft2ndSaveActive(false)
+                                    setDraft2ndSubmitActive(false)
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                yesEvent:()=>{
+                                    const currentUnitIndex = parseInt(UnitIndex);
+                                    setTeacherFeedbackModalChecked(true, currentUnitIndex);
+                                }
+                            })
+                        }
                     } else if (draft2ndStatus.status===4) {
                         // 1차 완료 , 2차 시작 init 
                         console.log(' == targetPageFlag=3=',targetPageFlag)
@@ -1327,7 +1349,7 @@ const EssayWriting = () => {
                                 // setShowSaveModal(true)
                                 callbackCheckValues()
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress and return to the main menu?'],
+                                    messages: ['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: `Yes`,
                                     noButtonLabel: `No`,
                                     yesEvent: async ()=> await temporarySaveFunction(),
@@ -1600,7 +1622,7 @@ const EssayWriting = () => {
                         if (draft2ndSaveActive) {
                             if (!commonStandbyScreen.openFlag) {
                                 commonAlertOpen({
-                                    messages:['Do you want to save your current progress and return to the main menu?'],
+                                    messages:['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: 'Yes',
                                     noButtonLabel: 'No',
                                     yesEvent: async () => {
