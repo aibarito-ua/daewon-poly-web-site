@@ -287,7 +287,7 @@ code {
 }
 
 #root {
-  font-family: "Noto Sans CJK KR";
+  font-family: "NotoSansCJKKR";
   @apply
   /* max-h-[800px]
   max-w-[1280px] */
@@ -1107,6 +1107,7 @@ bg-[#ffea2c]
 
 }
 .outline-content-box-item {
+
   @apply
   px-[15px]
   mt-[15px]
@@ -1423,7 +1424,7 @@ bg-[#ffea2c]
 .login_foot_style {
   color: #444;
   text-align: center;
-  font-family: Noto Sans CJK KR;
+  font-family: 'NotoSansCJKKR';
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
@@ -2193,11 +2194,11 @@ bg-[#ffea2c]
   font-weight: 700;
 }
 .notoSansCJKKR-regular {
-  font-family: 'Noto Sans CJK KR';
+  font-family: 'NotoSansCJKKR';
   font-weight: 400;
 }
 .notoSansCJKKR-medium {
-  font-family: 'Noto Sans CJK KR';
+  font-family: 'NotoSansCJKKR';
   font-weight: 500;
 }
 .roboto-regular {
