@@ -2021,6 +2021,7 @@ bg-[#ffea2c]
 .report-chart-righ-correction-content-wrap-2 {
   @apply
   flex flex-col
+  gap-[7px]
   justify-start
   items-start
   border-[1px]
@@ -2057,7 +2058,7 @@ bg-[#ffea2c]
   font-size: 12px;
   font-weight: 400;
   line-height: 1.33;
-  text-align: center;
+  text-align: left;
   @apply
   rounded-[5px]
   text-[#eb3a3a]
@@ -2070,7 +2071,7 @@ bg-[#ffea2c]
   font-size: 12px;
   font-weight: 400;
   line-height: 1.33;
-  text-align: center;
+  text-align: left;
   @apply
   rounded-[5px]
   text-[#00be91]
@@ -2082,11 +2083,18 @@ bg-[#ffea2c]
   font-size: 12px;
   font-weight: 400;
   line-height: 1.33;
-  text-align: center;
+  text-align: left;
   @apply
   rounded-[5px]
   text-[#222]
   h-fit
+}
+.grammar-tooltip-custom-content-list-item {
+  line-height: 0.9;
+  text-align: left;
+  @apply
+  flow-root
+  
 }
 .report-chart-report-by-unit-title {
   font-family: 'GothamRounded';

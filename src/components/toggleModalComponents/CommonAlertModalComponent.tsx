@@ -93,7 +93,7 @@ export default function CommonAlertModalComponent(
                     const keyValue = 'msg-'+msgIdx;
                     return (
                     <div key={keyValue}
-                        className='text-center font-[Roboto] text-[18px] px-[48px] font-[500] text-[#444444]'
+                        className='text-center font-[Roboto] text-[18px] px-[36px] font-[500] text-[#444444]'
                     >{msg}</div>
                     )
                 })}

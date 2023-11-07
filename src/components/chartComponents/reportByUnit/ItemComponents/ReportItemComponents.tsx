@@ -53,7 +53,9 @@ const ReportCorrectionSummaryComponent = (
         let correctionDiv:JSX.Element[]=[];
         correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
             const key1 = 'report-correction-summary-init-'+sentenceIndex+'-div';
-            return <div className='flow-root text-left' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
+            return <div className='flex flex-row gap-[0.4rem]' key={key1}>
+                <span className=''>{'•'}</span>
+                <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                 // console.log('word ==',wordItem)
                 
                 const key2 = key1+'-wordItem-'+wordIndex+'-'+wordItem.type;
@@ -64,7 +66,7 @@ const ReportCorrectionSummaryComponent = (
                 } else {
                     return <span key={key2} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                 }
-            })}</div>
+            })}</span></div>
         })
         setCorrectionDiv(correctionDiv)
         setSelectReason('grammar')
@@ -83,17 +85,19 @@ const ReportCorrectionSummaryComponent = (
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-grammar-'+sentenceIndex+'-div';
-                    return <div className='flow-root text-left' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
-                        console.log('word ==',wordItem)
-                        const key = key1+'wordItem-'+wordIndex+'-'+wordItem.type;
-                        if (wordItem.type === 1) {
-                            return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
-                        } else if (wordItem.type === -1 ) {
-                            return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
-                        } else {
-                            return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
-                        }
-                    })}</div>
+                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
+                        <span>{'•'}</span>
+                        <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
+                            console.log('word ==',wordItem)
+                            const key = key1+'wordItem-'+wordIndex+'-'+wordItem.type;
+                            if (wordItem.type === 1) {
+                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                            } else if (wordItem.type === -1 ) {
+                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                            } else {
+                                return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
+                            }
+                    })}</span></div>
                 })
                 setCorrectionDiv(correctionDiv)
                 setSelectReason('grammar')
@@ -123,17 +127,19 @@ const ReportCorrectionSummaryComponent = (
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
-                    return <div className='flow-root text-left' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
-                        console.log('word ==',wordItem)
-                        const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
-                        if (wordItem.type === 1) {
-                            return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
-                        } else if (wordItem.type === -1 ) {
-                            return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
-                        } else {
-                            return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
-                        }
-                    })}</div>
+                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
+                        <span>{'•'}</span>
+                        <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
+                            console.log('word ==',wordItem)
+                            const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
+                            if (wordItem.type === 1) {
+                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                            } else if (wordItem.type === -1 ) {
+                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                            } else {
+                                return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
+                            }
+                    })}</span></div>
                 })
                 setCorrectionDiv(correctionDiv)
                 setSelectReason('punctuation')
@@ -168,17 +174,19 @@ const ReportCorrectionSummaryComponent = (
                 
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
-                    return <div className='flow-root text-left' key={key1}>{sentenceItem.map((wordItem , wordIndex) => {
-                        console.log('word ==',wordItem)
-                        const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
-                        if (wordItem.type === 1) {
-                            return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
-                        } else if (wordItem.type === -1 ) {
-                            return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
-                        } else {
-                            return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
-                        }
-                    })}</div>
+                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
+                        <span>{'•'}</span>
+                        <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
+                            console.log('word ==',wordItem)
+                            const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
+                            if (wordItem.type === 1) {
+                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                            } else if (wordItem.type === -1 ) {
+                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                            } else {
+                                return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
+                            }
+                    })}</span></div>
                 })
                 setCorrectionDiv(correctionDiv)
                 setSelectReason('spelling')
@@ -220,7 +228,8 @@ const ReportCorrectionSummaryComponent = (
                         {item.grammar_correction.punctuation && PuctuationSentence(item.grammar_correction.punctuation)}
                         
                     </div>
-                    <div className='report-chart-righ-correction-content-item'>
+                    {/* <div className='report-chart-righ-correction-content-item'> */}
+                    <div>
                         <div className={'report-chart-righ-correction-content-wrap-2'}>
                             {correctionDiv}
                         </div>
