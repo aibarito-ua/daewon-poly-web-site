@@ -110,6 +110,7 @@ const NavAside = () => {
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
                     onClick={()=>{
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             alertType:'warning',
                             messages: ['Do you want to leave the Writing Hub?'],
                             yesButtonLabel: 'Yes',

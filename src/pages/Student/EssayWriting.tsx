@@ -422,6 +422,7 @@ const EssayWriting = () => {
                     })
                     if (titleMaxLengthCheck) {
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages:['The title cannot be more than 120 characters.'],
                             useOneButton: true,
                             yesButtonLabel: 'OK',
@@ -445,6 +446,7 @@ const EssayWriting = () => {
                         setIsPreviewButtonOpen(true);
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
+                                messageFontFamily: 'Roboto',
                                 messages: ['Do you want to exit?'],
                                 alertType: 'warningContinue',
                                 yesButtonLabel:'Yes',
@@ -452,7 +454,8 @@ const EssayWriting = () => {
                                 yesEvent: async () => {
                                     callbackCheckValues()
                                     commonAlertOpen({
-                                        messages: ['Do you want to save your current progress before you leave?'],
+                                        messageFontFamily: 'Roboto',
+                                        messages: ['Do you want to save your current','progress before you leave?'],
                                         alertType: 'warningContinue',
                                         yesButtonLabel: `No`,
                                         noButtonLabel: `Yes`,
@@ -478,6 +481,7 @@ const EssayWriting = () => {
                         setIsSaveButtonOpen(true)
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
+                                messageFontFamily: 'Roboto',
                                 messages: ['Do you want to exit?'],
                                 alertType: 'warningContinue',
                                 yesButtonLabel:'Yes',
@@ -485,7 +489,8 @@ const EssayWriting = () => {
                                 yesEvent: async () => {
                                     callbackCheckValues()
                                     commonAlertOpen({
-                                        messages: ['Do you want to save your current progress before you leave?'],
+                                        messageFontFamily: 'Roboto',
+                                        messages: ['Do you want to save your current','progress before you leave?'],
                                         alertType: 'warningContinue',
                                         yesButtonLabel: `No`,
                                         noButtonLabel: `Yes`,
@@ -512,6 +517,7 @@ const EssayWriting = () => {
                         setIsSaveButtonOpen(false)
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
+                                messageFontFamily: 'Roboto',
                                 messages: ['Do you want to exit?'],
                                 alertType: 'warningContinue',
                                 yesButtonLabel:'Yes',
@@ -656,6 +662,7 @@ const EssayWriting = () => {
                     console.log('setGoBackFromDraftInUnitPage 1')
                     setGoBackFromDraftInUnitPage(()=>{
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -663,7 +670,8 @@ const EssayWriting = () => {
                             yesEvent: async () => {
                                 callbackCheckValues()
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -688,6 +696,7 @@ const EssayWriting = () => {
                     console.log('setGoBackFromDraftInUnitPage 2')
                     setGoBackFromDraftInUnitPage(()=>{
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -695,7 +704,8 @@ const EssayWriting = () => {
                             yesEvent: async () => {
                                 callbackCheckValues()
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -718,6 +728,7 @@ const EssayWriting = () => {
                     console.log('setGoBackFromDraftInUnitPage 3')
                     setGoBackFromDraftInUnitPage(()=>{
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -828,6 +839,7 @@ const EssayWriting = () => {
                             console.log('setGoBackFromDraftInUnitPage 6')
                             setGoBackFromDraftInUnitPage(()=>{
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     messages: ['Do you want to exit?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel:'Yes',
@@ -835,7 +847,8 @@ const EssayWriting = () => {
                                     yesEvent: async () => {
                                         callbackCheckValues()
                                         commonAlertOpen({
-                                            messages: ['Do you want to save your current progress before you leave?'],
+                                            messageFontFamily: 'Roboto',
+                                            messages: ['Do you want to save your current','progress before you leave?'],
                                             alertType: 'warningContinue',
                                             yesButtonLabel: `No`,
                                             noButtonLabel: `Yes`,
@@ -863,6 +876,7 @@ const EssayWriting = () => {
                             console.log('setGoBackFromDraftInUnitPage 7')
                             setGoBackFromDraftInUnitPage(()=>{
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     messages: ['Do you want to exit?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel:'Yes',
@@ -883,6 +897,7 @@ const EssayWriting = () => {
                     } else {
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
+                                messageFontFamily: 'Roboto',
                                 messages: ['Do you want to exit?'],
                                 alertType: 'warningContinue',
                                 yesButtonLabel:'Yes',
@@ -976,6 +991,7 @@ const EssayWriting = () => {
                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             } else {
                 commonAlertOpen({
+                    messageFontFamily: 'Roboto',
                     messages: ['Are you sure you want to try again?'],
                     yesButtonLabel: 'Yes',
                     noButtonLabel: 'Cancel',
@@ -1031,6 +1047,7 @@ const EssayWriting = () => {
             } else {
                 setCommonStandbyScreen({openFlag:false})
                 commonAlertOpen({
+                    messageFontFamily: 'Roboto',
                     messages: ['Are you sure you want to try again?'],
                     yesButtonLabel: 'Yes',
                     noButtonLabel: 'Cancel',
@@ -1071,6 +1088,7 @@ const EssayWriting = () => {
             setCommonStandbyScreen({openFlag:false})
             const topicReplace = targetData.topic.replace(/s$/gmi,'');
             commonAlertOpen({
+                messageFontFamily: 'Roboto',
                 useOneButton: true,
                 yesButtonLabel: 'OK',
                 messages: [
@@ -1088,6 +1106,7 @@ const EssayWriting = () => {
         } else {
             setCommonStandbyScreen({openFlag:false})
             commonAlertOpen({
+                messageFontFamily: 'Roboto',
                 messages: ['Are you sure you want to try again?'],
                 yesButtonLabel: 'Yes',
                 noButtonLabel: 'Cancel',
@@ -1255,6 +1274,7 @@ const EssayWriting = () => {
                                                     const checkWordLength = wordLengthLimit(val);
                                                     if (!checkWordLength) {
                                                         commonAlertOpen({
+                                                            messageFontFamily: 'Roboto',
                                                             messages:['You have exceeded the maximum number of characters allowed per word.'],
                                                             useOneButton: true,
                                                             yesButtonLabel: 'OK',
@@ -1278,6 +1298,7 @@ const EssayWriting = () => {
                                                                 
                                                                 setOutlineInputText(cutting120Character, unitId, unitIndex, orderIndex, 1)
                                                                 commonAlertOpen({
+                                                                    messageFontFamily: 'Roboto',
                                                                     messages:['The title cannot be more than 120 characters.'],
                                                                     useOneButton: true,
                                                                     yesButtonLabel: 'OK',
@@ -1287,6 +1308,7 @@ const EssayWriting = () => {
                                                                 })
                                                             } else if (alertCheckCH!==null) {
                                                                 commonAlertOpen({
+                                                                    messageFontFamily: 'Roboto',
                                                                     messages:['The Enter/Return key cannot be used in this section.'],
                                                                     useOneButton: true,
                                                                     yesButtonLabel: 'OK',
@@ -1349,6 +1371,7 @@ const EssayWriting = () => {
                                 // setShowSaveModal(true)
                                 callbackCheckValues()
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     messages: ['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: `Yes`,
                                     noButtonLabel: `No`,
@@ -1362,6 +1385,7 @@ const EssayWriting = () => {
                         if (isPreviewButtonOpen) {
                             callbackCheckValues()
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     messages:['Are you ready to preview your writing?'],
                                     alertType: 'continue',
                                     yesButtonLabel: `No`,
@@ -1455,7 +1479,8 @@ const EssayWriting = () => {
                                         const checkWordLength = wordLengthLimit(val);
                                         if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                messageFontFamily: 'Roboto',
+                                                messages:['You have exceeded the maximum number of characters','allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1469,6 +1494,7 @@ const EssayWriting = () => {
                                                 
                                                 setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
                                                     messages:['The title cannot be more than 120 characters.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
@@ -1478,6 +1504,7 @@ const EssayWriting = () => {
                                                 })
                                             } else if (alertCheckCH!==null) {
                                                 commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
                                                     messages:['The Enter/Return key cannot be used in this section.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
@@ -1504,7 +1531,8 @@ const EssayWriting = () => {
                                         const checkWordLength = wordLengthLimit(val);
                                         if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                messageFontFamily: 'Roboto',
+                                                messages:['You have exceeded the maximum number of characters','allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1545,7 +1573,8 @@ const EssayWriting = () => {
                                         const checkWordLength = wordLengthLimit(val);
                                         if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                messageFontFamily: 'Roboto',
+                                                messages:['You have exceeded the maximum number of characters','allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1558,6 +1587,7 @@ const EssayWriting = () => {
                                                 const cutting120Character = val.substring(0, 120);
                                                 setOutlineInputText(cutting120Character, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
                                                     messages:['The title cannot be more than 120 characters.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
@@ -1567,6 +1597,7 @@ const EssayWriting = () => {
                                                 })
                                             } else if (alertCheckCH!==null) {
                                                 commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
                                                     messages:['The Enter/Return key cannot be used in this section.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
@@ -1593,7 +1624,8 @@ const EssayWriting = () => {
                                         const checkWordLength = wordLengthLimit(val);
                                         if (!checkWordLength) {
                                             commonAlertOpen({
-                                                messages:['You have exceeded the maximum number of characters allowed per word.'],
+                                                messageFontFamily: 'Roboto',
+                                                messages:['You have exceeded the maximum number of characters','allowed per word.'],
                                                 useOneButton: true,
                                                 yesButtonLabel: 'OK',
                                                 yesEvent: () => {
@@ -1622,6 +1654,7 @@ const EssayWriting = () => {
                         if (draft2ndSaveActive) {
                             if (!commonStandbyScreen.openFlag) {
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     messages:['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: 'Yes',
                                     noButtonLabel: 'No',
@@ -1641,6 +1674,7 @@ const EssayWriting = () => {
                                 const replaceTopic = draftItem.topic.replace(/s$/gmi,'');
                                 console.log('replaceTopic =',replaceTopic)
                                 commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
                                     head: `Unit ${draftItem.unit_index}: ${replaceTopic}`,
                                     messages: ['Are you ready to submit?'],
                                     // messages: [

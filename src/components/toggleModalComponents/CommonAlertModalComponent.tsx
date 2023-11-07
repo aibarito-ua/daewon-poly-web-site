@@ -22,6 +22,7 @@ export default function CommonAlertModalComponent(
     commonAlertYesLabel,
     commonAlertOneButton,
     commonAlertType,
+    commonAlertMessageFontFamily,
 
     setCommonAlertHeadTitle,
     commonAlertClose,
@@ -74,16 +75,16 @@ export default function CommonAlertModalComponent(
       // onClose={handleClose}
       >
         <DialogContent 
-          className={ (commonAlertType==='warning'||commonAlertType==='warningContinue')? 'flex flex-1 flex-col w-[390px] h-fit':'flex flex-1 flex-col w-[390px] h-[160px]'}
+          className={ (commonAlertType==='warning'||commonAlertType==='warningContinue')? 'flex flex-1 flex-col w-fit min-w-[390px] h-fit':'flex flex-1 flex-col w-fit min-w-[390px] h-[160px]'}
           sx={{
             paddingY:0,
             paddingX: 0
           }}
         >
         <div className='flex flex-1 flex-col h-full justify-center border-t border-t-[#dddddd]'>
-            {(commonAlertType==='warning'||commonAlertType==='warningContinue') && <commonSvgs.ExclamationMarkIcon className='w-[100px] h-[100px] mt-[36px] ml-[145px]'/>}
+            {(commonAlertType==='warning'||commonAlertType==='warningContinue') && <div className='flex flex-row justify-center'><commonSvgs.ExclamationMarkIcon className='w-[100px] h-[100px] mt-[36px]'/></div>}
             
-            {commonAlertHeadTitle !== '' && <div className={`text-center font-[Roboto] text-[20px] font-[700] text-[#222222] ${(commonAlertType==='warning'||commonAlertType==='warningContinue')? 'mt-[20px]': 'mt-[39.4px]'}`}>{commonAlertHeadTitle}</div>}
+            {commonAlertHeadTitle !== '' && <div className={`text-center text-[20px] font-[700] text-[#222222] ${(commonAlertType==='warning'||commonAlertType==='warningContinue')? 'mt-[20px]': 'mt-[39.4px]'} ${commonAlertMessageFontFamily==='Roboto' ? 'font-roboto':'font-notoSansCJKKR'}`}>{commonAlertHeadTitle}</div>}
             <div className={(commonAlertType==='warning'||commonAlertType==='warningContinue') ? (
                 commonAlertHeadTitle !== '' ? 'mt-[10px] mb-[30px]':'mt-[23px] mb-[30px]'
             ): (
@@ -93,7 +94,7 @@ export default function CommonAlertModalComponent(
                     const keyValue = 'msg-'+msgIdx;
                     return (
                     <div key={keyValue}
-                        className='text-center font-[Roboto] text-[18px] px-[36px] font-[500] text-[#444444]'
+                        className={commonAlertMessageFontFamily==='Roboto' ? 'text-center font-roboto text-[18px] px-[36px] font-[500] text-[#444444]':'text-center font-notoSansCJKKR text-[18px] px-[36px] font-[500] text-[#444444]'}
                     >{msg}</div>
                     )
                 })}

@@ -196,6 +196,7 @@ export default function UserInfoModalComponent() {
                         }
                             onClick={async()=>{
                                 commonAlertOpen({
+                                    messageFontFamily: 'NotoSansCJKKR',
                                     alertType: 'warningContinue',
                                     messages: ['회원 탈퇴를 하시겠습니까?'],
                                     yesButtonLabel: 'No',
@@ -217,6 +218,7 @@ export default function UserInfoModalComponent() {
                                                     window.location.reload();
                                                 } else {
                                                     commonAlertOpen({
+                                                        messageFontFamily: 'NotoSansCJKKR',
                                                         alertType: 'warning',
                                                         useOneButton: true,
                                                         yesButtonLabel: 'OK',

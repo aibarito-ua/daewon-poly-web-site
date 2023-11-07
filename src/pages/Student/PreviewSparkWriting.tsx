@@ -209,6 +209,7 @@ const PreviewSparkWriting = (props:any) => {
                 setCommonStandbyScreen({openFlag:false})
             } else {
                 commonAlertOpen({
+                    messageFontFamily: 'Roboto',
                     alertType: 'warning',
                     useOneButton: true,
                     yesButtonLabel: 'OK',
@@ -731,6 +732,7 @@ const PreviewSparkWriting = (props:any) => {
             setGoBackFromDraftInUnitPage(()=>{ 
                 commonAlertOpen({
                     messages: ['Do you want to exit?'],
+                    messageFontFamily: 'Roboto',
                     alertType: 'warningContinue',
                     yesButtonLabel:'Yes',
                     noButtonLabel: 'No',
@@ -825,6 +827,7 @@ const PreviewSparkWriting = (props:any) => {
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
                             messages: ['Do you want to exit?'],
+                            messageFontFamily: 'Roboto',
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
@@ -843,11 +846,13 @@ const PreviewSparkWriting = (props:any) => {
                         commonAlertOpen({
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
+                            messageFontFamily: 'Roboto',
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -873,6 +878,7 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(true);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -890,13 +896,15 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(false);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -923,6 +931,7 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(true);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -940,13 +949,15 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(false);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -971,6 +982,7 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(true);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
@@ -988,13 +1000,15 @@ const PreviewSparkWriting = (props:any) => {
                     setIsSubmitted(false);
                     setGoBackFromDraftInUnitPage(()=>{ 
                         commonAlertOpen({
+                            messageFontFamily: 'Roboto',
                             messages: ['Do you want to exit?'],
                             alertType: 'warningContinue',
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
                                 commonAlertOpen({
-                                    messages: ['Do you want to save your current progress before you leave?'],
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
                                     alertType: 'warningContinue',
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
@@ -1041,13 +1055,15 @@ const PreviewSparkWriting = (props:any) => {
     const goBackEventSave = () => {
         setGoBackFromDraftInUnitPage(()=>{ 
             commonAlertOpen({
+                messageFontFamily: 'Roboto',
                 messages: ['Do you want to exit?'],
                 alertType: 'warningContinue',
                 yesButtonLabel:'Yes',
                 noButtonLabel: 'No',
                 yesEvent: async () => {
                     commonAlertOpen({
-                        messages: ['Do you want to save your current progress before you leave?'],
+                        messageFontFamily: 'Roboto',
+                        messages: ['Do you want to save your current','progress before you leave?'],
                         alertType: 'warningContinue',
                         yesButtonLabel: `No`,
                         noButtonLabel: `Yes`,
@@ -1070,6 +1086,7 @@ const PreviewSparkWriting = (props:any) => {
     const goBackEvent = () => {
         setGoBackFromDraftInUnitPage(()=>{ 
             commonAlertOpen({
+                messageFontFamily: 'Roboto',
                 messages: ['Do you want to exit?'],
                 alertType: 'warningContinue',
                 yesButtonLabel:'Yes',
@@ -1149,6 +1166,7 @@ const PreviewSparkWriting = (props:any) => {
                     {!isSubmitted &&
                         <button className={`save-button-active`} onClick={()=>{
                             commonAlertOpen({
+                                messageFontFamily: 'Roboto',
                                 messages: ['Do you want to return to edit your writing?'],
                                 yesButtonLabel: "No",
                                 noButtonLabel: "Yes",
@@ -1182,7 +1200,8 @@ const PreviewSparkWriting = (props:any) => {
                             if (isSaveButtonOpen) {
                                 if (!commonStandbyScreen.openFlag) {
                                     commonAlertOpen({
-                                        messages: ['Do you want to save your current progress and return to the main menu?'],
+                                        messageFontFamily: 'Roboto',
+                                        messages: ['Do you want to save your current progress','and return to the main menu?'],
                                         yesButtonLabel: `Yes`,
                                         noButtonLabel: `No`,
                                         yesEvent: async ()=> await forcedTemporarySave(true)
@@ -1211,6 +1230,7 @@ const PreviewSparkWriting = (props:any) => {
                             if (!commonStandbyScreen.openFlag) {
                                 if (sparkWritingData[unitIndex].proofreading_count===2) {
                                     commonAlertOpen({
+                                        messageFontFamily: 'Roboto',
                                         messages:  ['You have already used AI proofreading twice.'],
                                         useOneButton:true,
                                         yesButtonLabel: 'OK',
@@ -1218,8 +1238,9 @@ const PreviewSparkWriting = (props:any) => {
                                     })
                                 } else {
                                     commonAlertOpen({
+                                        messageFontFamily: 'Roboto',
                                         messages: [
-                                            'You can only use the AI proofreading tool twice. Are you sure you want to proceed?',
+                                            'You can only use the AI proofreading tool twice.','Are you sure you want to proceed?',
                                             `(${sparkWritingData[unitIndex].proofreading_count+1}/2)`
                                         ],
                                         yesButtonLabel: 'No',
@@ -1256,6 +1277,7 @@ const PreviewSparkWriting = (props:any) => {
                         onClick={()=>{
                             if (sparkWritingData[unitIndex].proofreading_count===2) {
                                 commonAlertOpen({
+                                    messageFontFamily: 'NotoSansCJKKR',
                                     messages: [
                                         '임시 리셋 기능입니다.',
                                     ],
@@ -1326,6 +1348,7 @@ const PreviewSparkWriting = (props:any) => {
                                         const replaceTopic = currentSparkWritingData.topic.replace(/s$/gmi,'');
                                         console.log('replaceTopic =',replaceTopic)
                                         commonAlertOpen({
+                                            messageFontFamily: 'Roboto',
                                             yesButtonLabel: 'No',
                                             alertType: 'continue',
                                             head: `Unit ${currentSparkWritingData.unit_index}: ${replaceTopic}`,
@@ -1375,6 +1398,7 @@ const PreviewSparkWriting = (props:any) => {
                                                 if (submit) {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     commonAlertOpen({
+                                                        messageFontFamily: 'Roboto',
                                                         useOneButton:true,
                                                         yesButtonLabel: 'OK',
                                                         alertType: 'continue',

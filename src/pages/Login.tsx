@@ -77,6 +77,7 @@ export const Login = () => {
                     useOneButton:true,
                     alertType: 'warningContinue',
                     yesButtonLabel: 'OK',
+                    messageFontFamily: 'NotoSansCJKKR',
                     messages: [
                         "새로운 버전으로 업데이트를 진행해주세요."
                     ],
@@ -93,6 +94,7 @@ export const Login = () => {
             useOneButton:true,
             alertType: 'warningContinue',
             yesButtonLabel: 'OK',
+            messageFontFamily: 'NotoSansCJKKR',
             messages: [
                 "서비스 안정화를 위한 점검중이에요."
             ],
@@ -123,6 +125,7 @@ export const Login = () => {
             if (response.isWithdrawn) {
                 commonAlertOpen({
                     alertType: 'warning',
+                    messageFontFamily: 'NotoSansCJKKR',
                     messages: [
                         '탈퇴한 계정의 ID입니다.',
                         '관련 문의 있을 시, 소속 캠퍼스로 연락해주세요.'
@@ -153,7 +156,8 @@ export const Login = () => {
                             //count 5
                             commonAlertOpen({
                                 alertType: 'warning',
-                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                messageFontFamily: 'NotoSansCJKKR',
+                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다.','POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
                                 useOneButton: true,
                                 yesButtonLabel: 'OK',
                                 yesEvent: goPasswordUpdatePage
@@ -170,7 +174,8 @@ export const Login = () => {
                         } else if (count === 5) {
                             commonAlertOpen({
                                 alertType: 'warning',
-                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                messageFontFamily: 'NotoSansCJKKR',
+                                messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다.','POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
                                 useOneButton: true,
                                 yesButtonLabel: 'OK',
                                 yesEvent: goPasswordUpdatePage
@@ -194,6 +199,7 @@ export const Login = () => {
                         if (response.isNeedPasswordUpdate) {
                             commonAlertOpen({
                                 alertType: 'warning',
+                                messageFontFamily: 'NotoSansCJKKR',
                                 messages: ['비밀번호 변경 후 6개월이 경과했습니다.','POLY 홈페이지에서 비밀번호를 변경해주세요.'],
                                 useOneButton: true,
                                 yesButtonLabel: 'OK',
@@ -206,7 +212,8 @@ export const Login = () => {
                                 // confirm
                                 commonAlertOpen({
                                     alertType: 'warning',
-                                    messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다. 이 기기에서 로그인할까요?'],
+                                    messageFontFamily: 'NotoSansCJKKR',
+                                    messages: ['동일한 ID로 다른 기기에 로그인 되어 있습니다.','이 기기에서 로그인할까요?'],
                                     yesButtonLabel: 'Yes',
                                     yesEvent: () => {
                                         forceLogin(loginValues, device_id, saveId)
@@ -221,7 +228,8 @@ export const Login = () => {
                                 if (response.isFiveTimesWrong) {
                                     commonAlertOpen({
                                         alertType: 'warning',
-                                        messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다. POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
+                                        messageFontFamily: 'NotoSansCJKKR',
+                                        messages: ['비밀번호 입력 5회 오류로 로그인이 제한되었습니다.','POLY 홈페이지에서 비밀번호를 새로 등록해주세요.'],
                                         useOneButton: true,
                                         yesButtonLabel: 'OK',
                                         yesEvent: goPasswordUpdatePage

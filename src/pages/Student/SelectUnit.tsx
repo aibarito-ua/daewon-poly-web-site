@@ -108,6 +108,7 @@ export default function SelectUnit () {
             setGoBackFromDraftInUnitPage(()=>{
                 commonAlertOpen({
                     messages: ['Do you want to exit?'],
+                    messageFontFamily: 'Roboto',
                     alertType: 'warningContinue',
                     yesButtonLabel:'Yes',
                     noButtonLabel: 'No',
@@ -374,6 +375,7 @@ export default function SelectUnit () {
                         setGoBackFromDraftInUnitPage(()=>{
                             commonAlertOpen({
                                 messages: ['Do you want to exit?'],
+                                messageFontFamily: 'Roboto',
                                 alertType: 'warningContinue',
                                 yesButtonLabel:'Yes',
                                 noButtonLabel: 'No',

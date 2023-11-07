@@ -9,6 +9,7 @@ interface IUseControlAlertStore {
     commonAlertCloseEvent:Function|null;
     commonAlertOneButton: boolean;
     commonAlertType: TAlertType;
+    commonAlertMessageFontFamily: TCommonAlertOpenOptionFontFamily;
 
     setCommonAlertMessage: (messages: string[]) => void;
     setCommonAlertHeadTitle: (title:string) =>void;
@@ -154,7 +155,9 @@ type TCommonAlertOpenOptions = {
     closeEvent?:Function,
     useOneButton?:boolean,
     alertType?: TAlertType,
+    messageFontFamily?:TCommonAlertOpenOptionFontFamily
 }
+type TCommonAlertOpenOptionFontFamily = 'Roboto'|'NotoSansCJKKR'|''
 
 // standby screen
 type TCommonStandbyScreen = {
