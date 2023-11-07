@@ -14,7 +14,7 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     // Title
     const contentTitleComponent = (titleText:string, keyVal:any) => {
         return (<div className='flex flex-1 w-full h-fit justify-center z-0' key={keyVal}>
-            <div className='flex flex-row w-full h-fit max-h-full text-start'>
+            <div className='flex flex-row w-full h-fit max-h-full text-center'>
                 <div className='flow-root w-full overflow-y-auto'>
                     <span>
                         <pre className='preview-text-pre'>{titleText}</pre>

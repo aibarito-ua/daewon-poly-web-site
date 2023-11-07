@@ -674,7 +674,7 @@ const PreviewSparkWriting = (props:any) => {
         } else if (guideFlag === 1) {
             
             const guideTextData = [
-                'Before you submit, check the revised writing. Tap the colored text and choose whether to make changes or not.',
+                'Before you submit, check the revised writing. Tap the colored text and choose whether to accept or ignore the suggestions.',
             ];
             setGuideText(guideTextData)
         }
@@ -1132,7 +1132,7 @@ const PreviewSparkWriting = (props:any) => {
                         <div className='flex flex-1 flex-col w-full h-full pt-[24px] px-[12px] z-0 overflow-y-auto'>
                             {bodyHistory.title && (
                                 <div className='flex flex-1 w-full h-fit justify-center z-0'>
-                                    <div className='flex flex-row w-full h-fit max-h-full text-start'>
+                                    <div className='flex flex-row w-full h-fit max-h-full text-center'>
                                         <div className='flow-root w-full overflow-y-auto' style={{fontWeight:700}}>
                                         {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
                                         </div>
