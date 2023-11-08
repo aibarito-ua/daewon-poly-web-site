@@ -1,6 +1,6 @@
 
 import React, { useCallback, useState } from "react";
-import { PieChart, Pie, Sector, Tooltip } from "recharts";
+import { PieChart, Pie, Sector, Tooltip, Legend } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
 
 
@@ -185,33 +185,11 @@ export default function App() {
         value: 0, outerRadius: 0
     });
     const [allData, setAllData] = useState<TAllDoughnutDatas>([]);
+    const [legendData, setLegendData] = useState<TCircleLegendItems[]>([]);
     const [addWidth, setAddWidth] = useState<number>(0);
     const [decText, setDecText] = useState<number>(0);
     const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
     const [average, setAverage] = useState<number>(0);
-    React.useEffect(()=>{
-        
-        console.log('pie chart reportSelectedOverallPieChart =',reportSelectedOverallPieChart)
-        const dumpData:TAllDoughnutDatas = JSON.parse(JSON.stringify(reportSelectedOverallPieChart));
-        const length = dumpData.length
-        let sum_val = 0;
-        for (let i = 0; i < length; i++) {
-            sum_val += dumpData[i].data[0].value;
-        }
-        const avr = sum_val/length;
-        console.log('avr =',avr)
-        setAverage(avr)
-        setAllData(reportSelectedOverallPieChart);
-    },[reportSelectedOverallPieChart, reportSelectFinder])
-    const radiusDatas = [
-        { innerRadius: 60, outerRadius: 70 },
-        { innerRadius: 75, outerRadius: 85 },
-        { innerRadius: 90, outerRadius: 100 },
-        { innerRadius: 105, outerRadius: 115 },
-        { innerRadius: 120, outerRadius: 130 },
-        { innerRadius: 135, outerRadius: 145 }
-    ]
-    
     const labelNames = [
         'ideas',
         'organization',
@@ -220,6 +198,46 @@ export default function App() {
         'sentence fluency',
         'conventions'
     ];
+    const radiusDatas = [
+        { innerRadius: 60, outerRadius: 70 },
+        { innerRadius: 75, outerRadius: 85 },
+        { innerRadius: 90, outerRadius: 100 },
+        { innerRadius: 105, outerRadius: 115 },
+        { innerRadius: 120, outerRadius: 130 },
+        { innerRadius: 135, outerRadius: 145 }
+    ]
+    React.useEffect(()=>{
+        
+        console.log('pie chart reportSelectedOverallPieChart =',reportSelectedOverallPieChart)
+        const dumpData:TAllDoughnutDatas = JSON.parse(JSON.stringify(reportSelectedOverallPieChart));
+        let dumyLegendData:TCircleLegendItems[]=[];
+        const length = dumpData.length
+        let sum_val = 0;
+        for (let i = 0; i < length; i++) {
+            sum_val += dumpData[i].data[0].value;
+            let dumyLegendItem:TCircleLegendItems = {
+                circleColor: dumpData[i].data[0].fillColor,
+                circleLabel: dumpData[i].target,
+                eventValue: dumpData[i].data[0].value,
+                innerRadius: radiusDatas[i].innerRadius,
+                key: `report-legend-pie-chart-${dumpData[i].target}`
+            }
+            dumyLegendData.push(dumyLegendItem);
+        }
+        
+        dumyLegendData.sort((a,b) => {
+            return labelNames.indexOf(a.circleLabel)-labelNames.indexOf(b.circleLabel)
+        });
+        console.log('dumyLegendData =',dumyLegendData)
+        setLegendData(dumyLegendData)
+        const avr = sum_val/length;
+        console.log('avr =',avr)
+        setAverage(avr)
+        setAllData(reportSelectedOverallPieChart);
+    },[reportSelectedOverallPieChart, reportSelectFinder])
+    
+    
+    
     // const avr = 90;
     const cx = 145;
     const cy = 145;
@@ -457,20 +475,22 @@ Z
     )
 
 }
-const mouseOnEvent = (e:any)=>{
+const mouseOnEvent = (e:any, name?:string, eventValue?:number, legendInnerRadius?:number )=>{
     console.log('click =',e)
+    console.log('click name =',e.name)
+    console.log('click value =',e.value)
     console.log('active',activeIndex)
-
-    let value= e.value;
-    setClickIndex(e.name)
+    let eName = e.name? e.name: name;
+    let value= e.value? e.value: eventValue;
+    setClickIndex(eName)
     //   let outerR = e.outerRadius;
-    let outerR = e.innerRadius;
+    let outerR = e.innerRadius?e.innerRadius: legendInnerRadius;
       let dumpAllData:TAllDoughnutDatas = JSON.parse(JSON.stringify(allData));
       for (let i = 0; i < dumpAllData.length; i++) {
         const currentPayloadData = dumpAllData[i].data[0];
-        if (currentPayloadData.name === e.name) {
+        if (currentPayloadData.name === eName) {
             
-            dumpAllData[i].data[0].selectName=e.name
+            dumpAllData[i].data[0].selectName=eName
             setTooltipLineColor(dumpAllData[i].toolLineColor)
             setDecText(dumpAllData[i].fitText);
             setAddWidth(dumpAllData[i].addWidth);
@@ -493,6 +513,45 @@ const mouseOffEvent = (e:any) => {
     setTooltipData({value: 0, outerRadius: 0})
     setAllData(dumpAllData)
 }
+
+// Legend
+const DoughnutChartLegend = () => {
+
+    const legendJsx = legendData.sort((a,b) => {
+        return labelNames.indexOf(a.circleLabel) - labelNames.indexOf(b.circleLabel)
+    }).map((item, labelIndex)=> {
+        const key = 'report-chart-'+item.circleLabel+'-'+labelIndex;
+        
+        if (item.circleLabel === 'ideas') {
+            return <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-idea`} 
+                key={key}
+                onMouseEnter={mouseOnEvent}
+                onMouseOut={mouseOffEvent}
+            ></div>
+        } else if (item.circleLabel === 'organization') {
+            return <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-organization`} key={key} ></div>
+        } else if (item.circleLabel === 'voice') {
+            return <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-voice`} key={key} ></div>
+        } else if (item.circleLabel === 'word choice') {
+            return <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-word-choice`} key={key} ></div>
+        } else if (item.circleLabel === 'sentence fluency') {
+            return <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-sentence-fluency`} key={key} ></div>
+        } else if (item.circleLabel === 'conventions') {
+            return <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-conventions`} key={key} ></div>
+        }
+    })
+    // return (
+    //     <div className='flex flex-col w-[413px] h-[60px]'>
+    //        <div className='flex flex-row'>
+    //        {legendJsx[0]} {legendJsx[1]} {legendJsx[2]}
+    //        </div>
+    //        <div className='flex flex-row'>
+    //        {legendJsx[3]} {legendJsx[4]} {legendJsx[5]}
+    //        </div>
+    //     </div>
+    // )
+}
+
 // const testPercent = 100;
 const mainPercent = Math.round(average*10)/10;
 console.log('average =',average)
@@ -520,6 +579,7 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
 )
 
   return (
+    <div>
     <PieChart width={350} height={300}>
         
 
@@ -542,14 +602,45 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
               outerRadius={currentR.outerRadius}
               fill={dataItem.data[0].fillColor}
               dataKey="value"
-              onMouseEnter={mouseOnEvent}
+              onMouseEnter={(e) =>mouseOnEvent(e)}
               onMouseOut={mouseOffEvent}
             //   onClick={}
             />
 
         })}
+        
         {clickIndex!=='' && textTooltip()}
-        {/* <Tooltip content={textTooltip} /> */}
     </PieChart>
+        <div className='flex flex-col w-[413px] h-[60px]'>
+           <div className='flex flex-row'>
+                <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-idea hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[0].circleLabel, legendData[0].eventValue, legendData[0].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+                <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-organization hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[1].circleLabel, legendData[1].eventValue, legendData[1].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+                <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-voice hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[2].circleLabel, legendData[2].eventValue, legendData[2].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+           </div>
+           <div className='flex flex-row'>
+                <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-word-choice hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[3].circleLabel, legendData[3].eventValue, legendData[3].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+                <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-sentence-fluency hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[4].circleLabel, legendData[4].eventValue, legendData[4].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+                <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-conventions hover:cursor-pointer`} 
+                    onMouseEnter={(e)=>mouseOnEvent(e, legendData[5].circleLabel, legendData[5].eventValue, legendData[5].innerRadius)}
+                    onMouseOut={mouseOffEvent}
+                ></div>
+           </div>
+        </div>
+    </div>
   );
 }

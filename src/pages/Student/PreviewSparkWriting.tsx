@@ -1139,9 +1139,9 @@ const PreviewSparkWriting = (props:any) => {
                                     </div>
                                 </div>
                             )}
-                            <div className='flex flex-col text-start w-[1160px] max-w-[1160px] h-full max-h-full pt-[26px] overflow-y-auto overflow-x-hidden z-0'>
+                            <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto overflow-x-hidden z-0'>
                             {(draftIndex!==2 && isStandbyFeedback==='') && bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
-                                return <span className='pb-[20px] w-[1160px]' key={bodyRemakeStructIndex}>
+                                return <span className='pb-[20px] w-full' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
                                         // console.log('==test draft jsx ===',v)

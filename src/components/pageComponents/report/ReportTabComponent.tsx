@@ -338,7 +338,6 @@ const handleNext = (currentIndex:number) => {
                     {/* left pie chart */}
                     <div className='flex flex-col items-center justify-center'>
                         <PieChart />
-                        <div className='bg-tab-overall-pie-legend-img-svg bg-no-repeat w-[413px] h-[60px]' />
                     </div>
                     {/* right bar chart */}
                     <div className='flex flex-col items-center justify-center gap-[20px]'>

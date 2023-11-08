@@ -122,6 +122,13 @@ module.exports = {
         'user-info-modal-back-btn': "url('/src/components/toggleModalComponents/img/userInfoModal/ic_user_info_modal_back.png')",
         'user-info-modal-checkbox': "url('/src/components/toggleModalComponents/img/userInfoModal/checkbox_none.png')",
         'user-info-modal-checkbox-active': "url('/src/components/toggleModalComponents/img/userInfoModal/checkbox_checked.png')",
+        // report pie chart legend items
+        'report-pie-chart-legend-item-idea': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_idea.svg')",
+        'report-pie-chart-legend-item-organization': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_organization.svg')",
+        'report-pie-chart-legend-item-voice': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_voice.svg')",
+        'report-pie-chart-legend-item-word-choice': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_word_choice.svg')",
+        'report-pie-chart-legend-item-sentence-fluency': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_sentence_fluency.svg')",
+        'report-pie-chart-legend-item-conventions': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_conventions.svg')",
       }
     },
     borderWidth: {

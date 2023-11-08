@@ -6,6 +6,8 @@ import {
   YAxis,
   CartesianGrid,
   Cell,
+  Tooltip,
+  ReferenceArea,
 } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
 import { ImplicitLabelType } from "recharts/types/component/Label";
@@ -97,10 +99,42 @@ const CustomXAxisTick = (props:any) => {
         barCategoryGap={16}
         barGap={5}
         className="font-[NotoSansCJKKR] capitalize"
+      
       >
+        <ReferenceArea shape={(props:any)=>{
+          console.log('props ===',props)
+          return <rect 
+            x={10} 
+            y={18}
+            height={243}
+            width={86}
+            fill="#f5f5f5"
+          />
+        }}/>
+        <ReferenceArea shape={(props:any)=>{
+          console.log('props ===',props)
+          return <rect 
+            x={183} 
+            y={18}
+            height={243}
+            width={86}
+            fill="#f5f5f5"
+          />
+        }}/>
+        <ReferenceArea shape={(props:any)=>{
+          console.log('props ===',props)
+          return <rect 
+            x={357} 
+            y={18}
+            height={243}
+            width={86}
+            fill="#f5f5f5"
+          />
+        }}/>
         <CartesianGrid strokeDasharray="3 3" vertical={false}/>
         <XAxis dataKey="name" tick={<CustomXAxisTick />} minTickGap={0} ticks={['ideas','organization','voice','word', 'sentence','conventions']} 
           tickLine={false} tickMargin={10} axisLine={false} interval={0}
+              
         />
         <YAxis tickCount={5} ticks={[0,1,2,3,4,5,6,7,8,9,10,11]} tickLine={false} axisLine={false} tickFormatter={()=>''} />
         
@@ -128,6 +162,8 @@ const CustomXAxisTick = (props:any) => {
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
           check.unit5?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
           } barSize={10} radius={[5,5,0,0]}/>
+        {/* <ReferenceArea x1={0} x2={53} y1={0} y2={300} stroke="red" strokeOpacity={0.3} /> */}
+        
       </BarChart>
     );
 

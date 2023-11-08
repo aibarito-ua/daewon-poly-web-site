@@ -298,14 +298,14 @@ code {
 }
 body {
   *::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
+    width: 2px;
+    height: 2px;
   };
   *::-webkit-scrollbar-thumb {
     background-color: #cccccc;
     background-clip: padding-box;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid transparent;
+    /* border-right: 7px solid transparent; */
+    /* border-bottom: 7px solid transparent; */
   };
   *::-webkit-scrollbar-corner {
     display: none;

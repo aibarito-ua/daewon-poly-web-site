@@ -296,3 +296,11 @@ type TLMSparkWritingStudentUnitDraft2StatusItemInClass = {
     submit_date:string|null;
     temp_save_date:string|null;
 }
+
+type TCircleLegendItems = {
+    circleColor: string;
+    circleLabel: string;
+    eventValue: number;
+    innerRadius: number;
+    key: string;  
+}
