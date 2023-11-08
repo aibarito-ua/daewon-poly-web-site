@@ -307,7 +307,7 @@ const GrammarContentComponent = {
                             returnValue = <span key={mainTagKey} className={isAccept ? 'text-[#00be91]':''}><span id={textTagId}>{selectedWord}</span></span>
                         } else {
                             returnValue = (
-                                <span key={mainTagKey+'-both'}>
+                                <span key={mainTagKey+'-both'} className='inline-block'>
                                     <GrammarTooltipCustom 
                                         mainTagkey={deleteKey} 
                                         textTagid={'title-'+mainTagKey+'-del'} 
@@ -617,7 +617,7 @@ const GrammarContentComponent = {
                                 returnValue = <span key={mainTagKey} className={isAccept ? 'text-[#00be91]': ''}><span id={textTagId}>{selectedWord}</span></span>
                             } else {
                                 returnValue = (
-                                    <span key={mainTagKey+'-both'}>
+                                    <span key={mainTagKey+'-both'} className='inline-block'>
                                         <GrammarTooltipCustom 
                                             mainTagkey={deleteKey} 
                                             textTagid={'title-'+mainTagKey+'-del'} 
