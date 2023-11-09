@@ -8,7 +8,7 @@ import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import ReportSelectButton from '../../components/pageComponents/report/ReportSelectButton';
 import CustomizedReportTabs from '../../components/pageComponents/report/ReportTabComponent';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
-
+import { logoutAPI } from './api/Login.api';
 
 const Report = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -17,7 +17,7 @@ const Report = () => {
     // const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
     // const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
 
-    const {role, userInfo} = useLoginStore();
+    const {role, userInfo, device_id,isMobile} = useLoginStore();
     const {
         setCommonStandbyScreen,
         
@@ -33,7 +33,7 @@ const Report = () => {
         reportSelectUnit, setReportSelectUnit,
         reportSelectBookName,
         forcedReadOnlyReportSelectBox, setForcedReadOnlyReportSelectBox,
-        
+        commonAlertOpen
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI,
@@ -42,16 +42,37 @@ const Report = () => {
         sparkWritingBookName
     } = useSparkWritingStore();
 
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
+
     const beforeRenderFn1 = async () => {
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
-            
-            if (response.book_name!=='') {
-                setLoading(true)
+            if (!response.isDuplicateLogin) {
+                if (response.book_name!=='') {
+                    setLoading(true)
+                }
+                setSparkWritingDataFromAPI(response.units)
+                
+                return response;
+            } else {
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
             }
-            setSparkWritingDataFromAPI(response.units)
-            
-            return response;
         });
     }
 
@@ -62,7 +83,21 @@ const Report = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
+                if (!response.isDuplicateLogin) {
+                    return response.result;
+                } else {
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                }
+            });
             if (getAPIs) getReportAll = getAPIs;
         }
         
@@ -120,7 +155,21 @@ const Report = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((res) => {
+                if (!res.isDuplicateLogin) {
+                    return res.result;
+                } else {
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                }
+            });
             if (getAPIs) getReportAll = getAPIs;
         }
         if (getReportAll) {

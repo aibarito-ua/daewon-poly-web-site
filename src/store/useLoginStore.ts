@@ -12,6 +12,7 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
     isOpen: false,
     device_id: "",
     isMobile: false,
+    isDuplicateLogin: false,
     updateTryLoginCount: () => {
         const setCount = get().tryLoginCount+1;
         set(()=>({

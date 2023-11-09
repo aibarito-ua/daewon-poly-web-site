@@ -10,13 +10,13 @@ import PortfolioContents from '../../components/pageComponents/portfolio/Portfol
 import PortfolioModalComponent from '../../components/toggleModalComponents/PortfolioModalComponent';
 import PortfolioSelectButton from '../../components/pageComponents/portfolio/PortfolioSelectButton';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
-
+import { logoutAPI } from './api/Login.api';
 
 export const Portfolio = () => {
 
-    const {userInfo} = useLoginStore();
+    const {userInfo, device_id, isMobile} = useLoginStore();
     const {
-        setCommonStandbyScreen,
+        setCommonStandbyScreen, commonAlertOpen
     } = useControlAlertStore();
     const {
         // states
@@ -39,19 +39,42 @@ export const Portfolio = () => {
         sparkWritingBookName
     } = useSparkWritingStore();
 
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
+
     const beforeRenderedFn = async () => {
         const student_code = userInfo.userCode;
         setCommonStandbyScreen({openFlag:true});
-        await getPortfoliosAPI(student_code, userInfo.accessToken).then((response) => {
-            if (response) {
-                for (let i = 0; i < response.periods.length;i++) {
-                    response.periods[i].levels = [
-                        ...response.periods[i].levels.filter(d => d.level_name === userInfo.courseName),
-                        ...response.periods[i].levels.filter(d => d.level_name !== userInfo.courseName)
-                    ]
+        await getPortfoliosAPI(student_code, userInfo.accessToken).then((res) => {
+            if (!res.isDuplicateLogin) {
+                let response = res.result;
+                if (response) {
+                    for (let i = 0; i < response.periods.length;i++) {
+                        response.periods[i].levels = [
+                            ...response.periods[i].levels.filter(d => d.level_name === userInfo.courseName),
+                            ...response.periods[i].levels.filter(d => d.level_name !== userInfo.courseName)
+                        ]
+                    }
+                    setPortfolioApiData(response, userInfo);
+                    setCommonStandbyScreen({openFlag:false});
                 }
-                setPortfolioApiData(response, userInfo);
-                setCommonStandbyScreen({openFlag:false});
+            } else {
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
             }
         });
     }

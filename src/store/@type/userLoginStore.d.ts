@@ -10,6 +10,7 @@ interface IUserInfo {
     setIsOpen: any;
     device_id: string;
     isMobile: boolean;
+    isDuplicateLogin:boolean;
     setMobile: (v: boolean) => void;
     // setUserInfo: (userLoginInfomation: IUserLoginInfo)=>void;
     updateTryLoginCount: () => void;
@@ -39,6 +40,7 @@ interface IUserLoginInfo {
     class:string;
     subClass: string;
     role:TRole;
+    isDuplicateLogin:boolean;
 }
 type TUserInfoData = {
     accessToken: string;

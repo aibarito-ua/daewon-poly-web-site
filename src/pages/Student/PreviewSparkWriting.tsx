@@ -14,6 +14,7 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
 import { callUnitInfobyStudent, draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
+import { logoutAPI } from './api/Login.api';
 
 const PreviewSparkWriting = (props:any) => {
     // stores
@@ -40,7 +41,7 @@ const PreviewSparkWriting = (props:any) => {
     // WritingCenter Store
     const {} = useEssayWritingCenterDTStore();
     // current role
-    const {userInfo, role} = useLoginStore();
+    const {userInfo, role, device_id, isMobile} = useLoginStore();
     const {setGrammarBody, setGrammarTitle, setGrammarAll, grammarTitle, grammarBody, grammarAll,
         resultTitle,resultBody, setGrammarResult,
         returnData, setGrammarOrigin,
@@ -132,9 +133,19 @@ const PreviewSparkWriting = (props:any) => {
     // Navigate hook
     const navigate = useNavigate();
     const locationInfo = useLocation();
+
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
     // will mount grammar data check
     const beforeRenderedFn = async () => {
-        let reloadData:boolean;
+        let reloadData:boolean|undefined;
         
         if (params.unit && params.draft) {
             
@@ -153,12 +164,24 @@ const PreviewSparkWriting = (props:any) => {
                 // data reload 
                 reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
                     console.log('response ==',response)
-                    if (response.book_name!=='') {
-                        setSparkWritingDataFromAPI(response.units, response.book_name);
-                        setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
-                        return true;
+                    if (!response.isDuplicateLogin) {
+                        if (response.book_name!=='') {
+                            setSparkWritingDataFromAPI(response.units, response.book_name);
+                            setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
+                            }
+                        })
                     }
                 })
             }
@@ -244,28 +267,39 @@ const PreviewSparkWriting = (props:any) => {
         if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken);
-           console.log('res ====',res)
-            if (res.result_body.length>0) {
-                const unitId = sparkWritingData[unitIndex].unit_id
-                // const proofReadingCountUpdateValue = 1;
-                setProofreadingCount(unitId)
-                setCommonStandbyScreen({openFlag:false})
-                setIsPreview(false)
-                setIsGrammarProceed(true);
-                 console.log('res grammar =',res)
-                setGuideFlag(1)
-                setInitHistorys({
-                    title: res.result_title,
-                    body: res.result_body
-                })
-
-                // const proofReadingCountUpdateValue = ProofReadingCountValue+1;
-                // const updateCountAPI = await proofReadingCountUpdate(userInfo.userCode, unitId, proofReadingCountUpdateValue, userInfo.accessToken);
-                // if (updateCountAPI.statusCode === 200) {
-                // }
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken).then((response) => {
+                if (!response.isDuplicateLogin) {
+                    return response.result;
+                } else {
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                }
+            });
+            if (res) {
+                console.log('res ====',res)
+                 if (res.result_body.length>0) {
+                     const unitId = sparkWritingData[unitIndex].unit_id
+                     // const proofReadingCountUpdateValue = 1;
+                     setProofreadingCount(unitId)
+                     setCommonStandbyScreen({openFlag:false})
+                     setIsPreview(false)
+                     setIsGrammarProceed(true);
+                      console.log('res grammar =',res)
+                     setGuideFlag(1)
+                     setInitHistorys({
+                         title: res.result_title,
+                         body: res.result_body
+                     })
+     
+                 }
             }
-            // console.log('preview res ===',res)
         } else {
             // submit
         }
@@ -1291,7 +1325,21 @@ const PreviewSparkWriting = (props:any) => {
                                             "proofreading_count": 0
                                         }
                                       //  console.log('data =',data)
-                                        const reset = await grammarReset(data, userInfo.accessToken);
+                                        const reset = await grammarReset(data, userInfo.accessToken).then((response)=>{
+                                            if (!response.isDuplicateLogin) {
+                                                return response.result;
+                                            } else {
+                                                commonAlertOpen({
+                                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                    messageFontFamily:'NotoSansCJKKR',
+                                                    useOneButton: true,
+                                                    yesButtonLabel:'OK',
+                                                    yesEvent: async() => {
+                                                        await logoutFn()
+                                                    }
+                                                })
+                                            }
+                                        });
                                       //  console.log('reset =',reset)
                                         if (reset.statusCode === 200) {
                                             setProofreadingCountReset(sparkWritingData[unitIndex].unit_id);

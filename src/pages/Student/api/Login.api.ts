@@ -52,6 +52,7 @@ export async function logoutAPI(username:string, device_id: string):Promise<any>
 export async function memberWithDraw(username:string, password:string, usercode:string): Promise<{
     is_withdrawed_successfully:boolean;
     is_server_error:boolean;
+    isDuplicateLogin?:boolean;
 }>{
     const reqUrl = CONFIG.LOGIN.POST.WITHDRAW;
     const data = {
@@ -71,9 +72,18 @@ export async function memberWithDraw(username:string, password:string, usercode:
         };
     }).catch((reject) => {
         console.log('reject =',JSON.stringify(reject))
-        return {
-            is_withdrawed_successfully:false,
-            is_server_error:true,
+        const rsp:TProofReadingCountUpdateReject = reject.response.data;
+        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+            return {
+                is_withdrawed_successfully:false,
+                is_server_error:true,
+                isDuplicateLogin: false,
+            }
+        } else {
+            return {
+                is_withdrawed_successfully:false,
+                is_server_error:true,
+            }
         }
     })
 }

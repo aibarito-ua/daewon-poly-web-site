@@ -9,6 +9,16 @@ import { useComponentWillMount } from '../../../hooks/useEffectOnce';
 import { logoutAPI } from '../../../pages/Student/api/Login.api';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 
+// export const logoutFn =async () => {
+//     const {device_id, isMobile, userInfo} = useLoginStore()
+//     logoutAPI(userInfo.userCode, device_id)
+//     if(isMobile)
+//         window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+//     else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+//         (window as any).api.toElectron.send('clear')
+//     }
+//     window.location.reload()
+// }
 
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();

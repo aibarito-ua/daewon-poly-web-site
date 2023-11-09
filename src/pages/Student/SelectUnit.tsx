@@ -13,10 +13,12 @@ import { callUnitInfobyStudent, getReportsAPI } from './api/EssayWriting.api';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import UnitReportModalComponent from '../../components/toggleModalComponents/UnitReportModalComponent';
+import { logoutAPI } from './api/Login.api';
+
 
 export default function SelectUnit () {
     const navigate = useNavigate();
-    const {role, userInfo} = useLoginStore();
+    const {role, userInfo, setUserInfo, device_id, isMobile} = useLoginStore();
     const {
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen,
         goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage,
@@ -27,6 +29,7 @@ export default function SelectUnit () {
         // hover event
         lastUnitIndex, setLastUnitIndex
     } = useSparkWritingStore();
+    
     const {
         setCommonStandbyScreen,
         // report modal
@@ -45,6 +48,16 @@ export default function SelectUnit () {
         // feedback initialize
         setTeacherFeedbackInit
     } = useControlAlertStore();
+
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
 
     React.useEffect(()=>{
         if (lastUnitIndex===0) {
@@ -99,7 +112,22 @@ export default function SelectUnit () {
         // report
         const student_code = userInfo.userCode;
         
-        const getReportAll = await getReportsAPI(student_code, userInfo.accessToken,userInfo.courseName);
+        const getReportAll = await getReportsAPI(student_code, userInfo.accessToken,userInfo.courseName).then((res) => {
+            if (!res.isDuplicateLogin) {
+                return res.result;
+            } else {
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
+            }
+        });
+
         if (goBackFromDraftInUnitPage) {
             // const exitFunc = () => {
             //     CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
@@ -141,16 +169,16 @@ export default function SelectUnit () {
     })
     
 
-    const reportOpen = async (data:TSparkWritingData) => {
-        const student_code = userInfo.userCode;
-        const getAllReport = await getReportsAPI(student_code,userInfo.accessToken, userInfo.courseName);
-        if (getAllReport) {
-            const reportByYears = getAllReport.periods;
-            for (let i = 0; i < reportByYears.length; i++) {
+    // const reportOpen = async (data:TSparkWritingData) => {
+    //     const student_code = userInfo.userCode;
+    //     const getAllReport = await getReportsAPI(student_code,userInfo.accessToken, userInfo.courseName);
+    //     if (getAllReport) {
+    //         const reportByYears = getAllReport.periods;
+    //         for (let i = 0; i < reportByYears.length; i++) {
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
     const test = (data:TReportByStudentResponse,
         year:number,
         semester:number,

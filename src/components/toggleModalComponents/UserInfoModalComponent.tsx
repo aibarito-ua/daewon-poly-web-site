@@ -11,7 +11,7 @@ import {
 
 import useLoginStore from '../../store/useLoginStore';
 import CustomizedCheckbox from '../commonComponents/checkbox/CustomizedCheckbox';
-import { memberWithDraw } from '../../pages/Student/api/Login.api';
+import { logoutAPI, memberWithDraw } from '../../pages/Student/api/Login.api';
 import useControlAlertStore from '../../store/useControlAlertStore';
 
 export default function UserInfoModalComponent() {
@@ -24,7 +24,8 @@ export default function UserInfoModalComponent() {
         setCheckPW,
         setAgree,
         setPageName,
-        setInfoModal
+        setInfoModal,
+        device_id, isMobile
     } = useLoginStore();
     const {
         setCommonStandbyScreen, commonAlertOpen, commonAlertClose,
@@ -33,6 +34,16 @@ export default function UserInfoModalComponent() {
     const inputElementRef = React.useRef<HTMLInputElement>(null);
     // const [agree, setAgree] = React.useState<boolean[]>([false, false]);
     
+
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
 
     React.useEffect(()=>{
         if (infoModalOpen.isOpen) {
@@ -207,7 +218,21 @@ export default function UserInfoModalComponent() {
                                     },
                                     closeEvent: async () => {
                                         setCommonStandbyScreen({openFlag:true})
-                                        const rsp = await memberWithDraw(userInfo.webId, checkPW, userInfo.userCode);
+                                        const rsp = await memberWithDraw(userInfo.webId, checkPW, userInfo.userCode).then((response) => {
+                                            if (!response.isDuplicateLogin) {
+                                                return response;
+                                            } else {
+                                                commonAlertOpen({
+                                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                    messageFontFamily:'NotoSansCJKKR',
+                                                    useOneButton: true,
+                                                    yesButtonLabel:'OK',
+                                                    yesEvent: async() => {
+                                                        await logoutFn()
+                                                    }
+                                                })
+                                            }
+                                        });
                                         console.log('rsp ===',rsp)
                                         if (rsp) {
                                             setCommonStandbyScreen({openFlag:false})

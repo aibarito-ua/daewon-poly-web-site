@@ -12,10 +12,11 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { progressIcons } from '../../util/svgs/commonProgressIcons';
 import ProgressTable from '../../components/pageComponents/progress/ProgressTables';
 import SelectLabels from '../../components/pageComponents/progress/ProgressSelectButton';
+import { logoutAPI } from './api/Login.api';
 
 const Progress = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const {role, userInfo} = useLoginStore();
+    const {role, userInfo, device_id, isMobile} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
     const {
         setCommonStandbyScreen,
@@ -26,7 +27,8 @@ const Progress = () => {
         setReportSelectBoxValue,
         setProgressAllLevelBoxValues,
         setProgressLevelBoxValue,
-        progressLevelBoxValue
+        progressLevelBoxValue,
+        commonAlertOpen
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI, 
@@ -37,6 +39,16 @@ const Progress = () => {
         // progressTabActiveIndex,
     } = useProgressPageStore();
 
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
+
     const getReportsData = async () => {
         const student_code = userInfo.userCode;
         
@@ -44,7 +56,21 @@ const Progress = () => {
         if (reportAPIData.periods.length > 0) {
             getReportAll=reportAPIData;
         } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName);
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
+                if (!response.isDuplicateLogin) {
+                    return response.result;
+                } else {
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                }
+            });
             if (getAPIs) getReportAll = getAPIs;
         }
         

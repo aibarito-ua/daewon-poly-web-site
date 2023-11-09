@@ -514,44 +514,6 @@ const mouseOffEvent = (e:any) => {
     setAllData(dumpAllData)
 }
 
-// Legend
-const DoughnutChartLegend = () => {
-
-    const legendJsx = legendData.sort((a,b) => {
-        return labelNames.indexOf(a.circleLabel) - labelNames.indexOf(b.circleLabel)
-    }).map((item, labelIndex)=> {
-        const key = 'report-chart-'+item.circleLabel+'-'+labelIndex;
-        
-        if (item.circleLabel === 'ideas') {
-            return <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-idea`} 
-                key={key}
-                onMouseEnter={mouseOnEvent}
-                onMouseOut={mouseOffEvent}
-            ></div>
-        } else if (item.circleLabel === 'organization') {
-            return <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-organization`} key={key} ></div>
-        } else if (item.circleLabel === 'voice') {
-            return <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-voice`} key={key} ></div>
-        } else if (item.circleLabel === 'word choice') {
-            return <div className={`w-[128px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-word-choice`} key={key} ></div>
-        } else if (item.circleLabel === 'sentence fluency') {
-            return <div className={`w-[161px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-sentence-fluency`} key={key} ></div>
-        } else if (item.circleLabel === 'conventions') {
-            return <div className={`w-[124px] h-[30px] bg-no-repeat bg-origin-border bg-contain bg-report-pie-chart-legend-item-conventions`} key={key} ></div>
-        }
-    })
-    // return (
-    //     <div className='flex flex-col w-[413px] h-[60px]'>
-    //        <div className='flex flex-row'>
-    //        {legendJsx[0]} {legendJsx[1]} {legendJsx[2]}
-    //        </div>
-    //        <div className='flex flex-row'>
-    //        {legendJsx[3]} {legendJsx[4]} {legendJsx[5]}
-    //        </div>
-    //     </div>
-    // )
-}
-
 // const testPercent = 100;
 const mainPercent = Math.round(average*10)/10;
 console.log('average =',average)
