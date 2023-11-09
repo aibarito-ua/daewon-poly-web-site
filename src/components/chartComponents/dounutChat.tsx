@@ -541,10 +541,8 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
 )
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center w-full">
     <PieChart width={350} height={300}>
-        
-
         <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
             <tspan x={cx} y={cy} dy={12} textAnchor="middle" style={text1Css}>
                 {mainPercent}

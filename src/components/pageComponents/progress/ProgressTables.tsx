@@ -114,7 +114,6 @@ const ProgressTable = (props:any) => {
                         progressPercentValue+=0;
                         firstDraftState=progressIcons.RecycleRedCircleIcon;
                         firstDraftFeedbackState=<progressIcons.RejectRedRectIcon/>;
-                        // firstDraftStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
                         firstDraftStateData=''
                         firstDraftFeedbackStateData=unitItem.draft_1_status.review_reject_date? formatDateforStringData(unitItem.draft_1_status.review_reject_date): '';
                     } else {} // 0 values
@@ -148,7 +147,19 @@ const ProgressTable = (props:any) => {
                             <div className='text-start pl-[20px] h-[60px] max-h-[60px] w-[440px] min-w-[440px] py-0 my-0'>
                                 <span className='inline-flex gap-[10px] h-[60px] items-center'>
                                     <span className='progress-page-view-box-list-icon'>unit {unitItem.unit_index}</span>
-                                    <span className='progress-page-view-box-list-label'>{unitItem.topic}</span>
+                                    <span 
+                                    // className='progress-page-view-box-list-label'
+                                    style={{
+                                        fontFamily: 'GothamRounded',
+                                        fontWeight: 700,
+                                        fontSize: '16px',
+                                        flexGrow: 0,
+                                        fontStretch: 'normal',
+                                        fontStyle: 'normal',
+                                        lineHeight: 'normal',
+                                        letterSpacing: 'normal'
+                                    }}
+                                    >{unitItem.topic}</span>
                                 </span>
                             </div>
                             <div className='w-[70px] h-[60px] max-h-[60px] mr-[40px]'>

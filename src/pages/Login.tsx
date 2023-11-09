@@ -552,7 +552,11 @@ export const Login = () => {
                             </div>
                             <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
                         </div>
-                        <div className='flex flex-row mt-[35px] justify-center w-[308px] text-[#777777] text-[12px] font-normal font-notoSansCJKKR select-none' 
+                        
+
+                    </div>
+                    <div className='flex flex-col w-full justify-center items-center'>
+                    <div className='flex flex-row mt-[35px] justify-center w-[308px] text-[#777777] text-[12px] font-normal font-notoSansCJKKR select-none' 
                             style={{
 
                         }}>
@@ -562,11 +566,19 @@ export const Login = () => {
                             </div>
                             <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.PRIVACY)}}>개인정보취급방침</div>
                         </div>
-                        <div className='flex flex-col mt-[15px] text-[11px] w-[308px] text-[#444444] font-notoSansCJKKR select-none' 
+                        <div className='flex flex-col mt-[15px] text-[11px] w-fit text-[#444444] font-notoSansCJKKR select-none' 
                             style={{
 
                         }}>
-                            <p>{'COPY RIGHT© 2023 Poly Inspiration. ALL RIGHTS RESERVED.'}</p>
+                            <div className='flex flex-row w-fit text-[#444444] font-notoSansCJKKR break-normal' style={{
+                                fontSize: '11px',
+                                fontWeight: 'normal',
+                                fontStretch: 'normal',
+                                fontStyle: 'normal',
+                                lineHeight: 'normal',
+                                letterSpacing: 'normal',
+                                textAlign: 'center'
+                            }}>{'COPY RIGHT© 2023 Poly Inspiration. ALL RIGHTS RESERVED.'}</div>
                             {(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) && <p>{`Version ${version}`}</p>}
                             { (!isMobile && window.navigator.userAgent.toLowerCase().indexOf('electron') <= -1) && <p>{'Version 0.1.1'}</p>}
                         </div>

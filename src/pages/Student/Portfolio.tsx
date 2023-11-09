@@ -52,7 +52,7 @@ export const Portfolio = () => {
     const beforeRenderedFn = async () => {
         const student_code = userInfo.userCode;
         setCommonStandbyScreen({openFlag:true});
-        await getPortfoliosAPI(student_code, userInfo.accessToken).then((res) => {
+        await getPortfoliosAPI(student_code, userInfo.courseName, userInfo.accessToken).then((res) => {
             if (!res.isDuplicateLogin) {
                 let response = res.result;
                 if (response) {

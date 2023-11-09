@@ -265,11 +265,11 @@ export async function getReportsAPI(student_code: string, accessToken: string, l
         }
     })
 }
-export async function getPortfoliosAPI (student_code:string, accessToken: string) : Promise<{
+export async function getPortfoliosAPI (student_code:string, level_name:string, accessToken: string) : Promise<{
     result: TPortfolioAPIData|null,
     isDuplicateLogin:boolean
 }> {
-    const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code);
+    const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, level_name);
     return await axios.get(reqUrl, {
         headers: {
             'Content-Type': 'application/json',
