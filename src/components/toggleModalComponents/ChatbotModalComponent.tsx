@@ -79,6 +79,12 @@ export default function FormDialog() {
     console.log('chat history log =',chatHistory)
     console.log('dataHist log =',dataHist)
   },[chatHistory])
+  const callBackFocus = React.useCallback(()=>{
+    if (isInputFocus) {
+      let evt=document.getElementById('chatbot-modal-input-textarea');
+      evt?.scrollIntoView({behavior:'auto', block: 'nearest'})
+    }
+  }, [isInputFocus])
 
   const callDialogAPIFN = async (txt:string) => {
     // console.log('chat history before api =',chatHistory,'\n',dataHist)
@@ -268,9 +274,8 @@ export default function FormDialog() {
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
               onFocus={(e)=>{
                 if (isMobile) {
-                  console.log('focus =',e.currentTarget.id)
-                  e.currentTarget.scrollIntoView({behavior:'auto', block: 'nearest'})
                   setIsInptFocus(true);
+                  callBackFocus();
                 } else {
                   setIsInptFocus(false)
                 }
