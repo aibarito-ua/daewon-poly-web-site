@@ -32,6 +32,9 @@ const POLY_PRIVACY = process.env.REACT_APP_POLY_PRIVACY ? process.env.REACT_APP_
 // 회원 앱 탈퇴 
 const POLY_WITHDRAW = process.env.REACT_APP_POLY_WITHDRAW ? process.env.REACT_APP_POLY_WITHDRAW : '';
 
+// Duplicate Login Check
+const CHECK_DUPLICATE_LOGIN = process.env.REACT_APP_CHECK_DUPLICATE_LOGIN ? process.env.REACT_APP_CHECK_DUPLICATE_LOGIN:'';
+
 export const CONFIG = {
     GRAMMAR: {
         CHECK:BACK_HOST+GRAMMAR_CHECK,
@@ -55,7 +58,8 @@ export const CONFIG = {
                 SERVICE: POLY_SERVICE,
                 PRIVACY: POLY_PRIVACY
             }
-        }
+        },
+        DUPLICATE_CHECK: BACK_HOST+CHECK_DUPLICATE_LOGIN
     },
     DRAFT: {
         GET: {

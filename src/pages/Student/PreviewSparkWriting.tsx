@@ -14,7 +14,7 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { CommonFunctions } from '../../util/common/commonFunctions';
 import { callUnitInfobyStudent, draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
-import { logoutAPI } from './api/Login.api';
+import { checkDuplicateLogin, logoutAPI } from './api/Login.api';
 
 const PreviewSparkWriting = (props:any) => {
     // stores
@@ -431,55 +431,70 @@ const PreviewSparkWriting = (props:any) => {
         setGrammarAll(makeGrammarItems)
     }
 
-    const clickTooltip = (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
-       console.log('main div =',mainDiv)
-        if (mainDiv === 'Body') {
-            let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
-            let dumybodyHistory = dumyBodyHist.body.present;
+    const clickTooltip = async (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
+        const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
+        if (!check_duplicate_login.isDuplicateLogin) {
+            console.log('main div =',mainDiv)
+            if (mainDiv === 'Body') {
+                let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
+                let dumybodyHistory = dumyBodyHist.body.present;
+                
+                let checkIsSelected = false;
+                const wordInnerLength = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].length;
+                for (let checkIdx = 0; checkIdx< wordInnerLength; checkIdx++) {
+                    const targetData = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex][checkIdx];
+                    const targetCheck = targetData.type;
+                    if (targetCheck !== 3 && targetCheck > 1) {
+                        checkIsSelected=true;
+                        break;
+                    }
+                }
+              //  console.log('checkIsSelected ==',checkIsSelected)
+                if (!checkIsSelected) {
+                    const userSelectData:TGrammarResDiff = {
+                        key: `${wordIndex}-${wordInnerLength}`,
+                        type: 2,
+                        word: willChangeValue,
+                        correction_reason: []
+                    }
+                    dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
+                    setBodyValue(dumybodyHistory);
+                }
+            } else if (mainDiv==='Title') {
+                let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
+                let dumyTitleHistory = dumyBodyHist.title.present;
+                let checkIsSelected =false;
+                const wordInnerLength = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].length;
+                for (let checkIdx = 0; checkIdx < wordInnerLength; checkIdx++) {
+                    const targetCheck = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex][checkIdx].type;
+                    if (targetCheck!==3 && targetCheck > 1) {
+                        checkIsSelected=true;
+                        break;
+                    }
+                }
+                if (!checkIsSelected) {
+                    const userSelectData:TGrammarResDiff = {
+                        key: `${wordIndex}-${wordInnerLength}`,
+                        type: 2,
+                        word: willChangeValue,
+                        correction_reason: []
+                    }
+                    dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
+                    setTitleValue(dumyTitleHistory);
+                }
+            }
             
-            let checkIsSelected = false;
-            const wordInnerLength = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].length;
-            for (let checkIdx = 0; checkIdx< wordInnerLength; checkIdx++) {
-                const targetData = dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex][checkIdx];
-                const targetCheck = targetData.type;
-                if (targetCheck !== 3 && targetCheck > 1) {
-                    checkIsSelected=true;
-                    break;
-                }
+        } else {
+            setCommonStandbyScreen({openFlag:false})
+            commonAlertOpen({
+            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+            messageFontFamily:'NotoSansCJKKR',
+            useOneButton: true,
+            yesButtonLabel:'OK',
+            yesEvent: async() => {
+                await logoutFn()
             }
-          //  console.log('checkIsSelected ==',checkIsSelected)
-            if (!checkIsSelected) {
-                const userSelectData:TGrammarResDiff = {
-                    key: `${wordIndex}-${wordInnerLength}`,
-                    type: 2,
-                    word: willChangeValue,
-                    correction_reason: []
-                }
-                dumybodyHistory[paragraghData].data[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
-                setBodyValue(dumybodyHistory);
-            }
-        } else if (mainDiv==='Title') {
-            let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
-            let dumyTitleHistory = dumyBodyHist.title.present;
-            let checkIsSelected =false;
-            const wordInnerLength = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].length;
-            for (let checkIdx = 0; checkIdx < wordInnerLength; checkIdx++) {
-                const targetCheck = dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex][checkIdx].type;
-                if (targetCheck!==3 && targetCheck > 1) {
-                    checkIsSelected=true;
-                    break;
-                }
-            }
-            if (!checkIsSelected) {
-                const userSelectData:TGrammarResDiff = {
-                    key: `${wordIndex}-${wordInnerLength}`,
-                    type: 2,
-                    word: willChangeValue,
-                    correction_reason: []
-                }
-                dumyTitleHistory[paragraphIndex][sentenceIndex][wordIndex].push(userSelectData);
-                setTitleValue(dumyTitleHistory);
-            }
+            })
         }
     }
     // const onSubmitEvent = () => {
@@ -1210,24 +1225,37 @@ const PreviewSparkWriting = (props:any) => {
                                 noButtonLabel: "Yes",
                                 alertType: 'continue',
                                 closeEvent: async ()=>{
-                                    
-                                    // grammar 시작 전
-                                    commonAlertClose();
-                                    // go to edit page
-                                    const targetData = sparkWritingData[unitIndex];
-                                    if (targetData.proofreading_count>0) {
-                                        // edit은 세이브 필요 없을까?
-                                        // await forcedTemporarySave(true)
+                                    const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
+                                    if (!check_duplicate_login.isDuplicateLogin) {
+                                        // grammar 시작 전
+                                        commonAlertClose();
+                                        // go to edit page
+                                        const targetData = sparkWritingData[unitIndex];
+                                        if (targetData.proofreading_count>0) {
+                                            // edit은 세이브 필요 없을까?
+                                            // await forcedTemporarySave(true)
+                                        }
+                                        // console.log('targetData =',targetData)
+                                        const unitTitle = targetData.topic;
+                                        const unitNum = targetData.unit_index;
+                                        const draftNum = params.draft;
+                                        // console.log('unitNum: ',targetData.topic)
+                                        setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
+                                        const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
+                                        // console.log('path =',path)
+                                        CommonFunctions.goLink(path, navigate, role);  
+                                    } else {
+                                        setCommonStandbyScreen({openFlag:false})
+                                            commonAlertOpen({
+                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                            messageFontFamily:'NotoSansCJKKR',
+                                            useOneButton: true,
+                                            yesButtonLabel:'OK',
+                                            yesEvent: async() => {
+                                                await logoutFn()
+                                            }
+                                        })
                                     }
-                                    // console.log('targetData =',targetData)
-                                    const unitTitle = targetData.topic;
-                                    const unitNum = targetData.unit_index;
-                                    const draftNum = params.draft;
-                                    // console.log('unitNum: ',targetData.topic)
-                                    setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
-                                    const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
-                                    // console.log('path =',path)
-                                    CommonFunctions.goLink(path, navigate, role);  
                                 },
                                 yesEvent: () => commonAlertClose()
                             })

@@ -12,7 +12,7 @@ import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import { callUnitInfobyStudent, draft2ndSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import draftViewBox from '../../components/pageComponents/feedbackComponents/draftFeedback';
 import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
-import { logoutAPI } from './api/Login.api';
+import { checkDuplicateLogin, logoutAPI } from './api/Login.api';
 
 const EssayWriting = () => {
 
@@ -1439,12 +1439,26 @@ const EssayWriting = () => {
                                     yesButtonLabel: `No`,
                                     noButtonLabel: `Yes`,
                                     closeEvent: async ()=>{
-                                        const unitIndex = parseInt(UnitIndex);
-                                        const draftIndex = parseInt(DraftIndex);
-                                        historyDataDelete(unitIndex, draftIndex)
-                                        setPreviewPageInitFlag('UPDATE_WRITE');
-                                        CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
-                                        commonAlertClose();
+                                        const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
+                                        if (!check_duplicate_login.isDuplicateLogin) {
+                                            const unitIndex = parseInt(UnitIndex);
+                                            const draftIndex = parseInt(DraftIndex);
+                                            historyDataDelete(unitIndex, draftIndex)
+                                            setPreviewPageInitFlag('UPDATE_WRITE');
+                                            CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
+                                            commonAlertClose();
+                                        } else {
+                                            setCommonStandbyScreen({openFlag:false})
+                                            commonAlertOpen({
+                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                            messageFontFamily:'NotoSansCJKKR',
+                                            useOneButton: true,
+                                            yesButtonLabel:'OK',
+                                            yesEvent: async() => {
+                                                await logoutFn()
+                                            }
+                                            })
+                                        }
                                     },
                                     yesEvent: async () => {
                                         commonAlertClose();

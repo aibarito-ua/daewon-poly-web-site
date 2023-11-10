@@ -9,6 +9,8 @@ import DialogContent from '@mui/material/DialogContent';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
 import { CommonEmoji, CommonInputValidate } from '../../util/common/commonFunctions';
+import useControlAlertStore from '../../store/useControlAlertStore';
+import { logoutAPI } from '../../pages/Student/api/Login.api';
 // import buttonImage from './img/buttonEllaImg.png'
 // import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
 
@@ -31,12 +33,25 @@ export default function FormDialog() {
 
   
   const {
-    name, userInfo, isMobile
+    name, userInfo, isMobile, device_id
   } = useLoginStore();
+  const {
+    setCommonStandbyScreen, commonAlertOpen
+  } = useControlAlertStore();
   const ai_name = 'Ella';
   // const user_name = name;
   // const user_name = 'UaTester';
   const user_name = `${userInfo.memberNameEn}`;
+
+  const logoutFn =async () => {
+    logoutAPI(userInfo.userCode, device_id)
+    if(isMobile)
+        window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+    else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+        (window as any).api.toElectron.send('clear')
+    }
+    window.location.reload()
+  }
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -84,43 +99,55 @@ export default function FormDialog() {
     // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
 
     return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
-
-      let pushValue:any = [ai_name]
-      let resultData:string[] = []
-      const userUseToken:number = res.usages.prompt_tokens-beforeTurnTotalToken;
-      const createdToken:number = res.usages.completion_tokens;
-      const dumyHistAllTokensMaxIndex = historyTokens.length;
-
-      const totalUseToken:number = res.usages.total_tokens;
-      
-      dumyHistAllTokens.splice(dumyHistAllTokensMaxIndex, 0, userUseToken, createdToken);
-      for await (const value of res.text) {
-          resultData.push(value[1])
-          dumyDataHist.push(value);
-      }
-      // console.log('after dumyDataHist : ',dumyDataHist)
-      // console.log('after dumyHistAllToken =',dumyHistAllTokens)
-
-      let targetTotalToken = res.usages.total_tokens;
-      for await (const target of chatHistory) {
-        if (targetTotalToken > 3000) {
-          // delete
-          // console.log('target ==',target)
-          const deleteToken = dumyHistAllTokens.splice(0,1);
-          targetTotalToken = targetTotalToken - deleteToken[0];
-          dumyDataHist.splice(0,1);
+      if (!res.isDuplicateLogin) {
+        let pushValue:any = [ai_name]
+        let resultData:string[] = []
+        const userUseToken:number = res.usages.prompt_tokens-beforeTurnTotalToken;
+        const createdToken:number = res.usages.completion_tokens;
+        const dumyHistAllTokensMaxIndex = historyTokens.length;
+  
+        const totalUseToken:number = res.usages.total_tokens;
+        
+        dumyHistAllTokens.splice(dumyHistAllTokensMaxIndex, 0, userUseToken, createdToken);
+        for await (const value of res.text) {
+            resultData.push(value[1])
+            dumyDataHist.push(value);
         }
+        // console.log('after dumyDataHist : ',dumyDataHist)
+        // console.log('after dumyHistAllToken =',dumyHistAllTokens)
+  
+        let targetTotalToken = res.usages.total_tokens;
+        for await (const target of chatHistory) {
+          if (targetTotalToken > 3000) {
+            // delete
+            // console.log('target ==',target)
+            const deleteToken = dumyHistAllTokens.splice(0,1);
+            targetTotalToken = targetTotalToken - deleteToken[0];
+            dumyDataHist.splice(0,1);
+          }
+        }
+        // console.log('after api용',dumyDataHist.length,' : ',dumyDataHist)
+        // console.log('after 채팅용',dumyChatHist.length,' : ',dumyChatHist)
+        // console.log('after dumyHistAllToken =',dumyHistAllTokens)
+        pushValue.push(resultData);
+        dumyChatHist.push(pushValue);
+  
+        setBeforeTurnTotalToken(totalUseToken)
+        setHistoryTokens(dumyHistAllTokens);
+        setChatHistory(dumyChatHist);
+        setDataHist(dumyDataHist);
+      } else {
+        setCommonStandbyScreen({openFlag:false})
+        commonAlertOpen({
+          messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+          messageFontFamily:'NotoSansCJKKR',
+          useOneButton: true,
+          yesButtonLabel:'OK',
+          yesEvent: async() => {
+              await logoutFn()
+          }
+        })
       }
-      // console.log('after api용',dumyDataHist.length,' : ',dumyDataHist)
-      // console.log('after 채팅용',dumyChatHist.length,' : ',dumyChatHist)
-      // console.log('after dumyHistAllToken =',dumyHistAllTokens)
-      pushValue.push(resultData);
-      dumyChatHist.push(pushValue);
-
-      setBeforeTurnTotalToken(totalUseToken)
-      setHistoryTokens(dumyHistAllTokens);
-      setChatHistory(dumyChatHist);
-      setDataHist(dumyDataHist);
       
     })
 

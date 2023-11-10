@@ -87,3 +87,34 @@ export async function memberWithDraw(username:string, password:string, usercode:
         }
     })
 }
+
+export async function checkDuplicateLogin(
+    accessToken:string
+):Promise<{
+    isDuplicateLogin:boolean,
+}> {
+    const reqUrl=CONFIG.LOGIN.DUPLICATE_CHECK;
+    return await axios.get(reqUrl, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        },
+    }).then((response)=>{
+        const result:TProofReadingCountUpdateResponse = response.data;
+        return {
+            isDuplicateLogin:false
+        }
+    }).catch((reject) => {
+        const rsp:TProofReadingCountUpdateReject = reject.response.data;
+        if (rsp.statusCode===401) {
+            return {
+                isDuplicateLogin:true
+            }
+        } else {
+            return {
+                isDuplicateLogin:false
+            }
+        }
+    })
+}

@@ -35,7 +35,7 @@ const GrammarContentComponent = {
     titleCompareDif1: (
         paragragh:TGrammarResDiff[][][],
         paragraphIndex:number, 
-        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
+        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => Promise<void> 
     ) => {
         const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
             return (
@@ -159,8 +159,8 @@ const GrammarContentComponent = {
                                     tagType={'add'} 
                                     compareResultText={displayText} // page에 보여줄 단어
                                     tooltipText={describeText} // 모달의 툴팁에 보여줄 단어
-                                    acceptEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip('', 'Title', 0,paragraphIndex, sentenceIndex, wordIndex)} 
+                                    acceptEventFunction={async()=>await clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                    ignoreEventFunction={async()=>await clickTooltip('', 'Title', 0,paragraphIndex, sentenceIndex, wordIndex)} 
                                     thisIndex={[]}       
                                 />
                             )
@@ -232,8 +232,8 @@ const GrammarContentComponent = {
                                     tagType={'delete'} 
                                     compareResultText={displayText}
                                     tooltipText={describeText} 
-                                    acceptEventFunction={()=>clickTooltip('', 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
-                                    ignoreEventFunction={()=>clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)}
+                                    acceptEventFunction={async ()=>await clickTooltip('', 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                    ignoreEventFunction={async ()=>await clickTooltip(currentWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)}
                                     thisIndex={[]}
                                 />
                             )
@@ -314,8 +314,8 @@ const GrammarContentComponent = {
                                         tagType={'delete'} 
                                         compareResultText={deleteWord}
                                         tooltipText={describeText} 
-                                        acceptEventFunction={()=>clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
-                                        ignoreEventFunction={()=>clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        acceptEventFunction={async ()=>await clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={async ()=>await clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                         thisIndex={[]}                                    
                                     />
                                     <span id={'title-'+mainTagKey + '-ori'}>{' '}</span>
@@ -325,8 +325,8 @@ const GrammarContentComponent = {
                                         tagType={'add'} 
                                         compareResultText={addWord}
                                         tooltipText={describeText} 
-                                        acceptEventFunction={()=>clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
-                                        ignoreEventFunction={()=>clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        acceptEventFunction={async ()=>await clickTooltip(addWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={async ()=>await clickTooltip(deleteWord, 'Title',0, paragraphIndex, sentenceIndex, wordIndex)} 
                                         thisIndex={[]}                                    
                                     />
                                 </span>
@@ -343,7 +343,7 @@ const GrammarContentComponent = {
     bodyCompareDif1: (
         paragragh:TGrammarResponseResult, 
         paragraphIndex:number, 
-        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => void 
+        clickTooltip: (willChangeValue: string, mainDiv: 'Title' | 'Body', paragraghData: number, paragraphIndex: number, sentenceIndex: number, wordIndex: number) => Promise<void>
     ) => {
         const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
             return (
@@ -468,8 +468,8 @@ const GrammarContentComponent = {
                                         tagType={'add'} 
                                         compareResultText={displayText}
                                         tooltipText={describeText} 
-                                        acceptEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
-                                        ignoreEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        acceptEventFunction={async ()=>await clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={async ()=>await clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                         thisIndex={[]}       
                                     />
                                 )
@@ -541,8 +541,8 @@ const GrammarContentComponent = {
                                         tagType={'delete'} 
                                         compareResultText={displayText}
                                         tooltipText={describeText} 
-                                        acceptEventFunction={()=>clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
-                                        ignoreEventFunction={()=>clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)}
+                                        acceptEventFunction={async ()=>await clickTooltip('', 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                        ignoreEventFunction={async ()=>await clickTooltip(currentWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)}
                                         thisIndex={[]}
                                     />
                                 )
@@ -624,8 +624,8 @@ const GrammarContentComponent = {
                                             tagType={'delete'} 
                                             compareResultText={deleteWord}
                                             tooltipText={describeText} 
-                                            acceptEventFunction={()=>clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
-                                            ignoreEventFunction={()=>clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            acceptEventFunction={async ()=>await clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            ignoreEventFunction={async ()=>await clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                             thisIndex={[]}                                    
                                         />
                                         <span className='pl-[0px]'>{empty}</span>
@@ -635,8 +635,8 @@ const GrammarContentComponent = {
                                             tagType={'add'} 
                                             compareResultText={addWord}
                                             tooltipText={describeText} 
-                                            acceptEventFunction={()=>clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
-                                            ignoreEventFunction={()=>clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            acceptEventFunction={async ()=>await clickTooltip(addWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
+                                            ignoreEventFunction={async ()=>await clickTooltip(deleteWord, 'Body', paragraphIndex, paragraghDataIndex, sentenceIndex, wordIndex)} 
                                             thisIndex={[]}                                    
                                         />
                                     </span>
