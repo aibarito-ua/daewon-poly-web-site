@@ -68,7 +68,7 @@ export default function CommonAlertModalComponent(
       <Dialog className=''
       PaperProps={{sx:{
         borderRadius: '20px',
-        zIndex: 2000000000
+        zIndex: commonAlertMessage[0]==='중복 로그인으로 자동 로그아웃 처리 되었습니다.' ? 2147483647 : 2000000000
       }}}
       open={commonAlertOpenFlag} 
     // open={true}

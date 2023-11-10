@@ -116,7 +116,7 @@ type TSparkWritingTemporarySaveData = {
     unit_id: number;
     draft_index: number;
     proofreading_count: number;
-    draft_init_page_flag?: string;
+    draft_2_init_page_flag?: string;
     contents: TSparkWritingSaveTemporaryContent[];
 }
 type TSparkWritingSaveTemporaryContent = {
@@ -211,6 +211,7 @@ type TSubmit2ndDraftRequestData = {
     class_name:string;
     unit_id: number;
     draft_index: number;
+    draft_2_init_page_flag: string;
     contents: TSubmit2ndDraftReqDataContent[];
 }
 // Draft feedback type

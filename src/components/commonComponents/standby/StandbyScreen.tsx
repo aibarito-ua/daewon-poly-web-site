@@ -83,7 +83,7 @@ export default function StandbyScreen() {
   return (
     <div>
       <Backdrop
-        sx={{ color: '#fff', zIndex: 2147483647 }}
+        sx={{ color: '#fff', zIndex: 2100000000 }}
         open={commonStandbyScreen.openFlag}
       >
         <KeyFrames />

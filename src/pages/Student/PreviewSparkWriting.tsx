@@ -173,6 +173,7 @@ const PreviewSparkWriting = (props:any) => {
                             return false;
                         }
                     } else {
+                        setCommonStandbyScreen({openFlag:false})
                         commonAlertOpen({
                             messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                             messageFontFamily:'NotoSansCJKKR',
@@ -182,6 +183,7 @@ const PreviewSparkWriting = (props:any) => {
                                 await logoutFn()
                             }
                         })
+                        return false;
                     }
                 })
             }
@@ -271,6 +273,7 @@ const PreviewSparkWriting = (props:any) => {
                 if (!response.isDuplicateLogin) {
                     return response.result;
                 } else {
+                    setCommonStandbyScreen({openFlag:false})
                     commonAlertOpen({
                         messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                         messageFontFamily:'NotoSansCJKKR',
@@ -280,6 +283,7 @@ const PreviewSparkWriting = (props:any) => {
                             await logoutFn()
                         }
                     })
+                    return false;
                 }
             });
             if (res) {
@@ -1329,6 +1333,7 @@ const PreviewSparkWriting = (props:any) => {
                                             if (!response.isDuplicateLogin) {
                                                 return response.result;
                                             } else {
+                                                setCommonStandbyScreen({openFlag:false})
                                                 commonAlertOpen({
                                                     messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                                                     messageFontFamily:'NotoSansCJKKR',
@@ -1338,6 +1343,7 @@ const PreviewSparkWriting = (props:any) => {
                                                         await logoutFn()
                                                     }
                                                 })
+                                                return false;
                                             }
                                         });
                                       //  console.log('reset =',reset)

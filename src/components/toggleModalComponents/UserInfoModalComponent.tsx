@@ -222,6 +222,7 @@ export default function UserInfoModalComponent() {
                                             if (!response.isDuplicateLogin) {
                                                 return response;
                                             } else {
+                                                setCommonStandbyScreen({openFlag:false})
                                                 commonAlertOpen({
                                                     messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                                                     messageFontFamily:'NotoSansCJKKR',
@@ -231,6 +232,7 @@ export default function UserInfoModalComponent() {
                                                         await logoutFn()
                                                     }
                                                 })
+                                                return false;
                                             }
                                         });
                                         console.log('rsp ===',rsp)

@@ -12,6 +12,7 @@ import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import { callUnitInfobyStudent, draft2ndSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import draftViewBox from '../../components/pageComponents/feedbackComponents/draftFeedback';
 import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
+import { logoutAPI } from './api/Login.api';
 
 const EssayWriting = () => {
 
@@ -57,7 +58,7 @@ const EssayWriting = () => {
 
     // user info
     const {
-        userInfo
+        userInfo, device_id, isMobile
     } = useLoginStore();
     // Nav Store
     const { 
@@ -98,6 +99,16 @@ const EssayWriting = () => {
         teacherFeedbackModalChecked, setTeacherFeedbackModalChecked,
         commonStandbyScreen
     } = useControlAlertStore();
+
+    const logoutFn =async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }
 
     const pageInitSetting = async () => {
         const init = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
@@ -973,7 +984,7 @@ const EssayWriting = () => {
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
                 contents: contensData,
-                draft_init_page_flag:''
+                draft_2_init_page_flag:''
             }
             // console.log('data ==',data)
             
@@ -1023,39 +1034,57 @@ const EssayWriting = () => {
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
                 contents: contentsData,
-                draft_init_page_flag: draft2ndPageSet
+                draft_2_init_page_flag: draft2ndPageSet
             };
-            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
+                if (!response.isDuplicateLogin) {
+                    return response
+                } else {
+                    setCommonStandbyScreen({openFlag:false})
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                    return response
+                }
+            });;
             // const isSaveTemporary = false
-            if (isSaveTemporary) {
-                setCommonStandbyScreen({openFlag:false});
-                setIsSaved(true);
-                commonAlertClose();
-                setDraft2ndPageSet('')
-                setDraft2ndSaveActive(false)
-                setDraft2ndSubmitActive(false)
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                // commonAlertOpen({
-                //     useOneButton: true,
-                //     yesButtonLabel: 'OK',
-                //     messages: ['Temporary saving is complete.'],
-                //     yesEvent: ()=>{
-                //         commonAlertClose();
-                //         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                //     }
-                // })
-            } else {
-                setCommonStandbyScreen({openFlag:false})
-                commonAlertOpen({
-                    messageFontFamily: 'Roboto',
-                    messages: ['Are you sure you want to try again?'],
-                    yesButtonLabel: 'Yes',
-                    noButtonLabel: 'Cancel',
-                    yesEvent: async ()=> {
-                        setCommonStandbyScreen({openFlag:true})
-                        await temporarySaveFunction()
-                    },
-                })
+            if (!isSaveTemporary.isDuplicateLogin) {
+                if (isSaveTemporary) {
+                    setCommonStandbyScreen({openFlag:false});
+                    setIsSaved(true);
+                    commonAlertClose();
+                    setDraft2ndPageSet('')
+                    setDraft2ndSaveActive(false)
+                    setDraft2ndSubmitActive(false)
+                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    // commonAlertOpen({
+                    //     useOneButton: true,
+                    //     yesButtonLabel: 'OK',
+                    //     messages: ['Temporary saving is complete.'],
+                    //     yesEvent: ()=>{
+                    //         commonAlertClose();
+                    //         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                    //     }
+                    // })
+                } else {
+                    setCommonStandbyScreen({openFlag:false})
+                    commonAlertOpen({
+                        messageFontFamily: 'Roboto',
+                        messages: ['Are you sure you want to try again?'],
+                        yesButtonLabel: 'Yes',
+                        noButtonLabel: 'Cancel',
+                        yesEvent: async ()=> {
+                            setCommonStandbyScreen({openFlag:true})
+                            await temporarySaveFunction()
+                        },
+                    })
+                }
             }
         }
     }
@@ -1078,43 +1107,62 @@ const EssayWriting = () => {
             class_name: userInfo.className,
             unit_id: targetData.unit_id,
             draft_index: draftIndex,
+            draft_2_init_page_flag: draft2ndPageSet,
             contents,
 
         }
         commonAlertClose();
         setCommonStandbyScreen({openFlag:true});
-        const submit = await draft2ndSubmit(submitData, userInfo.accessToken);
-        if (submit) {
-            setCommonStandbyScreen({openFlag:false})
-            const topicReplace = targetData.topic.replace(/s$/gmi,'');
-            commonAlertOpen({
-                messageFontFamily: 'Roboto',
-                useOneButton: true,
-                yesButtonLabel: 'OK',
-                messages: [
-                    `Your Unit ${targetData.unit_index} ${topicReplace}'s`,
-                    <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup> draft</span> has been submitted.</span>
-                ],
-                yesEvent: async () => {
-                    commonAlertClose();
-                    setDraft2ndPageSet('')
-                    setDraft2ndSaveActive(false)
-                    setDraft2ndSubmitActive(false)
-                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
-                }
-            })
-        } else {
-            setCommonStandbyScreen({openFlag:false})
-            commonAlertOpen({
-                messageFontFamily: 'Roboto',
-                messages: ['Are you sure you want to try again?'],
-                yesButtonLabel: 'Yes',
-                noButtonLabel: 'Cancel',
-                yesEvent: async ()=> {
-                    setCommonStandbyScreen({openFlag:true})
-                    await submit2ndDraftFunction()
-                },
-            })
+        const submit = await draft2ndSubmit(submitData, userInfo.accessToken).then((response)=>{
+            if (!response.isDuplicateLogin) {
+                return response;
+            } else {
+                setCommonStandbyScreen({openFlag:false})
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
+                return response;
+            }
+        });
+        if (!submit.isDuplicateLogin) {
+            if (submit) {
+                setCommonStandbyScreen({openFlag:false})
+                const topicReplace = targetData.topic.replace(/s$/gmi,'');
+                commonAlertOpen({
+                    messageFontFamily: 'Roboto',
+                    useOneButton: true,
+                    yesButtonLabel: 'OK',
+                    messages: [
+                        `Your Unit ${targetData.unit_index} ${topicReplace}'s`,
+                        <span><span style={{textDecoration:'underline', fontWeight:700}}>2<sup>nd</sup> draft</span> has been submitted.</span>
+                    ],
+                    yesEvent: async () => {
+                        commonAlertClose();
+                        setDraft2ndPageSet('')
+                        setDraft2ndSaveActive(false)
+                        setDraft2ndSubmitActive(false)
+                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                    }
+                })
+            } else {
+                setCommonStandbyScreen({openFlag:false})
+                commonAlertOpen({
+                    messageFontFamily: 'Roboto',
+                    messages: ['Are you sure you want to try again?'],
+                    yesButtonLabel: 'Yes',
+                    noButtonLabel: 'Cancel',
+                    yesEvent: async ()=> {
+                        setCommonStandbyScreen({openFlag:true})
+                        await submit2ndDraftFunction()
+                    },
+                })
+            }
         }
     }
     const foldFlagFunction = (i:number, title:string,unitIndex:number) => {
