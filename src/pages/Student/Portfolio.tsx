@@ -40,7 +40,7 @@ export const Portfolio = () => {
     } = useSparkWritingStore();
 
     const logoutFn =async () => {
-        logoutAPI(userInfo.userCode, device_id)
+        logoutAPI(userInfo.userCode, device_id);
         if(isMobile)
             window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
         else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {

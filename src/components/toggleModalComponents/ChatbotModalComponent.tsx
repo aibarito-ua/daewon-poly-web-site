@@ -266,8 +266,10 @@ export default function FormDialog() {
               placeholder='Type your question here.'
               onChange={(e)=>onChangeValue(e)}
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
-              onFocus={()=>{
+              onFocus={(e)=>{
                 if (isMobile) {
+                  console.log('focus =',e.currentTarget.id)
+                  e.currentTarget.scrollIntoView({behavior:'auto', block: 'nearest'})
                   setIsInptFocus(true);
                 } else {
                   setIsInptFocus(false)

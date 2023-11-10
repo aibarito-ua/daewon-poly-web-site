@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { navItems } from "../Nav";
 import { commonIconSvgs } from '../../../util/svgs/commonIconsSvg';
 import { useComponentWillMount } from '../../../hooks/useEffectOnce';
-import { logoutAPI } from '../../../pages/Student/api/Login.api';
+import { checkDuplicateLogin, logoutAPI } from '../../../pages/Student/api/Login.api';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 
 // export const logoutFn =async () => {
@@ -118,15 +118,26 @@ const NavAside = () => {
                 {role !== 'logout' && (
                     
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
-                    onClick={()=>{
-                        commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            alertType:'warning',
-                            messages: ['Do you want to leave the Writing Hub?'],
-                            yesButtonLabel: 'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: ()=>logoutFn(),
-                        })
+                    onClick={async ()=>{
+                        const check = await checkDuplicateLogin(userInfo.accessToken);
+                        if (!check.isDuplicateLogin) {
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                alertType:'warning',
+                                messages: ['Do you want to leave the Writing Hub?'],
+                                yesButtonLabel: 'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: ()=>logoutFn(),
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                messageFontFamily:'NotoSansCJKKR',
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: async() => await logoutFn()
+                            })
+                        }
                         
                     }}/>
                     

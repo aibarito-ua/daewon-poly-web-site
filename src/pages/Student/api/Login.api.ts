@@ -39,20 +39,21 @@ export async function logoutAPI(username:string, device_id: string):Promise<any>
     return await axios.post(reqUrl, data, {
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
     }).then((response) => {
-        console.log('result =',response.data.data)
+        // console.log('result =',response)
         return response.data.data;
     }).catch((reject)=>{
-        console.log('reject =',reject)
+        const rsp:TProofReadingCountUpdateReject = reject.response.data;
+        console.log('reject =',rsp)
     })
 }
 
 export async function memberWithDraw(username:string, password:string, usercode:string): Promise<{
     is_withdrawed_successfully:boolean;
     is_server_error:boolean;
-    isDuplicateLogin?:boolean;
+    isDuplicateLogin:boolean;
 }>{
     const reqUrl = CONFIG.LOGIN.POST.WITHDRAW;
     const data = {
@@ -69,6 +70,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
         return {
             is_withdrawed_successfully,
             is_server_error:false,
+            isDuplicateLogin: false,
         };
     }).catch((reject) => {
         console.log('reject =',JSON.stringify(reject))
@@ -77,12 +79,13 @@ export async function memberWithDraw(username:string, password:string, usercode:
             return {
                 is_withdrawed_successfully:false,
                 is_server_error:true,
-                isDuplicateLogin: false,
+                isDuplicateLogin: true,
             }
         } else {
             return {
                 is_withdrawed_successfully:false,
                 is_server_error:true,
+                isDuplicateLogin: false,
             }
         }
     })

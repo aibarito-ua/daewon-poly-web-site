@@ -497,33 +497,6 @@ const PreviewSparkWriting = (props:any) => {
             })
         }
     }
-    // const onSubmitEvent = () => {
-    //     if (!openSubmitButton) {
-    //         return;
-    //     } else {
-    //         let draftText = '';
-    //         const unitTitle_1 = selectUnitInfo.main.replace(/\.$/gi,'');
-    //         if (params.draft === '1') {
-    //             draftText='1st draft'
-    //         } else { draftText='2nd draft'}
-    //         const yesMessage = <p className='ordinal'>{`Your ${unitTitle_1} ${selectUnitInfo.sub}'s ${draftText} has been submitted.`}</p>
-            
-    //         commonAlertOpen({
-    //             head: `${unitTitle_1}: ${selectUnitInfo.sub}`,
-    //             alertType: 'continue',
-    //             messages: ['Are you ready to submit?'],
-    //             yesButtonLabel: 'Yes',
-    //             noButtonLabel: 'No',
-    //             yesEvent: () => {
-    //                 commonAlertOpen({
-    //                     useOneButton: true,
-    //                     messages: [yesMessage],
-    //                     yesButtonLabel: 'OK',
-    //                 })
-    //             }
-    //         })
-    //     }
-    // }
     const replaceUpdateSparkWritingTitle = () => {
         const unitId = sparkWritingData[unitIndex].unit_id
       //  console.log('unit index =',sparkWritingData[unitIndex])
@@ -1475,22 +1448,34 @@ const PreviewSparkWriting = (props:any) => {
                                                 commonAlertClose();
                                                 setCommonStandbyScreen({openFlag:true})
                                                 const submit = await draft1stSubmit(submitData, userInfo.accessToken);
-                                                
-                                              //  console.log('submit return data =',submit)
-                                                if (submit) {
+                                                if (!submit.isDuplicateLogin) {
+                                                    //  console.log('submit return data =',submit)
+                                                      if (submit) {
+                                                          setCommonStandbyScreen({openFlag:false})
+                                                          commonAlertOpen({
+                                                              messageFontFamily: 'Roboto',
+                                                              useOneButton:true,
+                                                              yesButtonLabel: 'OK',
+                                                              alertType: 'continue',
+                                                              messages: [
+                                                                  `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
+                                                                  <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
+                                                              ],
+                                                              yesEvent: () => {
+                                                                  commonAlertClose()
+                                                                  CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                                                              }
+                                                          })
+                                                      }
+                                                } else {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     commonAlertOpen({
-                                                        messageFontFamily: 'Roboto',
-                                                        useOneButton:true,
-                                                        yesButtonLabel: 'OK',
-                                                        alertType: 'continue',
-                                                        messages: [
-                                                            `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
-                                                            <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
-                                                        ],
-                                                        yesEvent: () => {
-                                                            commonAlertClose()
-                                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
+                                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                        messageFontFamily:'NotoSansCJKKR',
+                                                        useOneButton: true,
+                                                        yesButtonLabel:'OK',
+                                                        yesEvent: async() => {
+                                                            await logoutFn()
                                                         }
                                                     })
                                                 }
