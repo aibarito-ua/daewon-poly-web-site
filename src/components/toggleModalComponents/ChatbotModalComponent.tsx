@@ -27,6 +27,29 @@ export default function FormDialog() {
   // input box controller
   const [isInputFocus, setIsInptFocus] = React.useState<boolean>(false);
 
+  // 입력 제한
+  /**
+   * 
+   * @param targetText string
+   * @returns boolean -> true: 사용 가능 / false: 사용 불가
+   */
+  const checkInputCharactersRegExps = (targetText: string) => {
+    const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
+    const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+    const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+    if (checkNotSC!==null) {
+        console.log('불가 문자 입력')
+        return false;
+    } else if (checkOneSC!==null) {
+        console.log('2개 이상 금지')
+        return false;
+    } else if (checkNotKR!==null) {
+        console.log('한국어')
+        return false;
+    } else {
+        return true;
+    }
+}
   
   const {
     userInfo, isMobile, device_id,
@@ -49,21 +72,7 @@ export default function FormDialog() {
     }
     window.location.reload()
   }
-
-  // React.useLayoutEffect(()=>{
-  //   const targetRef = inputRef.current;
-  //   if (targetRef) {
-  //     const parentClass = targetRef.parentElement?.parentElement?.parentElement;
-  //     const height1 = parentClass?.clientHeight;
-  //     const heigth2 = parentClass?.offsetHeight;
-  //     const height3 = parentClass?.scrollHeight;
-  //     if (isInputFocus && height1===390) {
-  //       targetRef.focus();
-  //       // targetRef.scrollIntoView({behavior:'auto', block:'nearest'})
-  //     }
-  //   }
     
-  // }, [inputRef, isInputFocus])
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -103,23 +112,27 @@ export default function FormDialog() {
       if (inputRef.current) {
         const target = inputRef.current;
         target.blur();
-        
-        if (platform==='ios') {
-          target.focus({
-            preventScroll:true
-          });
-          const screenDiv = document.getElementById('route-wrapper-div');
-          if (screenDiv) {
-            const screenRootSize = windowSize.height;
-            const deviceScreenSize = deviceSize.height;
-            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
-            const gapSize = screenRootSize-deviceScreenSize;
-            screenDiv.style.marginTop= gapSize+'px';
+        if (isMobile) {
+          if (platform==='ios') {
+            target.focus({
+              preventScroll:true
+            });
+            const screenDiv = document.getElementById('route-wrapper-div');
+            if (screenDiv) {
+              const screenRootSize = windowSize.height;
+              const deviceScreenSize = deviceSize.height;
+              console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+              const gapSize = screenRootSize-deviceScreenSize;
+              screenDiv.style.marginTop= gapSize+'px';
+            }
           }
-        }
-        if (platform==='android') {
+          if (platform==='android') {
+            target.focus();
+            // const targetRef = inputRef.current
+            inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+          }
+        } else {
           target.focus();
-          // const targetRef = inputRef.current
           inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
         }
         // if (chatDivRef.current) {
@@ -245,18 +258,10 @@ export default function FormDialog() {
     setOpen(false);
   };
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // console.log('current value =',e.currentTarget.value)
-    // [ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]
-    // const removeE = CommonEmoji.remove(e.currentTarget.value);
-    // const value = removeE.text.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]|[{}`\\]||(&#)|/gmi,'');
+    
     const value = CommonInputValidate.chat(e.currentTarget.value);
-    const checkNotSC = value.match(/[\{\}|\\`]{1,}/gmi)
-    const checkOneSC = value.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-    if (checkNotSC!==null) {
-      console.log('불가 문자 입력')
-    } else if (checkOneSC!==null) {
-      console.log('2개 이상 금지')
-    } else {
+    const checkNotChar = checkInputCharactersRegExps(value)
+    if (checkNotChar) {
       e.currentTarget.style.height = 'auto';
       e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
       const inputValue = value.replace(/\n{2,}/gm, '\n')
@@ -293,13 +298,13 @@ export default function FormDialog() {
         '.MuiDialog-paper': { 
           minWidth:'700px',
           width: '700px',
-          minHeight: isInputFocus ? '390px':'650px',
+          minHeight: isMobile ? (isInputFocus ? '390px':'650px'): '650px',
           // minHeight: '390px',
           height: '390px',
           padding: '32px 0 0',
           borderRadius: '20px',
           backgroundColor: '#fff',
-          marginTop: isInputFocus ? marginTopTrueValue: '-50px',
+          marginTop: isMobile ? (isInputFocus ? marginTopTrueValue: '-50px'): '-50px',
           // marginTop: '-310px',
         }
       }}
