@@ -131,22 +131,26 @@ export const Login = () => {
             return;
         } else {
             // alert(JSON.stringify(loginValues, null, 2))
-            const rsp = await loginAPI(loginValues.username, loginValues.password, device_id);
-            if (rsp.is_server_error) {
-                console.log('login =',rsp.is_server_error)
-                commonAlertOpen({
-                    messages: [
-                        'Cannot connect to the server.',
-                        'Please try again later.'
-                    ],
-                    priorityLevel: 2,
-                    useOneButton: true,
-                    yesButtonLabel:'OK',
-                    yesEvent: () => {
-                        commonAlertClose();
-                    }
-                })
-            } else {
+            const rsp = await loginAPI(loginValues.username, loginValues.password, device_id).then((response)=>{
+                if (response.is_server_error===true) {
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        priorityLevel: 2,
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                            commonAlertClose();
+                        }
+                    })
+                    return false;
+                } else {
+                    return response
+                }
+            });
+            if (rsp) {
                 // alert(response)
                 // 231031 최우선 체크 : 탈퇴 회원
                 const response = rsp.data;

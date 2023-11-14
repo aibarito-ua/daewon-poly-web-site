@@ -38,9 +38,9 @@ const SelectWritingClinic = () => {
         setCommonStandbyScreen({openFlag:true})
         const response = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             console.log('writing clinic response =',response)
-            if (response.is_server_error) {
+            if (response.is_server_error===true) {
                 setCommonStandbyScreen({openFlag:false})
-                if (response.isDuplicateLogin) {
+                if (response.isDuplicateLogin===true) {
                     setCommonStandbyScreen({openFlag:false})
                     commonAlertOpen({
                         messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
@@ -52,7 +52,7 @@ const SelectWritingClinic = () => {
                             await logoutFn()
                         }
                     })
-                } else {
+                } else if (response.isDuplicateLogin===false) {
                     commonAlertOpen({
                         messages: [
                             'Cannot connect to the server.',
