@@ -53,22 +53,25 @@ export const Login = () => {
         console.log('loggin in with', loginvalues)
         const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             console.log('response =',res)
-            return res
+            if (res.is_server_error===true) {
+                commonAlertOpen({
+                    messages: [
+                        'Cannot connect to the server.',
+                        'Please try again later.'
+                    ],
+                    priorityLevel: 2,
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: () => {
+                        commonAlertClose();
+                    }
+                })
+                return false;
+            } else {
+                return res
+            }
         });
-        if(response.is_server_error) {
-            commonAlertOpen({
-                messages: [
-                    'Cannot connect to the server.',
-                    'Please try again later.'
-                ],
-                priorityLevel: 2,
-                useOneButton: true,
-                yesButtonLabel:'OK',
-                yesEvent: () => {
-                    commonAlertClose();
-                }
-            })
-        } else {
+        if (response) {
             const rnData = {userInfo:response.data, loginValues: loginvalues, saveId: saveid}
     
             if (isMobile) {
