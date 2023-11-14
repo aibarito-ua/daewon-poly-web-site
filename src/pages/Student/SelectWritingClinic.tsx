@@ -38,34 +38,40 @@ const SelectWritingClinic = () => {
         setCommonStandbyScreen({openFlag:true})
         const response = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             console.log('writing clinic response =',response)
-            return response;
+            if (response.is_server_error) {
+                setCommonStandbyScreen({openFlag:false})
+                if (response.isDuplicateLogin) {
+                    setCommonStandbyScreen({openFlag:false})
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        priorityLevel: 2,
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                } else {
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        useOneButton: true,
+                        priorityLevel: 2,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                            commonAlertClose();
+                        }
+                    })
+                }
+                return false;
+            } else {
+                return response;
+            }
         });
-        if (response.is_server_error) {
-            setCommonStandbyScreen({openFlag:false})
-            commonAlertOpen({
-                messages: [
-                    'Cannot connect to the server.',
-                    'Please try again later.'
-                ],
-                useOneButton: true,
-                yesButtonLabel:'OK',
-                yesEvent: () => {
-                    commonAlertClose();
-                }
-            })
-        } else if (response.isDuplicateLogin) {
-            setCommonStandbyScreen({openFlag:false})
-            commonAlertOpen({
-                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                priorityLevel: 2,
-                messageFontFamily:'NotoSansCJKKR',
-                useOneButton: true,
-                yesButtonLabel:'OK',
-                yesEvent: async() => {
-                    await logoutFn()
-                }
-            })
-        } else {
+        if (response) {
             // alert(JSON.stringify(response))
             if (response) {
                 setButtonActive(true)
