@@ -54,6 +54,7 @@ export const Login = () => {
         const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             console.log('response =',res)
             if (res.is_server_error===true) {
+                console.log('test2')
                 commonAlertOpen({
                     messages: [
                         'Cannot connect to the server.',
@@ -81,8 +82,30 @@ export const Login = () => {
             }
             setSelectMenu('WritingClinic')
             setUserInfo(response.data);
-        }
-            
+        } 
+    }
+    const forceLoginRN = async (loginvalues: {username: string, password: string}, deviceid: string, saveid: boolean) => {
+        console.log('loggin in with', loginvalues)
+        const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
+            console.log('response =',res)
+            if (res.is_server_error===true) {
+                
+                return false;
+            } else {
+                return res
+            }
+        });
+        if (response) {
+            const rnData = {userInfo:response.data, loginValues: loginvalues, saveId: saveid}
+    
+            if (isMobile) {
+                sendMessage(rnData);
+            } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+                (window as any).api.toElectron.send('saveUser', rnData)
+            }
+            setSelectMenu('WritingClinic')
+            setUserInfo(response.data);
+        } 
     }
     const confirmUpdateNewVersion = () => {
         if (isUnderMaintenance) {
@@ -136,6 +159,7 @@ export const Login = () => {
             // alert(JSON.stringify(loginValues, null, 2))
             const rsp = await loginAPI(loginValues.username, loginValues.password, device_id).then((response)=>{
                 if (response.is_server_error===true) {
+                    console.log('test1')
                     commonAlertOpen({
                         messages: [
                             'Cannot connect to the server.',
@@ -340,7 +364,7 @@ export const Login = () => {
             }
 
             // we use rnData, because react state is updated in the next render cycle
-            await forceLogin(rnData['loginValues'], rnData['deviceId'], rnData['saveId'])
+            await forceLoginRN(rnData['loginValues'], rnData['deviceId'], rnData['saveId'])
         }
     };
 
@@ -363,7 +387,7 @@ export const Login = () => {
         if(data['version']) {
             setVersion(data['version'])
         }
-        await forceLogin(data['loginValues'], data['deviceId'], data['saveId'])
+        await forceLoginRN(data['loginValues'], data['deviceId'], data['saveId'])
     }
 
     // is not mobile id
