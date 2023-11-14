@@ -118,7 +118,9 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
         height:0, width:0
     },
     platform: '',
-    setPlatform: (platform) => set(()=>({platform})),
+    setPlatform: (value) => {
+        set(()=>({platform:value}))
+    },
     setSize: (deviceSize, windowSize) => {
         set(()=>({
             deviceSize, windowSize

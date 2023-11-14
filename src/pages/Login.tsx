@@ -15,7 +15,7 @@ export const Login = () => {
     const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
     const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
     const IS_MAINTENANCE = process.env.REACT_APP_MAINTENANCE ? process.env.REACT_APP_MAINTENANCE:'NO';
-    const { userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id, setSize } = useLoginStore();
+    const { userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform } = useLoginStore();
     const {setSelectMenu} = useNavStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
@@ -361,6 +361,9 @@ export const Login = () => {
             }
             if (rnData['deviceSize'] && rnData['windowSize']) {
                 setSize(rnData['deviceSize'], rnData['windowSize'])
+            }
+            if (rnData['platform']) {
+                setPlatform(rnData['platform'])
             }
 
             // we use rnData, because react state is updated in the next render cycle

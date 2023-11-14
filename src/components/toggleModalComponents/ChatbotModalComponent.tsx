@@ -98,14 +98,16 @@ export default function FormDialog() {
   },[chatHistory, dataHist])
 
   React.useLayoutEffect(()=>{
+    console.log('platform=',platform)
     if (isInputFocus) {
       if (inputRef.current) {
         const target = inputRef.current;
         target.blur();
-        target.focus({
-          preventScroll:true
-        });
+        
         if (platform==='ios') {
+          target.focus({
+            preventScroll:true
+          });
           const screenDiv = document.getElementById('route-wrapper-div');
           if (screenDiv) {
             const screenRootSize = windowSize.height;
@@ -114,6 +116,11 @@ export default function FormDialog() {
             const gapSize = screenRootSize-deviceScreenSize;
             screenDiv.style.marginTop= gapSize+'px';
           }
+        }
+        if (platform==='android') {
+          target.focus();
+          // const targetRef = inputRef.current
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
         }
         // if (chatDivRef.current) {
         //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
@@ -273,7 +280,7 @@ export default function FormDialog() {
         } 
     }
   }
-
+  const marginTopTrueValue = platform==='ios'? '-430px':'0px';
   return (
     <div className='flex'>
     <button 
@@ -292,7 +299,7 @@ export default function FormDialog() {
           padding: '32px 0 0',
           borderRadius: '20px',
           backgroundColor: '#fff',
-          marginTop: isInputFocus ? '-430px': '-50px',
+          marginTop: isInputFocus ? marginTopTrueValue: '-50px',
           // marginTop: '-310px',
         }
       }}
