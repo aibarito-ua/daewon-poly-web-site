@@ -23,6 +23,7 @@ export default function CommonAlertModalComponent(
     commonAlertOneButton,
     commonAlertType,
     commonAlertMessageFontFamily,
+    commonAlertPriorityLevel,
 
     setCommonAlertHeadTitle,
     commonAlertClose,
@@ -31,9 +32,17 @@ export default function CommonAlertModalComponent(
     commonAlertCloseEvent,
     commonAlertYesFunctionEvent,
   } = useControlAlertStore();  
-  
+  const [zIndexInit, setZIndexInit] = React.useState<number>();
   React.useEffect(()=>{
-    
+    if (commonAlertPriorityLevel === 0) {
+      setZIndexInit(2000000000)
+    } else if (commonAlertPriorityLevel === 1) {
+      setZIndexInit(2000000000)
+    } else if (commonAlertPriorityLevel === 2) {
+      setZIndexInit(2100000000)
+    } else if (commonAlertPriorityLevel === 3) {
+      setZIndexInit(2147483647)
+    }
   }, [commonAlertOpenFlag])
 
   const handleLeft = () => {
@@ -62,13 +71,13 @@ export default function CommonAlertModalComponent(
       commonAlertClose();
     }
   }
-
+  
   return (
     <div className='flex'>
       <Dialog className=''
       PaperProps={{sx:{
         borderRadius: '20px',
-        zIndex: commonAlertMessage[0]==='중복 로그인으로 자동 로그아웃 처리 되었습니다.' ? 2147483647 : 2000000000
+        zIndex: zIndexInit
       }}}
       open={commonAlertOpenFlag} 
     // open={true}

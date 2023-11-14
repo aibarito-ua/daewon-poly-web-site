@@ -1,21 +1,17 @@
 import * as React from 'react';
-// import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
-import { CommonEmoji, CommonInputValidate } from '../../util/common/commonFunctions';
+import { CommonInputValidate } from '../../util/common/commonFunctions';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { logoutAPI } from '../../pages/Student/api/Login.api';
-// import buttonImage from './img/buttonEllaImg.png'
-// import buttonImage from '../../util/svgs/btn-chatbot-ella.svg';
 
 export default function FormDialog() {
-    
+  const inputRef = React.useRef<HTMLTextAreaElement|null>(null);
+  const chatDivRef = React.useRef<HTMLDivElement|null>(null);
   const [open, setOpen] = React.useState(false);
   const [inputText, setInputText] = React.useState('');
   const [chatHistory, setChatHistory] = React.useState<(string | string[])[][]>([]);
@@ -33,10 +29,11 @@ export default function FormDialog() {
 
   
   const {
-    name, userInfo, isMobile, device_id
+    userInfo, isMobile, device_id,
+    deviceSize, windowSize, platform
   } = useLoginStore();
   const {
-    setCommonStandbyScreen, commonAlertOpen
+    setCommonStandbyScreen, commonAlertOpen,commonAlertClose
   } = useControlAlertStore();
   const ai_name = 'Ella';
   // const user_name = name;
@@ -52,6 +49,21 @@ export default function FormDialog() {
     }
     window.location.reload()
   }
+
+  // React.useLayoutEffect(()=>{
+  //   const targetRef = inputRef.current;
+  //   if (targetRef) {
+  //     const parentClass = targetRef.parentElement?.parentElement?.parentElement;
+  //     const height1 = parentClass?.clientHeight;
+  //     const heigth2 = parentClass?.offsetHeight;
+  //     const height3 = parentClass?.scrollHeight;
+  //     if (isInputFocus && height1===390) {
+  //       targetRef.focus();
+  //       // targetRef.scrollIntoView({behavior:'auto', block:'nearest'})
+  //     }
+  //   }
+    
+  // }, [inputRef, isInputFocus])
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -60,12 +72,16 @@ export default function FormDialog() {
         setHistoryTokens([])
         setBeforeTurnTotalToken(217)
         setInputLength(0)
+        setIsInptFocus(false)
     } else {
-      // console.log('chatHistory =',chatHistory)
+      setIsInptFocus(true)
+      // let evt=document.getElementById('chatbot-modal-input-textarea');
+      // evt?.focus()
       const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
       setChatHistory(initHist)
+      // callBackFocus()
     }
-  }, [open])
+  }, [open, user_name])
   React.useEffect(()=>{
     if (inputText === '') {
         let evt=document.getElementById('chatbot-modal-input-textarea');
@@ -78,13 +94,51 @@ export default function FormDialog() {
   React.useEffect(()=>{
     console.log('chat history log =',chatHistory)
     console.log('dataHist log =',dataHist)
-  },[chatHistory])
-  const callBackFocus = React.useCallback(()=>{
+
+  },[chatHistory, dataHist])
+
+  React.useLayoutEffect(()=>{
     if (isInputFocus) {
-      let evt=document.getElementById('chatbot-modal-input-textarea');
-      evt?.scrollIntoView({behavior:'auto', block: 'nearest'})
+      if (inputRef.current) {
+        const target = inputRef.current;
+        target.blur();
+        target.focus({
+          preventScroll:true
+        });
+        if (platform==='ios') {
+          const screenDiv = document.getElementById('route-wrapper-div');
+          if (screenDiv) {
+            const screenRootSize = windowSize.height;
+            const deviceScreenSize = deviceSize.height;
+            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+            const gapSize = screenRootSize-deviceScreenSize;
+            screenDiv.style.marginTop= gapSize+'px';
+          }
+        }
+        // if (chatDivRef.current) {
+        //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
+        // }
+      }
+    } else {
+      if (inputRef.current) {
+        const target = inputRef.current;
+        target.blur();
+        const screenDiv = document.getElementById('route-wrapper-div');
+        if (platform==='ios') {
+          if (screenDiv) {
+            const screenRootSize = windowSize.height;
+            const deviceScreenSize = deviceSize.height;
+            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+            screenDiv.style.marginTop= '0'
+          }
+        }
+        // if (chatDivRef.current) {
+        //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
+        // }
+      }
     }
-  }, [isInputFocus])
+  },[isInputFocus, inputRef])
+  
 
   const callDialogAPIFN = async (txt:string) => {
     // console.log('chat history before api =',chatHistory,'\n',dataHist)
@@ -105,7 +159,34 @@ export default function FormDialog() {
     // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
 
     return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
-      if (!res.isDuplicateLogin) {
+      if (res.is_server_error) {
+        setCommonStandbyScreen({openFlag:false})
+        if (res.isDuplicateLogin) {
+          commonAlertOpen({
+            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+            priorityLevel: 2,
+            messageFontFamily:'NotoSansCJKKR',
+            useOneButton: true,
+            yesButtonLabel:'OK',
+            yesEvent: async() => {
+                await logoutFn()
+            }
+          })
+        } else {
+          commonAlertOpen({
+            messages: [
+                'Cannot connect to the server.',
+                'Please try again later.'
+            ],
+            priorityLevel: 2,
+            useOneButton: true,
+            yesButtonLabel:'OK',
+            yesEvent: () => {
+                commonAlertClose();
+            }
+          })
+        }
+      } else {
         let pushValue:any = [ai_name]
         let resultData:string[] = []
         const userUseToken:number = res.usages.prompt_tokens-beforeTurnTotalToken;
@@ -137,22 +218,12 @@ export default function FormDialog() {
         // console.log('after dumyHistAllToken =',dumyHistAllTokens)
         pushValue.push(resultData);
         dumyChatHist.push(pushValue);
-  
+        setIsInptFocus(false)
         setBeforeTurnTotalToken(totalUseToken)
         setHistoryTokens(dumyHistAllTokens);
         setChatHistory(dumyChatHist);
         setDataHist(dumyDataHist);
-      } else {
-        setCommonStandbyScreen({openFlag:false})
-        commonAlertOpen({
-          messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-          messageFontFamily:'NotoSansCJKKR',
-          useOneButton: true,
-          yesButtonLabel:'OK',
-          yesEvent: async() => {
-              await logoutFn()
-          }
-        })
+        
       }
       
     })
@@ -190,7 +261,7 @@ export default function FormDialog() {
 
   const onKeyUpEvent = async (e:React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key==='Enter') {
-        if (!e.shiftKey) {
+        if (isMobile || !e.shiftKey) {
             console.log('enter')
             console.log('inputText =',inputText)
             
@@ -221,7 +292,7 @@ export default function FormDialog() {
           padding: '32px 0 0',
           borderRadius: '20px',
           backgroundColor: '#fff',
-          marginTop: isInputFocus ? '30px': '-50px',
+          marginTop: isInputFocus ? '-430px': '-50px',
           // marginTop: '-310px',
         }
       }}
@@ -233,7 +304,10 @@ export default function FormDialog() {
         >
         <div className='flex flex-1 h-[290px]'>
 
-        <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'>
+        <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'
+        ref={chatDivRef}
+        id={'chat-window-div'}
+        >
         {chatHistory.slice(0).reverse().map((hist, idx)=>{
             const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
             const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
@@ -263,31 +337,23 @@ export default function FormDialog() {
           <div className='flex flex-col w-full'>
             <textarea 
               id='chatbot-modal-input-textarea'
+              ref={inputRef}
               className='chatbot-chat-textarea'
+              autoFocus={isInputFocus}
               style={{resize:'none'}}
-              autoFocus
               maxLength={1000}
               rows={1}
-              // placeholder='Type here or tap on the mic button to begin.'
               placeholder='Type your question here.'
               onChange={(e)=>onChangeValue(e)}
               onKeyUp={async (e)=>await onKeyUpEvent(e)}
-              onFocus={(e)=>{
-                if (isMobile) {
-                  setIsInptFocus(true);
-                  callBackFocus();
-                } else {
-                  setIsInptFocus(false)
-                }
+              onFocus={()=>{
+                setIsInptFocus(true)
               }}
               onBlur={()=>{
                 setIsInptFocus(false)
               }}
               value={inputText}
             />
-            {/* <div className='flex w-full justify-center'>{`Number of characters: ${inputLength} / 1000`}</div>
-            <div className='flex w-full justify-center'>{`* copy&past max character 998`}</div> */}
-
           </div>
         </DialogActions>
       </Dialog>

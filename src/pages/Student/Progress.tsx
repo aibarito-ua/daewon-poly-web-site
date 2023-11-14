@@ -28,7 +28,8 @@ const Progress = () => {
         setProgressAllLevelBoxValues,
         setProgressLevelBoxValue,
         progressLevelBoxValue,
-        commonAlertOpen
+        commonAlertOpen,
+        commonAlertClose
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI, 
@@ -57,21 +58,38 @@ const Progress = () => {
             getReportAll=reportAPIData;
         } else {
             const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
-                if (!response.isDuplicateLogin) {
-                    return response.result;
-                } else {
+                if (response.is_server_error) {
                     setCommonStandbyScreen({openFlag:false})
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
+                    if (response.isDuplicateLogin) {
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
+                            }
+                        })
+                    } else {
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            priorityLevel: 2,
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    }
                     return false;
+                } else {
+                    return response.result;
                 }
+                
             });
             if (getAPIs) getReportAll = getAPIs;
         }

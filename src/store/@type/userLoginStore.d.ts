@@ -11,6 +11,11 @@ interface IUserInfo {
     device_id: string;
     isMobile: boolean;
     isDuplicateLogin:boolean;
+    deviceSize: TRNSize;
+    windowSize: TRNSize;
+    platform: string;
+    setPlatform: (v:string) => void;
+    setSize: (deviceSize: TRNSize, windowSize: TRNSize) => void;
     setMobile: (v: boolean) => void;
     // setUserInfo: (userLoginInfomation: IUserLoginInfo)=>void;
     updateTryLoginCount: () => void;
@@ -28,6 +33,10 @@ interface IUserInfo {
     setAgree: (data:boolean[]) => void;
     setPageName: (pageName:TUserInfoModalPageName) => void;
     setInfoModal: (data:TUserInfoModalController) => void;
+}
+type TRNSize = {
+    height: number;
+    width: number;
 }
 type TUserInfoModalPageName = 'MyInfo'|'CancelAccount';
 type TUserInfoModalController = {

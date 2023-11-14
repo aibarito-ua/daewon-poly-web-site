@@ -16,7 +16,7 @@ export const Portfolio = () => {
 
     const {userInfo, device_id, isMobile} = useLoginStore();
     const {
-        setCommonStandbyScreen, commonAlertOpen
+        setCommonStandbyScreen, commonAlertOpen, commonAlertClose
     } = useControlAlertStore();
     const {
         // states
@@ -53,7 +53,35 @@ export const Portfolio = () => {
         const student_code = userInfo.userCode;
         setCommonStandbyScreen({openFlag:true});
         await getPortfoliosAPI(student_code, userInfo.courseName, userInfo.accessToken).then((res) => {
-            if (!res.isDuplicateLogin) {
+            if (res.is_server_error) {
+                setCommonStandbyScreen({openFlag:false})
+                if (res.isDuplicateLogin) {
+                    commonAlertOpen({
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        priorityLevel: 2,
+                        messageFontFamily:'NotoSansCJKKR',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: async() => {
+                            await logoutFn()
+                        }
+                    })
+                } else {
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        priorityLevel: 2,
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                            commonAlertClose();
+                        }
+                    })
+                }
+                return false;
+            } else {
                 let response = res.result;
                 if (response) {
                     for (let i = 0; i < response.periods.length;i++) {
@@ -65,18 +93,6 @@ export const Portfolio = () => {
                     setPortfolioApiData(response, userInfo);
                     setCommonStandbyScreen({openFlag:false});
                 }
-            } else {
-                setCommonStandbyScreen({openFlag:false})
-                commonAlertOpen({
-                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                    messageFontFamily:'NotoSansCJKKR',
-                    useOneButton: true,
-                    yesButtonLabel:'OK',
-                    yesEvent: async() => {
-                        await logoutFn()
-                    }
-                })
-                return false;
             }
         });
     }

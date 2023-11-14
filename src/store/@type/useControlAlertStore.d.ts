@@ -10,6 +10,7 @@ interface IUseControlAlertStore {
     commonAlertOneButton: boolean;
     commonAlertType: TAlertType;
     commonAlertMessageFontFamily: TCommonAlertOpenOptionFontFamily;
+    commonAlertPriorityLevel:0|1|2|3;
 
     setCommonAlertMessage: (messages: string[]) => void;
     setCommonAlertHeadTitle: (title:string) =>void;
@@ -155,7 +156,8 @@ type TCommonAlertOpenOptions = {
     closeEvent?:Function,
     useOneButton?:boolean,
     alertType?: TAlertType,
-    messageFontFamily?:TCommonAlertOpenOptionFontFamily
+    messageFontFamily?:TCommonAlertOpenOptionFontFamily,
+    priorityLevel?:0|1|2|3
 }
 type TCommonAlertOpenOptionFontFamily = 'Roboto'|'NotoSansCJKKR'|''
 

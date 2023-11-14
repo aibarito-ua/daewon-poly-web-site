@@ -120,7 +120,31 @@ const NavAside = () => {
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
                     onClick={async ()=>{
                         const check = await checkDuplicateLogin(userInfo.accessToken);
-                        if (!check.isDuplicateLogin) {
+                        if (check.is_server_error) {
+                            if (check.isDuplicateLogin) {
+                                commonAlertOpen({
+                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                    priorityLevel: 2,
+                                    messageFontFamily:'NotoSansCJKKR',
+                                    useOneButton: true,
+                                    yesButtonLabel:'OK',
+                                    yesEvent: async() => await logoutFn()
+                                })
+                            } else {
+                                commonAlertOpen({
+                                    messages: [
+                                        'Cannot connect to the server.',
+                                        'Please try again later.'
+                                    ],
+                                    priorityLevel: 2,
+                                    useOneButton: true,
+                                    yesButtonLabel:'OK',
+                                    yesEvent: () => {
+                                        commonAlertClose();
+                                    }
+                                })
+                            }
+                        } else {
                             commonAlertOpen({
                                 messageFontFamily: 'Roboto',
                                 alertType:'warning',
@@ -129,14 +153,7 @@ const NavAside = () => {
                                 noButtonLabel: 'No',
                                 yesEvent: ()=>logoutFn(),
                             })
-                        } else {
-                            commonAlertOpen({
-                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                messageFontFamily:'NotoSansCJKKR',
-                                useOneButton: true,
-                                yesButtonLabel:'OK',
-                                yesEvent: async() => await logoutFn()
-                            })
+
                         }
                         
                     }}/>

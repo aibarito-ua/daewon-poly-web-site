@@ -110,6 +110,19 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
     checkPW:'',
     setCheckPW: (input) => {
         set(()=>({checkPW:input}))
+    },
+    deviceSize: {
+        height: 0, width: 0
+    },
+    windowSize: {
+        height:0, width:0
+    },
+    platform: '',
+    setPlatform: (platform) => set(()=>({platform})),
+    setSize: (deviceSize, windowSize) => {
+        set(()=>({
+            deviceSize, windowSize
+        }))
     }
 
 }))

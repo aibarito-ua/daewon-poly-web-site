@@ -164,29 +164,59 @@ const PreviewSparkWriting = (props:any) => {
                 // data reload 
                 reloadData = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response)=>{
                     console.log('response ==',response)
-                    if (!response.isDuplicateLogin) {
+                    if (response.is_server_error) {
+                        setCommonStandbyScreen({openFlag:false})
+                        if (response.isDuplicateLogin) {
+                            commonAlertOpen({
+                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                priorityLevel: 2,
+                                messageFontFamily:'NotoSansCJKKR',
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: async() => {
+                                    await logoutFn()
+                                }
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
+                        return false;
+
+                    } else {
                         if (response.book_name!=='') {
                             setSparkWritingDataFromAPI(response.units, response.book_name);
                             setCountofUseAIProofreading(response.units[unitIndex].proofreading_count);
                             return true;
                         } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
                             return false;
                         }
-                    } else {
-                        setCommonStandbyScreen({openFlag:false})
-                        commonAlertOpen({
-                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                            messageFontFamily:'NotoSansCJKKR',
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: async() => {
-                                await logoutFn()
-                            }
-                        })
-                        return false;
                     }
                 })
             }
+            
             if (reloadData) {
                 const checkTarget = sparkWritingData[unitIndex].draft_1_outline;
                 // check submit?
@@ -269,13 +299,13 @@ const PreviewSparkWriting = (props:any) => {
         if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken).then((response) => {
-                if (!response.isDuplicateLogin) {
-                    return response.result;
-                } else {
-                    setCommonStandbyScreen({openFlag:false})
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken)
+            
+            if (res.is_server_error) {
+                if (res.isDuplicateLogin) {
                     commonAlertOpen({
                         messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                        priorityLevel: 2,
                         messageFontFamily:'NotoSansCJKKR',
                         useOneButton: true,
                         yesButtonLabel:'OK',
@@ -283,12 +313,39 @@ const PreviewSparkWriting = (props:any) => {
                             await logoutFn()
                         }
                     })
-                    return false;
+                } else {
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        priorityLevel: 2,
+                        alertType: 'continue',
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                                if (res.is_retry) {
+                                    // save
+                                    commonAlertOpen({
+                                        messageFontFamily: 'Roboto',
+                                        alertType: 'continue',
+                                        messages: ['Do you want to save your current progress','and return to the main menu?'],
+                                        yesButtonLabel: `Yes`,
+                                        noButtonLabel: `No`,
+                                        yesEvent: async ()=> {
+                                            await forcedTemporarySave(true)
+                                            commonAlertClose()
+                                        }
+                                    })
+                                } else {
+                                    commonAlertClose();
+                                }
+                            }
+                        })
                 }
-            });
-            if (res) {
+            } else {
                 console.log('res ====',res)
-                 if (res.result_body.length>0) {
+                 if (res.result.result_body.length>0) {
                      const unitId = sparkWritingData[unitIndex].unit_id
                      // const proofReadingCountUpdateValue = 1;
                      setProofreadingCount(unitId)
@@ -298,8 +355,8 @@ const PreviewSparkWriting = (props:any) => {
                       console.log('res grammar =',res)
                      setGuideFlag(1)
                      setInitHistorys({
-                         title: res.result_title,
-                         body: res.result_body
+                         title: res.result.result_title,
+                         body: res.result.result_body
                      })
      
                  }
@@ -433,7 +490,36 @@ const PreviewSparkWriting = (props:any) => {
 
     const clickTooltip = async (willChangeValue:string, mainDiv:'Title'|'Body', paragraghData:number, paragraphIndex:number, sentenceIndex:number, wordIndex:number ) => {
         const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
-        if (!check_duplicate_login.isDuplicateLogin) {
+        if (check_duplicate_login.is_server_error) {
+
+            setCommonStandbyScreen({openFlag:false})
+            if (check_duplicate_login.isDuplicateLogin) {
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    priorityLevel: 2,
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
+            } else {
+                commonAlertOpen({
+                    messages: [
+                        'Cannot connect to the server.',
+                        'Please try again later.'
+                    ],
+                    priorityLevel: 2,
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: () => {
+                        commonAlertClose();
+                    }
+                })
+            }
+        } else {
+            setCommonStandbyScreen({openFlag:false})
             console.log('main div =',mainDiv)
             if (mainDiv === 'Body') {
                 let dumyBodyHist:TBodyHistorys = JSON.parse(JSON.stringify(bodyHistory));
@@ -483,19 +569,10 @@ const PreviewSparkWriting = (props:any) => {
                     setTitleValue(dumyTitleHistory);
                 }
             }
-            
-        } else {
-            setCommonStandbyScreen({openFlag:false})
-            commonAlertOpen({
-            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-            messageFontFamily:'NotoSansCJKKR',
-            useOneButton: true,
-            yesButtonLabel:'OK',
-            yesEvent: async() => {
-                await logoutFn()
-            }
-            })
+
         }
+        
+        
     }
     const replaceUpdateSparkWritingTitle = () => {
         const unitId = sparkWritingData[unitIndex].unit_id
@@ -648,44 +725,50 @@ const PreviewSparkWriting = (props:any) => {
         };
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
-        
-        if (isSaveTemporary) {
-            // if (isGrammarSave) {
-                commonAlertClose()
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
-                // commonAlertOpen({
-                //     useOneButton:true,
-                //     yesButtonLabel: 'OK',
-                //     alertType: 'continue',
-                //     messages: ['Temporary saving is complete.'],
-                //     yesEvent: async () => {
-                        
-                //     }
-                // })
-            // } else {
-            //     commonAlertOpen({
-            //         useOneButton:true,
-            //         yesButtonLabel: 'OK',
-            //         alertType: 'continue',
-            //         messages: ['Temporary saving is complete.'],
-            //         yesEvent: async () => {
-            //             commonAlertClose();
-            //             navigate(-1)
-            //         }
-            //     })
-            // }
+        if (isSaveTemporary.is_server_error) {
+            if (isSaveTemporary.isDuplicateLogin) {
+                commonAlertOpen({
+                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                    priorityLevel: 2,
+                    messageFontFamily:'NotoSansCJKKR',
+                    useOneButton: true,
+                    yesButtonLabel:'OK',
+                    yesEvent: async() => {
+                        await logoutFn()
+                    }
+                })
+            } else {
+                if (isSaveTemporary.is_retry) {
+                    // save
+                    commonAlertOpen({
+                        messageFontFamily: 'Roboto',
+                        messages: ['Do you want to save your current progress','and return to the main menu?'],
+                        yesButtonLabel: `Yes`,
+                        noButtonLabel: `No`,
+                        yesEvent: async ()=> {
+                            await forcedTemporarySave(true)
+                            commonAlertClose()
+                        }
+                    })
+                } else {
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        priorityLevel: 2,
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                                commonAlertClose();
+                            }
+                    })
+                }
+            }
         } else {
-            await forcedTemporarySave();
+            commonAlertClose()
+            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
         }
-        // commonAlertOpen({
-        //     useOneButton: true,
-        //     yesButtonLabel: 'OK',
-        //     alertType: 'continue',
-        //     messages: ['Do you want to save your current progress and return to the main menu?'],
-        //     yesEvent: async () => {
-                
-        //     }
-        // })
     }
 
     React.useMemo(()=>{
@@ -1199,7 +1282,34 @@ const PreviewSparkWriting = (props:any) => {
                                 alertType: 'continue',
                                 closeEvent: async ()=>{
                                     const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
-                                    if (!check_duplicate_login.isDuplicateLogin) {
+                                    if (check_duplicate_login.is_server_error) {
+                                        setCommonStandbyScreen({openFlag:false})
+                                        if (check_duplicate_login.isDuplicateLogin) {
+                                            commonAlertOpen({
+                                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                priorityLevel: 2,
+                                                messageFontFamily:'NotoSansCJKKR',
+                                                useOneButton: true,
+                                                yesButtonLabel:'OK',
+                                                yesEvent: async() => {
+                                                    await logoutFn()
+                                                }
+                                            })
+                                        } else {
+                                            commonAlertOpen({
+                                                messages: [
+                                                    'Cannot connect to the server.',
+                                                    'Please try again later.'
+                                                ],
+                                                priorityLevel: 2,
+                                                useOneButton: true,
+                                                yesButtonLabel:'OK',
+                                                yesEvent: () => {
+                                                    commonAlertClose();
+                                                }
+                                            })
+                                        }
+                                    } else {
                                         // grammar 시작 전
                                         commonAlertClose();
                                         // go to edit page
@@ -1217,17 +1327,6 @@ const PreviewSparkWriting = (props:any) => {
                                         const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
                                         // console.log('path =',path)
                                         CommonFunctions.goLink(path, navigate, role);  
-                                    } else {
-                                        setCommonStandbyScreen({openFlag:false})
-                                            commonAlertOpen({
-                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                            messageFontFamily:'NotoSansCJKKR',
-                                            useOneButton: true,
-                                            yesButtonLabel:'OK',
-                                            yesEvent: async() => {
-                                                await logoutFn()
-                                            }
-                                        })
                                     }
                                 },
                                 yesEvent: () => commonAlertClose()
@@ -1329,22 +1428,38 @@ const PreviewSparkWriting = (props:any) => {
                                             "unit_id": sparkWritingData[unitIndex].unit_id,
                                             "proofreading_count": 0
                                         }
-                                      //  console.log('data =',data)
+                                        //  console.log('data =',data)
                                         const reset = await grammarReset(data, userInfo.accessToken).then((response)=>{
-                                            if (!response.isDuplicateLogin) {
-                                                return response.result;
-                                            } else {
+                                            if (response.is_server_error) {
                                                 setCommonStandbyScreen({openFlag:false})
-                                                commonAlertOpen({
-                                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                                    messageFontFamily:'NotoSansCJKKR',
-                                                    useOneButton: true,
-                                                    yesButtonLabel:'OK',
-                                                    yesEvent: async() => {
-                                                        await logoutFn()
-                                                    }
-                                                })
+                                                if (response.isDuplicateLogin) {
+                                                    commonAlertOpen({
+                                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                        priorityLevel: 2,
+                                                        messageFontFamily:'NotoSansCJKKR',
+                                                        useOneButton: true,
+                                                        yesButtonLabel:'OK',
+                                                        yesEvent: async() => {
+                                                            await logoutFn()
+                                                        }
+                                                    })
+                                                } else {
+                                                    commonAlertOpen({
+                                                        messages: [
+                                                            'Cannot connect to the server.',
+                                                            'Please try again later.'
+                                                        ],
+                                                        priorityLevel: 2,
+                                                        useOneButton: true,
+                                                        yesButtonLabel:'OK',
+                                                        yesEvent: () => {
+                                                            commonAlertClose();
+                                                        }
+                                                    })
+                                                }
                                                 return false;
+                                            } else {
+                                                return response.result;
                                             }
                                         });
                                       //  console.log('reset =',reset)
@@ -1448,37 +1563,67 @@ const PreviewSparkWriting = (props:any) => {
                                                 commonAlertClose();
                                                 setCommonStandbyScreen({openFlag:true})
                                                 const submit = await draft1stSubmit(submitData, userInfo.accessToken);
-                                                if (!submit.isDuplicateLogin) {
-                                                    //  console.log('submit return data =',submit)
-                                                      if (submit) {
-                                                          setCommonStandbyScreen({openFlag:false})
-                                                          commonAlertOpen({
-                                                              messageFontFamily: 'Roboto',
-                                                              useOneButton:true,
-                                                              yesButtonLabel: 'OK',
-                                                              alertType: 'continue',
-                                                              messages: [
-                                                                  `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
-                                                                  <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
-                                                              ],
-                                                              yesEvent: () => {
-                                                                  commonAlertClose()
-                                                                  CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
-                                                              }
-                                                          })
-                                                      }
+                                                if (submit.is_server_error) {
+                                                    setCommonStandbyScreen({openFlag:false})
+                                                    if (submit.isDuplicateLogin) {
+                                                        commonAlertOpen({
+                                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                            priorityLevel: 2,
+                                                            messageFontFamily:'NotoSansCJKKR',
+                                                            useOneButton: true,
+                                                            yesButtonLabel:'OK',
+                                                            yesEvent: async() => {
+                                                                await logoutFn()
+                                                            }
+                                                        })
+                                                    } else {
+                                                        commonAlertOpen({
+                                                            messages: [
+                                                                'Cannot connect to the server.',
+                                                                'Please try again later.'
+                                                            ],
+                                                            priorityLevel: 2,
+                                                            alertType: 'continue',
+                                                            useOneButton: true,
+                                                            yesButtonLabel:'OK',
+                                                            yesEvent: () => {
+                                                                if (submit.is_retry) {
+                                                                    commonAlertOpen({
+                                                                        messageFontFamily: 'Roboto',
+                                                                        alertType: 'continue',
+                                                                        messages: ['Do you want to save your current progress','and return to the main menu?'],
+                                                                        yesButtonLabel: `Yes`,
+                                                                        noButtonLabel: `No`,
+                                                                        yesEvent: async ()=> {
+                                                                            await forcedTemporarySave(true);
+                                                                            commonAlertClose();
+                                                                        }
+                                                                    })
+                                                                } else {
+                                                                    commonAlertClose();
+                                                                }
+                                                            }
+                                                        })
+                                                    }
                                                 } else {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     commonAlertOpen({
-                                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                                        messageFontFamily:'NotoSansCJKKR',
-                                                        useOneButton: true,
-                                                        yesButtonLabel:'OK',
-                                                        yesEvent: async() => {
-                                                            await logoutFn()
+                                                        messageFontFamily: 'Roboto',
+                                                        useOneButton:true,
+                                                        yesButtonLabel: 'OK',
+                                                        alertType: 'continue',
+                                                        messages: [
+                                                            `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s`,
+                                                            <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
+                                                        ],
+                                                        yesEvent: () => {
+                                                            commonAlertClose()
+                                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
                                                         }
                                                     })
+                                                    
                                                 }
+                                                
                                             },
                                             yesEvent: async() => {
                                                 commonAlertClose();

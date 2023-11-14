@@ -3,8 +3,10 @@ import { CONFIG } from '../../../config';
 import axios from 'axios';
 
 export async function grammarCheck(grammarData:TSparkWritingDataOutline[], accessToken:string):Promise<{
-    result:TGrammarResponse,
-    isDuplicateLogin:boolean,
+    result:TGrammarResponse;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
 }>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
@@ -26,12 +28,14 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
                 result_title: responseData.result_title
             },
             isDuplicateLogin:false,
+            is_server_error:false,
+            is_retry:true,
         };
     }).catch((reject)=>{
         // throw new Error("API Server Error: ",reject)
         console.log('reject ==',reject.response.data)
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
-        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+        if (rsp.statusCode===401) {
             return {
                 result: {
                     origin_data:[],
@@ -39,16 +43,41 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
                     result_title:[]
                 },
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (rsp.statusCode===500) {
+            return {
+                result: {
+                    origin_data:[],
+                    result_body:[],
+                    result_title:[]
+                },
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
-            throw new Error("API Server Error: ",reject)
+            return {
+                result: {
+                    origin_data:[],
+                    result_body:[],
+                    result_title:[]
+                },
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
+            }
+            // throw new Error("API Server Error: ",reject)
         }
     })
     
 }
 export async function proofReadingCountUpdate(student_code:string, unit_id: number, proofreading_count: number, accessToken:string):Promise<{
-    result: TProofReadingCountUpdateResponse|TProofReadingCountUpdateReject,
-    isDuplicateLogin: boolean,
+    result: TProofReadingCountUpdateResponse|TProofReadingCountUpdateReject;
+    isDuplicateLogin: boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
 }> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     const data = { student_code, unit_id, proofreading_count };
@@ -63,6 +92,8 @@ export async function proofReadingCountUpdate(student_code:string, unit_id: numb
         return {
             result:response,
             isDuplicateLogin: false,
+            is_server_error:false,
+            is_retry:true,
         };
     }).catch((reject) => {
         const returnReject:TProofReadingCountUpdateReject = reject
@@ -71,18 +102,32 @@ export async function proofReadingCountUpdate(student_code:string, unit_id: numb
             return {
                 result: returnReject,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (returnReject.statusCode===500) {
+            return {
+                result: returnReject,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: returnReject,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
 }
 export async function grammarReset(data:{student_code:string, unit_id:number, proofreading_count:number},accessToken:string):Promise<{
-    result: any,
-    isDuplicateLogin: boolean,
+    result: any;
+    isDuplicateLogin: boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
+    
 }> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     return await axios.put(reqUrl,data,{
@@ -95,7 +140,9 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
         const response:TProofReadingCountUpdateResponse = result.data;
         return {
             result:response,
-            isDuplicateLogin:false
+            isDuplicateLogin:false,
+            is_server_error:false,
+            is_retry:true
         };
     }).catch((reject) => {
         const returnReject:TProofReadingCountUpdateReject = reject
@@ -104,11 +151,22 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
             return {
                 result: returnReject,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (returnReject.statusCode===500) {
+            return {
+                result: returnReject,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: returnReject,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })

@@ -4,18 +4,20 @@ import axios from 'axios';
 import { url } from 'inspector';
 
 export async function callDialogAPI(ai_name:string, user_name:string, history: string[][], accessToken:string):Promise<{
-    text:string[][],
+    text:string[][];
     usages: {
         completion_tokens:number,
         total_tokens:number,
         prompt_tokens:number
-    },
+    };
+    is_server_error:boolean;
+    is_retry:boolean;
     error?: {
         text:string,
         status:any,
         statusText:any
-    },
-    isDuplicateLogin?:boolean,
+    };
+    isDuplicateLogin?:boolean;
 }> {
     return await axios.post(
         CONFIG.CHATBOT.URL, {
@@ -44,7 +46,9 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
                     total_tokens: totalUseToken,
                     prompt_tokens: useStartToken
                 },
-                error: undefined
+                error: undefined,
+                is_server_error:false,
+                is_retry: true,
             };
         } else {
             return {
@@ -55,14 +59,14 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
                     prompt_tokens: 0
                 },
                 error: undefined,
+                is_server_error:true,
+                is_retry:true,
             };
         }
     }).catch((rej)=>{
-        const status = rej.response.status;
-        const statusText = rej.response.statusText;
-        const statusCode = rej.response.data.statusCode;
-        const message = rej.response.data.message;
-        if (statusCode===401 && message === "Unauthorized" ) {
+        const rsp:TProofReadingCountUpdateReject = rej.response.data;
+        console.log('dialog api reject =',rsp)
+        if (rsp.statusCode===401 ) {
             return {
                 text:[],
                 usages: {
@@ -70,8 +74,23 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
                     total_tokens:0,
                     prompt_tokens: 0
                 },
-                error: {text: '잠시 후 다시 시도해주세요.', status:statusCode, statusText:message},
+                error: {text: '잠시 후 다시 시도해주세요.', status:rsp.statusCode, statusText:rsp.message},
                 isDuplicateLogin:true,
+                is_server_error:true,
+                is_retry: true
+            }
+        } else if (rsp.statusCode===500 ) {
+            return {
+                text:[],
+                usages: {
+                    completion_tokens:0,
+                    total_tokens:0,
+                    prompt_tokens: 0
+                },
+                error: {text: '잠시 후 다시 시도해주세요.', status:rsp.statusCode, statusText:rsp.message},
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry: false
             }
         } else {
             return {
@@ -81,8 +100,10 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
                     total_tokens:0,
                     prompt_tokens: 0
                 },
-                error: {text: '잠시 후 다시 시도해주세요.', status, statusText},
+                error: {text: '잠시 후 다시 시도해주세요.', status:rsp.statusCode, statusText:rsp.message},
                 isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:true,
             }
         }
     });
@@ -93,9 +114,11 @@ export async function callUnitInfobyStudent (
     courseName: string,
     accessToken: string,
 ):Promise<{
-    book_name: string,
-    units: TSparkWritingDatas,
-    isDuplicateLogin?: boolean,
+    book_name: string;
+    units: TSparkWritingDatas;
+    isDuplicateLogin?: boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
 }> {
     // {STUDENT_CODE}/{COURSE_NAME}
     const replaceUrl = CONFIG.DRAFT.GET.UNIT_INFO.replace(/{STUDENT_CODE}/gmi, studentCode).replace(/{COURSE_NAME}/gmi, courseName);
@@ -113,23 +136,38 @@ export async function callUnitInfobyStudent (
         console.log('in api res =',res)
         return {
             book_name: res.book_name,
-            units: res.units
+            units: res.units,
+            is_server_error:false,
+            is_retry:true,
         };
     }).catch((reject) => {
         console.log('Server Rejected: ',reject)
-        const statusCode = reject.response.data.statusCode;
-        const message = reject.response.data.message;
-        if (statusCode===401 && message === "Unauthorized" ) {
+        const rsp:TProofReadingCountUpdateReject = reject.response.data;
+        const statusCode = rsp.statusCode;
+        const message = rsp.message;
+        if (statusCode===401) {
             return {
                 book_name: '',
                 units: [],
-                isDuplicateLogin: true
+                isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            }
+        } else if (statusCode===500 ) {
+            return {
+                book_name: '',
+                units: [],
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             }
         } else {
             return {
                 book_name: '',
                 units: [],
-                isDuplicateLogin:false
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:true
             }
         }
     })
@@ -138,7 +176,12 @@ export async function callUnitInfobyStudent (
 export async function draftSaveTemporary(
     data:TSparkWritingTemporarySaveData,
     accessToken: string,
-):Promise<{result:boolean, isDuplicateLogin:boolean}> {
+):Promise<{
+    result:boolean;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
+}> {
     return await axios.post(
         CONFIG.DRAFT.POST.SAVE_TEMPORARY,
         data,
@@ -153,26 +196,45 @@ export async function draftSaveTemporary(
         return {
             result: response.data.data,
             isDuplicateLogin:false,
+            is_server_error:false,
+            is_retry:true
         };
     }).catch((reject) => {
-        console.log('Server Rejected: ',reject.response.data)
-        const statusCode = reject.response.data.statusCode;
-        const message = reject.response.data.message;
-        if (statusCode===401 && message === "Unauthorized" ) {
+        const rsp:TProofReadingCountUpdateReject = reject.response.data;
+        console.log('Server Rejected: ',rsp)
+        const statusCode = rsp.statusCode;
+        const message = rsp.message;
+        if (statusCode===401 ) {
             return {
                 result: false,
                 isDuplicateLogin:true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (statusCode===500 ) {
+            return {
+                result: false,
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: false,
                 isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
 }
 
-export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessToken: string,):Promise<{result:boolean, isDuplicateLogin:boolean}>{
+export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessToken: string,):Promise<{
+    result:boolean;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
+}>{
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
         headers: {
@@ -185,23 +247,41 @@ export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessTok
         return {
             result: rsp.data,
             isDuplicateLogin: false,
+            is_server_error:false,
+            is_retry:true
         };
     }).catch((reject) => {
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
-        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+        if (rsp.statusCode===401 ) {
             return {
                 result: false,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (rsp.statusCode===500 ) {
+            return {
+                result: false,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: false,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
 }
-export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessToken: string):Promise<{result:boolean, isDuplicateLogin:boolean}> {
+export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessToken: string):Promise<{
+    result:boolean;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
+}> {
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
         headers: {
@@ -214,26 +294,41 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessTok
         return {
             result: rsp.data,
             isDuplicateLogin: false,
+            is_server_error:false,
+            is_retry:true
         };
     }).catch((reject) => {
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
-        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+        if (rsp.statusCode===401 ) {
             return {
                 result: false,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (rsp.statusCode===500 ) {
+            return {
+                result: false,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: false,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
 }
 
 export async function getReportsAPI(student_code: string, accessToken: string, levelName:string): Promise<{
-    result:TReportByStudentResponse|null,
-    isDuplicateLogin:boolean
+    result:TReportByStudentResponse|null;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
 }> {
     console.log(student_code)
     const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, levelName);
@@ -248,26 +343,41 @@ export async function getReportsAPI(student_code: string, accessToken: string, l
         return {
             result: rsp,
             isDuplicateLogin:false,
+            is_server_error:false,
+            is_retry:true
         }
     }).catch((reject) => {
         console.log('reject report api =',reject.response.data);
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
-        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+        if (rsp.statusCode===401 ) {
             return {
                 result: null,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (rsp.statusCode===500 ) {
+            return {
+                result: null,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: null,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
 }
 export async function getPortfoliosAPI (student_code:string, level_name:string, accessToken: string) : Promise<{
-    result: TPortfolioAPIData|null,
-    isDuplicateLogin:boolean
+    result: TPortfolioAPIData|null;
+    isDuplicateLogin:boolean;
+    is_server_error:boolean;
+    is_retry:boolean;
 }> {
     const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, level_name);
     return await axios.get(reqUrl, {
@@ -281,19 +391,32 @@ export async function getPortfoliosAPI (student_code:string, level_name:string, 
         return {
             result: rsp,
             isDuplicateLogin:false,
+            is_server_error:false,
+            is_retry:true
         }
     }).catch((reject) => {
         console.log('reject ==',reject.response.data)
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
-        if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
+        if (rsp.statusCode===401 ) {
             return {
                 result: null,
                 isDuplicateLogin: true,
+                is_server_error:true,
+                is_retry:true
+            };
+        } else if (rsp.statusCode===500 ) {
+            return {
+                result: null,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false
             };
         } else {
             return {
                 result: null,
                 isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:true
             };
         }
     })
