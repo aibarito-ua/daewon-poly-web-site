@@ -79,11 +79,11 @@ const KeyFrames = styled("div")({
 
 export default function StandbyScreen() {
   const {commonStandbyScreen, setCommonStandbyScreen, commonAlertPriorityLevel} = useControlAlertStore();
-  const backdropPriorityLevel = commonAlertPriorityLevel - 100000000
+  
   return (
     <div>
       <Backdrop
-        sx={{ color: '#fff', zIndex: backdropPriorityLevel }}
+        sx={{ color: '#fff', zIndex: 1800000000 }}
         open={commonStandbyScreen.openFlag}
       >
         <KeyFrames />

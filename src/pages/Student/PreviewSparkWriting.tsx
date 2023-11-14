@@ -299,57 +299,63 @@ const PreviewSparkWriting = (props:any) => {
         if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken)
-            
-            if (res.is_server_error) {
-                if (res.isDuplicateLogin) {
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
-                } else {
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
-                        priorityLevel: 2,
-                        alertType: 'continue',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: () => {
-                                if (res.is_retry) {
-                                    // save
-                                    commonAlertOpen({
-                                        messageFontFamily: 'Roboto',
-                                        alertType: 'continue',
-                                        messages: ['Do you want to save your current progress','and return to the main menu?'],
-                                        yesButtonLabel: `Yes`,
-                                        noButtonLabel: `No`,
-                                        yesEvent: async ()=> {
-                                            await forcedTemporarySave(true)
-                                            commonAlertClose()
-                                        }
-                                    })
-                                } else {
-                                    commonAlertClose();
-                                }
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken).then((response)=>{
+                if (response.is_server_error) {
+                    setCommonStandbyScreen({openFlag:false})
+                    if (response.isDuplicateLogin) {
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
                             }
                         })
+                    } else {
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            priorityLevel: 2,
+                            alertType: 'continue',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: () => {
+                                    if (response.is_retry) {
+                                        // save
+                                        commonAlertOpen({
+                                            messageFontFamily: 'Roboto',
+                                            alertType: 'continue',
+                                            messages: ['Do you want to save your current progress','and return to the main menu?'],
+                                            yesButtonLabel: `Yes`,
+                                            noButtonLabel: `No`,
+                                            yesEvent: async ()=> {
+                                                await forcedTemporarySave(true)
+                                                commonAlertClose()
+                                            }
+                                        })
+                                    } else {
+                                        commonAlertClose();
+                                    }
+                                }
+                            })
+                    }
+                } else {
+                    setCommonStandbyScreen({openFlag:false})
+                    return response
                 }
-            } else {
+            })
+            
+            if (res) {
                 console.log('res ====',res)
                  if (res.result.result_body.length>0) {
                      const unitId = sparkWritingData[unitIndex].unit_id
                      // const proofReadingCountUpdateValue = 1;
                      setProofreadingCount(unitId)
-                     setCommonStandbyScreen({openFlag:false})
+                     
                      setIsPreview(false)
                      setIsGrammarProceed(true);
                       console.log('res grammar =',res)
@@ -1562,50 +1568,54 @@ const PreviewSparkWriting = (props:any) => {
                                               //  console.log('submit item = ',submitData)
                                                 commonAlertClose();
                                                 setCommonStandbyScreen({openFlag:true})
-                                                const submit = await draft1stSubmit(submitData, userInfo.accessToken);
-                                                if (submit.is_server_error) {
-                                                    setCommonStandbyScreen({openFlag:false})
-                                                    if (submit.isDuplicateLogin) {
-                                                        commonAlertOpen({
-                                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                                            priorityLevel: 2,
-                                                            messageFontFamily:'NotoSansCJKKR',
-                                                            useOneButton: true,
-                                                            yesButtonLabel:'OK',
-                                                            yesEvent: async() => {
-                                                                await logoutFn()
-                                                            }
-                                                        })
-                                                    } else {
-                                                        commonAlertOpen({
-                                                            messages: [
-                                                                'Cannot connect to the server.',
-                                                                'Please try again later.'
-                                                            ],
-                                                            priorityLevel: 2,
-                                                            alertType: 'continue',
-                                                            useOneButton: true,
-                                                            yesButtonLabel:'OK',
-                                                            yesEvent: () => {
-                                                                if (submit.is_retry) {
-                                                                    commonAlertOpen({
-                                                                        messageFontFamily: 'Roboto',
-                                                                        alertType: 'continue',
-                                                                        messages: ['Do you want to save your current progress','and return to the main menu?'],
-                                                                        yesButtonLabel: `Yes`,
-                                                                        noButtonLabel: `No`,
-                                                                        yesEvent: async ()=> {
-                                                                            await forcedTemporarySave(true);
-                                                                            commonAlertClose();
-                                                                        }
-                                                                    })
-                                                                } else {
-                                                                    commonAlertClose();
+                                                const submit = await draft1stSubmit(submitData, userInfo.accessToken).then((response) => {
+                                                    if (response.is_server_error) {
+                                                        setCommonStandbyScreen({openFlag:false})
+                                                        if (response.isDuplicateLogin) {
+                                                            commonAlertOpen({
+                                                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                                priorityLevel: 2,
+                                                                messageFontFamily:'NotoSansCJKKR',
+                                                                useOneButton: true,
+                                                                yesButtonLabel:'OK',
+                                                                yesEvent: async() => {
+                                                                    await logoutFn()
                                                                 }
-                                                            }
-                                                        })
+                                                            })
+                                                        } else {
+                                                            commonAlertOpen({
+                                                                messages: [
+                                                                    'Cannot connect to the server.',
+                                                                    'Please try again later.'
+                                                                ],
+                                                                priorityLevel: 2,
+                                                                alertType: 'continue',
+                                                                useOneButton: true,
+                                                                yesButtonLabel:'OK',
+                                                                yesEvent: () => {
+                                                                    if (response.is_retry) {
+                                                                        commonAlertOpen({
+                                                                            messageFontFamily: 'Roboto',
+                                                                            alertType: 'continue',
+                                                                            messages: ['Do you want to save your current progress','and return to the main menu?'],
+                                                                            yesButtonLabel: `Yes`,
+                                                                            noButtonLabel: `No`,
+                                                                            yesEvent: async ()=> {
+                                                                                await forcedTemporarySave(true);
+                                                                                commonAlertClose();
+                                                                            }
+                                                                        })
+                                                                    } else {
+                                                                        commonAlertClose();
+                                                                    }
+                                                                }
+                                                            })
+                                                        }
+                                                    } else {
+                                                        return response
                                                     }
-                                                } else {
+                                                });
+                                                if (submit) {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     commonAlertOpen({
                                                         messageFontFamily: 'Roboto',
