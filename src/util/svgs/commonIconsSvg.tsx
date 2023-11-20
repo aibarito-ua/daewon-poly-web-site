@@ -338,6 +338,193 @@ function DownArrowIcon(props: React.SVGAttributes<SVGElement>) {
     )
 }
 
+function TooltipInReportChart(props: any) {
+    // React.SVGAttributes<SVGElement>
+    console.log('TooltipInReportChart props =',props)
+    const {
+        cx,
+        cy,
+        // midAngle,
+        innerRadius,
+        outerRadius,
+        // startAngle,
+        // endAngle,
+        
+        fill,
+        payload,
+        percent,
+        value
+    } = props;
+    const RADIAN = Math.PI / 180;
+    const midAngle = 45;
+    const startAngle = 90;
+    const endAngle = 90-value/100*360;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? "start" : "end";
+    const radiusMid = outerRadius-innerRadius;
+    const cornerRadius = radiusMid/2;
+    const trackRadius = innerRadius + cornerRadius;
+
+    const pX = sx - 40;
+    const pY = sy - 24;
+    
+
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="257" height="123" viewBox="0 0 257 123" fill="none">
+            <g filter="url(#filter0_d_620_1668)">
+                <mask id="path-1-inside-1_620_1668" fill="white">
+                <path fill-rule="evenodd" clipRule="evenodd" 
+d={`
+M240.48 0
+C247.108 0 252.48 5.37258 252.48 12
+V103
+C252.48 109.627 247.108 115 240.48 115
+H24.4805
+C17.8531 115 12.4805 109.627 12.4805 103
+V62.3251
+L4.60257 58.9178
+C3.79852 58.5701 3.79852 57.4299 4.60257 57.0822
+L12.4805 53.6749
+V12
+C12.4805 5.37258 17.8531 0 24.4805 0
+H240.48
+Z
+`}/>
+                </mask>
+                <path fillRule="evenodd" clipRule="evenodd" 
+d={`
+M240.48 0
+C247.108 0 252.48 5.37258 252.48 12
+V103
+C252.48 109.627 247.108 115 240.48 115
+H24.4805
+C17.8531 115 12.4805 109.627 12.4805 103
+V62.3251
+L4.60257 58.9178
+C3.79852 58.5701 3.79852 57.4299 4.60257 57.0822
+L12.4805 53.6749
+V12
+C12.4805 5.37258 17.8531 0 24.4805 0
+H240.48
+Z
+`} fill="white"/>
+                <path 
+d={`
+M12.4805 62.3251
+L13.6714 59.5716
+C14.7695 60.0466 15.4805 61.1287 15.4805 62.3251
+H12.4805
+Z
+M4.60257 58.9178
+L5.79347 56.1643
+L5.79349 56.1643
+L4.60257 58.9178Z
+M4.60257 57.0822
+L5.79349 59.8357
+L5.79347 59.8357
+L4.60257 57.0822
+Z
+M12.4805 53.6749
+H15.4805
+C15.4805 54.8713 14.7695 55.9534 13.6714 56.4284
+L12.4805 53.6749
+Z
+M249.48 12
+C249.48 7.02944 245.451 3 240.48 3
+V-3
+C248.765 -3 255.48 3.71573 255.48 12
+H249.48
+Z
+M249.48 103
+V12
+H255.48
+V103
+H249.48
+Z
+M240.48 112
+C245.451 112 249.48 107.971 249.48 103
+H255.48
+C255.48 111.284 248.765 118 240.48 118
+V112
+Z
+M24.4805 112
+H240.48
+V118
+H24.4805
+V112
+Z
+M15.4805 103
+C15.4805 107.971 19.5099 112 24.4805 112
+V118
+C16.1962 118 9.48047 111.284 9.48047 103
+H15.4805
+Z
+M15.4805 62.3251
+V103
+H9.48047
+V62.3251
+H15.4805
+Z
+M5.79349 56.1643
+L13.6714 59.5716
+L11.2896 65.0786
+L3.41165 61.6713L5.79349 56.1643
+Z
+M5.79347 59.8357
+C7.40155 59.1402 7.40155 56.8598 5.79347 56.1643
+L3.41167 61.6713
+C0.195496 60.2803 0.195496 55.7197 3.41167 54.3287
+L5.79347 59.8357
+Z
+M13.6714 56.4284
+L5.79349 59.8357
+L3.41165 54.3287
+L11.2896 50.9214
+L13.6714 56.4284
+Z
+M15.4805 12
+V53.6749
+H9.48047
+V12
+H15.4805
+Z
+M24.4805 3
+C19.5099 3 15.4805 7.02944 15.4805 12
+H9.48047
+C9.48047 3.71573 16.1962 -3 24.4805 -3
+V3
+Z
+M240.48 3
+H24.4805
+V-3
+H240.48
+V3
+Z
+`} fill="#6865CC" mask="url(#path-1-inside-1_620_1668)"/>
+            </g>
+            <defs>
+                <filter id="filter0_d_620_1668" x="0" y="0" width="256.48" height="123" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dy="4"/>
+                <feGaussianBlur stdDeviation="2"/>
+                <feComposite in2="hardAlpha" operator="out"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_620_1668"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_620_1668" result="shape"/>
+                </filter>
+            </defs>
+        </svg>
+    )
+}
+
 export const commonIconSvgs = {
     ExitButton,
     NavWritingActivityActiveOnIcon,
@@ -355,5 +542,6 @@ export const commonIconSvgs = {
     SparkWritingTitleBookIcon,
     WritingActivityBookIcon,
     WritingActivityBookSelectIcon,
-    DownArrowIcon
+    DownArrowIcon,
+    TooltipInReportChart
 }

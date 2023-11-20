@@ -2,6 +2,7 @@
 import React, { useCallback, useState } from "react";
 import { PieChart, Pie, Sector, Tooltip, Text } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
+import { commonIconSvgs } from "../../util/svgs/commonIconsSvg";
 // import {ReactComponent as ReportTooltipIMG} from './tooltips/reportTooltip copy.svg'
 
 
@@ -60,21 +61,21 @@ const renderActiveShape = (props: any) => {
     percent,
     value
   } = props;
-  const midAngle = 45;
-  const startAngle = 90;
-  const endAngle = 90-value/100*360;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
-  const radiusMid = outerRadius-innerRadius;
-const cornerRadius = radiusMid/2;
-const trackRadius = innerRadius + cornerRadius;
+    const midAngle = 45;
+    const startAngle = 90;
+    const endAngle = 90-value/100*360;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? "start" : "end";
+    const radiusMid = outerRadius-innerRadius;
+    const cornerRadius = radiusMid/2;
+    const trackRadius = innerRadius + cornerRadius;
 // console.log('payload ==',payload)
 const textLabelCss:React.CSSProperties = {
     width: '80px',
@@ -139,30 +140,7 @@ const titleName:string[] = payload.name.split(' ')
     </g>
   );
 };
-const CustomTooltipDIV = (props:any) => {
-    // console.log('===CustomTooltipDIV===',props)
-    const { active, payload, label, viewBox } = props;
-    // console.log('===payload',payload)
-    if (active && payload && payload.length) {
-        const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
-        const paddingLeftPX = viewBox.width >= 250 ? '10%': '25px'
-        
-        return (
-          <div style={{
-            width: '100%',
-            height: '100%',
-            paddingTop: '10px',
-            paddingBottom: '15px',
-            paddingLeft: paddingLeftPX,
-            paddingRight: '25px'
-          }} className={`${classNameStr} z-[1302]`} >
-            <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
-            <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
-            
-          </div>
-        );
-    } else return null
-}
+
 
 export default function App() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -212,6 +190,30 @@ export default function App() {
         'conventions'
     ];
     // const avr = 90;
+    const CustomTooltipDIV = (props:any) => {
+        // console.log('===CustomTooltipDIV===',props)
+        const { active, payload, label, viewBox } = props;
+        // console.log('===payload',payload)
+        if (active && payload && payload.length) {
+            const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
+            const paddingLeftPX = viewBox.width >= 250 ? '10%': '25px'
+            
+            return (
+              <div style={{
+                width: '100%',
+                height: '100%',
+                paddingTop: '10px',
+                paddingBottom: '15px',
+                paddingLeft: paddingLeftPX,
+                paddingRight: '25px'
+              }} className={`${classNameStr} z-[1302]`} >
+                <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
+                <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
+                
+              </div>
+            );
+        } else return null
+    }
     
 const mouseOnEvent = (e:any)=>{
     // console.log('click =',e)
@@ -323,8 +325,8 @@ const mouseOffEvent = (e:any) => {
         >%</tspan>
         </text>
         <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}} content={<CustomTooltipDIV/>}/>
-        {/* <Tooltip content={textTooltip} /> */}
-        {/* {clickIndex!=='' && <CustomTooltipDIV/>} */}
+        {/* <Tooltip content={<TextTooltip/>} /> */}
+        {/* {clickIndex!=='' && {TextTooltip}} */}
     </PieChart>
   );
 }

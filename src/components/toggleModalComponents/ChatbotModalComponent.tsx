@@ -220,25 +220,19 @@ export default function FormDialog() {
             resultData.push(value[1])
             dumyDataHist.push(value);
         }
-        // console.log('after dumyDataHist : ',dumyDataHist)
-        // console.log('after dumyHistAllToken =',dumyHistAllTokens)
   
         let targetTotalToken = res.usages.total_tokens;
         for await (const target of chatHistory) {
           if (targetTotalToken > 3000) {
             // delete
-            // console.log('target ==',target)
             const deleteToken = dumyHistAllTokens.splice(0,1);
             targetTotalToken = targetTotalToken - deleteToken[0];
             dumyDataHist.splice(0,1);
           }
         }
-        // console.log('after api용',dumyDataHist.length,' : ',dumyDataHist)
-        // console.log('after 채팅용',dumyChatHist.length,' : ',dumyChatHist)
-        // console.log('after dumyHistAllToken =',dumyHistAllTokens)
         pushValue.push(resultData);
         dumyChatHist.push(pushValue);
-        setIsInptFocus(false)
+        setIsInptFocus(true)
         setBeforeTurnTotalToken(totalUseToken)
         setHistoryTokens(dumyHistAllTokens);
         setChatHistory(dumyChatHist);
@@ -258,7 +252,7 @@ export default function FormDialog() {
     setOpen(false);
   };
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    
+
     const value = CommonInputValidate.chat(e.currentTarget.value);
     const checkNotChar = checkInputCharactersRegExps(value)
     if (checkNotChar) {
@@ -281,6 +275,7 @@ export default function FormDialog() {
             e.currentTarget.style.height = 'auto';
             e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
             const inputTextValue = inputText.replace(/\n$/gmi,'');
+            setIsInptFocus(false)
             await callDialogAPIFN(inputTextValue);
         } 
     }
