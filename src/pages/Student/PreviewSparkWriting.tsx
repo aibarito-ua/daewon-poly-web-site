@@ -541,7 +541,7 @@ const PreviewSparkWriting = (props:any) => {
                         break;
                     }
                 }
-              //  console.log('checkIsSelected ==',checkIsSelected)
+               
                 if (!checkIsSelected) {
                     const userSelectData:TGrammarResDiff = {
                         key: `${wordIndex}-${wordInnerLength}`,
@@ -727,7 +727,8 @@ const PreviewSparkWriting = (props:any) => {
             unit_id: targetData.unit_id,
             draft_index: 1,
             proofreading_count: targetData.proofreading_count,
-            contents: contentsData
+            contents: contentsData,
+            campus_name: userInfo.campusName,
         };
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
@@ -1563,7 +1564,8 @@ const PreviewSparkWriting = (props:any) => {
                                                     unit_id: currentSparkWritingData.unit_id,
                                                     draft_index: 1,
                                                     contents: contentsData,
-                                                    proofreading_count: currentSparkWritingData.proofreading_count
+                                                    proofreading_count: currentSparkWritingData.proofreading_count,
+                                                    campus_name: userInfo.campusName,
                                                 }
                                               //  console.log('submit item = ',submitData)
                                                 commonAlertClose();

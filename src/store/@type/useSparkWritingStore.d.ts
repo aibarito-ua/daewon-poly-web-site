@@ -118,6 +118,7 @@ type TSparkWritingTemporarySaveData = {
     proofreading_count: number;
     draft_2_init_page_flag?: string;
     contents: TSparkWritingSaveTemporaryContent[];
+    campus_name: string;
 }
 type TSparkWritingSaveTemporaryContent = {
     input_content: string;
@@ -192,6 +193,7 @@ type TSubmit1stDraftRequestData = {
     draft_index: number;
     contents: TSubmit1stDraftReqDataContent[];
     proofreading_count: number;
+    campus_name: string;
 }
 type TSubmit1stDraftReqDataContent = {
     input_content:string;
@@ -213,6 +215,7 @@ type TSubmit2ndDraftRequestData = {
     draft_index: number;
     draft_2_init_page_flag: string;
     contents: TSubmit2ndDraftReqDataContent[];
+    campus_name: string;
 }
 // Draft feedback type
 type TFeedbackStates = {

@@ -984,7 +984,8 @@ const EssayWriting = () => {
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
                 contents: contensData,
-                draft_2_init_page_flag:''
+                draft_2_init_page_flag:'',
+                campus_name: userInfo.campusName,
             }
             // console.log('data ==',data)
             
@@ -1064,7 +1065,8 @@ const EssayWriting = () => {
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
                 contents: contentsData,
-                draft_2_init_page_flag: draft2ndPageSet
+                draft_2_init_page_flag: draft2ndPageSet,
+                campus_name: userInfo.campusName,
             };
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
 
@@ -1138,6 +1140,7 @@ const EssayWriting = () => {
             draft_index: draftIndex,
             draft_2_init_page_flag: draft2ndPageSet,
             contents,
+            campus_name: userInfo.campusName,
 
         }
         commonAlertClose();
