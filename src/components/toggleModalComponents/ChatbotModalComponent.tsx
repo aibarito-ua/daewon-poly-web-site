@@ -26,6 +26,12 @@ export default function FormDialog() {
 
   // input box controller
   const [isInputFocus, setIsInptFocus] = React.useState<boolean>(false);
+  // block input
+  const [blockInput, setBlockInput] = React.useState<boolean>(false)
+  // external keyboard
+  const [isKeyboardExternal, setIsKeyboardExrernal] = React.useState<boolean>(true)
+  // message window bottom
+  const messagesEndRef = React.useRef<HTMLDivElement|null>(null)
 
   // 입력 제한
   /**
@@ -72,7 +78,17 @@ export default function FormDialog() {
     }
     window.location.reload()
   }
-    
+  
+  React.useEffect(() => {
+    if(isMobile) {
+      window.addEventListener('message', receiveMessage, true);
+    }
+    return () => {
+      if (isMobile) {
+        window.removeEventListener('message', receiveMessage, true)
+      }
+    }
+  }, [])
   React.useEffect(()=>{
     if (!open) {
         setInputText('')
@@ -103,34 +119,19 @@ export default function FormDialog() {
   React.useEffect(()=>{
     console.log('chat history log =',chatHistory)
     console.log('dataHist log =',dataHist)
+    scrollToBottom()
 
   },[chatHistory, dataHist])
 
   React.useLayoutEffect(()=>{
     console.log('platform=',platform)
     if (isInputFocus) {
+      sendMessage('InputFocus')
       if (inputRef.current) {
         const target = inputRef.current;
         target.blur();
         if (isMobile) {
-          if (platform==='ios') {
-            target.focus({
-              preventScroll:true
-            });
-            const screenDiv = document.getElementById('route-wrapper-div');
-            if (screenDiv) {
-              const screenRootSize = windowSize.height;
-              const deviceScreenSize = deviceSize.height;
-              console.log('sizeGap: ',screenRootSize-deviceScreenSize)
-              const gapSize = screenRootSize-deviceScreenSize;
-              screenDiv.style.marginTop= gapSize+'px';
-            }
-          }
-          if (platform==='android') {
-            target.focus();
-            // const targetRef = inputRef.current
-            inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-          }
+          setMobileChatWindow()
         } else {
           target.focus();
           inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
@@ -159,6 +160,73 @@ export default function FormDialog() {
     }
   },[isInputFocus, inputRef])
   
+  const sendMessage = (data:any) => {
+    console.log('Send message data =',data)
+    const messageData = JSON.stringify(data);
+    window.ReactNativeWebView.postMessage(messageData);
+  };
+  const receiveMessage = (event: any) => {
+    console.log('Receive message data =',event.data);
+    if(typeof event.data !== 'string')
+        return
+    const data = JSON.parse(event.data)
+    if (inputRef.current) {
+      const target = inputRef.current;
+      target.blur();
+      if (isMobile) {
+        if(data['isExternalKeyboard']) {
+          // sendMessage({type: 'debug', message: data['isExternalKeyboard']})
+          setIsKeyboardExrernal(true)
+          target.focus();
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+          return
+        } else {
+          setIsKeyboardExrernal(false)
+        }
+        setMobileChatWindow()
+      } else {
+        target.focus();
+        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+      }
+    }
+  }
+
+  const setMobileChatWindow = () => {
+    if (inputRef.current) {
+      const target = inputRef.current;
+      target.blur();
+      if (isMobile) {
+        if (platform==='ios') {
+          target.focus({
+            preventScroll:true
+          });
+          const screenDiv = document.getElementById('route-wrapper-div');
+          if (screenDiv) {
+            const screenRootSize = windowSize.height;
+            const deviceScreenSize = deviceSize.height;
+            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+            const gapSize = screenRootSize-deviceScreenSize;
+            screenDiv.style.marginTop= gapSize+'px';
+          }
+        }
+        if (platform==='android') {
+          target.focus();
+          // const targetRef = inputRef.current
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+        }
+      } else {
+        target.focus();
+        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+      }
+      // if (chatDivRef.current) {
+      //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
+      // }
+    }
+  }
+  const scrollToBottom = () => {
+    if(messagesEndRef.current)
+      messagesEndRef.current.scrollIntoView({ behavior:'smooth'})
+  }
 
   const callDialogAPIFN = async (txt:string) => {
     // console.log('chat history before api =',chatHistory,'\n',dataHist)
@@ -179,6 +247,7 @@ export default function FormDialog() {
     // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
 
     return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
+      setBlockInput(false)
       if (res.is_server_error) {
         setCommonStandbyScreen({openFlag:false})
         if (res.isDuplicateLogin) {
@@ -252,21 +321,25 @@ export default function FormDialog() {
     setOpen(false);
   };
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-
-    const value = CommonInputValidate.chat(e.currentTarget.value);
-    const checkNotChar = checkInputCharactersRegExps(value)
-    if (checkNotChar) {
-      e.currentTarget.style.height = 'auto';
-      e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-      const inputValue = value.replace(/\n{2,}/gm, '\n')
-      const countInputLength = inputValue.length
-      setInputLength(countInputLength)
-      setInputText(inputValue)
+    e.preventDefault();
+    if(blockInput) {
+      return
+    } else {
+      const value = CommonInputValidate.chat(e.currentTarget.value);
+      const checkNotChar = checkInputCharactersRegExps(value)
+      if (checkNotChar) {
+        e.currentTarget.style.height = 'auto';
+        e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
+        const inputValue = value.replace(/\n{2,}/gm, '\n')
+        const countInputLength = inputValue.length
+        setInputLength(countInputLength)
+        setInputText(inputValue)
+      }
     }
   }
 
   const onKeyUpEvent = async (e:React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key==='Enter') {
+    if (e.key==='Enter' && !blockInput) {
         if (isMobile || !e.shiftKey) {
             console.log('enter')
             console.log('inputText =',inputText)
@@ -275,7 +348,7 @@ export default function FormDialog() {
             e.currentTarget.style.height = 'auto';
             e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
             const inputTextValue = inputText.replace(/\n$/gmi,'');
-            setIsInptFocus(false)
+            setBlockInput(true)
             await callDialogAPIFN(inputTextValue);
         } 
     }
@@ -293,13 +366,13 @@ export default function FormDialog() {
         '.MuiDialog-paper': { 
           minWidth:'700px',
           width: '700px',
-          minHeight: isMobile ? (isInputFocus ? '390px':'650px'): '650px',
+          minHeight: isMobile ? (isInputFocus && !isKeyboardExternal ? '390px':'650px'): '650px',
           // minHeight: '390px',
           height: '390px',
           padding: '32px 0 0',
           borderRadius: '20px',
           backgroundColor: '#fff',
-          marginTop: isMobile ? (isInputFocus ? marginTopTrueValue: '-50px'): '-50px',
+          marginTop: isMobile ? (isInputFocus && !isKeyboardExternal ? marginTopTrueValue: '-50px'): '-50px',
           // marginTop: '-310px',
         }
       }}
@@ -315,6 +388,7 @@ export default function FormDialog() {
         ref={chatDivRef}
         id={'chat-window-div'}
         >
+          <div ref={messagesEndRef}/>
         {chatHistory.slice(0).reverse().map((hist, idx)=>{
             const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
             const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
@@ -333,6 +407,7 @@ export default function FormDialog() {
                 </div>
                 </div>
         })}
+          
         </div>
         </div>
         </DialogContent>

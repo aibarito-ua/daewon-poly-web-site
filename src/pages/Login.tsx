@@ -434,8 +434,8 @@ export const Login = () => {
         return () => {
             setSelectMenu('WritingClinic')
             if (isMobile) {
-                document.removeEventListener('message', receiveMessage);
-                window.removeEventListener('message', receiveMessage)
+                document.removeEventListener('message', receiveMessage, true);
+                window.removeEventListener('message', receiveMessage, true)
             }
         }
     },[])
