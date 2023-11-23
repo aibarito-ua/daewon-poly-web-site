@@ -126,7 +126,9 @@ export default function FormDialog() {
   React.useLayoutEffect(()=>{
     console.log('platform=',platform)
     if (isInputFocus) {
-      sendMessage('InputFocus')
+      if(isMobile) {
+        sendMessage('InputFocus')
+      }
       if (inputRef.current) {
         const target = inputRef.current;
         target.blur();
