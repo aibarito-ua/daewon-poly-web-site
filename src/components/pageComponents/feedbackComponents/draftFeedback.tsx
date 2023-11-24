@@ -189,7 +189,7 @@ const loadFeedbackDraftBody = (
                 }
             });
 
-            return <div className='draft-title-paragragh-wrap'
+            return <div className='draft-body-paragragh-wrap'
             id={'Body'} key={paragraphKey}
             >
             {jsxElements}

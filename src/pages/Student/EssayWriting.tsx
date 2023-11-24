@@ -1415,12 +1415,27 @@ const EssayWriting = () => {
                                                                 }
                                                             }    
                                                         } else {
-                                                            const checkNotCH = checkInputCharactersRegExps(val);
-                                                            if (checkNotCH) {
-                                                                e.currentTarget.style.height = 'auto';
-                                                                e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-                                                                setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
-                                                                callbackCheckValues()
+                                                            const outlineLengthCheck = val.length > 1800;
+                                                            if (outlineLengthCheck) {
+                                                                const cutting1800Character = val.substring(0, 1800);
+                                                                setOutlineInputText(cutting1800Character, unitId, unitIndex, orderIndex, 1)
+                                                                commonAlertOpen({
+                                                                    messageFontFamily: 'Roboto',
+                                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                                    useOneButton: true,
+                                                                    yesButtonLabel: 'OK',
+                                                                    yesEvent: () => {
+                                                                        commonAlertClose();
+                                                                    }
+                                                                })
+                                                            } else {
+                                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                                if (checkNotCH) {
+                                                                    e.currentTarget.style.height = 'auto';
+                                                                    e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                                                                    setOutlineInputText(e.currentTarget.value, unitId, unitIndex, orderIndex, 1)
+                                                                    callbackCheckValues()
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -1674,10 +1689,45 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
+                                            const valueSplit = val.split('\n');
+                                            let bodyValueLengthCheckFlag = false;
                                             
-                                            const checkNotCH = checkInputCharactersRegExps2(val);
-                                            if (checkNotCH) {
-                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                            const bodyValueLengthCheck = valueSplit.map((bodyItem)=>{
+                                                if (bodyItem.length > 1800) {
+                                                    const cutting1800Character = val.substring(0, 1800);
+                                                    bodyValueLengthCheckFlag = true;
+                                                    return cutting1800Character;
+                                                }
+                                            })
+
+                                            if (bodyValueLengthCheckFlag) {
+                                                let bodyValueLengthCheckReplaceValue = '';
+                                                for (let i = 0; i < bodyValueLengthCheck.length; i++) {
+                                                    if (bodyValueLengthCheck[i]) {
+                                                        if (bodyValueLengthCheck.length-1 === i) {
+                                                            bodyValueLengthCheckReplaceValue += bodyValueLengthCheck[i];
+                                                        } else {
+                                                            bodyValueLengthCheckReplaceValue += bodyValueLengthCheck[i]+'\n';
+                                                        }
+                                                    }
+                                                }
+                                                console.log(bodyValueLengthCheckReplaceValue)
+                                                setOutlineInputText(bodyValueLengthCheckReplaceValue, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                                commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
+                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                                
+                                            } else {
+                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                if (checkNotCH) {
+                                                    setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                                }
                                             }
                                         }
                                         
@@ -1767,9 +1817,46 @@ const EssayWriting = () => {
                                                 }
                                             })
                                         } else {
-                                            const checkNotCH = checkInputCharactersRegExps2(val);
-                                            if (checkNotCH) {
-                                                setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                            const valueSplit = val.split('\n');
+                                            let bodyValueLengthCheckFlag = false;
+                                            
+                                            const bodyValueLengthCheck = valueSplit.map((bodyItem)=>{
+                                                if (bodyItem.length > 1800) {
+                                                    const cutting1800Character = val.substring(0, 1800);
+                                                    bodyValueLengthCheckFlag = true;
+                                                    return cutting1800Character;
+                                                } else {
+                                                    return bodyItem;
+                                                }
+                                            })
+
+                                            if (bodyValueLengthCheckFlag) {
+                                                let bodyValueLengthCheckReplaceValue = '';
+                                                for (let i = 0; i < bodyValueLengthCheck.length; i++) {
+                                                    if (bodyValueLengthCheck[i]) {
+                                                        if (bodyValueLengthCheck.length-1 === i) {
+                                                            bodyValueLengthCheckReplaceValue += bodyValueLengthCheck[i];
+                                                        } else {
+                                                            bodyValueLengthCheckReplaceValue += bodyValueLengthCheck[i]+'\n';
+                                                        }
+                                                    }
+                                                }
+                                                setOutlineInputText(bodyValueLengthCheckReplaceValue, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                                commonAlertOpen({
+                                                    messageFontFamily: 'Roboto',
+                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                    useOneButton: true,
+                                                    yesButtonLabel: 'OK',
+                                                    yesEvent: () => {
+                                                        commonAlertClose();
+                                                    }
+                                                })
+                                                
+                                            } else {
+                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                if (checkNotCH) {
+                                                    setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
+                                                }
                                             }
                                         }
                                         
