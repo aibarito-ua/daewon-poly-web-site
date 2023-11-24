@@ -171,10 +171,10 @@ export default function UnitReportModalComponent() {
                 <div className='report-modal-menu-buttons'>
                     <div className={`${menuControll===0 ? 'report-modal-menu-button-active': 'report-modal-menu-button'}`}
                     onClick={()=>setMenuControl(0)}
-                    >overall report</div>
+                    >Overall Report</div>
                     <div className={`${menuControll===1 ? 'report-modal-menu-button-active': 'report-modal-menu-button'}`}
                     onClick={()=>setMenuControl(1)}
-                    >report by unit</div>
+                    >Report by Unit</div>
                 </div>
                 <div className='absolute top-[55px] right-[30px]'>
                     {menuControll===0 && (

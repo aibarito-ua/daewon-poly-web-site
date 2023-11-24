@@ -104,7 +104,8 @@ const titleName:string[] = payload.name.split(' ')
         className="report-small-chart-inner-doughnut-label">{titleName.map((textTitle, textTitleIdx) => {
             const checkTextLength = titleName.length;
             const d2y = textTitleIdx * 14;
-            return <tspan x={cx} y={cy} key={textTitleIdx} textAnchor="middle" dy={checkTextLength>1 ? d2y-18: d2y-5}>{textTitle}</tspan>
+            const textValue = textTitle.replace(/^[a-z]/, char => char.toUpperCase())
+            return <tspan x={cx} y={cy} key={textTitleIdx} textAnchor="middle" dy={checkTextLength>1 ? d2y-18: d2y-5}>{textValue}</tspan>
         })}</text>
         <text x={cx} y={cy} dy={0} dx={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
@@ -161,7 +162,7 @@ export default function App() {
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
     React.useEffect(()=>{
         const data = unitRubricScoresData.hexagonChartData;
-        // console.log('data ===',data)
+        console.log('data ===',data)
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
         // console.log('allData ===',data)
@@ -310,7 +311,7 @@ const mouseOffEvent = (e:any) => {
         fontSize={17}
         fill="#222"
         textAnchor="middle"
-        >{`overall score`}</text>
+        >{`Overall Score`}</text>
         <text x={stDotX} y={stDotY} width={190} height={80}
         dx={5} dy={35}
         textAnchor="middle"

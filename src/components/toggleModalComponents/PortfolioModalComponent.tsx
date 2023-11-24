@@ -17,7 +17,7 @@ export default function PortfolioModalComponent() {
 
     } = usePortfolioStore();
     
-    console.log('portfolioModal==',portfolioModal)
+    // console.log('portfolioModal==',portfolioModal)
     const setMenuControl = (index:number) => {
         let data:TPortfolioModal = JSON.parse(JSON.stringify(portfolioModal));
         data.menuControll=index;
@@ -40,10 +40,7 @@ export default function PortfolioModalComponent() {
     
     const handlePrev = () => {
 
-        // if (portfolioModal.isPrev && portfolioModal.selectUnit!==1) {
-        //     const prevIndex = portfolioModal.selectUnit-1;
-        //     setUnitIndex(prevIndex);
-        // }
+        
         if (portfolioModal.isPrev && portfolioModal.selectUnit !== 1) {
             let allUnits:number[] = [];
             const allPortfolioData = displayPortfolioData.unit_portfolios;
@@ -51,24 +48,28 @@ export default function PortfolioModalComponent() {
                 allUnits.push(allPortfolioData[i].unit_index);
             }
             const findCurrentUnitIndex = allUnits.indexOf(portfolioModal.selectUnit);
-            console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
+            // console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
             const beforeUnitIndex = allUnits[findCurrentUnitIndex-1];
-            console.log('beforeUnitIndex =',beforeUnitIndex)
+            // console.log('beforeUnitIndex =',beforeUnitIndex)
             setUnitIndex(beforeUnitIndex);
         }
     }
     const handleNext = () => {
+        // console.log('portfolioModal.isNext =',portfolioModal.isNext)
+        // console.log('portfolioModal.selectUnit =',portfolioModal.selectUnit)
         if (portfolioModal.isNext && portfolioModal.selectUnit!==5) {
             
             let allUnits:number[] = [];
             const allPortfolioData = displayPortfolioData.unit_portfolios;
+            // console.log('displayPortfolioData =',displayPortfolioData)
             for (let i = 0; i < allPortfolioData.length; i++) {
                 allUnits.push(allPortfolioData[i].unit_index);
             }
             const findCurrentUnitIndex = allUnits.indexOf(portfolioModal.selectUnit);
-            console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
+            // console.log('findCurrentUnitIndex =',findCurrentUnitIndex)
+            // console.log('allUnits =',allUnits)
             const afterUnitIndex = allUnits[findCurrentUnitIndex+1];
-            console.log('beforeUnitIndex =',afterUnitIndex)
+            // console.log('afterUnitIndex =',afterUnitIndex)
             setUnitIndex(afterUnitIndex);
         }
     }

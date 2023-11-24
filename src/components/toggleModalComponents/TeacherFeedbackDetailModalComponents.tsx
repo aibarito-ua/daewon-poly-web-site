@@ -91,8 +91,8 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                                 }</div>
                             </div>
                         </div>
-                        <div className='flex flex-col w-[340px] h-[594px] overflow-y-scroll'>
-                            <div className='flex flex-col w-[340px] bg-[#f4f1fc] gap-[10px] p-[20px] h-fit'>
+                        <div className='flex flex-col w-[340px] h-[594px] overflow-y-scroll bg-[#f4f1fc]'>
+                            <div className='flex flex-col w-[340px] gap-[10px] p-[20px] h-fit'>
                                 
                                 {draftItem.draft_1_comment.map((item,draftCommentIndex) => {
                                     const key = 'teacherFeedbackModalComment-'+draftCommentIndex

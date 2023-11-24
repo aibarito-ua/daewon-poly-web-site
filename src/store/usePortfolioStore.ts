@@ -251,6 +251,9 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
                 break;
             }
         }
+        dumpDisplayPortfolioData.unit_portfolios.sort((a,b) => {
+            return a.unit_index - b.unit_index;
+        })
         // const checkSemester = dumpSemester.length === 0 ? false:true;
 
         set(()=>({

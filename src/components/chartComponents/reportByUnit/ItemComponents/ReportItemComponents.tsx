@@ -19,15 +19,15 @@ const ReportWordCountSummaryComponent = (props:{item: TReportByStudent}) => {
                             <div className='report-chart-righ-word-count-content-title select-none'><span>{`${wordCoundItem.draft_index===1 ? '1st draft': '2nd draft'}`}</span></div>
                             <div className={`report-chart-righ-word-count-content-items ${wordCoundItem.draft_index===1? 'border-r-[1px] border-r-[#ddd]':''}`}>
                                 <div className='report-chart-righ-word-count-content-item select-none'>
-                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- words`}</span>
+                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- Words`}</span>
                                     <span className='report-chart-righ-word-count-content-item-value'>{word_count}</span>
                                 </div>
                                 <div className='report-chart-righ-word-count-content-item select-none'>
-                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- sentences`}</span>
+                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- Sentences`}</span>
                                     <span className='report-chart-righ-word-count-content-item-value'>{sentence_count}</span>
                                 </div>
                                 <div className='report-chart-righ-word-count-content-item select-none'>
-                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- words per sentence`}</span>
+                                    <span className='report-chart-righ-word-count-content-item-title whitespace-nowrap'>{`- Words per Sentence`}</span>
                                     <span className='report-chart-righ-word-count-content-item-value'>{wordPerSentenceStr}</span>
                                 </div>
                             </div>        
@@ -53,8 +53,8 @@ const ReportCorrectionSummaryComponent = (
         let correctionDiv:JSX.Element[]=[];
         correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
             const key1 = 'report-correction-summary-init-'+sentenceIndex+'-div';
-            return <div className='flex flex-row gap-[0.4rem]' key={key1}>
-                <span className=''>{'•'}</span>
+            return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
+                <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                 <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                 // console.log('word ==',wordItem)
                 
@@ -85,8 +85,8 @@ const ReportCorrectionSummaryComponent = (
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = grammar.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-grammar-'+sentenceIndex+'-div';
-                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
-                        <span>{'•'}</span>
+                    return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
+                        <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                             console.log('word ==',wordItem)
                             const key = key1+'wordItem-'+wordIndex+'-'+wordItem.type;
@@ -127,8 +127,8 @@ const ReportCorrectionSummaryComponent = (
                 let correctionDiv:JSX.Element[]=[];
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
-                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
-                        <span>{'•'}</span>
+                    return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
+                        <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                             console.log('word ==',wordItem)
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
@@ -174,8 +174,8 @@ const ReportCorrectionSummaryComponent = (
                 
                 correctionDiv = punctuation.sentences.map((sentenceItem, sentenceIndex) => {
                     const key1 = 'report-correction-summary-puctuation-'+sentenceIndex+'-div';
-                    return <div className='flex flex-row gap-[0.4rem]' key={key1}>
-                        <span>{'•'}</span>
+                    return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
+                        <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                             console.log('word ==',wordItem)
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
@@ -228,11 +228,8 @@ const ReportCorrectionSummaryComponent = (
                         {item.grammar_correction.punctuation && PuctuationSentence(item.grammar_correction.punctuation)}
                         
                     </div>
-                    {/* <div className='report-chart-righ-correction-content-item'> */}
-                    <div>
-                        <div className={'report-chart-righ-correction-content-wrap-2'}>
-                            {correctionDiv}
-                        </div>
+                    <div className={'ml-[13px] report-chart-righ-correction-content-wrap-2 w-full'}>
+                        {correctionDiv}
                     </div>
                 </div>
             </div>

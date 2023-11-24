@@ -129,6 +129,8 @@ module.exports = {
         'report-pie-chart-legend-item-word-choice': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_word_choice.svg')",
         'report-pie-chart-legend-item-sentence-fluency': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_sentence_fluency.svg')",
         'report-pie-chart-legend-item-conventions': "url('/src/components/toggleModalComponents/img/PieChartLegend/Legend_conventions.svg')",
+        // overall comment union
+        'spark-draft-1st-overall-comment-union': "url('/src/util/svgs/overallComment/Union.svg')",
       }
     },
     borderWidth: {

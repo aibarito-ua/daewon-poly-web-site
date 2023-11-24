@@ -1441,6 +1441,7 @@ const EssayWriting = () => {
             </div>
         })
     }
+    
     const Draft1stWritingPage = () => {
         return (
             <div className='wrap-contain-spark-writing'>
@@ -1559,8 +1560,8 @@ const EssayWriting = () => {
                             {'teacher feedback'}
                             <TeacherFeedbackDetailModalComponents draftItem={draftItem}/>
                         </div>
-                        <div className='wrap-content-2nd-spark-writing'>
-                            <div className='teacher-feedback-title-font'>{
+                        <div className='wrap-content-2nd-spark-writing-left'>
+                            <div className='teacher-feedback-title-font' style={{fontSize:'16px'}}>{
                                 draftViewBox.loadFeedbackDraftTitle({feedbackDataInStudent:draftItem})
                             }</div>
                             <div className='teacher-feedback-body-font'>{
@@ -1842,14 +1843,12 @@ const EssayWriting = () => {
                     <FormDialog />
                 </div>
             )}
-            {/* draft 2 => overall comment */}
-            {/* {DraftIndex === '2' && overallComment1stDraft.content!=='' && ( */}
             {DraftIndex === '2' && (
-                <div className='flex flex-row absolute w-fit h-[80px] overflow-auto top-[30px] right-[35px] gap-[50px] z-[50]'>
+                <div className='flex flex-row absolute w-fit h-[93px] overflow-none top-[30px] right-[35px] gap-[6px] z-[50]'>
                     <div className={overallComment1stDraft.open? 'overall-comment-2nd-draft-write-top-tooltip-content':'hidden'}>
-                        <span></span>
-                        {overallComment1stDraft.content}
-                        <span></span>
+                        <div className='w-full h-[45px] overflow-y-auto overflow-x-hidden'>
+                            {overallComment1stDraft.content}
+                        </div>
                     </div>
                     <div className='overall-comment-2nd-draft-write-top-button'
                     onClick={()=>{
