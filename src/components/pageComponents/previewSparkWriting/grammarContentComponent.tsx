@@ -65,14 +65,15 @@ const GrammarContentComponent = {
                         const dataKey = word[0].key;
                         const currentWord = word[0].word;
                         const reasonValue = word[0].correction_reason;
+                        const reasonLastIndex = word[0].correction_reason.length - 1;
                         const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                            if (reasonValue.length-1 === reasonTextIndex) {
-                                return reasonText
+                            if ( reasonTextIndex === reasonLastIndex) {
+                                return reasonText;
                             } else {
-                                return reasonText + ' / ' 
+                                return reasonText + ' / ';
                             }
                         })):reasonValue[0];
-
+                        
                         const emptyCheckStart = currentWord.match(/^\s/gmi);
                         const emptyCheckEnd = currentWord.match(/\s$/gmi);
                         let displayText = '';
@@ -265,7 +266,7 @@ const GrammarContentComponent = {
                                 // reason = targetInnerWord.correction_reason
                                 const reasonValue = targetInnerWord.correction_reason;
                                 reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                    if (reasonValue.length === reasonTextIndex-1) {
+                                    if (reasonValue.length-1 === reasonTextIndex) {
                                         return reasonText
                                     } else {
                                         return reasonText + '/'
@@ -278,7 +279,7 @@ const GrammarContentComponent = {
                                 // reason = targetInnerWord.correction_reason
                                 const reasonValue = targetInnerWord.correction_reason;
                                 reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                    if (reasonValue.length === reasonTextIndex-1) {
+                                    if (reasonValue.length-1 === reasonTextIndex) {
                                         return reasonText
                                     } else {
                                         return reasonText + '/'
@@ -368,20 +369,21 @@ const GrammarContentComponent = {
                         let returnValue:any = '';
                         const wordElementsLength = word.length;
                         
-                        if (wordElementsLength < 2) {    
+                        if (wordElementsLength < 2) {
                             const compareWordFlag = word[0].type;
                             const mainTagKey = `title-paragragh-${paragraphIndex}-sentence-${sentenceIndex}-word-${wordIndex}`;
                             const dataKey = word[0].key;
                             const currentWord = word[0].word;
-                            // const reasons = word[0].correction_reason;
                             const reasonValue = word[0].correction_reason;
+                            const reasonLastIndex = word[0].correction_reason.length - 1;
                             const reasons = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                if (reasonValue.length-1 === reasonTextIndex) {
-                                    return reasonText
+                                if ( reasonTextIndex === reasonLastIndex) {
+                                    return reasonText;
                                 } else {
-                                    return reasonText + ' / '
+                                    return reasonText + ' / ';
                                 }
                             })):reasonValue[0];
+
                             const emptyCheckStart = currentWord.match(/^\s/gmi);
                             const emptyCheckEnd = currentWord.match(/\s$/gmi);
                             let displayText = '';
@@ -573,7 +575,7 @@ const GrammarContentComponent = {
                                     // reason = targetInnerWord.correction_reason
                                     const reasonValue = targetInnerWord.correction_reason;
                                     reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                        if (reasonValue.length === reasonTextIndex-1) {
+                                        if (reasonValue.length-1 === reasonTextIndex) {
                                             return reasonText
                                         } else {
                                             return reasonText + '/'
@@ -586,7 +588,7 @@ const GrammarContentComponent = {
                                     // reason = targetInnerWord.correction_reason
                                     const reasonValue = targetInnerWord.correction_reason;
                                     reason = reasonValue.length > 1 ? (reasonValue.map((reasonText, reasonTextIndex) => {
-                                        if (reasonValue.length === reasonTextIndex-1) {
+                                        if (reasonValue.length-1 === reasonTextIndex) {
                                             return reasonText
                                         } else {
                                             return reasonText + '/'
