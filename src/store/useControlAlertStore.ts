@@ -736,7 +736,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         let dumyData:TReportByStudentPeriodLevel= {
             book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
         }
-
+        let dumyIsNoData = true;
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
         let dumyUnitReportsData:TUnitReportsData[] = JSON.parse(JSON.stringify(get().unitReportsData));
         let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(get().reportModalRubricData));
@@ -770,9 +770,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 }
             }
         }
-
-        const scoreStringName = ['Excellent', 'Very Good', 'Good', 'fair','poor'];
-        const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
         let sumData = [
             {name:'conventions', sum: 0},
             {name:'sentence fluency', sum: 0},
@@ -782,6 +779,11 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             {name:'ideas', sum: 0},
         ]
         let unitCount = dumyData.overall_report.length;
+        if (unitCount>0) {
+            dumyIsNoData=false
+        } else {
+            dumyIsNoData=true
+        }
         let reportCompletedUnitIndexArray:number[] = [];
         for (let z = 0; z < unitCount; z++) {
             const targetOverall = dumyData.overall_report[z];
@@ -844,10 +846,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 }
             }
         }
+        
         if (reportCompletedUnitIndexArray.length > 0) {
             reportCompletedUnitIndexArray.sort((a,b) => {return a-b});
         }
         set(()=>({
+            isNoData:dumyIsNoData,
             reportSelectedOverallBarChart: dumyOverallBar,
             reportSelectedOverallPieChart: dumyOverallPie,
             reportModalRubricData: dumySelectReportRubricAllData,
@@ -1114,7 +1118,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             return item;
         });
         set(()=>({teacherFeedbackModalChecked: teacherFeedbackData}))
+    },
+    isNoData: true,
+    setIsNoData: (flag) => {
+        set(()=>({isNoData: flag}))
     }
+    
 }))
 
 export default useControlAlertStore;

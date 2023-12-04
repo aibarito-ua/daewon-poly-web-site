@@ -12,7 +12,7 @@ import { logoutAPI } from './api/Login.api';
 
 const Report = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [isNoData, setIsNoData] = React.useState<boolean>(true);
+    // const [isNoData, setIsNoData] = React.useState<boolean>(true);
 
     // const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
     // const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
@@ -33,7 +33,8 @@ const Report = () => {
         reportSelectUnit, setReportSelectUnit,
         reportSelectBookName,
         forcedReadOnlyReportSelectBox, setForcedReadOnlyReportSelectBox,
-        commonAlertOpen, commonAlertClose
+        commonAlertOpen, commonAlertClose,
+        isNoData, setIsNoData
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI,
@@ -313,28 +314,32 @@ const Report = () => {
         if (isInit) {
             console.log('init values')
             setValue(selectValue, selectData)
-            setIsNoData(true);
+            // setIsNoData(true);
         } else {
             console.log('set values')
+            // console.log('reportSelectBoxDatas =',reportSelectBoxDatas)
             for (let i = 0; i < reportAPIData.periods.length; i++) {
                 const currentPeriod = reportAPIData.periods[i];
                 if (currentPeriod.year === selectData.year && currentPeriod.semester === selectData.semester) {
-
+                    // console.log('currentPeriod =',currentPeriod)
                     for (let j = 0; j < currentPeriod.levels.length; j++) {
                         const currentLevelInPeriod = currentPeriod.levels[j];
-                        if (currentLevelInPeriod.overall_report.length > 0) {
-                            console.log('currentLevelInPeriod.overall_report =104=',currentLevelInPeriod.overall_report)
-                            const initializeUnitIndex = currentLevelInPeriod.overall_report[0].unit_index
-                            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
-                            setValue(selectValue, selectData)
-
-                            setReportSelectUnit(initializeUnitIndex)
-                            setIsNoData(false);
-                        } else {
-                            setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
-                            setValue(selectValue, selectData)
-                            setReportSelectUnit(1)
-                            setIsNoData(true);
+                        // console.log('currentLevelInPeriod.level_name =',currentLevelInPeriod.level_name)
+                        // console.log('selectData.level =',selectData.level)
+                        if (currentLevelInPeriod.level_name === selectData.level) {
+                            if (currentLevelInPeriod.overall_report.length > 0) {
+                                // console.log('currentLevelInPeriod.overall_report =has over=',currentLevelInPeriod.overall_report)
+                                const initializeUnitIndex = currentLevelInPeriod.overall_report[0].unit_index
+                                setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
+                                setValue(selectValue, selectData)
+    
+                                setReportSelectUnit(initializeUnitIndex)
+                            } else {
+                                // console.log('currentLevelInPeriod.overall_report =104=',currentLevelInPeriod.overall_report)
+                                setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
+                                setValue(selectValue, selectData)
+                                setReportSelectUnit(1)
+                            }
                         }
                     }
                 }
@@ -362,7 +367,7 @@ const Report = () => {
                     </div>
                 </div>
                 {/* Tab */}
-                <CustomizedReportTabs isNoData={isNoData}/>
+                <CustomizedReportTabs/>
             </div>
         </section>
     )

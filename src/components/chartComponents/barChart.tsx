@@ -25,9 +25,7 @@ export default function App() {
 }>({
   unit1:false, unit2:false, unit3:false, unit4: false, unit5: false
 })
-  const [bars, setBars] = React.useState<JSX.Element[]>([]);
   
-
 const CustomXAxisTick = (props:any) => {
   
   const { x, y, payload } = props;

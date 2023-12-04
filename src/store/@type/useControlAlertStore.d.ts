@@ -97,6 +97,11 @@ interface IUseControlAlertStore {
     teacherFeedbackModalChecked: TTeacherFeedbackModalChecked[];
     setTeacherFeedbackModalChecked: (isChecked:boolean, index:number) => void;
     setTeacherFeedbackInit: () => void;
+
+    // report display
+    // no data controller
+    isNoData:boolean;
+    setIsNoData: (flag:boolean) => void;
 }
 type TTeacherFeedbackModalChecked = {
     index:number;

@@ -102,14 +102,7 @@ function CustomTabPanel(props: TabPanelProps) {
     }
   }
 
-export default function CustomizedReportTabs(
-    props: {
-        isNoData: boolean;
-    }
-) {
-    const {
-        isNoData
-    } = props;
+export default function CustomizedReportTabs() {
   const [value, setValue] = React.useState(0);
   //check isPrev & isNext
   const [isPrev, setIsPrev] = React.useState<boolean>(false);
@@ -122,59 +115,65 @@ export default function CustomizedReportTabs(
     reportByUnitMainTitle,
     reportSelectFinder,
     // 
-    reportCompletedUnitIndexArray
+    reportCompletedUnitIndexArray,
+    isNoData
   } = useControlAlertStore();
 
   React.useEffect(()=>{
+    console.log('isNoData ==',isNoData)
     if (isNoData) {
       setValue(0);
     }
+
   }, [isNoData])
   
   React.useEffect(()=>{
-    if (unitReportsData.length > 0) {
-        let currentUnit = 0;
-        let nextUnits = [];
-        let prevUnits = [];
-        console.log('reportCompletedUnitIndexArray =',reportCompletedUnitIndexArray)
-        console.log('reportSelectUnit =',reportSelectUnit)
-        for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
-          if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
-              currentUnit = reportCompletedUnitIndexArray[i];
-          } else if (reportCompletedUnitIndexArray[i] > reportSelectUnit) {
-              nextUnits.push(reportCompletedUnitIndexArray[i]);
-          } else if (reportCompletedUnitIndexArray[i] < reportSelectUnit) {
-              prevUnits.push(reportCompletedUnitIndexArray[i])
+    if (!isNoData) {
+
+      if (unitReportsData.length > 0) {
+          let currentUnit = 0;
+          let nextUnits = [];
+          let prevUnits = [];
+          // console.log('reportCompletedUnitIndexArray =',reportCompletedUnitIndexArray)
+          // console.log('reportSelectUnit =',reportSelectUnit)
+          for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
+            if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
+                currentUnit = reportCompletedUnitIndexArray[i];
+            } else if (reportCompletedUnitIndexArray[i] > reportSelectUnit) {
+                nextUnits.push(reportCompletedUnitIndexArray[i]);
+            } else if (reportCompletedUnitIndexArray[i] < reportSelectUnit) {
+                prevUnits.push(reportCompletedUnitIndexArray[i])
+            }
           }
-        }
-        if (currentUnit === 1) {
-            if (nextUnits.length > 0) {
-                setIsNext(true);
-                setIsPrev(false);
-            } else {
-                setIsNext(false);
-                setIsPrev(false);
-            }
-        } else if (currentUnit === 5) {
-            if (prevUnits.length > 0) {
-                setIsNext(false);
-                setIsPrev(true);
-            } else {
-                setIsNext(false);
-                setIsPrev(false);
-            }
-        } else {
-            if (prevUnits.length > 0) {
-                setIsPrev(true);
-            } else {
-                setIsPrev(false);
-            }
-            if (nextUnits.length > 0) {
-                setIsNext(true);
-            } else {
-                setIsNext(false);
-            }
-        }
+          if (currentUnit === 1) {
+              if (nextUnits.length > 0) {
+                  setIsNext(true);
+                  setIsPrev(false);
+              } else {
+                  setIsNext(false);
+                  setIsPrev(false);
+              }
+          } else if (currentUnit === 5) {
+              if (prevUnits.length > 0) {
+                  setIsNext(false);
+                  setIsPrev(true);
+              } else {
+                  setIsNext(false);
+                  setIsPrev(false);
+              }
+          } else {
+              if (prevUnits.length > 0) {
+                  setIsPrev(true);
+              } else {
+                  setIsPrev(false);
+              }
+              if (nextUnits.length > 0) {
+                  setIsNext(true);
+              } else {
+                  setIsNext(false);
+              }
+          }
+      }
     }
     
   },[unitReportsData, reportCompletedUnitIndexArray, reportSelectUnit, reportSelectFinder])
