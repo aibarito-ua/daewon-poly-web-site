@@ -55,7 +55,7 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
     React.useEffect(()=>{
         // console.log('tooltip opened', thisIndex)
-        console.log('tooltipText =',tooltipText)
+        // console.log('tooltipText =',tooltipText)
         const target = document.getElementById(textTagid);
         const windowXWidth = document.getElementById('root')?.clientWidth;
         let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
@@ -104,8 +104,8 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         role,
         click
     ]);
-    console.log(compareResultText.toString().length)
-    console.log('compareResultText=[',compareResultText,']')
+    // console.log(compareResultText.toString().length)
+    // console.log('compareResultText=[',compareResultText,']')
     const displayResultText = compareResultText!==' ' ? compareResultText : <span>&nbsp;</span>
     return (
         <span key={mainTagkey} 

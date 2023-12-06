@@ -2,7 +2,7 @@ import React from 'react';
 import { CONFIG } from '../../../config';
 import axios from 'axios';
 
-export async function grammarCheck(grammarData:TSparkWritingDataOutline[], accessToken:string):Promise<{
+export async function grammarCheck(grammarData:TSparkWritingDataOutline[], accessToken:string, student_name_en:string):Promise<{
     result:TGrammarResponse;
     isDuplicateLogin:boolean;
     is_server_error:boolean;
@@ -10,8 +10,10 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
 }>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
+        student_name_en,
         data: grammarData
     }
+    console.log('grammar request data =',data)
     return await axios.post(reqUrl,data, {
         headers: {
             Accept: 'application/json',

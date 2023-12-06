@@ -299,7 +299,8 @@ const PreviewSparkWriting = (props:any) => {
         if (ProofReadingCountValue < 2) {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken).then((response)=>{
+            console.log('user info =',userInfo.memberNameEn)
+            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken, userInfo.memberNameEn).then((response)=>{
                 if (response.is_server_error) {
                     setCommonStandbyScreen({openFlag:false})
                     if (response.isDuplicateLogin) {
