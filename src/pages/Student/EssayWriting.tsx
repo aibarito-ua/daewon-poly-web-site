@@ -1421,7 +1421,7 @@ const EssayWriting = () => {
                                                                 setOutlineInputText(cutting1800Character, unitId, unitIndex, orderIndex, 1)
                                                                 commonAlertOpen({
                                                                     messageFontFamily: 'Roboto',
-                                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                                    messages:['You have exceeded the maximum number of characters allowed in this section.'],
                                                                     useOneButton: true,
                                                                     yesButtonLabel: 'OK',
                                                                     yesEvent: () => {
@@ -1715,7 +1715,7 @@ const EssayWriting = () => {
                                                 setOutlineInputText(bodyValueLengthCheckReplaceValue, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                                 commonAlertOpen({
                                                     messageFontFamily: 'Roboto',
-                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                    messages:['You have exceeded the maximum number of characters allowed per paragraph.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
                                                     yesEvent: () => {
@@ -1844,7 +1844,7 @@ const EssayWriting = () => {
                                                 setOutlineInputText(bodyValueLengthCheckReplaceValue, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                                 commonAlertOpen({
                                                     messageFontFamily: 'Roboto',
-                                                    messages:['The Outline cannot be more than 1800 characters.'],
+                                                    messages:['You have exceeded the maximum number of characters allowed per paragraph.'],
                                                     useOneButton: true,
                                                     yesButtonLabel: 'OK',
                                                     yesEvent: () => {
