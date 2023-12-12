@@ -81,9 +81,9 @@ export default function SelectUnit () {
         setCommonStandbyScreen({openFlag:true})
         const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             if (response.data) {
-                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let maintenanceInfo:TMaintenanceInfo = response.data;
+                maintenanceInfo.start_date = response.data.start_date;
+                maintenanceInfo.end_date = response.data.end_date;
                 let dumyMaintenanceData:TMaintenanceData = {
                     alertTitle: '시스템 점검 안내',
                     data: maintenanceInfo,
@@ -128,9 +128,9 @@ export default function SelectUnit () {
         const getReportAll = await getReportsAPI(student_code, userInfo.accessToken,userInfo.courseName).then((res) => {
             if (res.is_server_error) {
                 if (res.data) {
-                    let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
-                    maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
-                    maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+                    let maintenanceInfo:TMaintenanceInfo = res.data;
+                    maintenanceInfo.start_date = res.data.start_date;
+                    maintenanceInfo.end_date = res.data.end_date;
                     let dumyMaintenanceData:TMaintenanceData = {
                         alertTitle: '시스템 점검 안내',
                         data: maintenanceInfo,

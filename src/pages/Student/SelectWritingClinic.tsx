@@ -40,9 +40,9 @@ const SelectWritingClinic = () => {
             console.log('writing clinic response =',response)
             if (response.is_server_error===true) {
                 if (response.data) {
-                    let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                    maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                    maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                    let maintenanceInfo:TMaintenanceInfo = response.data;
+                    maintenanceInfo.start_date = response.data.start_date;
+                    maintenanceInfo.end_date = response.data.end_date;
                     let dumyMaintenanceData:TMaintenanceData = {
                         alertTitle: '시스템 점검 안내',
                         data: maintenanceInfo,

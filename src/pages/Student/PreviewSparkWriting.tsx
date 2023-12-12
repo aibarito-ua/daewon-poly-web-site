@@ -167,9 +167,9 @@ const PreviewSparkWriting = (props:any) => {
 
                     if (response.is_server_error) {
                         if (response.data) {
-                            let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                            maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                            maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                            let maintenanceInfo:TMaintenanceInfo = response.data;
+                            maintenanceInfo.start_date = response.data.start_date;
+                            maintenanceInfo.end_date = response.data.end_date;
                             let dumyMaintenanceData:TMaintenanceData = {
                                 alertTitle: '시스템 점검 안내',
                                 data: maintenanceInfo,
@@ -318,9 +318,9 @@ const PreviewSparkWriting = (props:any) => {
             const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken, userInfo.memberNameEn).then((response)=>{
                 if (response.is_server_error) {
                     if (response.data) {
-                        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                        let maintenanceInfo:TMaintenanceInfo = response.data;
+                        maintenanceInfo.start_date = response.data.start_date;
+                        maintenanceInfo.end_date = response.data.end_date;
                         let dumyMaintenanceData:TMaintenanceData = {
                             alertTitle: '시스템 점검 안내',
                             data: maintenanceInfo,
@@ -529,9 +529,9 @@ const PreviewSparkWriting = (props:any) => {
         const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
         if (check_duplicate_login.is_server_error) {
             if (check_duplicate_login.data) {
-                let maintenanceInfo:TMaintenanceInfo = check_duplicate_login.data.maintenanceInfo;
-                maintenanceInfo.start_date = check_duplicate_login.data.maintenanceInfo.start_date;
-                maintenanceInfo.end_date = check_duplicate_login.data.maintenanceInfo.end_date;
+                let maintenanceInfo:TMaintenanceInfo = check_duplicate_login.data;
+                maintenanceInfo.start_date = check_duplicate_login.data.start_date;
+                maintenanceInfo.end_date = check_duplicate_login.data.end_date;
                 let dumyMaintenanceData:TMaintenanceData = {
                     alertTitle: '시스템 점검 안내',
                     data: maintenanceInfo,
@@ -779,9 +779,9 @@ const PreviewSparkWriting = (props:any) => {
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
         if (isSaveTemporary.is_server_error) {
             if (isSaveTemporary.data) {
-                let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data.maintenanceInfo;
-                maintenanceInfo.start_date = isSaveTemporary.data.maintenanceInfo.start_date;
-                maintenanceInfo.end_date = isSaveTemporary.data.maintenanceInfo.end_date;
+                let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data;
+                maintenanceInfo.start_date = isSaveTemporary.data.start_date;
+                maintenanceInfo.end_date = isSaveTemporary.data.end_date;
                 let dumyMaintenanceData:TMaintenanceData = {
                     alertTitle: '시스템 점검 안내',
                     data: maintenanceInfo,
@@ -1351,9 +1351,9 @@ const PreviewSparkWriting = (props:any) => {
                                     const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
                                     if (check_duplicate_login.is_server_error) {
                                         if (check_duplicate_login.data) {
-                                            let maintenanceInfo:TMaintenanceInfo = check_duplicate_login.data.maintenanceInfo;
-                                            maintenanceInfo.start_date = check_duplicate_login.data.maintenanceInfo.start_date;
-                                            maintenanceInfo.end_date = check_duplicate_login.data.maintenanceInfo.end_date;
+                                            let maintenanceInfo:TMaintenanceInfo = check_duplicate_login.data;
+                                            maintenanceInfo.start_date = check_duplicate_login.data.start_date;
+                                            maintenanceInfo.end_date = check_duplicate_login.data.end_date;
                                             let dumyMaintenanceData:TMaintenanceData = {
                                                 alertTitle: '시스템 점검 안내',
                                                 data: maintenanceInfo,
@@ -1514,9 +1514,9 @@ const PreviewSparkWriting = (props:any) => {
                                         const reset = await grammarReset(data, userInfo.accessToken).then((response)=>{
                                             if (response.is_server_error) {
                                                 if (response.data) {
-                                                    let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                                                    maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                                                    maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                                                    let maintenanceInfo:TMaintenanceInfo = response.data;
+                                                    maintenanceInfo.start_date = response.data.start_date;
+                                                    maintenanceInfo.end_date = response.data.end_date;
                                                     let dumyMaintenanceData:TMaintenanceData = {
                                                         alertTitle: '시스템 점검 안내',
                                                         data: maintenanceInfo,
@@ -1662,9 +1662,9 @@ const PreviewSparkWriting = (props:any) => {
                                                 const submit = await draft1stSubmit(submitData, userInfo.accessToken).then((response) => {
                                                     if (response.is_server_error) {
                                                         if (response.data) {
-                                                            let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                                                            maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                                                            maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                                                            let maintenanceInfo:TMaintenanceInfo = response.data;
+                                                            maintenanceInfo.start_date = response.data.start_date;
+                                                            maintenanceInfo.end_date = response.data.end_date;
                                                             let dumyMaintenanceData:TMaintenanceData = {
                                                                 alertTitle: '시스템 점검 안내',
                                                                 data: maintenanceInfo,

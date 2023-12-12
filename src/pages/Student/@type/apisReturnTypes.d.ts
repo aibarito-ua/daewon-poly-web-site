@@ -11,6 +11,7 @@ type TProofReadingCountUpdateReject = {
     "data": {
         "timestamp": string,
         "endpoint": string,
+        maintenanceInfo?: TMaintenanceInfo,
         [key:string]:any,
     }
 }

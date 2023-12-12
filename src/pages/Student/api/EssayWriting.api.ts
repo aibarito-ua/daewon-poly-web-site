@@ -18,7 +18,7 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
         statusText:any
     };
     isDuplicateLogin?:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     return await axios.post(
         CONFIG.CHATBOT.URL, {
@@ -134,7 +134,7 @@ export async function callUnitInfobyStudent (
     isDuplicateLogin?: boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     // {STUDENT_CODE}/{COURSE_NAME}
     const replaceUrl = CONFIG.DRAFT.GET.UNIT_INFO.replace(/{STUDENT_CODE}/gmi, studentCode).replace(/{COURSE_NAME}/gmi, courseName);
@@ -206,7 +206,7 @@ export async function draftSaveTemporary(
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     return await axios.post(
         CONFIG.DRAFT.POST.SAVE_TEMPORARY,
@@ -268,7 +268,7 @@ export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessTok
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }>{
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
@@ -324,7 +324,7 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessTok
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
@@ -381,7 +381,7 @@ export async function getReportsAPI(student_code: string, accessToken: string, l
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     console.log(student_code)
     const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, levelName);
@@ -439,7 +439,7 @@ export async function getPortfoliosAPI (student_code:string, level_name:string, 
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any
+    data?:TMaintenanceInfo
 }> {
     const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, level_name);
     return await axios.get(reqUrl, {

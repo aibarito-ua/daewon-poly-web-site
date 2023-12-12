@@ -7,7 +7,7 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?: any;
+    data?: TMaintenanceInfo;
 }>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
@@ -142,7 +142,7 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
     isDuplicateLogin: boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any
+    data?:TMaintenanceInfo
 }> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     return await axios.put(reqUrl,data,{

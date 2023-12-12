@@ -139,7 +139,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
     is_server_error:boolean;
     isDuplicateLogin:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }>{
     const reqUrl = CONFIG.LOGIN.POST.WITHDRAW;
     const data = {
@@ -178,7 +178,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
             }
         } else if (rsp.statusCode===555) {
             return {
-                data: rsp.data,
+                data: rsp.data.maintenanceInfo,
                 is_withdrawed_successfully:false,
                 is_server_error:true,
                 isDuplicateLogin: false,
@@ -201,7 +201,7 @@ export async function checkDuplicateLogin(
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    data?:any;
+    data?:TMaintenanceInfo;
 }> {
     const reqUrl=CONFIG.LOGIN.DUPLICATE_CHECK;
     console.log('duplicate =',reqUrl)
@@ -236,7 +236,7 @@ export async function checkDuplicateLogin(
             }
         } else if (rsp.statusCode===555) {
             return {
-                data: rsp.data,
+                data: rsp.data.maintenanceInfo,
                 isDuplicateLogin:false,
                 is_server_error:true,
                 is_retry:false

@@ -62,9 +62,9 @@ const Progress = () => {
             const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
                 if (response.is_server_error) {
                     if (response.data) {
-                        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                        let maintenanceInfo:TMaintenanceInfo = response.data;
+                        maintenanceInfo.start_date = response.data.start_date;
+                        maintenanceInfo.end_date = response.data.end_date;
                         let dumyMaintenanceData:TMaintenanceData = {
                             alertTitle: '시스템 점검 안내',
                             data: maintenanceInfo,
@@ -170,9 +170,9 @@ const Progress = () => {
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             if (response.data) {
-                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let maintenanceInfo:TMaintenanceInfo = response.data;
+                maintenanceInfo.start_date = response.data.start_date;
+                maintenanceInfo.end_date = response.data.end_date;
                 let dumyMaintenanceData:TMaintenanceData = {
                     alertTitle: '시스템 점검 안내',
                     data: maintenanceInfo,
@@ -198,9 +198,9 @@ const Progress = () => {
     ) => {
         return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
             if (response.data) {
-                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
-                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
-                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let maintenanceInfo:TMaintenanceInfo = response.data;
+                maintenanceInfo.start_date = response.data.start_date;
+                maintenanceInfo.end_date = response.data.end_date;
                 let dumyMaintenanceData:TMaintenanceData = {
                     alertTitle: '시스템 점검 안내',
                     data: maintenanceInfo,

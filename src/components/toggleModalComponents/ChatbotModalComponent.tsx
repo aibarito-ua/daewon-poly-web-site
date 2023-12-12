@@ -255,17 +255,19 @@ export default function FormDialog() {
       setBlockInput(false)
       if (res.is_server_error) {
         if (res.data) {
-          let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
-          maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
-          maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
-          let dumyMaintenanceData:TMaintenanceData = {
-              alertTitle: '시스템 점검 안내',
-              data: maintenanceInfo,
-              open: false,
-              type: ''
-          }
-          setMaintenanceData(dumyMaintenanceData)
-          navigate('/')
+          
+            let maintenanceInfo:TMaintenanceInfo = res.data;
+            maintenanceInfo.start_date = res.data.start_date;
+            maintenanceInfo.end_date = res.data.end_date;
+            let dumyMaintenanceData:TMaintenanceData = {
+                alertTitle: '시스템 점검 안내',
+                data: maintenanceInfo,
+                open: false,
+                type: ''
+            }
+            setMaintenanceData(dumyMaintenanceData)
+            navigate('/')
+          
         } else {
           setCommonStandbyScreen({openFlag:false})
           if (res.isDuplicateLogin) {

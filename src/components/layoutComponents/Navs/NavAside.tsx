@@ -122,9 +122,9 @@ const NavAside = () => {
                         const check = await checkDuplicateLogin(userInfo.accessToken);
                         if (check.is_server_error) { 
                             if (check.data) {
-                                let maintenanceInfo:TMaintenanceInfo = check.data.maintenanceInfo;
-                                maintenanceInfo.start_date = check.data.maintenanceInfo.start_date;
-                                maintenanceInfo.end_date = check.data.maintenanceInfo.end_date;
+                                let maintenanceInfo:TMaintenanceInfo = check.data;
+                                maintenanceInfo.start_date = check.data.start_date;
+                                maintenanceInfo.end_date = check.data.end_date;
                                 let dumyMaintenanceData:TMaintenanceData = {
                                     alertTitle: '시스템 점검 안내',
                                     data: maintenanceInfo,
