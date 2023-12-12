@@ -33,6 +33,24 @@ interface IUserInfo {
     setAgree: (data:boolean[]) => void;
     setPageName: (pageName:TUserInfoModalPageName) => void;
     setInfoModal: (data:TUserInfoModalController) => void;
+
+    // MAINTENANCE(점검 )
+    maintenanceData: TMaintenanceData;
+    setMaintenanceData: (data:TMaintenanceData) => void;
+}
+type TMaintenanceData = {
+    alertTitle: string;
+    type: string;
+    open:boolean;
+    data: TMaintenanceInfo
+}
+type TMaintenanceInfo = {
+    start_date: string;
+    end_date: string;
+    maintenance_description_en: string[];
+    maintenance_description_kr: string[];
+    time_description_en: string;
+    time_description_kr: string;
 }
 type TRNSize = {
     height: number;

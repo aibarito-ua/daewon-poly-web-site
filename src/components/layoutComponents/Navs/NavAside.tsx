@@ -22,7 +22,7 @@ import useControlAlertStore from '../../../store/useControlAlertStore';
 
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
-    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser, userInfo, device_id, isMobile } = useLoginStore();
+    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser, userInfo, device_id, isMobile, setMaintenanceData } = useLoginStore();
     const { commonAlertClose, commonAlertOpen} = useControlAlertStore()
     // const [menuLocateValue, setMenuLocateValue] = useState("");
     const location = useLocation();
@@ -121,28 +121,42 @@ const NavAside = () => {
                     onClick={async ()=>{
                         const check = await checkDuplicateLogin(userInfo.accessToken);
                         if (check.is_server_error) {
-                            if (check.isDuplicateLogin) {
-                                commonAlertOpen({
-                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                    priorityLevel: 2,
-                                    messageFontFamily:'NotoSansCJKKR',
-                                    useOneButton: true,
-                                    yesButtonLabel:'OK',
-                                    yesEvent: async() => await logoutFn()
-                                })
+                            if (check.data) {
+                                let maintenanceInfo:TMaintenanceInfo = check.data.maintenanceInfo;
+                                maintenanceInfo.start_date = check.data.maintenanceInfo.start_date;
+                                maintenanceInfo.end_date = check.data.maintenanceInfo.end_date;
+                                let dumyMaintenanceData:TMaintenanceData = {
+                                    alertTitle: '시스템 점검 안내',
+                                    data: maintenanceInfo,
+                                    open: false,
+                                    type: ''
+                                }
+                                console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                setMaintenanceData(dumyMaintenanceData)
                             } else {
-                                commonAlertOpen({
-                                    messages: [
-                                        'Cannot connect to the server.',
-                                        'Please try again later.'
-                                    ],
-                                    priorityLevel: 2,
-                                    useOneButton: true,
-                                    yesButtonLabel:'OK',
-                                    yesEvent: () => {
-                                        commonAlertClose();
-                                    }
-                                })
+                                if (check.isDuplicateLogin) {
+                                    commonAlertOpen({
+                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                        priorityLevel: 2,
+                                        messageFontFamily:'NotoSansCJKKR',
+                                        useOneButton: true,
+                                        yesButtonLabel:'OK',
+                                        yesEvent: async() => await logoutFn()
+                                    })
+                                } else {
+                                    commonAlertOpen({
+                                        messages: [
+                                            'Cannot connect to the server.',
+                                            'Please try again later.'
+                                        ],
+                                        priorityLevel: 2,
+                                        useOneButton: true,
+                                        yesButtonLabel:'OK',
+                                        yesEvent: () => {
+                                            commonAlertClose();
+                                        }
+                                    })
+                                }
                             }
                         } else {
                             commonAlertOpen({

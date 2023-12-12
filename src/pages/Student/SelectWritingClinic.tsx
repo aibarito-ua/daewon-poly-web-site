@@ -14,7 +14,7 @@ import { logoutAPI } from './api/Login.api';
 
 const SelectWritingClinic = () => {
     const [buttonActive, setButtonActive] = React.useState<boolean>(false);
-    const {role, userInfo, device_id, isMobile} = useLoginStore();
+    const {role, userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
     const {
         setCommonStandbyScreen, commonAlertOpen, commonAlertClose
@@ -39,32 +39,45 @@ const SelectWritingClinic = () => {
         const response = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             console.log('writing clinic response =',response)
             if (response.is_server_error===true) {
-                setCommonStandbyScreen({openFlag:false})
-                if (response.isDuplicateLogin===true) {
+                if (response.data) {
+                    let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                    maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    setMaintenanceData(dumyMaintenanceData)
+                } else {
                     setCommonStandbyScreen({openFlag:false})
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
-                } else if (response.isDuplicateLogin===false) {
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
-                        useOneButton: true,
-                        priorityLevel: 2,
-                        yesButtonLabel:'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
-                        }
-                    })
+                    if (response.isDuplicateLogin===true) {
+                        setCommonStandbyScreen({openFlag:false})
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
+                            }
+                        })
+                    } else if (response.isDuplicateLogin===false) {
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            useOneButton: true,
+                            priorityLevel: 2,
+                            yesButtonLabel:'OK',
+                            yesEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    }
                 }
                 return false;
             } else {

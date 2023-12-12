@@ -1122,7 +1122,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     isNoData: true,
     setIsNoData: (flag) => {
         set(()=>({isNoData: flag}))
-    }
+    },
     
 }))
 

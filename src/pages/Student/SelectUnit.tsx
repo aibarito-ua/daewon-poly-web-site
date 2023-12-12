@@ -18,7 +18,7 @@ import { logoutAPI } from './api/Login.api';
 
 export default function SelectUnit () {
     const navigate = useNavigate();
-    const {role, userInfo, setUserInfo, device_id, isMobile} = useLoginStore();
+    const {role, userInfo, setUserInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {
         setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen,
         goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage,
@@ -80,18 +80,20 @@ export default function SelectUnit () {
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
         const allUnitsDataFromAPI = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
-            
-            response.units = response.units.map((item)=>{
-                item.draft_1_outline = item.draft_1_outline.sort((a,b) => {
-                    return a.order_index - b.order_index;
-                }).map((item) => {
-                    if (typeof(item.is_input_open) !== 'boolean') {
-                        item.is_input_open = false;
-                    }
-                    return item;
-                });
-                if (item.draft_1_status.status===4) {
-                    item.draft_2_outline = item.draft_2_outline.sort((a,b) => {
+            if (response.data) {
+                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                setMaintenanceData(dumyMaintenanceData)
+            } else {
+                response.units = response.units.map((item)=>{
+                    item.draft_1_outline = item.draft_1_outline.sort((a,b) => {
                         return a.order_index - b.order_index;
                     }).map((item) => {
                         if (typeof(item.is_input_open) !== 'boolean') {
@@ -99,11 +101,21 @@ export default function SelectUnit () {
                         }
                         return item;
                     });
-                }
-                return item;
-            })
-            
-            return response;
+                    if (item.draft_1_status.status===4) {
+                        item.draft_2_outline = item.draft_2_outline.sort((a,b) => {
+                            return a.order_index - b.order_index;
+                        }).map((item) => {
+                            if (typeof(item.is_input_open) !== 'boolean') {
+                                item.is_input_open = false;
+                            }
+                            return item;
+                        });
+                    }
+                    return item;
+                })
+                
+                return response;
+            }
         });
         // always currently page init feedback flags
 
@@ -114,31 +126,45 @@ export default function SelectUnit () {
         
         const getReportAll = await getReportsAPI(student_code, userInfo.accessToken,userInfo.courseName).then((res) => {
             if (res.is_server_error) {
-                setCommonStandbyScreen({openFlag:false})
-                if (res.isDuplicateLogin) {
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
+                if (res.data) {
+                    let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
+                    maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setMaintenanceData(dumyMaintenanceData)
                 } else {
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
-                        priorityLevel: 2,
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
-                        }
-                    })
+                    setCommonStandbyScreen({openFlag:false})
+                    if (res.isDuplicateLogin) {
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
+                            }
+                        })
+                    } else {
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            priorityLevel: 2,
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    }
                 }
                 return false;
             } else {

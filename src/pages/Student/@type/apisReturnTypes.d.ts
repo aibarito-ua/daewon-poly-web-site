@@ -10,6 +10,7 @@ type TProofReadingCountUpdateReject = {
     "errors": string[];
     "data": {
         "timestamp": string,
-        "endpoint": string
+        "endpoint": string,
+        [key:string]:any,
     }
 }

@@ -28,7 +28,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 export default function SelectLabels() {
   // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
-  const {userInfo} = useLoginStore();
+  const {userInfo, setMaintenanceData} = useLoginStore();
   // const [levels, setLevels] = React.useState<string[]>([]);
   const [isReadOnly, setIsReadOnly] = React.useState<boolean>(false);
   const {
@@ -61,6 +61,18 @@ export default function SelectLabels() {
     accessToken: string
 ) => {
     return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
+      if (response.data) {
+        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+        let dumyMaintenanceData:TMaintenanceData = {
+            alertTitle: '시스템 점검 안내',
+            data: maintenanceInfo,
+            open: false,
+            type: ''
+        }
+        setMaintenanceData(dumyMaintenanceData)
+      } else {
         console.log('callUnitInfobyStudent ===',response)
         if (response.book_name!=='') {
             // setLoading(true)
@@ -68,6 +80,7 @@ export default function SelectLabels() {
         setSparkWritingDataFromAPI(response.units, response.book_name)
         
         return response;
+      } 
     });
 }
   

@@ -24,10 +24,73 @@ import Progress from '../pages/Student/Progress';
 import ReturnFeedbackModalComponent from '../components/toggleModalComponents/ReturnFeedbackModalComponent';
 import PortfolioModalComponent from '../components/toggleModalComponents/PortfolioModalComponent';
 import UserInfoModalComponent from '../components/toggleModalComponents/UserInfoModalComponent';
+import MaintenanceAlertModalComponent from '../components/toggleModalComponents/MaintenanceAlertModalComponent';
+import { logoutAPI } from '../pages/Student/api/Login.api';
+import ErrorBoundary from './errorBoundary';
 
 
 export default function Roter() {
-    const { role, isOpen } = useLoginStore();
+    const { role, isOpen, maintenanceData, setMaintenanceData, userInfo, device_id, isMobile, setLogoutUser } = useLoginStore();
+    const logoutFn = async () => {
+        await logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        setLogoutUser();
+    }
+    React.useEffect(()=>{
+        const stDate = maintenanceData.data.start_date;
+        const edDate = maintenanceData.data.end_date;
+        if (stDate !== '' && edDate !== '' ) {
+            // real time check maintenance start/end
+            let timerId = setInterval(()=>{
+                const currentTime = new Date();
+                // start
+                const startDate = new Date(stDate);
+                const start_date = startDate.getTime();
+                const start_current_gap_timeNumber = start_date - currentTime.getTime()
+                const startCurrentGapTime_min = Math.floor(start_current_gap_timeNumber/ ( 60*1000));
+                const gap_st = Math.floor(start_current_gap_timeNumber)
+                // console.log('gap_st= ',gap_st)
+                
+                if (start_current_gap_timeNumber <= 0) {
+                    // 시작
+                    let dumpMaintenanceData:TMaintenanceData = JSON.parse(JSON.stringify(maintenanceData));
+                    // end time calculate
+                    const endDate = new Date(edDate)
+                    const end_date = endDate.getTime();
+                    const end_current_gap_timeNumber = end_date - currentTime.getTime();
+                    const gap_end = Math.floor(end_current_gap_timeNumber);
+                    // console.log('gap ed =',gap_end)
+                    if (gap_end >= 0) {
+                        // maintenance 진행중
+                        if (role !== 'logout') {
+                            logoutFn()
+                        }
+                        dumpMaintenanceData.open = true;
+                        setMaintenanceData(dumpMaintenanceData)
+                    } else {
+                        // 종료
+                        dumpMaintenanceData.open = false;
+                        dumpMaintenanceData.alertTitle = '';
+                        dumpMaintenanceData.data.end_date = '';
+                        dumpMaintenanceData.data.start_date = '';
+                        setMaintenanceData(dumpMaintenanceData)
+                    }
+                } else {
+                    if (startCurrentGapTime_min === 30) {
+                        // 30 분 전
+                    } else if (startCurrentGapTime_min === 10) {
+                        // 10분 전
+                    }
+                }
+            },1000);
+    
+            return () => clearTimeout(timerId);
+        }
+    })
     const publicRoutes = () => {
         const routeValue = routeValues.publicRoutes;
         // 각 권한별 기본 페이지
@@ -60,6 +123,7 @@ export default function Roter() {
             {role!=='logout' && <Nav />}
             {role!=='logout' && <NavAside />}
             <div className="max-display-screen">
+                <ErrorBoundary>
                 {isOpen && <Login />}
                 <Routes>
                     {/* No Login Pages */}
@@ -89,11 +153,13 @@ export default function Roter() {
                     {/* webview 전용 page */}
                     <Route path='/webTest' element={<WebViewWrap />}></Route>
                 </Routes>
+                <MaintenanceAlertModalComponent />
                 <CommonAlertModalComponent />
                 <StandbyScreen />
                 <PortfolioModalComponent />
                 <ReturnFeedbackModalComponent />
                 <UserInfoModalComponent />
+                </ErrorBoundary>
             </div>
           
         </div>

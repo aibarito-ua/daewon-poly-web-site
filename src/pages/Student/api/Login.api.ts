@@ -30,6 +30,12 @@ export async function loginAPI(username:string, password:string, device_id:strin
                 is_server_error:true,
                 is_retry:false,
             };
+        } else if (rsp.statusCode===555) {
+            return {
+                data: rsp.data,
+                is_server_error: true,
+                is_retry: true
+            }
         } else {
             return {
                 data:null,
@@ -68,6 +74,12 @@ export async function forcedLoginAPI(username:string, password:string, device_id
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (rsp.statusCode===555) {
+            return {
+                data: rsp.data,
+                is_server_error: true,
+                is_retry: true
+            }
         } else {
             return {
                 data:null,
@@ -106,6 +118,12 @@ export async function logoutAPI(username:string, device_id: string):Promise<{
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (rsp.statusCode===555) {
+            return {
+                data: rsp.data,
+                is_server_error: true,
+                is_retry: true
+            }
         } else {
             return {
                 data:null,
@@ -121,6 +139,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
     is_server_error:boolean;
     isDuplicateLogin:boolean;
     is_retry:boolean;
+    data?:any;
 }>{
     const reqUrl = CONFIG.LOGIN.POST.WITHDRAW;
     const data = {
@@ -157,6 +176,14 @@ export async function memberWithDraw(username:string, password:string, usercode:
                 isDuplicateLogin: false,
                 is_retry: false,
             }
+        } else if (rsp.statusCode===555) {
+            return {
+                data: rsp.data,
+                is_withdrawed_successfully:false,
+                is_server_error:true,
+                isDuplicateLogin: false,
+                is_retry: true,
+            }
         } else {
             return {
                 is_withdrawed_successfully:false,
@@ -174,6 +201,7 @@ export async function checkDuplicateLogin(
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }> {
     const reqUrl=CONFIG.LOGIN.DUPLICATE_CHECK;
     console.log('duplicate =',reqUrl)
@@ -202,6 +230,13 @@ export async function checkDuplicateLogin(
             }
         } else if (rsp.statusCode===500) {
             return {
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:false
+            }
+        } else if (rsp.statusCode===555) {
+            return {
+                data: rsp.data,
                 isDuplicateLogin:false,
                 is_server_error:true,
                 is_retry:false

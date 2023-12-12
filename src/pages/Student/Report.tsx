@@ -17,7 +17,7 @@ const Report = () => {
     // const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
     // const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
 
-    const {role, userInfo, device_id,isMobile} = useLoginStore();
+    const {role, userInfo, device_id,isMobile, setMaintenanceData} = useLoginStore();
     const {
         setCommonStandbyScreen,
         
@@ -57,54 +57,18 @@ const Report = () => {
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             if (response.is_server_error) {
-                setCommonStandbyScreen({openFlag:false})
-                if (response.isDuplicateLogin) {
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
+                if (response.data) {
+                    let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                    maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    setMaintenanceData(dumyMaintenanceData)
                 } else {
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
-                        priorityLevel: 2,
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
-                        }
-                    })
-                }
-                return false;
-            } else {
-                if (response.book_name!=='') {
-                    setLoading(true)
-                }
-                setSparkWritingDataFromAPI(response.units)
-                
-                return response;
-            }
-            
-        });
-    }
-
-    const getReportsData = async () => {
-        const student_code = userInfo.userCode;
-        
-        let getReportAll:TReportByStudentResponse = {periods:[]};
-        if (reportAPIData.periods.length > 0) {
-            getReportAll=reportAPIData;
-        } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
-                if (response.is_server_error) {
                     setCommonStandbyScreen({openFlag:false})
                     if (response.isDuplicateLogin) {
                         commonAlertOpen({
@@ -130,6 +94,69 @@ const Report = () => {
                                 commonAlertClose();
                             }
                         })
+                    }
+                }
+                return false;
+            } else {
+                if (response.book_name!=='') {
+                    setLoading(true)
+                }
+                setSparkWritingDataFromAPI(response.units)
+                
+                return response;
+            }
+            
+        });
+    }
+
+    const getReportsData = async () => {
+        const student_code = userInfo.userCode;
+        
+        let getReportAll:TReportByStudentResponse = {periods:[]};
+        if (reportAPIData.periods.length > 0) {
+            getReportAll=reportAPIData;
+        } else {
+            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
+                if (response.is_server_error) {
+                    if (response.data) {
+                        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                        let dumyMaintenanceData:TMaintenanceData = {
+                            alertTitle: '시스템 점검 안내',
+                            data: maintenanceInfo,
+                            open: false,
+                            type: ''
+                        }
+                        console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setMaintenanceData(dumyMaintenanceData)
+                    } else {
+                        setCommonStandbyScreen({openFlag:false})
+                        if (response.isDuplicateLogin) {
+                            commonAlertOpen({
+                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                priorityLevel: 2,
+                                messageFontFamily:'NotoSansCJKKR',
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: async() => {
+                                    await logoutFn()
+                                }
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
                     }
                     return false;
                 } else {
@@ -196,31 +223,45 @@ const Report = () => {
         } else {
             const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((res) => {
                 if (res.is_server_error) {
-                    setCommonStandbyScreen({openFlag:false})
-                    if (res.isDuplicateLogin) {
-                        commonAlertOpen({
-                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                            priorityLevel: 2,
-                            messageFontFamily:'NotoSansCJKKR',
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: async() => {
-                                await logoutFn()
-                            }
-                        })
+                    if (res.data) {
+                        let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
+                        maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
+                        maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+                        let dumyMaintenanceData:TMaintenanceData = {
+                            alertTitle: '시스템 점검 안내',
+                            data: maintenanceInfo,
+                            open: false,
+                            type: ''
+                        }
+                        console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setMaintenanceData(dumyMaintenanceData)
                     } else {
-                        commonAlertOpen({
-                            messages: [
-                                'Cannot connect to the server.',
-                                'Please try again later.'
-                            ],
-                            priorityLevel: 2,
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
+                        setCommonStandbyScreen({openFlag:false})
+                        if (res.isDuplicateLogin) {
+                            commonAlertOpen({
+                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                priorityLevel: 2,
+                                messageFontFamily:'NotoSansCJKKR',
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: async() => {
+                                    await logoutFn()
+                                }
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
                     }
                     return false;
                 } else {

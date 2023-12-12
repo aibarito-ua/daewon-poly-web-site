@@ -102,7 +102,10 @@ interface IUseControlAlertStore {
     // no data controller
     isNoData:boolean;
     setIsNoData: (flag:boolean) => void;
+
+    
 }
+
 type TTeacherFeedbackModalChecked = {
     index:number;
     isChecked: boolean;

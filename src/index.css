@@ -3241,3 +3241,60 @@ bg-[#ffea2c]
   bg-no-repeat
   bg-cover
 }
+
+.maintenance-modal-title {
+  font-family: 'NotoSansCJKKR';
+  font-size: 25px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+  @apply
+  h-full
+  align-middle
+}
+.maintenance-modal-message {
+  font-family: 'NotoSansCJKKR';
+  font-size: 18px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #222;
+}
+.maintenance-modal-time-title {
+  font-family: 'NotoSansCJKKR';
+  font-size: 18px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #3c2481;
+  @apply
+  flex
+  items-center
+  h-[30px]
+  border-[1px]
+  border-[#3c2481]
+  bg-white
+  rounded-[60px]
+  px-[16px]
+}
+.maintenance-modal-time-message {
+  font-family: 'NotoSansCJKKR';
+  font-size: 18px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  text-align: center;
+  color: #444;
+}

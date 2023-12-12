@@ -16,7 +16,7 @@ import { logoutAPI } from './api/Login.api';
 
 const Progress = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const {role, userInfo, device_id, isMobile} = useLoginStore();
+    const {role, userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
     const {
         setCommonStandbyScreen,
@@ -59,31 +59,45 @@ const Progress = () => {
         } else {
             const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
                 if (response.is_server_error) {
-                    setCommonStandbyScreen({openFlag:false})
-                    if (response.isDuplicateLogin) {
-                        commonAlertOpen({
-                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                            priorityLevel: 2,
-                            messageFontFamily:'NotoSansCJKKR',
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: async() => {
-                                await logoutFn()
-                            }
-                        })
+                    if (response.data) {
+                        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                        let dumyMaintenanceData:TMaintenanceData = {
+                            alertTitle: '시스템 점검 안내',
+                            data: maintenanceInfo,
+                            open: false,
+                            type: ''
+                        }
+                        console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setMaintenanceData(dumyMaintenanceData)
                     } else {
-                        commonAlertOpen({
-                            messages: [
-                                'Cannot connect to the server.',
-                                'Please try again later.'
-                            ],
-                            priorityLevel: 2,
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
+                        setCommonStandbyScreen({openFlag:false})
+                        if (response.isDuplicateLogin) {
+                            commonAlertOpen({
+                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                priorityLevel: 2,
+                                messageFontFamily:'NotoSansCJKKR',
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: async() => {
+                                    await logoutFn()
+                                }
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
                     }
                     return false;
                 } else {
@@ -152,13 +166,26 @@ const Progress = () => {
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
-            console.log('callUnitInfobyStudent ===',response)
-            if (response.book_name!=='') {
-                setLoading(true)
+            if (response.data) {
+                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                setMaintenanceData(dumyMaintenanceData)
+            } else {
+                console.log('callUnitInfobyStudent ===',response)
+                if (response.book_name!=='') {
+                    setLoading(true)
+                }
+                setSparkWritingDataFromAPI(response.units, response.book_name)
+                
+                return response;
             }
-            setSparkWritingDataFromAPI(response.units, response.book_name)
-            
-            return response;
         });
     }
     const findCallUnitInfobyStudent = async (studentCode: string,
@@ -166,13 +193,26 @@ const Progress = () => {
         accessToken: string
     ) => {
         return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
-            console.log('callUnitInfobyStudent ===',response)
-            if (response.book_name!=='') {
-                setLoading(true)
+            if (response.data) {
+                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                setMaintenanceData(dumyMaintenanceData)
+            } else {
+                console.log('callUnitInfobyStudent ===',response)
+                if (response.book_name!=='') {
+                    setLoading(true)
+                }
+                setSparkWritingDataFromAPI(response.units)
+                
+                return response;
             }
-            setSparkWritingDataFromAPI(response.units)
-            
-            return response;
         });
     }
     useComponentWillMount(async()=>{

@@ -58,7 +58,7 @@ const EssayWriting = () => {
 
     // user info
     const {
-        userInfo, device_id, isMobile
+        userInfo, device_id, isMobile, setMaintenanceData
     } = useLoginStore();
     // Nav Store
     const { 
@@ -112,11 +112,24 @@ const EssayWriting = () => {
 
     const pageInitSetting = async () => {
         const init = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
-            const data = response.units
-            console.log('response page init set api =',response)
-            setOriginalTargetData(data);
-            setIsSaved(false);
-            return true;
+            if (response.data) {
+                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                setMaintenanceData(dumyMaintenanceData)
+            } else {
+                const data = response.units
+                console.log('response page init set api =',response)
+                setOriginalTargetData(data);
+                setIsSaved(false);
+                return true;
+            }
         })
         setPreviewPageInitFlag('')
         const currentDraft = params.draft ? params.draft : '';
@@ -997,41 +1010,55 @@ const EssayWriting = () => {
                 return response;
             });
             if (isSaveTemporary.is_server_error) {
-                if (isSaveTemporary.isDuplicateLogin) {
-                    setCommonStandbyScreen({openFlag:false})
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
+                if (isSaveTemporary.data) {
+                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data.maintenanceInfo;
+                    maintenanceInfo.start_date = isSaveTemporary.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = isSaveTemporary.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setMaintenanceData(dumyMaintenanceData)
                 } else {
-                    if (isSaveTemporary.is_retry) {
+                    if (isSaveTemporary.isDuplicateLogin) {
+                        setCommonStandbyScreen({openFlag:false})
                         commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages: ['Do you want to save your current','progress and return to the main menu?'],
-                            yesButtonLabel: `Yes`,
-                            noButtonLabel: `No`,
-                            yesEvent: async ()=> await temporarySaveFunction(),
-                            closeEvent: async () => commonAlertClose()
-                        })
-                    } else {
-                        commonAlertOpen({
-                            messages: [
-                                'Cannot connect to the server.',
-                                'Please try again later.'
-                            ],
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                             priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
                             useOneButton: true,
                             yesButtonLabel:'OK',
-                            yesEvent: () => {
-                                commonAlertClose();
+                            yesEvent: async() => {
+                                await logoutFn()
                             }
                         })
+                    } else {
+                        if (isSaveTemporary.is_retry) {
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                yesButtonLabel: `Yes`,
+                                noButtonLabel: `No`,
+                                yesEvent: async ()=> await temporarySaveFunction(),
+                                closeEvent: async () => commonAlertClose()
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
                     }
                 }
             } else {
@@ -1071,41 +1098,55 @@ const EssayWriting = () => {
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
 
             if (isSaveTemporary.is_server_error) {
-                if (isSaveTemporary.isDuplicateLogin) {
-                    setCommonStandbyScreen({openFlag:false})
-                    commonAlertOpen({
-                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                        priorityLevel: 2,
-                        messageFontFamily:'NotoSansCJKKR',
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: async() => {
-                            await logoutFn()
-                        }
-                    })
+                if (isSaveTemporary.data) {
+                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data.maintenanceInfo;
+                    maintenanceInfo.start_date = isSaveTemporary.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = isSaveTemporary.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setMaintenanceData(dumyMaintenanceData)
                 } else {
-                    if (isSaveTemporary.is_retry) {
+                    if (isSaveTemporary.isDuplicateLogin) {
+                        setCommonStandbyScreen({openFlag:false})
                         commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages: ['Do you want to save your current','progress and return to the main menu?'],
-                            yesButtonLabel: `Yes`,
-                            noButtonLabel: `No`,
-                            yesEvent: async ()=> await temporarySaveFunction(),
-                            closeEvent: async () => commonAlertClose()
-                        })
-                    } else {
-                        commonAlertOpen({
-                            messages: [
-                                'Cannot connect to the server.',
-                                'Please try again later.'
-                            ],
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                             priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
                             useOneButton: true,
                             yesButtonLabel:'OK',
-                            yesEvent: () => {
-                                commonAlertClose();
+                            yesEvent: async() => {
+                                await logoutFn()
                             }
                         })
+                    } else {
+                        if (isSaveTemporary.is_retry) {
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                yesButtonLabel: `Yes`,
+                                noButtonLabel: `No`,
+                                yesEvent: async ()=> await temporarySaveFunction(),
+                                closeEvent: async () => commonAlertClose()
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
                     }
                 }
             } else {
@@ -1148,41 +1189,55 @@ const EssayWriting = () => {
         const submit = await draft2ndSubmit(submitData, userInfo.accessToken)
 
         if (submit.is_server_error) {
-            setCommonStandbyScreen({openFlag:false})
-            if (submit.isDuplicateLogin) {
-                commonAlertOpen({
-                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                    priorityLevel: 2,
-                    messageFontFamily:'NotoSansCJKKR',
-                    useOneButton: true,
-                    yesButtonLabel:'OK',
-                    yesEvent: async() => {
-                        await logoutFn()
-                    }
-                })
+            if (submit.data) {
+                let maintenanceInfo:TMaintenanceInfo = submit.data.maintenanceInfo;
+                maintenanceInfo.start_date = submit.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = submit.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                console.log('login maintenanceInfo =',dumyMaintenanceData)
+                setMaintenanceData(dumyMaintenanceData)
             } else {
-                if (submit.is_retry) {
+                setCommonStandbyScreen({openFlag:false})
+                if (submit.isDuplicateLogin) {
                     commonAlertOpen({
-                        messageFontFamily: 'Roboto',
-                        messages: ['Do you want to save your current','progress and return to the main menu?'],
-                        yesButtonLabel: `Yes`,
-                        noButtonLabel: `No`,
-                        yesEvent: async ()=> await temporarySaveFunction(),
-                        closeEvent: async () => commonAlertClose()
-                    })
-                } else {
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
+                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                         priorityLevel: 2,
+                        messageFontFamily:'NotoSansCJKKR',
                         useOneButton: true,
                         yesButtonLabel:'OK',
-                        yesEvent: async () => {
-                            commonAlertClose();
+                        yesEvent: async() => {
+                            await logoutFn()
                         }
                     })
+                } else {
+                    if (submit.is_retry) {
+                        commonAlertOpen({
+                            messageFontFamily: 'Roboto',
+                            messages: ['Do you want to save your current','progress and return to the main menu?'],
+                            yesButtonLabel: `Yes`,
+                            noButtonLabel: `No`,
+                            yesEvent: async ()=> await temporarySaveFunction(),
+                            closeEvent: async () => commonAlertClose()
+                        })
+                    } else {
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            priorityLevel: 2,
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async () => {
+                                commonAlertClose();
+                            }
+                        })
+                    }
                 }
             }
         } else {
@@ -1499,42 +1554,56 @@ const EssayWriting = () => {
                                         console.log('click preview!')
                                         const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
                                         if (check_duplicate_login.is_server_error) {
-                                            setCommonStandbyScreen({openFlag:false})
-                                            if (check_duplicate_login.isDuplicateLogin) {
-                                                commonAlertOpen({
-                                                    messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                                    priorityLevel: 2,
-                                                    messageFontFamily:'NotoSansCJKKR',
-                                                    useOneButton: true,
-                                                    yesButtonLabel:'OK',
-                                                    yesEvent: async() => {
-                                                        await logoutFn()
-                                                    }
-                                                })
+                                            if (check_duplicate_login.data) {
+                                                let maintenanceInfo:TMaintenanceInfo = check_duplicate_login.data.maintenanceInfo;
+                                                maintenanceInfo.start_date = check_duplicate_login.data.maintenanceInfo.start_date;
+                                                maintenanceInfo.end_date = check_duplicate_login.data.maintenanceInfo.end_date;
+                                                let dumyMaintenanceData:TMaintenanceData = {
+                                                    alertTitle: '시스템 점검 안내',
+                                                    data: maintenanceInfo,
+                                                    open: false,
+                                                    type: ''
+                                                }
+                                                console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                                setMaintenanceData(dumyMaintenanceData)
                                             } else {
-                                                if (check_duplicate_login.is_retry) {
-                                                    callbackCheckValues()
+                                                setCommonStandbyScreen({openFlag:false})
+                                                if (check_duplicate_login.isDuplicateLogin) {
                                                     commonAlertOpen({
-                                                        messageFontFamily: 'Roboto',
-                                                        messages: ['Do you want to save your current','progress and return to the main menu?'],
-                                                        yesButtonLabel: `Yes`,
-                                                        noButtonLabel: `No`,
-                                                        yesEvent: async ()=> await temporarySaveFunction(),
-                                                        closeEvent: async () => commonAlertClose()
-                                                    })
-                                                } else {
-                                                    commonAlertOpen({
-                                                        messages: [
-                                                            'Cannot connect to the server.',
-                                                            'Please try again later.'
-                                                        ],
+                                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
                                                         priorityLevel: 2,
+                                                        messageFontFamily:'NotoSansCJKKR',
                                                         useOneButton: true,
                                                         yesButtonLabel:'OK',
-                                                        yesEvent: () => {
-                                                            commonAlertClose();
+                                                        yesEvent: async() => {
+                                                            await logoutFn()
                                                         }
                                                     })
+                                                } else {
+                                                    if (check_duplicate_login.is_retry) {
+                                                        callbackCheckValues()
+                                                        commonAlertOpen({
+                                                            messageFontFamily: 'Roboto',
+                                                            messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                                            yesButtonLabel: `Yes`,
+                                                            noButtonLabel: `No`,
+                                                            yesEvent: async ()=> await temporarySaveFunction(),
+                                                            closeEvent: async () => commonAlertClose()
+                                                        })
+                                                    } else {
+                                                        commonAlertOpen({
+                                                            messages: [
+                                                                'Cannot connect to the server.',
+                                                                'Please try again later.'
+                                                            ],
+                                                            priorityLevel: 2,
+                                                            useOneButton: true,
+                                                            yesButtonLabel:'OK',
+                                                            yesEvent: () => {
+                                                                commonAlertClose();
+                                                            }
+                                                        })
+                                                    }
                                                 }
                                             }
                                         } else {

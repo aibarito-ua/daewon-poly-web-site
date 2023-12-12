@@ -18,6 +18,7 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
         statusText:any
     };
     isDuplicateLogin?:boolean;
+    data?:any;
 }> {
     return await axios.post(
         CONFIG.CHATBOT.URL, {
@@ -92,6 +93,20 @@ export async function callDialogAPI(ai_name:string, user_name:string, history: s
                 is_server_error:true,
                 is_retry: false
             }
+        } else if (rsp.statusCode===555 ) {
+            return {
+                text:[],
+                usages: {
+                    completion_tokens:0,
+                    total_tokens:0,
+                    prompt_tokens: 0
+                },
+                error: {text: '잠시 후 다시 시도해주세요.', status:rsp.statusCode, statusText:rsp.message},
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry: false,
+                data: rsp.data.maintenanceInfo
+            }
         } else {
             return {
                 text:[],
@@ -119,6 +134,7 @@ export async function callUnitInfobyStudent (
     isDuplicateLogin?: boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }> {
     // {STUDENT_CODE}/{COURSE_NAME}
     const replaceUrl = CONFIG.DRAFT.GET.UNIT_INFO.replace(/{STUDENT_CODE}/gmi, studentCode).replace(/{COURSE_NAME}/gmi, courseName);
@@ -161,6 +177,15 @@ export async function callUnitInfobyStudent (
                 is_server_error:true,
                 is_retry:false
             }
+        } else if (statusCode===555 ) {
+            return {
+                book_name: '',
+                units: [],
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
+            }
         } else {
             return {
                 book_name: '',
@@ -181,6 +206,7 @@ export async function draftSaveTemporary(
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }> {
     return await axios.post(
         CONFIG.DRAFT.POST.SAVE_TEMPORARY,
@@ -218,6 +244,14 @@ export async function draftSaveTemporary(
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (statusCode===555 ) {
+            return {
+                result: false,
+                isDuplicateLogin:false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
+            };
         } else {
             return {
                 result: false,
@@ -234,6 +268,7 @@ export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessTok
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }>{
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
@@ -266,6 +301,14 @@ export async function draft1stSubmit (data:TSubmit1stDraftRequestData, accessTok
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (rsp.statusCode===555 ) {
+            return {
+                result: false,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data:rsp.data.maintenanceInfo
+            };
         } else {
             return {
                 result: false,
@@ -281,6 +324,7 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessTok
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }> {
     const reqUrl = CONFIG.DRAFT.POST.SUBMIT;
     return await axios.post(reqUrl, data, {
@@ -313,6 +357,14 @@ export async function draft2ndSubmit (data:TSubmit2ndDraftRequestData, accessTok
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (rsp.statusCode===555 ) {
+            return {
+                result: false,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
+            };
         } else {
             return {
                 result: false,
@@ -329,6 +381,7 @@ export async function getReportsAPI(student_code: string, accessToken: string, l
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any;
 }> {
     console.log(student_code)
     const reqUrl = CONFIG.REPORT.GET.SPARK_GET_REPORT_OVERALL_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, levelName);
@@ -363,6 +416,14 @@ export async function getReportsAPI(student_code: string, accessToken: string, l
                 is_server_error:true,
                 is_retry:false
             };
+        } else if (rsp.statusCode===500 ) {
+            return {
+                result: null,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
+            };
         } else {
             return {
                 result: null,
@@ -378,6 +439,7 @@ export async function getPortfoliosAPI (student_code:string, level_name:string, 
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?:any
 }> {
     const reqUrl = CONFIG.REPORT.GET.PORTFOLIO_BY_STUDENT.replace(/{student_code}/gmi, student_code).replace(/{level_name}/gmi, level_name);
     return await axios.get(reqUrl, {
@@ -410,6 +472,14 @@ export async function getPortfoliosAPI (student_code:string, level_name:string, 
                 isDuplicateLogin: false,
                 is_server_error:true,
                 is_retry:false
+            };
+        } else if (rsp.statusCode===555 ) {
+            return {
+                result: null,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
             };
         } else {
             return {

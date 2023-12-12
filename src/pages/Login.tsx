@@ -15,7 +15,10 @@ export const Login = () => {
     const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
     const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
     const IS_MAINTENANCE = process.env.REACT_APP_MAINTENANCE ? process.env.REACT_APP_MAINTENANCE:'NO';
-    const { userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform } = useLoginStore();
+    const { 
+        userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform,
+        setMaintenanceData
+     } = useLoginStore();
     const {setSelectMenu} = useNavStore();
     const [passwordType, setPasswordType] = React.useState<boolean>(false);
     const [loginValues, setLoginValues] = React.useState<{username:string, password:string}>({username:'',password:''});
@@ -54,26 +57,40 @@ export const Login = () => {
         const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             console.log('response =',res)
             if (res.is_server_error===true) {
-                console.log('test2')
-                commonAlertOpen({
-                    messages: [
-                        'Cannot connect to the server.',
-                        'Please try again later.'
-                    ],
-                    priorityLevel: 2,
-                    useOneButton: true,
-                    yesButtonLabel:'OK',
-                    yesEvent: () => {
-                        commonAlertClose();
+                if (res.data !== null) {
+                    let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
+                    maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
                     }
-                })
-                return false;
+                    setMaintenanceData(dumyMaintenanceData)
+                } else {
+                    console.log('test2')
+                    commonAlertOpen({
+                        messages: [
+                            'Cannot connect to the server.',
+                            'Please try again later.'
+                        ],
+                        priorityLevel: 2,
+                        useOneButton: true,
+                        yesButtonLabel:'OK',
+                        yesEvent: () => {
+                            commonAlertClose();
+                        }
+                    })
+                    return false;
+                }
             } else {
                 return res
             }
         });
         if (response) {
-            const rnData = {userInfo:response.data, loginValues: loginvalues, saveId: saveid}
+            
+            const rnData = {userInfo:response.data, loginValues: loginvalues, saveId: saveid, maintenance: response.data.maintenanceInfo}
     
             if (isMobile) {
                 sendMessage(rnData);
@@ -81,6 +98,19 @@ export const Login = () => {
                 (window as any).api.toElectron.send('saveUser', rnData)
             }
             setSelectMenu('WritingClinic')
+            if (response.data.maintenanceInfo) {
+                let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                let dumyMaintenanceData:TMaintenanceData = {
+                    alertTitle: '시스템 점검 안내',
+                    data: maintenanceInfo,
+                    open: false,
+                    type: ''
+                }
+                console.log('login maintenanceInfo =',dumyMaintenanceData)
+                setMaintenanceData(dumyMaintenanceData)
+            }
             setUserInfo(response.data);
         } 
     }
@@ -89,8 +119,20 @@ export const Login = () => {
         const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             console.log('response =',res)
             if (res.is_server_error===true) {
-                
-                return false;
+                if (res.data !== null) {
+                    let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
+                    maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
+                    maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    setMaintenanceData(dumyMaintenanceData)
+                } else {
+                    return false;
+                }
             } else {
                 return res
             }
@@ -159,20 +201,33 @@ export const Login = () => {
             // alert(JSON.stringify(loginValues, null, 2))
             const rsp = await loginAPI(loginValues.username, loginValues.password, device_id).then((response)=>{
                 if (response.is_server_error===true) {
-                    console.log('test1')
-                    commonAlertOpen({
-                        messages: [
-                            'Cannot connect to the server.',
-                            'Please try again later.'
-                        ],
-                        priorityLevel: 2,
-                        useOneButton: true,
-                        yesButtonLabel:'OK',
-                        yesEvent: () => {
-                            commonAlertClose();
+                    if (response.data !== null) {
+                        let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                        maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                        maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                        let dumyMaintenanceData:TMaintenanceData = {
+                            alertTitle: '시스템 점검 안내',
+                            data: maintenanceInfo,
+                            open: false,
+                            type: ''
                         }
-                    })
-                    return false;
+                        setMaintenanceData(dumyMaintenanceData)
+                    } else {
+                        console.log('test1')
+                        commonAlertOpen({
+                            messages: [
+                                'Cannot connect to the server.',
+                                'Please try again later.'
+                            ],
+                            priorityLevel: 2,
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                        return false;
+                    }
                 } else {
                     return response
                 }

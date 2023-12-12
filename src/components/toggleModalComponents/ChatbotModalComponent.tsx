@@ -59,7 +59,8 @@ export default function FormDialog() {
   
   const {
     userInfo, isMobile, device_id,
-    deviceSize, windowSize, platform
+    deviceSize, windowSize, platform,
+    setMaintenanceData
   } = useLoginStore();
   const {
     setCommonStandbyScreen, commonAlertOpen,commonAlertClose
@@ -251,31 +252,44 @@ export default function FormDialog() {
     return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
       setBlockInput(false)
       if (res.is_server_error) {
-        setCommonStandbyScreen({openFlag:false})
-        if (res.isDuplicateLogin) {
-          commonAlertOpen({
-            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-            priorityLevel: 2,
-            messageFontFamily:'NotoSansCJKKR',
-            useOneButton: true,
-            yesButtonLabel:'OK',
-            yesEvent: async() => {
-                await logoutFn()
-            }
-          })
+        if (res.data) {
+          let maintenanceInfo:TMaintenanceInfo = res.data.maintenanceInfo;
+          maintenanceInfo.start_date = res.data.maintenanceInfo.start_date;
+          maintenanceInfo.end_date = res.data.maintenanceInfo.end_date;
+          let dumyMaintenanceData:TMaintenanceData = {
+              alertTitle: '시스템 점검 안내',
+              data: maintenanceInfo,
+              open: false,
+              type: ''
+          }
+          setMaintenanceData(dumyMaintenanceData)
         } else {
-          commonAlertOpen({
-            messages: [
-                'Cannot connect to the server.',
-                'Please try again later.'
-            ],
-            priorityLevel: 2,
-            useOneButton: true,
-            yesButtonLabel:'OK',
-            yesEvent: () => {
-                commonAlertClose();
-            }
-          })
+          setCommonStandbyScreen({openFlag:false})
+          if (res.isDuplicateLogin) {
+            commonAlertOpen({
+              messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+              priorityLevel: 2,
+              messageFontFamily:'NotoSansCJKKR',
+              useOneButton: true,
+              yesButtonLabel:'OK',
+              yesEvent: async() => {
+                  await logoutFn()
+              }
+            })
+          } else {
+            commonAlertOpen({
+              messages: [
+                  'Cannot connect to the server.',
+                  'Please try again later.'
+              ],
+              priorityLevel: 2,
+              useOneButton: true,
+              yesButtonLabel:'OK',
+              yesEvent: () => {
+                  commonAlertClose();
+              }
+            })
+          }
         }
       } else {
         let pushValue:any = [ai_name]

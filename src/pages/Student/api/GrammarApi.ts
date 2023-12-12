@@ -7,6 +7,7 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
     isDuplicateLogin:boolean;
     is_server_error:boolean;
     is_retry:boolean;
+    data?: any;
 }>{
     const reqUrl = CONFIG.GRAMMAR.CHECK;
     const data = {
@@ -58,6 +59,18 @@ export async function grammarCheck(grammarData:TSparkWritingDataOutline[], acces
                 isDuplicateLogin: false,
                 is_server_error:true,
                 is_retry:false
+            };
+        } else if (rsp.statusCode===555) {
+            return {
+                result: {
+                    origin_data:[],
+                    result_body:[],
+                    result_title:[]
+                },
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: rsp.data.maintenanceInfo
             };
         } else {
             return {
@@ -129,7 +142,7 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
     isDuplicateLogin: boolean;
     is_server_error:boolean;
     is_retry:boolean;
-    
+    data?:any
 }> {
     const reqUrl = CONFIG.GRAMMAR.PROOF_READING_COUNT_UPDATGE;
     return await axios.put(reqUrl,data,{
@@ -162,6 +175,14 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
                 isDuplicateLogin: false,
                 is_server_error:true,
                 is_retry:false
+            };
+        } else if (returnReject.statusCode===555) {
+            return {
+                result: returnReject,
+                isDuplicateLogin: false,
+                is_server_error:true,
+                is_retry:false,
+                data: returnReject.data.maintenanceInfo
             };
         } else {
             return {

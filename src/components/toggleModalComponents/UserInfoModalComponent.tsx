@@ -25,7 +25,8 @@ export default function UserInfoModalComponent() {
         setAgree,
         setPageName,
         setInfoModal,
-        device_id, isMobile
+        device_id, isMobile,
+        setMaintenanceData
     } = useLoginStore();
     const {
         setCommonStandbyScreen, commonAlertOpen, commonAlertClose,
@@ -220,33 +221,47 @@ export default function UserInfoModalComponent() {
                                         setCommonStandbyScreen({openFlag:true})
                                         const rsp = await memberWithDraw(userInfo.webId, checkPW, userInfo.userCode).then((response) => {
                                             if (response.is_server_error) {
-                                                setCommonStandbyScreen({openFlag:false})
-                                                if (response.isDuplicateLogin) {
-                                                    commonAlertOpen({
-                                                        messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                                        priorityLevel: 2,
-                                                        messageFontFamily:'NotoSansCJKKR',
-                                                        useOneButton: true,
-                                                        yesButtonLabel:'OK',
-                                                        yesEvent: async() => {
-                                                            await logoutFn()
-                                                        }
-                                                    })
+                                                if (response.data) {
+                                                    let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
+                                                    maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
+                                                    maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;
+                                                    let dumyMaintenanceData:TMaintenanceData = {
+                                                        alertTitle: '시스템 점검 안내',
+                                                        data: maintenanceInfo,
+                                                        open: false,
+                                                        type: ''
+                                                    }
+                                                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                                    setMaintenanceData(dumyMaintenanceData)
                                                 } else {
-                                                    commonAlertOpen({
-                                                        messages: [
-                                                            'Cannot connect to the server.',
-                                                            'Please try again later.'
-                                                        ],
-                                                        priorityLevel: 2,
-                                                        useOneButton: true,
-                                                        yesButtonLabel:'OK',
-                                                        yesEvent: () => {
-                                                            commonAlertClose();
-                                                        }
-                                                    })
+                                                    setCommonStandbyScreen({openFlag:false})
+                                                    if (response.isDuplicateLogin) {
+                                                        commonAlertOpen({
+                                                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                                                            priorityLevel: 2,
+                                                            messageFontFamily:'NotoSansCJKKR',
+                                                            useOneButton: true,
+                                                            yesButtonLabel:'OK',
+                                                            yesEvent: async() => {
+                                                                await logoutFn()
+                                                            }
+                                                        })
+                                                    } else {
+                                                        commonAlertOpen({
+                                                            messages: [
+                                                                'Cannot connect to the server.',
+                                                                'Please try again later.'
+                                                            ],
+                                                            priorityLevel: 2,
+                                                            useOneButton: true,
+                                                            yesButtonLabel:'OK',
+                                                            yesEvent: () => {
+                                                                commonAlertClose();
+                                                            }
+                                                        })
+                                                    }
+                                                    return false;
                                                 }
-                                                return false;
                                             } else {
                                                 return response;
                                                 
