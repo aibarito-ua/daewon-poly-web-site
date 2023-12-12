@@ -50,6 +50,7 @@ const SelectWritingClinic = () => {
                         type: ''
                     }
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     setCommonStandbyScreen({openFlag:false})
                     if (response.isDuplicateLogin===true) {

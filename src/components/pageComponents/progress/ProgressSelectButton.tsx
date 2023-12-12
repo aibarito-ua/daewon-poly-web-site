@@ -11,6 +11,7 @@ import InputBase from '@mui/material/InputBase';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
 import { callUnitInfobyStudent } from '../../../pages/Student/api/EssayWriting.api';
+import { useNavigate } from 'react-router-dom';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     '& .MuiInputBase-input': {
@@ -28,9 +29,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 export default function SelectLabels() {
   // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
+  const navigate = useNavigate();
   const {userInfo, setMaintenanceData} = useLoginStore();
   // const [levels, setLevels] = React.useState<string[]>([]);
   const [isReadOnly, setIsReadOnly] = React.useState<boolean>(false);
+  
   const {
     reportAPIData,
     reportSelectBoxDatas,
@@ -72,6 +75,7 @@ export default function SelectLabels() {
             type: ''
         }
         setMaintenanceData(dumyMaintenanceData)
+        navigate('/')
       } else {
         console.log('callUnitInfobyStudent ===',response)
         if (response.book_name!=='') {

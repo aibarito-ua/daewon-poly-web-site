@@ -177,6 +177,7 @@ const PreviewSparkWriting = (props:any) => {
                                 type: ''
                             }
                             setMaintenanceData(dumyMaintenanceData)
+                            navigate('/')
                         } else {
                             setCommonStandbyScreen({openFlag:false})
                             if (response.isDuplicateLogin) {
@@ -328,6 +329,7 @@ const PreviewSparkWriting = (props:any) => {
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
                         setMaintenanceData(dumyMaintenanceData)
+                        navigate('/')
                     } else {
                         setCommonStandbyScreen({openFlag:false})
                         if (response.isDuplicateLogin) {
@@ -538,6 +540,7 @@ const PreviewSparkWriting = (props:any) => {
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 setCommonStandbyScreen({openFlag:false})
                 if (check_duplicate_login.isDuplicateLogin) {
@@ -787,6 +790,7 @@ const PreviewSparkWriting = (props:any) => {
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 if (isSaveTemporary.isDuplicateLogin) {
                     commonAlertOpen({
@@ -1358,6 +1362,7 @@ const PreviewSparkWriting = (props:any) => {
                                             }
                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
                                             setMaintenanceData(dumyMaintenanceData)
+                                            navigate('/')
                                         } else {
                                             setCommonStandbyScreen({openFlag:false})
                                             if (check_duplicate_login.isDuplicateLogin) {
@@ -1519,6 +1524,7 @@ const PreviewSparkWriting = (props:any) => {
                                                         type: ''
                                                     }
                                                     setMaintenanceData(dumyMaintenanceData)
+                                                    navigate('/')
                                                 } else {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     if (response.isDuplicateLogin) {
@@ -1667,6 +1673,7 @@ const PreviewSparkWriting = (props:any) => {
                                                             }
                                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
                                                             setMaintenanceData(dumyMaintenanceData)
+                                                            navigate('/')
                                                         } else {
                                                             setCommonStandbyScreen({openFlag:false})
                                                             if (response.isDuplicateLogin) {

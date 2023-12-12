@@ -13,8 +13,10 @@ import { progressIcons } from '../../util/svgs/commonProgressIcons';
 import ProgressTable from '../../components/pageComponents/progress/ProgressTables';
 import SelectLabels from '../../components/pageComponents/progress/ProgressSelectButton';
 import { logoutAPI } from './api/Login.api';
+import { useNavigate } from 'react-router-dom';
 
 const Progress = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = React.useState<boolean>(false);
     const {role, userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {secondGenerationOpen} = useNavStore();
@@ -71,6 +73,7 @@ const Progress = () => {
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
                         setMaintenanceData(dumyMaintenanceData)
+                        navigate('/')
                     } else {
                         setCommonStandbyScreen({openFlag:false})
                         if (response.isDuplicateLogin) {
@@ -177,6 +180,7 @@ const Progress = () => {
                     type: ''
                 }
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 console.log('callUnitInfobyStudent ===',response)
                 if (response.book_name!=='') {
@@ -204,6 +208,7 @@ const Progress = () => {
                     type: ''
                 }
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 console.log('callUnitInfobyStudent ===',response)
                 if (response.book_name!=='') {

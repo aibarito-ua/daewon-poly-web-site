@@ -8,8 +8,10 @@ import useLoginStore from '../../store/useLoginStore';
 import { CommonInputValidate } from '../../util/common/commonFunctions';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import { logoutAPI } from '../../pages/Student/api/Login.api';
+import { useNavigate } from 'react-router-dom';
 
 export default function FormDialog() {
+  const navigate = useNavigate();
   const inputRef = React.useRef<HTMLTextAreaElement|null>(null);
   const chatDivRef = React.useRef<HTMLDivElement|null>(null);
   const [open, setOpen] = React.useState(false);
@@ -263,6 +265,7 @@ export default function FormDialog() {
               type: ''
           }
           setMaintenanceData(dumyMaintenanceData)
+          navigate('/')
         } else {
           setCommonStandbyScreen({openFlag:false})
           if (res.isDuplicateLogin) {

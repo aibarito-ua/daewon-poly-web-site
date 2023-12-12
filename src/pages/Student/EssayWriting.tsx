@@ -123,6 +123,7 @@ const EssayWriting = () => {
                     type: ''
                 }
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 const data = response.units
                 console.log('response page init set api =',response)
@@ -1022,6 +1023,7 @@ const EssayWriting = () => {
                     }
                     console.log('login maintenanceInfo =',dumyMaintenanceData)
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     if (isSaveTemporary.isDuplicateLogin) {
                         setCommonStandbyScreen({openFlag:false})
@@ -1110,6 +1112,7 @@ const EssayWriting = () => {
                     }
                     console.log('login maintenanceInfo =',dumyMaintenanceData)
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     if (isSaveTemporary.isDuplicateLogin) {
                         setCommonStandbyScreen({openFlag:false})
@@ -1201,6 +1204,7 @@ const EssayWriting = () => {
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 setCommonStandbyScreen({openFlag:false})
                 if (submit.isDuplicateLogin) {
@@ -1566,6 +1570,7 @@ const EssayWriting = () => {
                                                 }
                                                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                                                 setMaintenanceData(dumyMaintenanceData)
+                                                navigate('/')
                                             } else {
                                                 setCommonStandbyScreen({openFlag:false})
                                                 if (check_duplicate_login.isDuplicateLogin) {

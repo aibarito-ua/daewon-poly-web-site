@@ -11,9 +11,10 @@ import PortfolioModalComponent from '../../components/toggleModalComponents/Port
 import PortfolioSelectButton from '../../components/pageComponents/portfolio/PortfolioSelectButton';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
 import { logoutAPI } from './api/Login.api';
+import { useNavigate } from 'react-router-dom';
 
 export const Portfolio = () => {
-
+    const navigate = useNavigate();
     const {userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {
         setCommonStandbyScreen, commonAlertOpen, commonAlertClose
@@ -66,6 +67,7 @@ export const Portfolio = () => {
                     }
                     console.log('login maintenanceInfo =',dumyMaintenanceData)
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     setCommonStandbyScreen({openFlag:false})
                     if (res.isDuplicateLogin) {

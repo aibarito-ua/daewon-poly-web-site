@@ -9,8 +9,10 @@ import useControlAlertStore from '../store/useControlAlertStore';
 import { RN } from '../util/RN/commonPostMessage';
 import useNavStore from '../store/useNavStore';
 import { detect } from 'detect-browser';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
+    const navigate = useNavigate();
     const ANDROID_VERSION=process.env.REACT_APP_ANDROID_VERSION ? process.env.REACT_APP_ANDROID_VERSION:'';
     const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
     const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
@@ -68,6 +70,7 @@ export const Login = () => {
                         type: ''
                     }
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     console.log('test2')
                     commonAlertOpen({
@@ -110,6 +113,7 @@ export const Login = () => {
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             }
             setUserInfo(response.data);
         } 
@@ -130,6 +134,7 @@ export const Login = () => {
                         type: ''
                     }
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     return false;
                 }
@@ -212,6 +217,7 @@ export const Login = () => {
                             type: ''
                         }
                         setMaintenanceData(dumyMaintenanceData)
+                        navigate('/')
                     } else {
                         console.log('test1')
                         commonAlertOpen({

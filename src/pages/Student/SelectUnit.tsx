@@ -91,6 +91,7 @@ export default function SelectUnit () {
                     type: ''
                 }
                 setMaintenanceData(dumyMaintenanceData)
+                navigate('/')
             } else {
                 response.units = response.units.map((item)=>{
                     item.draft_1_outline = item.draft_1_outline.sort((a,b) => {
@@ -138,6 +139,7 @@ export default function SelectUnit () {
                     }
                     console.log('login maintenanceInfo =',dumyMaintenanceData)
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     setCommonStandbyScreen({openFlag:false})
                     if (res.isDuplicateLogin) {

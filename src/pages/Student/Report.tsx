@@ -9,8 +9,10 @@ import ReportSelectButton from '../../components/pageComponents/report/ReportSel
 import CustomizedReportTabs from '../../components/pageComponents/report/ReportTabComponent';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
 import { logoutAPI } from './api/Login.api';
+import { useNavigate } from 'react-router-dom';
 
 const Report = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = React.useState<boolean>(false);
     // const [isNoData, setIsNoData] = React.useState<boolean>(true);
 
@@ -68,6 +70,7 @@ const Report = () => {
                         type: ''
                     }
                     setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
                 } else {
                     setCommonStandbyScreen({openFlag:false})
                     if (response.isDuplicateLogin) {
@@ -130,6 +133,7 @@ const Report = () => {
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
                         setMaintenanceData(dumyMaintenanceData)
+                        navigate('/')
                     } else {
                         setCommonStandbyScreen({openFlag:false})
                         if (response.isDuplicateLogin) {
@@ -235,6 +239,7 @@ const Report = () => {
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
                         setMaintenanceData(dumyMaintenanceData)
+                        navigate('/')
                     } else {
                         setCommonStandbyScreen({openFlag:false})
                         if (res.isDuplicateLogin) {

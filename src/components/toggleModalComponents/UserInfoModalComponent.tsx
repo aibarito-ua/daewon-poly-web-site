@@ -13,8 +13,10 @@ import useLoginStore from '../../store/useLoginStore';
 import CustomizedCheckbox from '../commonComponents/checkbox/CustomizedCheckbox';
 import { logoutAPI, memberWithDraw } from '../../pages/Student/api/Login.api';
 import useControlAlertStore from '../../store/useControlAlertStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserInfoModalComponent() {
+    const navigate = useNavigate();
     const {
         userInfo,
         infoModalOpen,
@@ -233,6 +235,7 @@ export default function UserInfoModalComponent() {
                                                     }
                                                     console.log('login maintenanceInfo =',dumyMaintenanceData)
                                                     setMaintenanceData(dumyMaintenanceData)
+                                                    navigate('/')
                                                 } else {
                                                     setCommonStandbyScreen({openFlag:false})
                                                     if (response.isDuplicateLogin) {

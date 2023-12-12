@@ -120,7 +120,7 @@ const NavAside = () => {
                     <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
                     onClick={async ()=>{
                         const check = await checkDuplicateLogin(userInfo.accessToken);
-                        if (check.is_server_error) {
+                        if (check.is_server_error) { 
                             if (check.data) {
                                 let maintenanceInfo:TMaintenanceInfo = check.data.maintenanceInfo;
                                 maintenanceInfo.start_date = check.data.maintenanceInfo.start_date;
@@ -133,6 +133,7 @@ const NavAside = () => {
                                 }
                                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                                 setMaintenanceData(dumyMaintenanceData)
+                                navigate('/')
                             } else {
                                 if (check.isDuplicateLogin) {
                                     commonAlertOpen({
