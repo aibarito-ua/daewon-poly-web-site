@@ -265,6 +265,7 @@ export default function FormDialog() {
                 open: false,
                 type: ''
             }
+            setCommonStandbyScreen({openFlag:false})
             setMaintenanceData(dumyMaintenanceData)
             navigate('/')
           

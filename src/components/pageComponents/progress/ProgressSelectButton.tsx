@@ -74,6 +74,7 @@ export default function SelectLabels() {
             open: false,
             type: ''
         }
+        setCommonStandbyScreen({openFlag:false})
         setMaintenanceData(dumyMaintenanceData)
         navigate('/')
       } else {

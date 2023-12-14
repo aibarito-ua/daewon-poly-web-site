@@ -69,6 +69,7 @@ const Report = () => {
                         open: false,
                         type: ''
                     }
+                    setCommonStandbyScreen({openFlag:false})
                     setMaintenanceData(dumyMaintenanceData)
                     navigate('/')
                 } else {
@@ -132,6 +133,7 @@ const Report = () => {
                             type: ''
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setCommonStandbyScreen({openFlag:false})
                         setMaintenanceData(dumyMaintenanceData)
                         navigate('/')
                     } else {
@@ -238,6 +240,7 @@ const Report = () => {
                             type: ''
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setCommonStandbyScreen({openFlag:false})
                         setMaintenanceData(dumyMaintenanceData)
                         navigate('/')
                     } else {

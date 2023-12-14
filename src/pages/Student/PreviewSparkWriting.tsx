@@ -176,6 +176,7 @@ const PreviewSparkWriting = (props:any) => {
                                 open: false,
                                 type: ''
                             }
+                            setCommonStandbyScreen({openFlag:false})
                             setMaintenanceData(dumyMaintenanceData)
                             navigate('/')
                         } else {
@@ -328,6 +329,7 @@ const PreviewSparkWriting = (props:any) => {
                             type: ''
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setCommonStandbyScreen({openFlag:false})
                         setMaintenanceData(dumyMaintenanceData)
                         navigate('/')
                     } else {
@@ -539,6 +541,7 @@ const PreviewSparkWriting = (props:any) => {
                     type: ''
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
+                setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
                 navigate('/')
             } else {
@@ -789,6 +792,7 @@ const PreviewSparkWriting = (props:any) => {
                     type: ''
                 }
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
+                setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
                 navigate('/')
             } else {
@@ -1361,6 +1365,7 @@ const PreviewSparkWriting = (props:any) => {
                                                 type: ''
                                             }
                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                            setCommonStandbyScreen({openFlag:false})
                                             setMaintenanceData(dumyMaintenanceData)
                                             navigate('/')
                                         } else {
@@ -1523,6 +1528,7 @@ const PreviewSparkWriting = (props:any) => {
                                                         open: false,
                                                         type: ''
                                                     }
+                                                    setCommonStandbyScreen({openFlag:false})
                                                     setMaintenanceData(dumyMaintenanceData)
                                                     navigate('/')
                                                 } else {
@@ -1672,6 +1678,7 @@ const PreviewSparkWriting = (props:any) => {
                                                                 type: ''
                                                             }
                                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                                            setCommonStandbyScreen({openFlag:false})
                                                             setMaintenanceData(dumyMaintenanceData)
                                                             navigate('/')
                                                         } else {

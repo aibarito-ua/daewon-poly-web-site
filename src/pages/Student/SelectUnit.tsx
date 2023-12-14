@@ -90,6 +90,7 @@ export default function SelectUnit () {
                     open: false,
                     type: ''
                 }
+                setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
                 navigate('/')
             } else {
@@ -138,6 +139,7 @@ export default function SelectUnit () {
                         type: ''
                     }
                     console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setCommonStandbyScreen({openFlag:false})
                     setMaintenanceData(dumyMaintenanceData)
                     navigate('/')
                 } else {

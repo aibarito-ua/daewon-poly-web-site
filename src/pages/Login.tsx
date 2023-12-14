@@ -69,6 +69,7 @@ export const Login = () => {
                         open: false,
                         type: ''
                     }
+                    
                     setMaintenanceData(dumyMaintenanceData)
                     navigate('/')
                 } else {

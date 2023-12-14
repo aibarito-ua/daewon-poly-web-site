@@ -234,6 +234,7 @@ export default function UserInfoModalComponent() {
                                                         type: ''
                                                     }
                                                     console.log('login maintenanceInfo =',dumyMaintenanceData)
+                                                    setCommonStandbyScreen({openFlag:false})
                                                     setMaintenanceData(dumyMaintenanceData)
                                                     navigate('/')
                                                 } else {

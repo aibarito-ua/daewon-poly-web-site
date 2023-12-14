@@ -72,6 +72,7 @@ const Progress = () => {
                             type: ''
                         }
                         console.log('login maintenanceInfo =',dumyMaintenanceData)
+                        setCommonStandbyScreen({openFlag:false})
                         setMaintenanceData(dumyMaintenanceData)
                         navigate('/')
                     } else {
@@ -179,6 +180,7 @@ const Progress = () => {
                     open: false,
                     type: ''
                 }
+                setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
                 navigate('/')
             } else {
@@ -207,6 +209,7 @@ const Progress = () => {
                     open: false,
                     type: ''
                 }
+                setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
                 navigate('/')
             } else {

@@ -1,6 +1,6 @@
 {
   "name": "poly_web_site",
-  "version": "0.1.202312121725",
+  "version": "0.1.202312141400",
   "private": true,
   "dependencies": {
     "@emotion/react": "11.11.1",
