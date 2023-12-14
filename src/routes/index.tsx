@@ -90,7 +90,7 @@ export default function Roter() {
                 }
             },1000);
     
-            return () => clearTimeout(timerId);
+            // return () => clearTimeout(timerId);
         }
     })
     const publicRoutes = () => {
