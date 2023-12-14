@@ -47,9 +47,11 @@ export default function Roter() {
             // real time check maintenance start/end
             let timerId = setInterval(()=>{
                 const currentTime = new Date();
+
+                const offset = 1000 * 60 * 60 * 9;
                 // start
                 const startDate = new Date(stDate);
-                const start_date = startDate.getTime();
+                const start_date = startDate.getTime() + offset;
                 const start_current_gap_timeNumber = start_date - currentTime.getTime()
                 const startCurrentGapTime_min = Math.floor(start_current_gap_timeNumber/ ( 60*1000));
                 const gap_st = Math.floor(start_current_gap_timeNumber)
@@ -60,7 +62,7 @@ export default function Roter() {
                     let dumpMaintenanceData:TMaintenanceData = JSON.parse(JSON.stringify(maintenanceData));
                     // end time calculate
                     const endDate = new Date(edDate)
-                    const end_date = endDate.getTime();
+                    const end_date = endDate.getTime() + offset;
                     const end_current_gap_timeNumber = end_date - currentTime.getTime();
                     const gap_end = Math.floor(end_current_gap_timeNumber);
                     // console.log('gap ed =',gap_end)
