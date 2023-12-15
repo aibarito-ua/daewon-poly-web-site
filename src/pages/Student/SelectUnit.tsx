@@ -27,7 +27,9 @@ export default function SelectUnit () {
     const {
         sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI,
         // hover event
-        lastUnitIndex, setLastUnitIndex
+        lastUnitIndex, setLastUnitIndex,
+        // time track
+        setSparkWritingUnitStart
     } = useSparkWritingStore();
     
     const {
@@ -343,18 +345,21 @@ export default function SelectUnit () {
             console.log('unitNum: ',unitTitle)
             setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
+            setSparkWritingUnitStart(unitNum, draftNum);
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
             CommonFunctions.goLink(path, navigate, role);
         }
         const selectTemporaryPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
             setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
+            setSparkWritingUnitStart(unitNum, draftNum);
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview`
             CommonFunctions.goLink(path, navigate, role)
         }
         const selectPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
             setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
+            setSparkWritingUnitStart(unitNum, draftNum);
             const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}/Preview/submit`
             CommonFunctions.goLink(path, navigate, role)
         }

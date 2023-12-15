@@ -62,6 +62,12 @@ interface ISparkWritingStore {
     previewPageInitFlag: TPreviewPageInitFlag;
     setPreviewPageInitFlag: (flag: TPreviewPageInitFlag) => void;
 
+    // time check by unit
+    sparkWritingUnitDurationData: TSparkWritingTimeCheckAllUnits;
+    setSparkWritingUnitStart: (unit:string, draft:string) => void;
+    setSparkWritingUnitCancel:() => void;
+    setSparkWritingUnitEnd:(unit:string, draft:string) => number;
+
     
 }
 type TPreviewPageInitFlag = "UPDATE_WRITE"|"PREVIEW"|"ETC"|"";
@@ -119,6 +125,7 @@ type TSparkWritingTemporarySaveData = {
     draft_2_init_page_flag?: string;
     contents: TSparkWritingSaveTemporaryContent[];
     campus_name: string;
+    duration:number;
 }
 type TSparkWritingSaveTemporaryContent = {
     input_content: string;
@@ -194,6 +201,7 @@ type TSubmit1stDraftRequestData = {
     contents: TSubmit1stDraftReqDataContent[];
     proofreading_count: number;
     campus_name: string;
+    duration:number;
 }
 type TSubmit1stDraftReqDataContent = {
     input_content:string;
@@ -216,6 +224,7 @@ type TSubmit2ndDraftRequestData = {
     draft_2_init_page_flag: string;
     contents: TSubmit2ndDraftReqDataContent[];
     campus_name: string;
+    duration:number;
 }
 // Draft feedback type
 type TFeedbackStates = {
@@ -307,4 +316,13 @@ type TCircleLegendItems = {
     eventValue: number;
     innerRadius: number;
     key: string;  
+}
+
+type TSparkWritingTimeCheckAllUnits = TSparkWritingTimeCheck[];
+type TSparkWritingTimeCheck = {
+    activityName:string;
+    unit: string;
+    draft: string;
+    startAt: string;
+    endAt: string;
 }

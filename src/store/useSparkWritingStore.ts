@@ -373,7 +373,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
         student_name_kr:'', class_name: '',
         unit_id: 0, proofreading_count:0,
         draft_index: 0, contents: [],
-        campus_name: ''
+        campus_name: '', duration: 0
     },
     setSparkWritingTemporarySaveData: (data) => {
         set(()=>({
@@ -536,6 +536,66 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
         set(()=>({sparkWritingData: dumpSparkWritingData}))
         
     },
+    sparkWritingUnitDurationData: [],
+    setSparkWritingUnitStart: (unit, draft) => {
+        console.log('unit =',unit, ', draft =',draft)
+        const date = new Date();
+        const dateIso = date.toISOString();
+        console.log('date =',dateIso)
+        let sparkWritingUnitDurationData:TSparkWritingTimeCheckAllUnits = JSON.parse(JSON.stringify(get().sparkWritingUnitDurationData));
+        const originDataLength = sparkWritingUnitDurationData.length;
+        if (originDataLength > 0) {
+            let checkUpdateTargetIndex = -1;
+            for (let i = 0; i < originDataLength; i++) {
+                const target = sparkWritingUnitDurationData[i]
+                if (target.unit===unit && target.draft === draft) {
+                    sparkWritingUnitDurationData[i].startAt = dateIso;
+                    checkUpdateTargetIndex = i;
+                    break;
+                }
+            }
+            if (checkUpdateTargetIndex >= 0) {
+                set(()=>({sparkWritingUnitDurationData}))
+            } else {
+                const newData:TSparkWritingTimeCheck = {
+                    activityName: 'SparkWriting',unit, draft, startAt:dateIso , endAt:''
+                }
+                sparkWritingUnitDurationData.push(newData);
+                set(()=>({sparkWritingUnitDurationData}))
+            }
+        } else {
+
+            const newData:TSparkWritingTimeCheck = {
+                activityName: 'SparkWriting',unit, draft, startAt:dateIso , endAt:''
+            }
+            sparkWritingUnitDurationData.push(newData);
+            set(()=>({sparkWritingUnitDurationData}))
+        }
+    },
+    setSparkWritingUnitCancel: ()=>{
+        set(()=>({sparkWritingUnitDurationData:[]}))
+    },
+    setSparkWritingUnitEnd: (unit, draft) => {
+        const date = new Date();
+        const dateIso = date.toISOString();
+        const endTime = date.getTime();
+        let sparkWritingUnitDurationOriginData:TSparkWritingTimeCheckAllUnits = JSON.parse(JSON.stringify(get().sparkWritingUnitDurationData));
+        const originDataLength = sparkWritingUnitDurationOriginData.length;
+        if (originDataLength > 0) {
+            let startAt = '';
+            let sparkWritingUnitDurationData = sparkWritingUnitDurationOriginData.map((item, index)=>{
+                if (item.unit === unit && item.draft === draft) {
+                    startAt = item.startAt;
+                    item.endAt = dateIso;
+                    return item;
+                } else return item;
+            })
+            const startTime = new Date(startAt).getTime();
+            const gapTime = endTime - startTime;
+            console.log('start =',startTime,', end =',endTime, ', gap =',gapTime)
+            return gapTime;
+        } else return 0;
+    }
 }))
 
 export default useSparkWritingStore;

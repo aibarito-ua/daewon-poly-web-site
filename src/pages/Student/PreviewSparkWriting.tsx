@@ -30,6 +30,8 @@ const PreviewSparkWriting = (props:any) => {
         // page init set
         previewPageInitFlag,
         setPreviewPageInitFlag,
+
+        setSparkWritingUnitEnd
     } = useSparkWritingStore();
     // Nav Store
     const {
@@ -753,7 +755,8 @@ const PreviewSparkWriting = (props:any) => {
         const bodySave = replaceUpdateSparkWritingBody();
     }
     const forcedTemporarySave = async (isGrammarSave?:boolean) => {
-        
+        const unitNum = (unitIndex+1).toString();
+        const gapTime = setSparkWritingUnitEnd(unitNum.toString(), '1')
         const targetData = sparkWritingData[unitIndex];
         const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
             const historyMinusIndex = targetData.draft_1_outline[0].name==='Title' ? 2:1;
@@ -777,6 +780,7 @@ const PreviewSparkWriting = (props:any) => {
             proofreading_count: targetData.proofreading_count,
             contents: contentsData,
             campus_name: userInfo.campusName,
+            duration: gapTime,
         };
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
@@ -1352,6 +1356,7 @@ const PreviewSparkWriting = (props:any) => {
                                 noButtonLabel: "Yes",
                                 alertType: 'continue',
                                 closeEvent: async ()=>{
+                                    
                                     const check_duplicate_login = await checkDuplicateLogin(userInfo.accessToken);
                                     if (check_duplicate_login.is_server_error) {
                                         if (check_duplicate_login.data) {
@@ -1408,8 +1413,9 @@ const PreviewSparkWriting = (props:any) => {
                                         // console.log('targetData =',targetData)
                                         const unitTitle = targetData.topic;
                                         const unitNum = targetData.unit_index;
-                                        const draftNum = params.draft;
-                                        // console.log('unitNum: ',targetData.topic)
+                                        
+                                        const draftNum = params.draft ? params.draft:'';
+                                        
                                         setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
                                         const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
                                         // console.log('path =',path)
@@ -1632,6 +1638,8 @@ const PreviewSparkWriting = (props:any) => {
                                             closeEvent: async () => {
         
                                                 // submit
+                                                const unitNum = (unitIndex+1).toString();
+                                                const gapTime = setSparkWritingUnitEnd(unitNum.toString(), '1')
                                                 // make contents 
                                                 const contentsData:TSubmit1stDraftReqDataContent[] = currentSparkWritingData.draft_1_outline.map((item) => {
                                                     
@@ -1661,6 +1669,7 @@ const PreviewSparkWriting = (props:any) => {
                                                     contents: contentsData,
                                                     proofreading_count: currentSparkWritingData.proofreading_count,
                                                     campus_name: userInfo.campusName,
+                                                    duration: gapTime
                                                 }
                                               //  console.log('submit item = ',submitData)
                                                 commonAlertClose();

@@ -85,6 +85,7 @@ const EssayWriting = () => {
         previewPageInitFlag,
         setPreviewPageInitFlag,
         setIsOpenFold,
+        setSparkWritingUnitEnd
     } = useSparkWritingStore();
     const params = useParams();
     // console.log('params : unit =',params.unit,': draft =',params.draft)
@@ -988,7 +989,8 @@ const EssayWriting = () => {
                     is_input_open: item.is_input_open
                 }
             })
-
+            
+            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
             const data:TSparkWritingTemporarySaveData = {
                 student_code: userInfo.userCode,
                 student_name_en: userInfo.memberNameEn,
@@ -1000,6 +1002,7 @@ const EssayWriting = () => {
                 contents: contensData,
                 draft_2_init_page_flag:'',
                 campus_name: userInfo.campusName,
+                duration:gapTime
             }
             // console.log('data ==',data)
             
@@ -1084,7 +1087,7 @@ const EssayWriting = () => {
                     is_input_open: false
                 }
             });
-            
+            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
             const data:TSparkWritingTemporarySaveData = {
                 student_code: userInfo.userCode,
                 student_name_en: userInfo.memberNameEn,
@@ -1096,6 +1099,7 @@ const EssayWriting = () => {
                 contents: contentsData,
                 draft_2_init_page_flag: draft2ndPageSet,
                 campus_name: userInfo.campusName,
+                duration:gapTime
             };
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
 
@@ -1175,6 +1179,7 @@ const EssayWriting = () => {
                 order_index: item.order_index
             }
         });
+        const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
         const submitData:TSubmit2ndDraftRequestData = {
             student_code: userInfo.userCode,
             student_name_en: userInfo.memberNameEn,
@@ -1185,7 +1190,7 @@ const EssayWriting = () => {
             draft_2_init_page_flag: draft2ndPageSet,
             contents,
             campus_name: userInfo.campusName,
-
+            duration: gapTime
         }
         commonAlertClose();
         setCommonStandbyScreen({openFlag:true});
