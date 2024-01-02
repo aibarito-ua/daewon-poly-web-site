@@ -210,7 +210,6 @@ export default function UnitReportModalComponent() {
                     <BarChart />
                     <div className='bg-tab-overall-bar-legend-img-svg bg-no-repeat w-[393px] h-[15px]' />
                 </div>
-                
             </div>
             )}
             {/* Report By Unit */}

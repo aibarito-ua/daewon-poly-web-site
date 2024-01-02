@@ -644,7 +644,12 @@ const PreviewSparkWriting = (props:any) => {
     
                 for (const wordTitleValue of iPresentTitleValue) {
                     let addWordString = '';
-                    for (const checkTitleTarget of wordTitleValue) {
+                    const wordTitleValueItem = wordTitleValue.sort((a,b) => {
+                        return b.type - a.type;
+                    })
+                    for (const checkTitleTarget of wordTitleValueItem) {
+                        console.log('checkTitleTarget =',checkTitleTarget)
+                        
                         switch (checkTitleTarget.type) {
                             case 0:
                                 if (addWordString==='') {
@@ -654,6 +659,9 @@ const PreviewSparkWriting = (props:any) => {
                             case 1:
                                 continue;
                             case -1:
+                                if (addWordString==='') {
+                                    addWordString=checkTitleTarget.word;
+                                }
                                 continue;
                             case 2:
                                 addWordString=checkTitleTarget.word;
@@ -685,19 +693,26 @@ const PreviewSparkWriting = (props:any) => {
                 
                 for (const iPresentTitleValue of presentBody) {
                     for (const wordTitleValue of iPresentTitleValue) {
-                        
+                        const wordTitleValueItem = wordTitleValue.sort((a,b) => {
+                            return b.type - a.type;
+                        })
                         let wordString = '';
-                        for (const checkTitleTarget of wordTitleValue) {
+                        for (const checkTitleTarget of wordTitleValueItem) {
                             switch (checkTitleTarget.type) {
                                 case 0:
-                                    wordString = checkTitleTarget.word;
+                                    if (wordString==='') {
+                                        wordString=checkTitleTarget.word;
+                                    }
                                     continue;
                                 case 1:
                                     continue;
                                 case -1:
+                                    if (wordString==='') {
+                                        wordString=checkTitleTarget.word;
+                                    }
                                     continue;
                                 case 2:
-                                    wordString = checkTitleTarget.word;
+                                    wordString=checkTitleTarget.word;
                                     break;
                             }
                         }
@@ -939,6 +954,8 @@ const PreviewSparkWriting = (props:any) => {
             if (countofUseAIProofreading===2) {
                 if (checkGrammarsSelectAll) {
                    console.log('grammar 진행 중 1')
+                   replaceUpdateSparkWritingTitle()
+                    replaceUpdateSparkWritingBody()
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
                     
@@ -955,6 +972,8 @@ const PreviewSparkWriting = (props:any) => {
                 if (checkGrammarsSelectAll) {
                     // grammar 진행중
                    console.log('grammar 진행 중 2')
+                    replaceUpdateSparkWritingTitle()
+                    replaceUpdateSparkWritingBody()
                     setIsSaveButtonOpen(true);
                     setIsGrammarProceed(true)
                     
