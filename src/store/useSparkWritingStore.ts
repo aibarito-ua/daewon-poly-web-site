@@ -416,7 +416,7 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
             if (item.unit_id === unitId) {
                 const currentProofReadingCount = item.proofreading_count;
                 if (currentProofReadingCount < 2) {
-                    item.proofreading_count =0;
+                    item.proofreading_count = 0;
                 } else {
                     isAvailable=false;
                 }

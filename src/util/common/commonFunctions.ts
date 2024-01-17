@@ -94,7 +94,7 @@ export const CommonReplace={
         const removeOneSP = text.replace(/[{}`\\]|(&#)/gmi,'');
         const removeContinue = removeOneSP.replace(/[\{\}\[\]\/?,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi, '');
         return removeContinue;
-    }
+    },
 }
 export const CommonInputValidate = {
     chat: (text: string) => {
@@ -102,8 +102,86 @@ export const CommonInputValidate = {
         const removeSpecialCharacters = CommonReplace.removeErrorCharactor(removeEmoji.text);
         return removeSpecialCharacters;
     },
+    // 입력 제한
+    /**
+     * 
+     * @param targetText string
+     * @returns boolean -> true: 사용 가능 / false: 사용 불가
+     */
     writingInput: (text: string) => {
         const removeEmoji = CommonEmoji.remove(text);
         
+    },
+    // 입력 제한
+    /**
+     * 
+     * @param targetText string
+     * @returns boolean -> true: 사용 가능 / false: 사용 불가
+     */
+    writingEssayInputTitle: (targetText: string) => {
+        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
+        const checkOneSC = targetText.match(/(?!\('|'\)|\("|"\))[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+        const checkSCemptySC = targetText.match(/([\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+\s+[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+)/gmi)
+        const checkAemptyA = targetText.match(/([\'\"\`]+\s+[\'\"\`]+)/gmi)
+        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
+        const checkChangeRow = targetText.match(/\n{3,}/gmi)
+        if (checkNotSC!==null) {
+            console.log('불가 문자 입력')
+            return false;
+        } else if (checkOneSC!==null) {
+            console.log('2개 이상 금지')
+            return false;
+        } else if (checkAemptyA !== null) {
+            console.log('\` \' \" 2개 연속 사용 금지')
+            return false;
+        } else if (checkSCemptySC !==null) {
+            console.log('특문 사이 공백 : \'\"는 제외')
+            return false;
+        } else if (checkNotKR!==null) {
+            console.log('한국어')
+            return false;
+        } else if (checkDoubleSpace) {
+            console.log('space 2개까지만 허용')
+            return false;
+        } else if (checkChangeRow) {
+            console.log('줄바꿈 2개까지만')
+            return false;
+        } else {
+            return true;
+        }
+    },
+    writingEssayInputBody: (targetText: string) => {
+        const checkNotSC = targetText.match(/[\{\}\|\\`]{1,}/gmi)
+        const checkOneSC = targetText.match(/(?!\('|'\)|\("|"\))[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+        const checkSCemptySC = targetText.match(/([\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+\s+[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+)/gmi)
+        const checkAemptyA = targetText.match(/([\'\"\`]+\s+[\'\"\`]+)/gmi)
+        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
+        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
+        const checkChangeRow = targetText.match(/\n{3,}/gmi)
+        if (checkNotSC!==null) {
+            console.log('불가 문자 입력')
+            return false;
+        } else if (checkOneSC!==null) {
+            console.log('2개 이상 금지')
+            return false;
+        } else if (checkAemptyA !== null) {
+            console.log('\` \' \" 2개 연속 사용 금지')
+            return false;
+        } else if (checkSCemptySC !==null) {
+            console.log('특문 사이 공백 : \'\"는 제외')
+            return false;
+        } else if (checkNotKR!==null) {
+            console.log('한국어')
+            return false;
+        } else if (checkDoubleSpace) {
+            console.log('space 2개까지만 허용')
+            return false;
+        } else if (checkChangeRow) {
+            console.log('줄바꿈 2개까지만')
+            return false;
+        } else {
+            return true;
+        }
     }
 }

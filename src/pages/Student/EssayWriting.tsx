@@ -13,7 +13,7 @@ import { callUnitInfobyStudent, draft2ndSubmit, draftSaveTemporary } from './api
 import draftViewBox from '../../components/pageComponents/feedbackComponents/draftFeedback';
 import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
 import { checkDuplicateLogin, logoutAPI } from './api/Login.api';
-
+import {CommonInputValidate} from '../../util/common/commonFunctions'
 const EssayWriting = () => {
 
     // 1nd draft에서 완료 후 툴팁 제어
@@ -27,7 +27,7 @@ const EssayWriting = () => {
     // fold flag
     const [foldFlag, setFoldFlag] = React.useState<boolean[]>([]);
     const draft1stRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
-    const draft2ndRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
+    // const draft2ndRefs = React.useRef<(HTMLTextAreaElement|null)[]>([]);
     const [updateFoldIndex, setUpdateFoldIndex] = React.useState<number>();
 
     // check open  Buttons
@@ -38,7 +38,7 @@ const EssayWriting = () => {
     const [paramValues, setParamValues] = React.useState<{unitIndex:number, draft:number}>({unitIndex:0, draft: 0});
 
     // save flag
-    const [ isSaved, setIsSaved] = React.useState<boolean>(false);
+    // const [ isSaved, setIsSaved] = React.useState<boolean>(false);
     // 비교할 원본 데이터
     const [originalTargetData, setOriginalTargetData] = React.useState<TSparkWritingDatas>([]);
 
@@ -66,7 +66,6 @@ const EssayWriting = () => {
         setSubNavTitleString,
         setSubRightNavTitleString,
         selectUnitInfo,
-        goBackFromDraftInUnitPage,
         setGoBackFromDraftInUnitPage,
     } = useNavStore();
     // WritingCenter Store
@@ -75,14 +74,9 @@ const EssayWriting = () => {
     const { 
         setOutlineInputText,
         sparkWritingData,
-        feedbackDataInStudent,
-        setFeedbackDataInStudent,
         draft2ndPageSet,
         setDraft2ndPageSet,
-        commentFocusId,
-        sparkWritingDataDumy,
         historyDataDelete,
-        previewPageInitFlag,
         setPreviewPageInitFlag,
         setIsOpenFold,
         setSparkWritingUnitEnd
@@ -129,7 +123,7 @@ const EssayWriting = () => {
                 const data = response.units
                 console.log('response page init set api =',response)
                 setOriginalTargetData(data);
-                setIsSaved(false);
+                // setIsSaved(false);
                 return true;
             }
         })
@@ -245,8 +239,7 @@ const EssayWriting = () => {
         
         return ()=>{
             console.log('is did un mout?')
-            setIsSaved(false);
-            // setDraft2ndPageSet('')
+            // setIsSaved(false);
         }
     });
     React.useEffect(()=>{
@@ -296,29 +289,16 @@ const EssayWriting = () => {
                 const data = sparkWritingData[unitIndex];
                 let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
                 let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-                // console.log('all names ==',allNames)
                 for (let i = 0; i < outlineOrigin.length; i++) {
                     const target = draft1stRefs.current[i];
                     if (target) {
                         const targetBeforeIdName = target.id.replace(/(_)?([0-9]{1,})/gmi,'');
                         const targetTitleName = target.id.replace(/\d$/gmi,'').split('_');
-                        // console.log('targetBeforeIdName =',targetBeforeIdName)
-                        // console.log('target.className =',target.className)
                         if (target.className.includes(controllClass)) {
                             target.style.height='auto';
                             target.style.height = target.scrollHeight+'px';
                             
                         }
-
-                        // if (allNames[updateFoldIndex] === targetBeforeIdName) {
-                        //     if (targetTitleName.length > 1) {
-                        //         if (targetTitleName[1] === '1') {
-                        //             target.scrollIntoView({behavior:'auto', block: 'center'})
-                        //         }
-                        //     } else {
-                        //         target.scrollIntoView({behavior:'auto', block: 'center'})
-                        //     }
-                        // }
                     }
                 }
             }
@@ -362,9 +342,6 @@ const EssayWriting = () => {
             setIsPreviewButtonOpen(false);
             setIsSaveButtonOpen(false);
             setIsUpdateDraft2Inputs(false);
-
-            // setDraft2ndSaveActive(false);
-            // setDraft2ndSubmitActive(false);
         }
     
     },[
@@ -389,17 +366,6 @@ const EssayWriting = () => {
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
         const target = sparkWritingData[unitIndex].draft_2_outline;
         // 2nd draft check
-        // if (target[0].input_content!=='' && target[1].input_content!=='' ) {
-        //     setDraft2ndSubmitActive(true);
-        //     setDraft2ndSaveActive(true);
-        // } else if (target[0].input_content!=='' || target[1].input_content!=='' ) {
-        //     setDraft2ndSaveActive(true);
-        //     setDraft2ndSubmitActive(false);
-        // } else {
-        //     setDraft2ndSubmitActive(false);
-        //     setDraft2ndSaveActive(false);
-        // }
-        
         if (params.draft && params.draft==='1') {
 
             if (sparkWritingData !== undefined) {
@@ -852,8 +818,6 @@ const EssayWriting = () => {
                     callbackCheckValues()
                     // draft2ndSaveActive
                     // draft2ndSubmitActive
-                    // console.log('is after update?',sparkWritingData[parseInt(UnitIndex)].draft_2_outline)
-                    // console.log('is after update?2',sparkWritingDataDumy[parseInt(UnitIndex)].draft_2_outline)
                     let questionOpenSave = false;
                     if (draft2ndSaveActive||draft2ndSubmitActive) {
                         questionOpenSave = true;
@@ -963,7 +927,6 @@ const EssayWriting = () => {
             if (targetRef) {
                 targetRef.style.height = 'auto';
                 targetRef.style.height = targetRef.scrollHeight + 'px';
-                // targetRef.scrollIntoView({behavior:'auto', block: 'start'})
                 return targetRef.id;
             }
         })
@@ -979,7 +942,9 @@ const EssayWriting = () => {
         if (draftIndex === 1){
             console.log('foldFlag ==',foldFlag)
             const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+                // input content 바뀐부분 확인 필요 240117
                 const input_content = item.input_content.replace(/\s{2,}/g, ' ');
+                
                 console.log('item[',item.order_index-1,'] =',item)
                 return {
                     heading_name: item.name,
@@ -1004,11 +969,10 @@ const EssayWriting = () => {
                 campus_name: userInfo.campusName,
                 duration:gapTime
             }
-            // console.log('data ==',data)
             
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
                 if (response) {
-                    setIsSaved(true);
+                    // setIsSaved(true);
                     commonAlertClose();
                 }
                 return response;
@@ -1074,11 +1038,8 @@ const EssayWriting = () => {
             }
             
         } else if (draftIndex === 2) {
-            
             const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
-                // console.log('item.input_content length =',item.input_content.length)
                 const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
-                // console.log('input_content ====',input_content.length)
                 return {
                     grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
                     input_content,
@@ -1158,7 +1119,7 @@ const EssayWriting = () => {
                 }
             } else {
                 setCommonStandbyScreen({openFlag:false});
-                setIsSaved(true);
+                // setIsSaved(true);
                 commonAlertClose();
                 setDraft2ndPageSet('')
                 setDraft2ndSaveActive(false)
@@ -1319,71 +1280,14 @@ const EssayWriting = () => {
         }
         return true;
     }
-    // 입력 제한
-    /**
-     * 
-     * @param targetText string
-     * @returns boolean -> true: 사용 가능 / false: 사용 불가
-     */
-    const checkInputCharactersRegExps = (targetText: string) => {
-        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
-        const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
-        const checkDoubleSpace = targetText.match(/\s{4,}/gmi)
-        const checkChangeRow = targetText.match(/\n{3,}/gmi)
-        if (checkNotSC!==null) {
-            console.log('불가 문자 입력')
-            return false;
-        } else if (checkOneSC!==null) {
-            console.log('2개 이상 금지')
-            return false;
-        } else if (checkNotKR!==null) {
-            console.log('한국어')
-            return false;
-        } else if (checkDoubleSpace) {
-            console.log('space 2개까지만 허용')
-            return false;
-        } else if (checkChangeRow) {
-            console.log('줄바꿈 2개까지만')
-            return false;
-        } else {
-            return true;
-        }
-    }
-    const checkInputCharactersRegExps2 = (targetText: string) => {
-        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
-        const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
-        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
-        const checkChangeRow = targetText.match(/\n{3,}/gmi)
-        if (checkNotSC!==null) {
-            console.log('불가 문자 입력')
-            return false;
-        } else if (checkOneSC!==null) {
-            console.log('2개 이상 금지')
-            return false;
-        } else if (checkNotKR!==null) {
-            console.log('한국어')
-            return false;
-        } else if (checkDoubleSpace) {
-            console.log('space 2개까지만 허용')
-            return false;
-        } else if (checkChangeRow) {
-            console.log('줄바꿈 2개까지만')
-            return false;
-        } else {
-            return true;
-        }
-    }
+    
     const outlineBody = (outlineItem: TSparkWritingData ) => {
         let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
         const targetMaxLength = outlineOrigin.length;
         // title 정리
         let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-        // console.log('targets =',allNames)
         // 데이터 폼 만들기
         let manufactureItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(allNames, outlineOrigin);
-        // console.log('data =',manufactureItem)
         
         return allNames.map((title, i) => {
             const controllClass = `foldFlag:::[${i}]`
@@ -1443,7 +1347,6 @@ const EssayWriting = () => {
                                                         const unitIndex = outlineItem.unit_index
                                                         const orderIndex = item.order_index
     
-                                                        // const maxWordLength = val.match
                                                         console.log('input name =',item.name)
                                                         if (item.name==='Title') {
                                                             if (lengthCheck ) {
@@ -1470,7 +1373,7 @@ const EssayWriting = () => {
                                                                     }
                                                                 })
                                                             } else {
-                                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                                 if (checkNotCH) {
                                                                     e.currentTarget.style.height = 'auto';
                                                                     e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -1493,7 +1396,7 @@ const EssayWriting = () => {
                                                                     }
                                                                 })
                                                             } else {
-                                                                const checkNotCH = checkInputCharactersRegExps(val);
+                                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                                 if (checkNotCH) {
                                                                     e.currentTarget.style.height = 'auto';
                                                                     e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
@@ -1741,7 +1644,7 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
@@ -1803,7 +1706,7 @@ const EssayWriting = () => {
                                                 })
                                                 
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                                 }
@@ -1869,7 +1772,7 @@ const EssayWriting = () => {
                                                     }
                                                 })
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 1,2)
                                                 }
@@ -1932,7 +1835,7 @@ const EssayWriting = () => {
                                                 })
                                                 
                                             } else {
-                                                const checkNotCH = checkInputCharactersRegExps2(val);
+                                                const checkNotCH = CommonInputValidate.writingEssayInputBody(val);
                                                 if (checkNotCH) {
                                                     setOutlineInputText(val, draftItem.unit_id, draftItem.unit_index, 2, 2);
                                                 }
