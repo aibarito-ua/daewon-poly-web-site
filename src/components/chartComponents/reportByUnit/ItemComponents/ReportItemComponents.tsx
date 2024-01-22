@@ -57,12 +57,12 @@ const ReportCorrectionSummaryComponent = (
                 <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                 <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                 // console.log('word ==',wordItem)
-                
+                const isGrammarCheck = wordItem.correction_reason.indexOf('grammar') !== -1
                 const key2 = key1+'-wordItem-'+wordIndex+'-'+wordItem.type;
                 if (wordItem.type === 1) {
-                    return <span key={key2} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                    return <span key={key2} className={`report-chart-correction-content-add-text ${isGrammarCheck && '!bg-[#ffea2c]'}`}>{wordItem.word}</span>
                 } else if (wordItem.type === -1 ) {
-                    return <span key={key2} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                    return <span key={key2} className={`report-chart-correction-content-delete-text ${isGrammarCheck && '!bg-[#ffea2c]'}`}>{wordItem.word}</span>
                 } else {
                     return <span key={key2} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                 }
@@ -78,7 +78,9 @@ const ReportCorrectionSummaryComponent = (
         </svg>
     }
     const GrammarSentence = (grammar:TReportByStudentGrammarCorrectionItem) => {
-        
+        console.log('=== TEST GRAMMAR SENTENCE CREATE ====')
+        console.log('grammar =',grammar)
+
         return (
             <div className='report-chart-righ-correction-content-item'
             onClick={()=>{
@@ -88,12 +90,13 @@ const ReportCorrectionSummaryComponent = (
                     return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
                         <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
-                            console.log('word ==',wordItem)
+                            
+                            const isGrammarCheck = wordItem.correction_reason.indexOf('grammar') !== -1;
                             const key = key1+'wordItem-'+wordIndex+'-'+wordItem.type;
                             if (wordItem.type === 1) {
-                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-add-text ${isGrammarCheck && '!bg-[#ffea2c]'}`} >{wordItem.word}</span>
                             } else if (wordItem.type === -1 ) {
-                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-delete-text ${isGrammarCheck && '!bg-[#ffea2c]'}`}>{wordItem.word}</span>
                             } else {
                                 return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                             }
@@ -130,12 +133,13 @@ const ReportCorrectionSummaryComponent = (
                     return <div className='flex flex-row justify-start justify-items-start w-full' key={key1}>
                         <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
-                            console.log('word ==',wordItem)
+
+                            const isPunctuationCheck = wordItem.correction_reason.indexOf('grammar') !== -1
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                             if (wordItem.type === 1) {
-                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-add-text ${isPunctuationCheck && '!bg-[#ffea2c]'}`} >{wordItem.word}</span>
                             } else if (wordItem.type === -1 ) {
-                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-delete-text ${isPunctuationCheck && '!bg-[#ffea2c]'}`}>{wordItem.word}</span>
                             } else {
                                 return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                             }
@@ -155,13 +159,9 @@ const ReportCorrectionSummaryComponent = (
                             : 'pl-[4px]'}>{'punctuation'}
                         </span>
                     </span>
-                    {/* <span className='report-chart-righ-correction-content-item-title'>{`- punctuation`}</span> */}
                     <span className='report-chart-righ-correction-content-item-value'>{punctuation.corrections_count}</span>
                     { selectReason === 'punctuation' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
-                {/* <div className={ selectReason === 'punctuation' ? 'report-chart-righ-correction-content-wrap-2':'hidden'}>
-                    {correctionDiv}
-                </div> */}
             </div>
         )   
     }
@@ -178,11 +178,12 @@ const ReportCorrectionSummaryComponent = (
                         <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                             console.log('word ==',wordItem)
+                            const isSpellingCheck = wordItem.correction_reason.indexOf('grammar') !== -1
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                             if (wordItem.type === 1) {
-                                return <span key={key} className='report-chart-correction-content-add-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-add-text ${isSpellingCheck && '!bg-[#ffea2c]'}`} >{wordItem.word}</span>
                             } else if (wordItem.type === -1 ) {
-                                return <span key={key} className='report-chart-correction-content-delete-text'>{wordItem.word}</span>
+                                return <span key={key} className={`report-chart-correction-content-delete-text ${isSpellingCheck && '!bg-[#ffea2c]'}`}>{wordItem.word}</span>
                             } else {
                                 return <span key={key} className='grammar-tooltip-custom-content-normal-text'>{wordItem.word}</span>
                             }
@@ -202,13 +203,9 @@ const ReportCorrectionSummaryComponent = (
                             : 'pl-[4px]'}>{'spelling'}
                         </span>
                     </span>
-                    {/* <span className='report-chart-righ-correction-content-item-title'>{`- spelling`}</span> */}
                     <span className='report-chart-righ-correction-content-item-value'>{punctuation.corrections_count}</span>
                     { selectReason === 'spelling' ? <span className='report-chart-righ-correction-content-item-arrow'><SelectArrow/></span>: null}
                 </div>
-                {/* <div className={ selectReason === 'spelling' ? 'report-chart-righ-correction-content-wrap-2':'hidden'}>
-                    {correctionDiv}
-                </div> */}
             </div>
         )   
     }

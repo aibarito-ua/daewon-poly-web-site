@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import {commonSvgs} from '../../util/svgs/commonModalSvgs'
 import {debounce} from 'lodash';
+import useDebounced from '../../hooks/useDebounced';
 
 export default function CommonAlertModalComponent(
   
@@ -19,6 +20,7 @@ export default function CommonAlertModalComponent(
     commonAlertType,
     commonAlertMessageFontFamily,
     commonAlertPriorityLevel,
+    commonAlertYesEventDelay,
 
     // setCommonAlertHeadTitle,
     commonAlertClose,
@@ -44,50 +46,69 @@ export default function CommonAlertModalComponent(
     }
   }, [commonAlertOpenFlag])
 
-  React.useEffect(()=>{
-    if (isUseLeftButton) {
-      handleCallbackDebounce();
-      setIsUseLeftButton(false)
-    }
-  }, [isUseLeftButton])
-
-  const handleCallbackDebounce = React.useCallback(
-    debounce( async () => {
-      console.log('debouncing...')
-      if (commonAlertYesFunctionEvent!==null) {
-        commonAlertYesFunctionEvent()
-        
-      } else {
-        if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+  useDebounced(
+    ()=>{
+      if (isUseLeftButton) {
+        setIsUseLeftButton(false);
+        if (commonAlertYesFunctionEvent!==null) {
+          console.log('===is props yes event')
+          commonAlertYesFunctionEvent()
           
-          commonAlertClose();
+        } else {
+          console.log('===is not props yes event===type:',commonAlertType)
+          if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+            console.log('close!')
+            handleClose();
+          }
         }
       }
-    }, 1000, {leading:true, trailing: false}), []
+    },
+    1000,
+    [isUseLeftButton]
   )
-  // const handleLeft = () => {
-  //   if (commonAlertYesFunctionEvent!==null) {
-  //     commonAlertYesFunctionEvent()
-  //   } else {
-  //     if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
-        
-  //       commonAlertClose();
-  //     }
-  //   }
-  // };
+  useDebounced(
+    ()=>{
+      if (isUseRightButton) {
+        setIsUseRightButton(false);
+        if (commonAlertCloseEvent!==null) {
+          commonAlertCloseEvent();
+        } else {
+          if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+            commonAlertClose();
+          }
+        }
+      }
+    },
+    1000,
+    [isUseRightButton]
+  )
+  const handleLeft = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    if (commonAlertYesEventDelay===0) {
+      if (commonAlertYesFunctionEvent!==null) {
+        console.log('===is props yes event')
+        commonAlertYesFunctionEvent()
+      } else {
+        console.log('===is not props yes event===type:',commonAlertType)
+        if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+          console.log('close!')
+          handleClose();
+        }
+      }
+    } else setIsUseLeftButton(true);
+  }
 
   const handleRight = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
-    if (isUseRightButton) return;
-    setIsUseRightButton(true);
-    if (commonAlertCloseEvent!==null) {
-      commonAlertCloseEvent();
-    } else {
-      if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
-        commonAlertClose();
+    if (commonAlertYesEventDelay===0) {
+      if (commonAlertCloseEvent!==null) {
+        commonAlertCloseEvent();
+      } else {
+        if (commonAlertType!=='continue' && commonAlertType!=='warningContinue') {
+          commonAlertClose();
+        }
       }
-    }
-    setIsUseRightButton(false);
+    } else setIsUseRightButton(true);
   };
 
   const handleClose = () => {
@@ -142,14 +163,14 @@ export default function CommonAlertModalComponent(
             {commonAlertOneButton ? (
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] items-center'>
                   <div className='flex flex-1 h-full justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'
-                    onClick={()=>{setIsUseLeftButton(true)}}
+                    onClick={(e)=>handleLeft(e)}
                   >{commonAlertYesLabel}</div>
                 </div>
               ):(
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] gap-[10px] items-center'>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#dcdadf] rounded-[15px] text-[#959aaa] hover:cursor-pointer items-center'
                   
-                  onClick={()=>{setIsUseLeftButton(true)}}
+                  onClick={(e)=>handleLeft(e)}
                   >{commonAlertYesLabel}</div>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'
                     onClick={handleRight}

@@ -11,6 +11,8 @@ interface IUseControlAlertStore {
     commonAlertType: TAlertType;
     commonAlertMessageFontFamily: TCommonAlertOpenOptionFontFamily;
     commonAlertPriorityLevel:0|1|2|3;
+    commonAlertYesEventDelay: number;
+    commonAlertCloseEventDelay: number;
 
     // todo: delete
     commonAlertControllerFlag : number;
@@ -166,7 +168,9 @@ type TCommonAlertOpenOptions = {
     useOneButton?:boolean,
     alertType?: TAlertType,
     messageFontFamily?:TCommonAlertOpenOptionFontFamily,
-    priorityLevel?:0|1|2|3
+    priorityLevel?:0|1|2|3,
+    yesEventDelay?:number,
+    closeEventDelay?: number,
 }
 type TCommonAlertOpenOptionFontFamily = 'Roboto'|'NotoSansCJKKR'|''
 

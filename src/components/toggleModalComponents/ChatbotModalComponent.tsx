@@ -3,6 +3,7 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
 import { CommonInputValidate } from '../../util/common/commonFunctions';
@@ -103,11 +104,8 @@ export default function FormDialog() {
         setIsInptFocus(false)
     } else {
       setIsInptFocus(true)
-      // let evt=document.getElementById('chatbot-modal-input-textarea');
-      // evt?.focus()
       const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
       setChatHistory(initHist)
-      // callBackFocus()
     }
   }, [open, user_name])
   React.useEffect(()=>{
@@ -141,9 +139,6 @@ export default function FormDialog() {
           target.focus();
           inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
         }
-        // if (chatDivRef.current) {
-        //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
-        // }
       }
     } else {
       if (inputRef.current) {
@@ -158,9 +153,6 @@ export default function FormDialog() {
             screenDiv.style.marginTop= '0'
           }
         }
-        // if (chatDivRef.current) {
-        //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
-        // }
       }
     }
   },[isInputFocus, inputRef])
@@ -180,7 +172,6 @@ export default function FormDialog() {
       target.blur();
       if (isMobile) {
         if(data['isExternalKeyboard']) {
-          // sendMessage({type: 'debug', message: data['isExternalKeyboard']})
           setIsKeyboardExrernal(true)
           target.focus();
           inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
@@ -216,16 +207,12 @@ export default function FormDialog() {
         }
         if (platform==='android') {
           target.focus();
-          // const targetRef = inputRef.current
           inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
         }
       } else {
         target.focus();
         inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
       }
-      // if (chatDivRef.current) {
-      //   chatDivRef.current.scrollTop = chatDivRef.current.scrollHeight;
-      // }
     }
   }
   const scrollToBottom = () => {
@@ -234,7 +221,6 @@ export default function FormDialog() {
   }
 
   const callDialogAPIFN = async (txt:string) => {
-    // console.log('chat history before api =',chatHistory,'\n',dataHist)
     // api 용 data
     let dumyDataHist = JSON.parse(JSON.stringify(dataHist))
     dumyDataHist.push(["{CHILDNAME}", txt])
@@ -245,11 +231,7 @@ export default function FormDialog() {
 
     let dumyHistAllTokens:number[] = JSON.parse(JSON.stringify(historyTokens))
     setChatHistory(dumyChatHist);
-    // let dumyHist = [...chatHistory, ]
     setInputText('')
-    // let pushValue:any = []
-    // let resultData:string[] = [];
-    // console.log('dumyDataHist ==',dumyDataHist,'\n',dumyChatHist)
 
     return await callDialogAPI(ai_name, user_name, dumyDataHist, userInfo.accessToken).then(async (res)=>{
       setBlockInput(false)
@@ -330,18 +312,11 @@ export default function FormDialog() {
         setDataHist(dumyDataHist);
         
       }
-      
     })
-
   }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.preventDefault();
     if(blockInput) {
@@ -363,15 +338,13 @@ export default function FormDialog() {
   const onKeyUpEvent = async (e:React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key==='Enter' && !blockInput) {
         if (isMobile || !e.shiftKey) {
-            console.log('enter')
-            console.log('inputText =',inputText)
-            
-            e.currentTarget.value = '';
-            e.currentTarget.style.height = 'auto';
-            e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-            const inputTextValue = inputText.replace(/\n$/gmi,'');
-            setBlockInput(true)
-            await callDialogAPIFN(inputTextValue);
+          
+          e.currentTarget.value = '';
+          e.currentTarget.style.height = 'auto';
+          e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
+          const inputTextValue = inputText.replace(/\n$/gmi,'');
+          setBlockInput(true)
+          await callDialogAPIFN(inputTextValue);
         } 
     }
   }
@@ -386,57 +359,74 @@ export default function FormDialog() {
       <Dialog className=''
       sx={{ '.MuiDialog-container':{ backgroundColor: 'rgba(0,0,0,0.5)'},
         '.MuiDialog-paper': { 
-          minWidth:'700px',
-          width: '700px',
+          minWidth:'750px',
+          width: '750px',
           minHeight: isMobile ? (isInputFocus && !isKeyboardExternal ? '390px':'650px'): '650px',
-          // minHeight: '390px',
           height: '390px',
-          padding: '32px 0 0',
-          borderRadius: '20px',
-          backgroundColor: '#fff',
+          paddingTop: '32px',
+          paddingLeft: '25px',
+          paddingRight: '25px',
+          
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
           marginTop: isMobile ? (isInputFocus && !isKeyboardExternal ? marginTopTrueValue: '-50px'): '-50px',
-          // marginTop: '-310px',
         }
       }}
-      open={open} onClose={handleClose}>
-        {/* <DialogTitle>Chatbot</DialogTitle> */}
+      open={open} >
+        <div className='flex flex-row w-full'>
+          <button 
+            style={{
+              width: '50px',
+              height: '50px',
+              padding: 0,
+              position: 'absolute',
+              right:'0px',
+              top: '7px',
+              zIndex: 1301
+          }}>
+            <div className='w-[50px] h-[50px] m-0 p-0 bg-modal-close-button-svg bg-contain bg-no-repeat'
+              onClick={handleClose}/>
+          </button>
+        </div>
         <DialogContent 
-            className='flex flex-1 flex-col min-w-[500px] h-[390px]'
-            sx={{padding: '0 20px'}}
+          className='flex flex-1 flex-col min-w-[500px] h-[390px] bg-white rounded-sm'
+          sx={{padding: '0 20px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px'}}
         >
-        <div className='flex flex-1 h-[290px]'>
+          <div className='flex flex-1 h-[290px]'>
 
-        <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'
-        ref={chatDivRef}
-        id={'chat-window-div'}
-        >
-          <div ref={messagesEndRef}/>
-        {chatHistory.slice(0).reverse().map((hist, idx)=>{
-            const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
-            const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
-            const chatItem = hist[0]=== ai_name ? 'chat-ai-div-child' : 'chat-user-div-child';
-            let nameDiv:any = <div>{hist[0]===ai_name?ai_name: user_name}</div>;
-            
-            
-            return <div key={'chatmodal-ai-chat-hist-'+idx.toString()} className={chatDiv}>
-                <div className={chatItemPosition}>
-                    <div className={`chat-user-name-div ${chatItemPosition}`}>{nameDiv}</div>
-                    {Array.isArray(hist[1]) && <div className='flex flex-col'>{hist[1].map((v, i)=>{
-                        return <div key={i} className={chatItem}>{v}</div>
-                    })}</div>
-                    }
-                    {typeof(hist[1])==='string' && <div className={chatItem}>{hist[1]}</div>}
+            <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'
+              ref={chatDivRef}
+              id={'chat-window-div'}
+            >
+              <div ref={messagesEndRef}/>
+              {chatHistory.slice(0).reverse().map((hist, idx)=>{
+                const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
+                const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
+                const chatItem = hist[0]=== ai_name ? 'chat-ai-div-child' : 'chat-user-div-child';
+                let nameDiv:any = <div>{hist[0]===ai_name?ai_name: user_name}</div>;
+                
+                
+                return <div key={'chatmodal-ai-chat-hist-'+idx.toString()} className={chatDiv}>
+                  <div className={chatItemPosition}>
+                      <div className={`chat-user-name-div ${chatItemPosition}`}>{nameDiv}</div>
+                      {Array.isArray(hist[1]) && <div className='flex flex-col'>{hist[1].map((v, i)=>{
+                          return <div key={i} className={chatItem}>{v}</div>
+                      })}</div>
+                      }
+                      {typeof(hist[1])==='string' && <div className={chatItem}>{hist[1]}</div>}
+                  </div>
                 </div>
-                </div>
-        })}
-          
-        </div>
-        </div>
+              })}
+            </div>
+          </div>
         </DialogContent>
         <DialogActions sx={{
           borderTop: 'solid 1px #d9dde1',
           padding: '19px 20px',
-          minHeight: '94px'
+          minHeight: '94px',
+          backgroundColor: '#fff',
+          borderBottomLeftRadius: '20px',
+          borderBottomRightRadius: '20px'
         }}>
           <div className='flex flex-col w-full'>
             <textarea 

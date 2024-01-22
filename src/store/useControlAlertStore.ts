@@ -13,6 +13,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     commonAlertType: '',
     commonAlertMessageFontFamily: 'Roboto',
     commonAlertPriorityLevel:0,
+    commonAlertYesEventDelay: 0,
 
     setCommonAlertMessage: (messages: string[]|JSX.Element[]) => {
         set(()=>({
@@ -35,6 +36,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         const commonAlertType=option?.alertType ? option.alertType:'';
         const commonAlertMessageFontFamily=option?.messageFontFamily ? option?.messageFontFamily : 'NotoSansCJKKR';
         const commonAlertPriorityLevel=option?.priorityLevel ? option?.priorityLevel : 0;
+        const commonAlertYesEventDelay = option?.yesEventDelay ? option.yesEventDelay : 0;
         
         set(()=>({
             commonAlertHeadTitle,
@@ -47,7 +49,8 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             commonAlertOpenFlag:true,
             commonAlertType,
             commonAlertMessageFontFamily,
-            commonAlertPriorityLevel
+            commonAlertPriorityLevel,
+            commonAlertYesEventDelay
         }))
     },
     commonAlertClose: () => {

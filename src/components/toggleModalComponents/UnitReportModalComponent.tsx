@@ -138,7 +138,6 @@ export default function UnitReportModalComponent() {
             minWidth: '1024px',
             width: '100%'
         }}>
-
             <div className='flex flex-row w-full'>
                 
                 <button 

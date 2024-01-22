@@ -1439,7 +1439,8 @@ const PreviewSparkWriting = (props:any) => {
                                             console.log('common close first')
                                             commonAlertClose();
                                             await forcedTemporarySave(true);
-                                        }
+                                        },
+                                        yesEventDelay: 1000,
                                     })
                                 }
                             }
@@ -1729,7 +1730,8 @@ const PreviewSparkWriting = (props:any) => {
                                                                                 yesEvent: async ()=> {
                                                                                     await forcedTemporarySave(true);
                                                                                     commonAlertClose();
-                                                                                }
+                                                                                },
+                                                                                yesEventDelay: 1000,
                                                                             })
                                                                         } else {
                                                                             commonAlertClose();
