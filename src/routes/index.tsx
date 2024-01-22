@@ -1,16 +1,11 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom';
-// import { Home } from '../pages/Home';
 import { Login } from '../pages/Login';
 import EssayWriting from '../pages/Student/EssayWriting';
-// import { MyPage } from '../pages/Student/MyPage';
 import { Portfolio } from '../pages/Student/Portfolio';
 import WebViewWrap from '../pages/WebViewWrap';
 import useLoginStore from '../store/useLoginStore';
 import PrivateRoute from './PrivateRoute';
-// import { Admin } from '../pages/Admin';
-// import { Student } from '../pages/Student/Student';
-// import { Teacher } from '../pages/Teacher';
 import {routeValues} from './routeValues';
 import SelectWritingClinic from '../pages/Student/SelectWritingClinic';
 import SelectUnit from '../pages/Student/SelectUnit';

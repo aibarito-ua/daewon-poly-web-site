@@ -1435,7 +1435,11 @@ const PreviewSparkWriting = (props:any) => {
                                         messages: ['Do you want to save your current progress','and return to the main menu?'],
                                         yesButtonLabel: `Yes`,
                                         noButtonLabel: `No`,
-                                        yesEvent: async ()=> await forcedTemporarySave(true)
+                                        yesEvent: async ()=> {
+                                            console.log('common close first')
+                                            commonAlertClose();
+                                            await forcedTemporarySave(true);
+                                        }
                                     })
                                 }
                             }

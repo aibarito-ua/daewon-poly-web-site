@@ -1,7 +1,7 @@
 interface IUseControlAlertStore {
+    
     commonAlertOpenFlag: boolean;
     commonAlertMessage: (string|JSX.Element)[];
-    commonAlertControllerFlag : number;
     commonAlertHeadTitle:string;
     commonAlertYesLabel:string;
     commonAlertNoLabel:string;
@@ -12,10 +12,13 @@ interface IUseControlAlertStore {
     commonAlertMessageFontFamily: TCommonAlertOpenOptionFontFamily;
     commonAlertPriorityLevel:0|1|2|3;
 
-    setCommonAlertMessage: (messages: string[]) => void;
-    setCommonAlertHeadTitle: (title:string) =>void;
+    // todo: delete
+    commonAlertControllerFlag : number;
+
     commonAlertOpen: (option?: TCommonAlertOpenOptions ) => void;
     commonAlertClose: () => void;
+    setCommonAlertMessage: (messages: string[]) => void;
+    setCommonAlertHeadTitle: (title:string) =>void;
 
     // standby screen
     commonStandbyScreen: TCommonStandbyScreen,
@@ -102,8 +105,6 @@ interface IUseControlAlertStore {
     // no data controller
     isNoData:boolean;
     setIsNoData: (flag:boolean) => void;
-
-    
 }
 
 type TTeacherFeedbackModalChecked = {
