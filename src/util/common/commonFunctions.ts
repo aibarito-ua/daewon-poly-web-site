@@ -96,6 +96,18 @@ export const CommonReplace={
         return removeContinue;
     },
 }
+/**
+ * regular expressions value
+ */
+const ALL_REG_EXP_ITEMS = {
+    checkNotSC: /[\{\}|\\`]{1,}/gmi,
+    checkOneSC: /(?!\('|'\)|\("|"\))[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi,
+    checkSCemptySC: /([\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+\s+[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+)/gmi,
+    checkAPemptyAP: /([\`]+\s+[\`]+)/gmi,
+    checkNotKR: /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi,
+    checkContinuousSpace: /\s{10,}/gmi,
+    checkChangeRow: /\n{3,}/gmi
+}
 export const CommonInputValidate = {
     chat: (text: string) => {
         const removeEmoji = CommonEmoji.remove(text);
@@ -119,13 +131,13 @@ export const CommonInputValidate = {
      * @returns boolean -> true: 사용 가능 / false: 사용 불가
      */
     writingEssayInputTitle: (targetText: string) => {
-        const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
-        const checkOneSC = targetText.match(/(?!\('|'\)|\("|"\))[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-        const checkSCemptySC = targetText.match(/([\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+\s+[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+)/gmi)
-        const checkAemptyA = targetText.match(/([\'\"\`]+\s+[\'\"\`]+)/gmi)
-        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
-        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
-        const checkChangeRow = targetText.match(/\n{3,}/gmi)
+        const checkNotSC = targetText.match(ALL_REG_EXP_ITEMS.checkNotSC)
+        const checkOneSC = targetText.match(ALL_REG_EXP_ITEMS.checkOneSC)
+        const checkSCemptySC = targetText.match(ALL_REG_EXP_ITEMS.checkSCemptySC)
+        const checkAemptyA = targetText.match(ALL_REG_EXP_ITEMS.checkAPemptyAP)
+        const checkNotKR = targetText.match(ALL_REG_EXP_ITEMS.checkNotKR)
+        const checkDoubleSpace = targetText.match(ALL_REG_EXP_ITEMS.checkContinuousSpace)
+        const checkChangeRow = targetText.match(ALL_REG_EXP_ITEMS.checkChangeRow)
         if (checkNotSC!==null) {
             console.log('불가 문자 입력')
             return false;
@@ -152,13 +164,13 @@ export const CommonInputValidate = {
         }
     },
     writingEssayInputBody: (targetText: string) => {
-        const checkNotSC = targetText.match(/[\{\}\|\\`]{1,}/gmi)
-        const checkOneSC = targetText.match(/(?!\('|'\)|\("|"\))[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
-        const checkSCemptySC = targetText.match(/([\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+\s+[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(]+)/gmi)
-        const checkAemptyA = targetText.match(/([\'\"\`]+\s+[\'\"\`]+)/gmi)
-        const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
-        const checkDoubleSpace = targetText.match(/\s{10,}/gmi)
-        const checkChangeRow = targetText.match(/\n{3,}/gmi)
+        const checkNotSC = targetText.match(ALL_REG_EXP_ITEMS.checkNotSC)
+        const checkOneSC = targetText.match(ALL_REG_EXP_ITEMS.checkOneSC)
+        const checkSCemptySC = targetText.match(ALL_REG_EXP_ITEMS.checkSCemptySC)
+        const checkAemptyA = targetText.match(ALL_REG_EXP_ITEMS.checkAPemptyAP)
+        const checkNotKR = targetText.match(ALL_REG_EXP_ITEMS.checkNotKR)
+        const checkDoubleSpace = targetText.match(ALL_REG_EXP_ITEMS.checkContinuousSpace)
+        const checkChangeRow = targetText.match(ALL_REG_EXP_ITEMS.checkChangeRow)
         if (checkNotSC!==null) {
             console.log('불가 문자 입력')
             return false;
