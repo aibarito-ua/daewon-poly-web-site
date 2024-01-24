@@ -134,7 +134,7 @@ const ReportCorrectionSummaryComponent = (
                         <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
 
-                            const isPunctuationCheck = wordItem.correction_reason.indexOf('grammar') !== -1
+                            const isPunctuationCheck = wordItem.correction_reason.indexOf('punctuation') !== -1
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                             if (wordItem.type === 1) {
                                 return <span key={key} className={`report-chart-correction-content-add-text ${isPunctuationCheck && '!bg-[#ffea2c]'}`} >{wordItem.word}</span>
@@ -178,7 +178,7 @@ const ReportCorrectionSummaryComponent = (
                         <span className='report-tooltip-custom-content-bullet'>{'•'}</span>
                         <span className='grammar-tooltip-custom-content-list-item'>{sentenceItem.map((wordItem , wordIndex) => {
                             console.log('word ==',wordItem)
-                            const isSpellingCheck = wordItem.correction_reason.indexOf('grammar') !== -1
+                            const isSpellingCheck = wordItem.correction_reason.indexOf('spelling') !== -1
                             const key = key1+'wordItem'+wordIndex+'-'+wordItem.type;
                             if (wordItem.type === 1) {
                                 return <span key={key} className={`report-chart-correction-content-add-text ${isSpellingCheck && '!bg-[#ffea2c]'}`} >{wordItem.word}</span>
