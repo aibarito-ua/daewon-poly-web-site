@@ -14,6 +14,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     commonAlertMessageFontFamily: 'Roboto',
     commonAlertPriorityLevel:0,
     commonAlertYesEventDelay: 0,
+    commonAlertCloseEventDelay: 0,
 
     setCommonAlertMessage: (messages: string[]|JSX.Element[]) => {
         set(()=>({
