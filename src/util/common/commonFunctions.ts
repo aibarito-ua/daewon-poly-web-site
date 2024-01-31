@@ -101,7 +101,7 @@ export const CommonReplace={
  */
 const ALL_REG_EXP_ITEMS = {
     checkNotSC: /[\{\}|\\`]{1,}/gmi,
-    checkOneSC: /[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi,
+    checkOneSC: /[\[\]\/;:*\-_+<>@\#$%&\\\=\'\"]{2,}/gmi,
     checkSCemptySC: /([\[\]\/;:*\-_+<>@\#$%&\\\=]+\s+[\[\]\/;:*\-_+<>@\#$%&\\\=]+)/gmi,
     checkAPemptyAP: /([\`]+\s+[\`]+)/gmi,
     checkNotKR: /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi,
