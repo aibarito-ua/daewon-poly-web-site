@@ -101,7 +101,8 @@ export const CommonReplace={
  */
 const ALL_REG_EXP_ITEMS = {
     checkNotSC: /[\{\}|\\`]{1,}/gmi,
-    checkOneSC: /[\[\]\/;:*\-_+<>@\#$%&\\\=\'\"]{2,}/gmi,
+    checkOneSC: /[\[\]\/;:*\-_+<>@\#$%&\\\=]{2,}/gmi,
+    checkDoubleQuetes: /[\'\"]{2,}/gmi,
     checkSCemptySC: /([\[\]\/;:*\-_+<>@\#$%&\\\=]+\s+[\[\]\/;:*\-_+<>@\#$%&\\\=]+)/gmi,
     checkAPemptyAP: /([\`]+\s+[\`]+)/gmi,
     checkNotKR: /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi,
@@ -133,6 +134,7 @@ export const CommonInputValidate = {
     writingEssayInputTitle: (targetText: string) => {
         const checkNotSC = targetText.match(ALL_REG_EXP_ITEMS.checkNotSC)
         const checkOneSC = targetText.match(ALL_REG_EXP_ITEMS.checkOneSC)
+        const checkDoubleQuetes = targetText.match(ALL_REG_EXP_ITEMS.checkDoubleQuetes)
         const checkSCemptySC = targetText.match(ALL_REG_EXP_ITEMS.checkSCemptySC)
         const checkAemptyA = targetText.match(ALL_REG_EXP_ITEMS.checkAPemptyAP)
         const checkNotKR = targetText.match(ALL_REG_EXP_ITEMS.checkNotKR)
@@ -143,6 +145,9 @@ export const CommonInputValidate = {
             return false;
         } else if (checkOneSC!==null) {
             console.log('2개 이상 금지')
+            return false;
+        } else if (checkDoubleQuetes!==null) {
+            console.log('quetes 2개 이상 금지')
             return false;
         } else if (checkAemptyA !== null) {
             console.log('\` \' \" 2개 연속 사용 금지')
@@ -166,6 +171,7 @@ export const CommonInputValidate = {
     writingEssayInputBody: (targetText: string) => {
         const checkNotSC = targetText.match(ALL_REG_EXP_ITEMS.checkNotSC)
         const checkOneSC = targetText.match(ALL_REG_EXP_ITEMS.checkOneSC)
+        const checkDoubleQuetes = targetText.match(ALL_REG_EXP_ITEMS.checkDoubleQuetes)
         const checkSCemptySC = targetText.match(ALL_REG_EXP_ITEMS.checkSCemptySC)
         const checkAemptyA = targetText.match(ALL_REG_EXP_ITEMS.checkAPemptyAP)
         const checkNotKR = targetText.match(ALL_REG_EXP_ITEMS.checkNotKR)
@@ -176,6 +182,9 @@ export const CommonInputValidate = {
             return false;
         } else if (checkOneSC!==null) {
             console.log('2개 이상 금지')
+            return false;
+        } else if (checkDoubleQuetes!==null) {
+            console.log('quetes 2개 이상 금지')
             return false;
         } else if (checkAemptyA !== null) {
             console.log('\` \' \" 2개 연속 사용 금지')
