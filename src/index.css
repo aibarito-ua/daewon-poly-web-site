@@ -1931,7 +1931,7 @@ bg-[#ffea2c]
   border-[#21c39a]
   rounded-[15px]
   w-[500px]
-  h-[50px]
+  h-[70px]
   items-center
   overflow-y-auto
 }
@@ -1945,7 +1945,8 @@ bg-[#ffea2c]
   line-height: 1.33;
   text-align: left;
   @apply
-  p-[10px]
+  py-[13px]
+  px-[15px]
   h-full
   flex flex-col
 }
@@ -2524,6 +2525,10 @@ bg-[#ffea2c]
   h-fit
   py-0
   px-[10px]
+  placeholder:text-[#aaa]
+  placeholder:text-start
+  placeholder:font-[Roboto]
+  placeholder:font-[400]
 }
 .draft-2nd-body-wrap-textarea {
   font-family: 'Roboto';
@@ -2540,7 +2545,7 @@ bg-[#ffea2c]
   focus:border-none
   focus:ring-0
   p-0
-
+  placeholder:text-[#aaa]
 }
 .draft-title-paragragh-wrap {
   @apply

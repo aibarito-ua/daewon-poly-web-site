@@ -1324,7 +1324,7 @@ const EssayWriting = () => {
                                                 id={inputId}
                                                 className={`${controllClass} block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`} 
                                                 
-                                                placeholder={`Write here.`}
+                                                placeholder={`Enter text here.`}
                                                 onChange={(e)=>{
                                                     
                                                     const val = e.currentTarget.value;
@@ -1597,6 +1597,7 @@ const EssayWriting = () => {
                             <div className='draft-2nd-title-font items-center'>
                                 {/* 2nd draft title content */}
                                 <textarea className='draft-2nd-title-wrap-textarea'
+                                    placeholder='Enter text here.'
                                     maxLength={120}
                                     rows={1}
                                     ref={(textarea)=>{
@@ -1656,7 +1657,7 @@ const EssayWriting = () => {
                             </div>
                             <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
+                                <textarea className='draft-2nd-body-wrap-textarea'
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);
@@ -1714,7 +1715,7 @@ const EssayWriting = () => {
                                         }
                                         
                                     }}
-                                    placeholder='Start typing'
+                                    placeholder='Enter text here.'
                                     value={draftItem.draft_2_outline[1].input_content}
                                 />
                             </div>
@@ -1726,6 +1727,7 @@ const EssayWriting = () => {
                             <div className='draft-2nd-title-font items-center'>
                                 {/* 2nd draft title content */}
                                 <textarea className='draft-2nd-title-wrap-textarea'
+                                    placeholder='Enter text here.'
                                     maxLength={120}
                                     rows={1}
                                     ref={(textarea)=>{
@@ -1784,7 +1786,7 @@ const EssayWriting = () => {
                             </div>
                             <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className='draft-2nd-body-wrap-textarea placeholder:text-[#aaa]'
+                                <textarea className='draft-2nd-body-wrap-textarea'
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);
@@ -1843,7 +1845,7 @@ const EssayWriting = () => {
                                         }
                                         
                                     }}
-                                    placeholder='Start typing'
+                                    placeholder='Enter text here.'
                                     value={draftItem.draft_2_outline[1].input_content}
                                 />
                             </div>

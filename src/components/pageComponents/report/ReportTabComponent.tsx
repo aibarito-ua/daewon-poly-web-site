@@ -361,7 +361,7 @@ const handleNext = (currentIndex:number) => {
                     </div>
                     {/* unit report */}
                     <ReportByUnitComponent reportByUnitAPIData={unitReportData} />
-                    <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData}/>
+                    {/* <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData}/> */}
 
                     <div className={!isPrev
                         ? 'absolute top-[215px] -left-[25px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'

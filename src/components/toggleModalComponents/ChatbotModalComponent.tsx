@@ -3,7 +3,6 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import { callDialogAPI } from '../../pages/Student/api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
 import { CommonInputValidate } from '../../util/common/commonFunctions';
@@ -17,14 +16,16 @@ export default function FormDialog() {
   const chatDivRef = React.useRef<HTMLDivElement|null>(null);
   const [open, setOpen] = React.useState(false);
   const [inputText, setInputText] = React.useState('');
+  // chat history : app 유지
   const [chatHistory, setChatHistory] = React.useState<(string | string[])[][]>([]);
+  // chat data history : app 유지
   const [dataHist, setDataHist] = React.useState<string[][]>([]);
 
   // input max length
-  const [inputLength, setInputLength] = React.useState<number>(0);
-  // 매 회 completionToken 누적
+  // const [inputLength, setInputLength] = React.useState<number>(0);
+  // 매 회 completionToken 누적 : app 유지
   const [historyTokens, setHistoryTokens] = React.useState<number[]>([]);
-  // before total token
+  // before total token : app 유지
   const [beforeTurnTotalToken, setBeforeTurnTotalToken] = React.useState<number>(217);
 
   // input box controller
@@ -58,7 +59,7 @@ export default function FormDialog() {
     } else {
         return true;
     }
-}
+  }
   
   const {
     userInfo, isMobile, device_id,
@@ -93,21 +94,36 @@ export default function FormDialog() {
       }
     }
   }, [])
+  
   React.useEffect(()=>{
+    console.log('=== open effect ===')
     if (!open) {
-        setInputText('')
-        setChatHistory([])
-        setDataHist([])
-        setHistoryTokens([])
-        setBeforeTurnTotalToken(217)
-        setInputLength(0)
-        setIsInptFocus(false)
+      setInputText('')
+      setChatHistory([])
+      setDataHist([])
+      setHistoryTokens([])
+      setBeforeTurnTotalToken(217)
+      setIsInptFocus(false)
     } else {
+      if( isMobile) {
+        sendMessage('open-chatbot-modal')
+      } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+        const electronData = (window as any).api.toElectron.sendSync('open-chatbot-modal')
+        console.log('electron data:', electronData)
+        if (electronData) {
+          const isExistElectronData = receiveElectronData(electronData);
+          if (!isExistElectronData) {
+            const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
+            setChatHistory(initHist)
+          }
+        }
+      }
       setIsInptFocus(true)
-      const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
-      setChatHistory(initHist)
     }
-  }, [open, user_name])
+
+  }, [
+    open, user_name, isMobile,
+  ])
   React.useEffect(()=>{
     if (inputText === '') {
         let evt=document.getElementById('chatbot-modal-input-textarea');
@@ -120,8 +136,12 @@ export default function FormDialog() {
   React.useEffect(()=>{
     console.log('chat history log =',chatHistory)
     console.log('dataHist log =',dataHist)
+    console.log('set init chat history')
+    if (chatHistory.length === 0) {
+      const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
+      setChatHistory(initHist)
+    }
     scrollToBottom()
-
   },[chatHistory, dataHist])
 
   React.useLayoutEffect(()=>{
@@ -156,7 +176,37 @@ export default function FormDialog() {
       }
     }
   },[isInputFocus, inputRef])
+
+  // electron receive
+  const receiveElectronData = async (rnData:any) => {
+    let isExistData = false;
+    if (rnData['chatHistory']) {
+      console.log('set chat history')
+      isExistData=true;
+      setChatHistory(rnData['chatHistory'])
+    }
+    if (rnData['dataHist']) {
+      console.log('set data history')
+      isExistData=true;
+      setDataHist(rnData['dataHist'])
+    }
+    if (rnData['historyTokens']) {
+      console.log('set history tokens')
+      isExistData=true;
+      setHistoryTokens(rnData['historyTokens'])
+    }
+    if (rnData['beforeTurnTotalToken']) {
+      console.log('set beforeTurnTotalToken')
+      isExistData=true;
+      setBeforeTurnTotalToken(rnData['beforeTurnTotalToken'])
+    }
+    return isExistData;
+  }
   
+  /**
+   * app 소켓 통신 이벤트
+   * @param data 
+   */
   const sendMessage = (data:any) => {
     console.log('Send message data =',data)
     const messageData = JSON.stringify(data);
@@ -167,6 +217,24 @@ export default function FormDialog() {
     if(typeof event.data !== 'string')
         return
     const data = JSON.parse(event.data)
+    const rnData = JSON.parse(event.data);
+    if (rnData['chatHistory']) {
+      console.log('set chat history')
+      setChatHistory(rnData['chatHistory'])
+    }
+    if (rnData['dataHist']) {
+      console.log('set data history')
+      setDataHist(rnData['dataHist'])
+    }
+    if (rnData['historyTokens']) {
+      console.log('set history tokens')
+      setHistoryTokens(rnData['historyTokens'])
+    }
+    if (rnData['beforeTurnTotalToken']) {
+      console.log('set beforeTurnTotalToken')
+      setBeforeTurnTotalToken(rnData['beforeTurnTotalToken'])
+    }
+
     if (inputRef.current) {
       const target = inputRef.current;
       target.blur();
@@ -187,6 +255,9 @@ export default function FormDialog() {
     }
   }
 
+  /**
+   * app 화면별 viewer setting
+   */
   const setMobileChatWindow = () => {
     if (inputRef.current) {
       const target = inputRef.current;
@@ -216,10 +287,16 @@ export default function FormDialog() {
     }
   }
   const scrollToBottom = () => {
+    console.log('===scrollToBottom ===')
     if(messagesEndRef.current)
       messagesEndRef.current.scrollIntoView({ behavior:'smooth'})
   }
 
+  /**
+   * 챗봇 이벤트
+   * @param txt 입력 텍스트
+   * @returns Promise<void>: update state
+   */
   const callDialogAPIFN = async (txt:string) => {
     // api 용 data
     let dumyDataHist = JSON.parse(JSON.stringify(dataHist))
@@ -237,19 +314,18 @@ export default function FormDialog() {
       setBlockInput(false)
       if (res.is_server_error) {
         if (res.data) {
-          
-            let maintenanceInfo:TMaintenanceInfo = res.data;
-            maintenanceInfo.start_date = res.data.start_date;
-            maintenanceInfo.end_date = res.data.end_date;
-            let dumyMaintenanceData:TMaintenanceData = {
-                alertTitle: '시스템 점검 안내',
-                data: maintenanceInfo,
-                open: false,
-                type: ''
-            }
-            setCommonStandbyScreen({openFlag:false})
-            setMaintenanceData(dumyMaintenanceData)
-            navigate('/')
+          let maintenanceInfo:TMaintenanceInfo = res.data;
+          maintenanceInfo.start_date = res.data.start_date;
+          maintenanceInfo.end_date = res.data.end_date;
+          let dumyMaintenanceData:TMaintenanceData = {
+            alertTitle: '시스템 점검 안내',
+            data: maintenanceInfo,
+            open: false,
+            type: ''
+          }
+          setCommonStandbyScreen({openFlag:false})
+          setMaintenanceData(dumyMaintenanceData)
+          navigate('/')
           
         } else {
           setCommonStandbyScreen({openFlag:false})
@@ -261,20 +337,20 @@ export default function FormDialog() {
               useOneButton: true,
               yesButtonLabel:'OK',
               yesEvent: async() => {
-                  await logoutFn()
+                await logoutFn()
               }
             })
           } else {
             commonAlertOpen({
               messages: [
-                  'Cannot connect to the server.',
-                  'Please try again later.'
+                'Cannot connect to the server.',
+                'Please try again later.'
               ],
               priorityLevel: 2,
               useOneButton: true,
               yesButtonLabel:'OK',
               yesEvent: () => {
-                  commonAlertClose();
+                commonAlertClose();
               }
             })
           }
@@ -285,13 +361,11 @@ export default function FormDialog() {
         const userUseToken:number = res.usages.prompt_tokens-beforeTurnTotalToken;
         const createdToken:number = res.usages.completion_tokens;
         const dumyHistAllTokensMaxIndex = historyTokens.length;
-  
         const totalUseToken:number = res.usages.total_tokens;
-        
         dumyHistAllTokens.splice(dumyHistAllTokensMaxIndex, 0, userUseToken, createdToken);
         for await (const value of res.text) {
-            resultData.push(value[1])
-            dumyDataHist.push(value);
+          resultData.push(value[1])
+          dumyDataHist.push(value);
         }
   
         let targetTotalToken = res.usages.total_tokens;
@@ -306,11 +380,26 @@ export default function FormDialog() {
         pushValue.push(resultData);
         dumyChatHist.push(pushValue);
         setIsInptFocus(true)
-        setBeforeTurnTotalToken(totalUseToken)
+
+        // app repository update
+        const appRepositoryData = { 
+          chatHistory:dumyChatHist,
+          dataHist,dumyDataHist,
+          historyTokens:dumyHistAllTokens,
+          beforeTurnTotalToken:totalUseToken,
+          userInfo
+        }
+        console.log('==appRepositoryData==:',appRepositoryData)
+        if (isMobile) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({event: "chatbot", data: appRepositoryData}));
+        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+          (window as any).api.toElectron.send('chatbot', appRepositoryData)
+        }
+
+        setBeforeTurnTotalToken(totalUseToken);
         setHistoryTokens(dumyHistAllTokens);
         setChatHistory(dumyChatHist);
         setDataHist(dumyDataHist);
-        
       }
     })
   }
@@ -318,6 +407,7 @@ export default function FormDialog() {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const onChangeValue = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('=== onChangeValue ====')
     e.preventDefault();
     if(blockInput) {
       return
@@ -328,14 +418,13 @@ export default function FormDialog() {
         e.currentTarget.style.height = 'auto';
         e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
         const inputValue = value.replace(/\n{2,}/gm, '\n')
-        const countInputLength = inputValue.length
-        setInputLength(countInputLength)
         setInputText(inputValue)
       }
     }
   }
 
   const onKeyUpEvent = async (e:React.KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(' ==== onKeyUpEvent ====')
     if (e.key==='Enter' && !blockInput) {
         if (isMobile || !e.shiftKey) {
           
@@ -353,7 +442,6 @@ export default function FormDialog() {
     <div className='flex'>
     <button 
         className={open ? `chatbot-modal-button`:'chatbot-modal-button-inactive'}
-        // className='relative z-50'
         onClick={handleClickOpen}
     ></button>
       <Dialog className=''
@@ -366,7 +454,6 @@ export default function FormDialog() {
           paddingTop: '32px',
           paddingLeft: '25px',
           paddingRight: '25px',
-          
           backgroundColor: 'transparent',
           boxShadow: 'none',
           marginTop: isMobile ? (isInputFocus && !isKeyboardExternal ? marginTopTrueValue: '-50px'): '-50px',
@@ -393,24 +480,20 @@ export default function FormDialog() {
           sx={{padding: '0 20px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px'}}
         >
           <div className='flex flex-1 h-[290px]'>
-
             <div className='flex flex-grow flex-col-reverse w-full overflow-y-auto pb-[20px]'
-              ref={chatDivRef}
-              id={'chat-window-div'}
-            >
+            ref={chatDivRef}
+            id={'chat-window-div'}>
               <div ref={messagesEndRef}/>
               {chatHistory.slice(0).reverse().map((hist, idx)=>{
                 const chatDiv = hist[0] === ai_name ? 'chat-ai-div' : 'chat-user-div';
                 const chatItemPosition = hist[0]===ai_name ? '': 'chat-user-div-position';
                 const chatItem = hist[0]=== ai_name ? 'chat-ai-div-child' : 'chat-user-div-child';
                 let nameDiv:any = <div>{hist[0]===ai_name?ai_name: user_name}</div>;
-                
-                
                 return <div key={'chatmodal-ai-chat-hist-'+idx.toString()} className={chatDiv}>
                   <div className={chatItemPosition}>
                       <div className={`chat-user-name-div ${chatItemPosition}`}>{nameDiv}</div>
                       {Array.isArray(hist[1]) && <div className='flex flex-col'>{hist[1].map((v, i)=>{
-                          return <div key={i} className={chatItem}>{v}</div>
+                        return <div key={i} className={chatItem}>{v}</div>
                       })}</div>
                       }
                       {typeof(hist[1])==='string' && <div className={chatItem}>{hist[1]}</div>}

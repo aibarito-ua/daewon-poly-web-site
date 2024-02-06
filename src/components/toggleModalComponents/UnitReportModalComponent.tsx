@@ -220,7 +220,7 @@ export default function UnitReportModalComponent() {
                 </div>
                 {/* unit report */}
                 <ReportByUnitComponent reportByUnitAPIData={unitReportData} />
-                <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData} isActivityPage={true}/>
+                {/* <ReportItemComponents.ReportCompletionDateDiv reportByUnitAPIData={unitReportData} isActivityPage={true}/> */}
 
                 <div className={!isPrev
                     ? 'absolute top-[240px] left-[0px] bg-tab-prev-btn-disabled bg-contain w-[55px] h-[55px] bg-no-repeat hover:cursor-not-allowed'
