@@ -1787,6 +1787,7 @@ const EssayWriting = () => {
                             <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
                                 <textarea className='draft-2nd-body-wrap-textarea'
+                                
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);

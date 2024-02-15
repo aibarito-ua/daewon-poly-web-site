@@ -472,7 +472,9 @@ export default function FormDialog() {
               zIndex: 1301
           }}>
             <div className='w-[50px] h-[50px] m-0 p-0 bg-modal-close-button-svg bg-contain bg-no-repeat'
-              onClick={handleClose}/>
+              onClick={handleClose}
+              onTouchEnd={handleClose}  
+            />
           </button>
         </div>
         <DialogContent 

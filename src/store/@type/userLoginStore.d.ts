@@ -37,6 +37,8 @@ interface IUserInfo {
     // MAINTENANCE(점검 )
     maintenanceData: TMaintenanceData;
     setMaintenanceData: (data:TMaintenanceData) => void;
+    // Alert (Server Open/Close)
+    
 }
 type TMaintenanceData = {
     alertTitle: string;

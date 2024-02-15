@@ -2526,13 +2526,13 @@ bg-[#ffea2c]
   py-0
   px-[10px]
   placeholder:text-[#aaa]
-  placeholder:text-start
+  placeholder:text-center
   placeholder:font-[Roboto]
   placeholder:font-[400]
 }
 .draft-2nd-body-wrap-textarea {
   font-family: 'Roboto';
-  font-size: 18px;
+  
   text-align: left;
   font-weight: 400;
   line-height: 1.22;
@@ -2540,12 +2540,17 @@ bg-[#ffea2c]
   @apply
   w-full
   h-full
+  text-[18px]
   resize-none
   border-none
   focus:border-none
   focus:ring-0
   p-0
+  
   placeholder:text-[#aaa]
+  placeholder:pt-[30%]
+  placeholder:text-center
+  placeholder:align-middle
 }
 .draft-title-paragragh-wrap {
   @apply
