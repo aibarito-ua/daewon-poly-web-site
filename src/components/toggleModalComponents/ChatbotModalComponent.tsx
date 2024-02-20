@@ -239,6 +239,9 @@ export default function FormDialog() {
       const target = inputRef.current;
       target.blur();
       if (isMobile) {
+        if(data['keyboardDidHide'] == true) {
+          return;
+        }
         if(data['isExternalKeyboard']) {
           setIsKeyboardExrernal(true)
           target.focus();
