@@ -106,7 +106,10 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     ]);
     // console.log(compareResultText.toString().length)
     // console.log('compareResultText=[',compareResultText,']')
-    const displayResultText = compareResultText!==' ' ? compareResultText : <span>&nbsp;</span>
+    const displayResultText = compareResultText!==' ' ? compareResultText : ''
+    // if (tagType === 'delete') {
+    //     console.log('disp ==',compareResultText.valueOf() === ' ')
+    // }
     return (
         <span key={mainTagkey} 
         className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] 
@@ -117,7 +120,8 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             )} `}>
             <span id={textTagid}
             ref={refs.setReference} {...getReferenceProps()}
-            >{compareResultText.toString().length===0 ? ' ' : compareResultText } 
+            >
+                {compareResultText.toString().length===0 ? ' ' : compareResultText } 
             </span>
             <FloatingPortal>
                 {isOpen && (

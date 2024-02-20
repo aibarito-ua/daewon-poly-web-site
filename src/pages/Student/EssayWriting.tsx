@@ -1325,6 +1325,14 @@ const EssayWriting = () => {
                                                 className={`${controllClass} block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500`} 
                                                 
                                                 placeholder={`Enter text here.`}
+                                                onBlur={(e) => {
+                                                    console.log('blue =',e.currentTarget.value)
+                                                    const unitId = outlineItem.unit_id
+                                                    const unitIndex = outlineItem.unit_index
+                                                    const orderIndex = item.order_index
+                                                    const replacedValue = e.currentTarget.value.replace(/^[\s]+/gmi, '').replace(/[\s]{2,}/gmi, ' ').replace(/[\s]+$/gmi, '');
+                                                    setOutlineInputText(replacedValue, unitId, unitIndex, orderIndex, 1)
+                                                }}
                                                 onChange={(e)=>{
                                                     
                                                     const val = e.currentTarget.value;

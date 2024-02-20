@@ -678,16 +678,18 @@ const PreviewSparkWriting = (props:any) => {
                         let wordString = '';
                         const isHasUpdateValueType0 = wordTitleValue.filter((v) => v.type === 0);
                         const isHasUpdateValueType2 = wordTitleValue.filter((v) => v.type===2);
-                        console.log('isHasUpdateValueType2 =',isHasUpdateValueType2)
                         if (isHasUpdateValueType2.length > 0) {
+                            console.log('isHasUpdateValueType2 =',isHasUpdateValueType2[0].word)
                             presentParagraghString+= isHasUpdateValueType2[0].word;
                         } else {
                             if (isHasUpdateValueType0.length > 0) {
                                 presentParagraghString += isHasUpdateValueType0[0].word;
                             } else {
                                 const isHasUpdateValueTypeMinus1 = wordTitleValue.filter((v) => (v.type===-1));
-                                console.log('isHasUpdateValueTypeMinus1 =',isHasUpdateValueTypeMinus1)
-                                presentParagraghString += isHasUpdateValueTypeMinus1[0].word;
+                                if (isHasUpdateValueTypeMinus1.length > 0) {
+                                    console.log('isHasUpdateValueTypeMinus1 =',isHasUpdateValueTypeMinus1[0].word)
+                                    presentParagraghString += isHasUpdateValueTypeMinus1[0].word;
+                                }
                             }
                         }
                     }
@@ -1493,6 +1495,7 @@ const PreviewSparkWriting = (props:any) => {
                     }
                     {/* 임시 버튼 - will del */}
                     {process.env.REACT_APP_IS_DEV==='ISDEVUA' &&
+                    
                         <button className={
                             
                             !isSubmitted 
@@ -1503,7 +1506,7 @@ const PreviewSparkWriting = (props:any) => {
                                     : 'save-button'
                                 )
                                 
-                            :'hidden'
+                            :'save-button-active'
 
                             // submit 활성화 조건
                             // !isSubmitted && (openSubmitButton && countofUseAIProofreading>0) 
