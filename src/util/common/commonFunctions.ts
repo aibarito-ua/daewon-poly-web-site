@@ -107,7 +107,9 @@ const ALL_REG_EXP_ITEMS = {
     checkAPemptyAP: /([\`]+\s+[\`]+)/gmi,
     checkNotKR: /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi,
     checkContinuousSpace: /\s{10,}/gmi,
-    checkChangeRow: /\n{3,}/gmi
+    checkChangeRow: /\n{3,}/gmi,
+    findEmptysNotEnterReg: /([^\n\S]{2,})/g, // 개행 문자열을 제외하고 2개 이상의 공백을 선택하는 정규식
+    findStartEndEmptysReg: /^\s+|\s+$/g,
 }
 export const CommonInputValidate = {
     chat: (text: string) => {
@@ -204,5 +206,8 @@ export const CommonInputValidate = {
         } else {
             return true;
         }
+    },
+    replaceTextareaBlurCheck: (targetText: string) => {
+        return targetText.replace(ALL_REG_EXP_ITEMS.findEmptysNotEnterReg, ' ').replace(ALL_REG_EXP_ITEMS.findStartEndEmptysReg,'');
     }
 }

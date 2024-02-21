@@ -1290,6 +1290,7 @@ const EssayWriting = () => {
         let manufactureItem:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(allNames, outlineOrigin);
         
         return allNames.map((title, i) => {
+            // console.log('title ===',title)
             const controllClass = `foldFlag:::[${i}]`
             return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} 
             key={i} id={title+i}>
@@ -1326,15 +1327,13 @@ const EssayWriting = () => {
                                                 
                                                 placeholder={`Enter text here.`}
                                                 onBlur={(e) => {
-                                                    console.log('blue =',e.currentTarget.value)
                                                     const unitId = outlineItem.unit_id
                                                     const unitIndex = outlineItem.unit_index
                                                     const orderIndex = item.order_index
-                                                    const replacedValue = e.currentTarget.value.replace(/^[\s]+/gmi, '').replace(/[\s]{2,}/gmi, ' ').replace(/[\s]+$/gmi, '');
+                                                    const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                                     setOutlineInputText(replacedValue, unitId, unitIndex, orderIndex, 1)
                                                 }}
                                                 onChange={(e)=>{
-                                                    
                                                     const val = e.currentTarget.value;
                                                     const checkWordLength = wordLengthLimit(val);
                                                     if (!checkWordLength) {
@@ -1614,6 +1613,10 @@ const EssayWriting = () => {
                                             textarea.style.height = textarea.scrollHeight+'px';
                                         }
                                     }}
+                                    onBlur={(e) => {
+                                        const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
+                                        setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                    }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);
@@ -1666,6 +1669,10 @@ const EssayWriting = () => {
                             <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
                                 <textarea className='draft-2nd-body-wrap-textarea'
+                                    onBlur={(e) => {
+                                        const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
+                                        setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
+                                    }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);
@@ -1744,6 +1751,10 @@ const EssayWriting = () => {
                                             textarea.style.height = textarea.scrollHeight+'px';
                                         }
                                     }}
+                                    onBlur={(e) => {
+                                        const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
+                                        setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 1,2)
+                                    }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);
@@ -1795,7 +1806,10 @@ const EssayWriting = () => {
                             <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
                                 <textarea className='draft-2nd-body-wrap-textarea'
-                                
+                                    onBlur={(e) => {
+                                        const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
+                                        setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
+                                    }}
                                     onChange={(e) => {
                                         const val = e.currentTarget.value;
                                         const checkWordLength = wordLengthLimit(val);

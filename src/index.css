@@ -1510,6 +1510,23 @@ bg-[#ffea2c]
   overflow-hidden
   break-keep
 }
+.preview-body-text-pre-empty {
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.44;
+  /* letter-spacing: normal; */
+  /* overflow-wrap: normal; */
+  /* word-break: break-all; */
+  @apply
+  h-[1.44rem]
+  text-[#333]
+  text-left
+  block
+  flex-auto
+  overflow-hidden
+  break-keep
+}
 .preview-sub-body-text-pre {
   font-family: 'Roboto';
   font-size: 18px;

@@ -25,25 +25,38 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
     }
     // Body
     const contentBodyComponent = (itemIndex:number, text:string, paddingStr:string) => {
-        return (<span className={`flex ${paddingStr}`} key={itemIndex}>
-            <span className='preview-body-text-pre'>{text}</span>
+        console.log('text=',text)
+        let textSplit = text.split('\n');
+        return (<span className={`flex flex-col ${paddingStr}`} key={itemIndex}>
+            {textSplit.map((splitedText, splitedIndex)=>{
+                const innerSplitTagKey = itemIndex+'-'+splitedIndex
+                if (splitedText === '') {
+                    return <span className='preview-body-text-pre-empty' key={innerSplitTagKey}></span>
+                } else {
+                    return <span className='preview-body-text-pre' key={innerSplitTagKey}>{splitedText}</span>
+                }
+            })}
+            {/* <span className='preview-body-text-pre'>{text}</span> */}
         </span>)
     }
     // draft 2 body
     const contentBodyComponent2 = (itemIndex:number, text:string, paddingStr:string) => {
         const textArr = text.split('\n');
+        console.log('textArr=',textArr)
         return textArr.map((textItem, textItemIndex)=>(
             <span className={`flex pb-[20px] w-[1160px] max-w-[1160px] overflow-hidden ${paddingStr}`} key={itemIndex+'-draft-2-'+textItemIndex}>
                 <span className='preview-body-text-pre w-[1160px] max-w-[1160px]'>{textItem}</span>
             </span>
         ));
     }
+    console.log('bodyItem =',bodyItem)
     return (
         <div className='flex flex-1 flex-col w-full h-full pt-[24px] px-[12px] z-0 overflow-y-auto'>
             
             {titleItem[0].name.toLocaleLowerCase()==='title' && contentTitleComponent(titleItem[0].input_content, titleItem[0].name+titleItem[0].order_index)}
             <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto z-0'>
                 {draftStatus==='1' && bodyItem.map((item, itemIndex) => {
+                    
                     return (
                         <div key={itemIndex} className='pb-[20px]'>
                             {item.map((innerItem, innerItemIndex)=>{
