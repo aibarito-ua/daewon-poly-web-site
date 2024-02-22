@@ -134,8 +134,8 @@ export default function CustomizedReportTabs() {
           let currentUnit = 0;
           let nextUnits = [];
           let prevUnits = [];
-          // console.log('reportCompletedUnitIndexArray =',reportCompletedUnitIndexArray)
-          // console.log('reportSelectUnit =',reportSelectUnit)
+          console.log('reportCompletedUnitIndexArray =',reportCompletedUnitIndexArray)
+          console.log('reportSelectUnit =',reportSelectUnit)
           for (let i = 0; i < reportCompletedUnitIndexArray.length; i++) {
             if (reportCompletedUnitIndexArray[i] === reportSelectUnit) {
                 currentUnit = reportCompletedUnitIndexArray[i];

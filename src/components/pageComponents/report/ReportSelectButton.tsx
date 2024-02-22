@@ -32,10 +32,18 @@ export default function ReportSelectButton(props:{
     reportAPIData,
     forcedReadOnlyReportSelectBox,
     setSelectReportData,
-    setReportSelectUnit
+    setReportSelectUnit,
+    setResetReportDatas,
   } = useControlAlertStore();
   React.useEffect(()=>{
-
+    return () => {
+      console.log('!!!! unmount button component !!!!!')
+      setResetReportDatas();
+    }
+  }, [])
+  React.useEffect(()=>{
+    console.log('reportSemester =',reportSemester)
+    console.log('reportLevel =',reportLevel)
     // isLevel? (reportSemester===''?true:false):false
     let isDisabled = false;
     if (isLevel) {
@@ -84,33 +92,46 @@ export default function ReportSelectButton(props:{
         if (data[i].label === reportSemester) {
           for (let l = 0; l < data[i].level.length; l++) {
             if (data[i].level[l].name === targetData) {
-              // selectDataFn(targetData, reportAPIData, data[i], isLevel);
-              console.log('reportAPIData.periods[i].levels[l].overall_report.length =',reportAPIData.periods[i].levels[l].overall_report.length)
-              if (reportAPIData.periods[i].levels[l].overall_report.length > 0) {
-                setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
-                const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
-                setReportSelectUnit(init)
-                setReportSelectBoxValue({
-                  data: {
-                    label: data[i].label,
-                    semester: data[i].semester,
-                    year: data[i].year,
-                    level: targetData
-                  }, level: targetData
-                })
-              } else {
+              console.log('data[',i,'].level[',l,'].name =',data[i].level[l].name)
+              
+              const selectReportApidataLevels = reportAPIData.periods.find((p) => (p.year === data[i].year && p.semester === data[i].semester) );
+              if (selectReportApidataLevels) {
+                
+                const findReportAPIData = selectReportApidataLevels.levels.find((p) => p.level_name === data[i].level[l].name);
+                if (findReportAPIData) {
 
-                setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
-                // const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
-                // setReportSelectUnit(init)
-                setReportSelectBoxValue({
-                  data: {
-                    label: data[i].label,
-                    semester: data[i].semester,
-                    year: data[i].year,
-                    level: targetData
-                  }, level: targetData
-                })
+                  if (findReportAPIData.overall_report.length > 0) {
+                    setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
+                    const init = findReportAPIData.overall_report[0].unit_index
+                    console.log('init ==',init)
+                    setReportSelectUnit(init)
+                    setReportSelectBoxValue({
+                      data: {
+                        label: data[i].label,
+                        semester: data[i].semester,
+                        year: data[i].year,
+                        level: targetData
+                      }, level: targetData
+                    })
+                  } else {
+    
+                    setSelectReportData(reportAPIData, data[i].year, data[i].semester, targetData);
+                    // const init = reportAPIData.periods[i].levels[l].overall_report[0].unit_index
+                    // setReportSelectUnit(init)
+                    setReportSelectBoxValue({
+                      data: {
+                        label: data[i].label,
+                        semester: data[i].semester,
+                        year: data[i].year,
+                        level: targetData
+                      }, level: targetData
+                    })
+                  }
+                }
+
+              } else {
+                // selectReportApidataLevels is undefined
+
               }
             }
           }
@@ -119,20 +140,35 @@ export default function ReportSelectButton(props:{
       }
     } else {
       console.log('isLevel false')
+      let reportSelectedBoxValue:{
+        data: TDropdownSelectBoxDataTypes;
+        semester?: string | undefined;
+        level?: string | undefined;
+        init?: boolean | undefined;
+        renderInit?: boolean | undefined;
+      } = { data: { label: '', semester: 0, year: 0, level: '' }}
+
       for (let i = 0; i < data.length; i++) {
         if (data[i].label === targetData) {
-          console.log('data[i].label ===',data[i].label)
+          console.log('data[i] ===',data[i])
           // selectDataFn(targetData, reportAPIData, data[i], isLevel);
-          setReportSelectBoxValue({
-            data: {
-              label: data[i].label,
-              semester: data[i].semester,
-              year: data[i].year,
-              level: ''
-            }, semester: targetData
-          })
+          reportSelectedBoxValue.data.label = data[i].label;
+          reportSelectedBoxValue.data.semester = data[i].semester;
+          reportSelectedBoxValue.data.year = data[i].year;
+          reportSelectedBoxValue.semester = targetData;
+          console.log('data[i].level.length =',data[i].level.length)
+          if (data[i].level.length > 1) {
+            reportSelectedBoxValue.data.level = ''
+            setSelectReportData(reportAPIData,reportSelectedBoxValue.data.year, reportSelectedBoxValue.data.semester, '');
+          } else if (data[i].level.length === 1) {
+            reportSelectedBoxValue.data.level = data[i].level[0].name;
+            setSelectReportData(reportAPIData,reportSelectedBoxValue.data.year, reportSelectedBoxValue.data.semester, data[i].level[0].name);
+          } else {
+            reportSelectedBoxValue.data.level = ''
+            setSelectReportData(reportAPIData,reportSelectedBoxValue.data.year, reportSelectedBoxValue.data.semester, '');
+          }
+          setReportSelectBoxValue(reportSelectedBoxValue)
         }
-
       }
     }
   };
@@ -178,13 +214,17 @@ export default function ReportSelectButton(props:{
             placeholder='test'
             value={isLevel? reportLevel: reportSemester}
             
-            disabled={disabled}
+            // disabled={disabled}
+            readOnly={disabled}
             onChange={handleChange}
             displayEmpty={true}
             open={open}
             
             renderValue={(selected) => {
+              console.log('=== render value in button ====')
               console.log('selected !!=',selected)
+              console.log('reportLevel =',reportLevel)
+              console.log('reportSemester =',reportSemester)
               if (selected.length === 0) {
                 if (isLevel) {
                   return 'Please select a level'

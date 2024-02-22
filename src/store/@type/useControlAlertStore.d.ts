@@ -47,7 +47,8 @@ interface IUseControlAlertStore {
         data:TReportByStudentResponse,
         year:number,
         semester:number,
-        level:string
+        level:string,
+        renderInit?:boolean
     ) => void;
     // overall report - bar chart data selected
     reportSelectedOverallBarChart: TOverallBarChartDataItem[];
@@ -64,6 +65,7 @@ interface IUseControlAlertStore {
         semester?:string;
         level?:string;
         init?:boolean;
+        renderInit?:boolean;
     })=>void;
     setReportSelectBoxDatas: (data: TReportPageSelectBoxDatas[])=>void;
     setReportSelectedFinder: (data:TDropdownSelectBoxDataTypes)=>void;
@@ -107,6 +109,9 @@ interface IUseControlAlertStore {
     // no data controller
     isNoData:boolean;
     setIsNoData: (flag:boolean) => void;
+
+    // report buttons at unmount event
+    setResetReportDatas: () => void;
 }
 
 type TTeacherFeedbackModalChecked = {

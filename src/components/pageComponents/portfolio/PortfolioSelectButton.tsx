@@ -24,12 +24,15 @@ export default function PortfolioSelectButton(props:{
     let readOnlyFlag = false;
     if (isUse === 'level') {
       for (let i = 0; i < portfolioSelectBoxValue.length; i++) {
-        if (portfolioSelectBoxValue[i].level.length > 1) {
-          readOnlyFlag = false;  
-        } else {
-          readOnlyFlag = true;
+        if (portfolioSelectBoxValue[i].label === selectSemester) {
+          if (portfolioSelectBoxValue[i].level.length > 1) {
+            // 2개 이상
+            readOnlyFlag = false;
+          } else {
+            setSelectLevel(portfolioSelectBoxValue[i].level[0].name)
+            readOnlyFlag = true;
+          }
         }
-        break;
       }
     } else if (isUse==='semester') {
       if (portfolioSelectBoxValue.length > 1) {

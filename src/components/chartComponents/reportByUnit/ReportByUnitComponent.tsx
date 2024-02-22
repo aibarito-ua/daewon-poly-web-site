@@ -6,7 +6,8 @@ import ReportChart from '../reportChart';
 const ReportByUnitComponent = (props: {
     reportByUnitAPIData: TReportByStudent
 }) => {
-    
+    console.log('=== ReportByUnitComponent ===')
+    console.log('reportByUnitAPIData ==',props.reportByUnitAPIData)
     return (
         <div className='flex flex-col w-full h-full'>
             <div className='flex flex-row justify-center items-center'>

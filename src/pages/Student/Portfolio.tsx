@@ -20,21 +20,9 @@ export const Portfolio = () => {
         setCommonStandbyScreen, commonAlertOpen, commonAlertClose
     } = useControlAlertStore();
     const {
-        // states
-        selectSemester, setSelectSemester,
-        selectLevel, setSelectLevel,
-
-        portfolioSelectBoxValue,
-        portfolioSelectFinder,
-
         // apis
-        portfolioApiData,
         setPortfolioApiData,
         displayPortfolioData,
-
-        // force readonly
-        forceReadOnlyPortfolioSelectBox,
-        setForceReadOnlyPortfolioSelectBox,
     } = usePortfolioStore();
     const {
         sparkWritingBookName

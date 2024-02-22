@@ -734,7 +734,367 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     reportSelectData: {
         book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
     },
-    setSelectReportData: (data, year, semester, level) => {
+    setResetReportDatas: () => {
+        set(()=>({
+            reportSelectUnit: 1,
+            unitReportData: {
+                is_completed: false, word_counts: [], 
+                grammar_correction: { 
+                    grammar: {sentences:[],sentences_count:0, corrections_count:0},
+                    punctuation: {sentences:[],sentences_count:0, corrections_count:0},
+                    spelling: {sentences:[],sentences_count:0, corrections_count:0}
+                },
+                teacher_comments: [],
+                rubric: {
+                    overall_score: 0,
+                    categories: [],
+                },
+                completion_date: []
+            },
+            unitRubricScoresData : {
+                averageChartData: {
+                    dataPayload: {
+                        target: 'average',
+                        data: [
+                            {
+                                name: 'average',
+                                value: 0,
+                            }
+                        ],
+                        addWidth: 40,
+                        fitText: 40,
+                    }
+                },
+                barChartData: [
+                    {
+                      name: "ideas",
+                      score: 0,
+                      colors: { start:'#c9defc', end: '#588ee1'},
+                      customY: 10,
+                    },
+                    {
+                      name: "organization",
+                      score: 0,
+                      colors: { start:'#ffd1b2', end: '#f6914d'},
+                      customY: 32,
+                    },
+                    {
+                      name: "voice",
+                      score: 0,
+                      colors: { start:'#efd6ff', end: '#aa6bd4'},
+                      customY: 54,
+                    },
+                    {
+                      name: "word choice",
+                      score: 0,
+                      colors: { start:'#c2f3e4', end: '#30c194'},
+                      customY: 76,
+                    },
+                    {
+                      name: "sentence fluency",
+                      score: 0,
+                      colors: { start:'#e0dfff', end: '#6865cc'},
+                      customY: 98,
+                    },
+                    {
+                      name: "conventions",
+                      score: 0,
+                      colors: { start:'#ffdcdc', end: '#db5757'},
+                      customY: 120
+                    }
+                ],
+                unitsData: [
+                    {
+                        unit_index:1,
+                        categories: [
+                            {
+                                category: 'ideas',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'organization',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'voice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'word choice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'sentence fluency',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'conventions',
+                                score: 0,
+                                description: ''
+                            },
+                        ]
+                    }, {
+                        unit_index:2,
+                        categories: [
+                            {
+                                category: 'ideas',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'organization',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'voice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'word choice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'sentence fluency',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'conventions',
+                                score: 0,
+                                description: ''
+                            },
+                        ]
+                    }, {
+                        unit_index:3,
+                        categories: [
+                            {
+                                category: 'ideas',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'organization',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'voice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'word choice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'sentence fluency',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'conventions',
+                                score: 0,
+                                description: ''
+                            },
+                        ]
+                    }, {
+                        unit_index:4,
+                        categories: [
+                            {
+                                category: 'ideas',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'organization',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'voice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'word choice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'sentence fluency',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'conventions',
+                                score: 0,
+                                description: ''
+                            },
+                        ]
+                    }, {
+                        unit_index:5,
+                        categories: [
+                            {
+                                category: 'ideas',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'organization',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'voice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'word choice',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'sentence fluency',
+                                score: 0,
+                                description: ''
+                            }, {
+                                category: 'conventions',
+                                score: 0,
+                                description: ''
+                            },
+                        ]
+                    }
+                ],
+                reportByUnit: {
+                    selectUnitInfo: {
+                        unit_index: 0
+                    }
+                },
+                hexagonChartData: [
+                    {
+                        target: 'organization',
+                        data: [
+                            {
+                                name: 'organization',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#f6914d',
+                                fillBorderColor: '#ee711e',
+                                tooltip: {
+                                    title: 'organization',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#fcddc8'
+                            }
+                        ],
+                        addWidth: 40,
+                        fitText: 40,
+                        toolLineColor: '#ee711e'
+                    },
+                    {
+                        target: 'voice',
+                        data: [
+                            {
+                                name: 'voice',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#aa6bd4',
+                                fillBorderColor: '#863fb5',
+                                tooltip: {
+                                    title: 'voice',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#E5D1F1'
+                            }
+                        ],
+                        addWidth: 10,
+                        fitText: 14,
+                        toolLineColor: '#863fb5'
+                    },
+                    {
+                        target: 'conventions',
+                        data: [
+                            {
+                                name: 'conventions',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#db5757',
+                                fillBorderColor: '#be1f1f',
+                                tooltip: {
+                                    title: 'conventions',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#F4CBCB'
+                
+                            }
+                        ],
+                        addWidth: 100,
+                        fitText: 40,
+                        toolLineColor: '#be1f1f',
+                    },
+                    {
+                        target: 'sentence fluency',
+                        data: [
+                            {
+                                name: 'sentence fluency',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#6865cc',
+                                fillBorderColor: '#433fa7',
+                                tooltip: {
+                                    title: 'sentence fluency',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#E2E1FD'
+                            }
+                        ],
+                        addWidth: 55,
+                        fitText: 55,
+                        toolLineColor: '#433fa7'
+                    },
+                    {
+                        target: 'word choice',
+                        data: [
+                            {
+                                name: 'word choice',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#30c194',
+                                fillBorderColor: '#12986f',
+                                tooltip: {
+                                    title: 'word choice',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#DCF4EC'
+                            }
+                        ],
+                        addWidth: 40,
+                        fitText: 40,
+                        toolLineColor: '#12986f'
+                    },
+                    {
+                        target: 'ideas',
+                        data: [
+                            {
+                                name: 'ideas',
+                                value: 0,
+                                selectName: '',
+                                fillColor: '#588ee1',
+                                fillBorderColor: '#1f61c8',
+                                tooltip: {
+                                    title: 'ideas',
+                                    content: 'The narrative has a clear topic and purpose that is well- focused. All the details are well-developed, interesting, and important to the narrative.'
+                                },
+                                circleBaseLineColor: '#C5DBFC'
+                            }
+                        ],
+                        addWidth: 10,
+                        fitText: 14,
+                        toolLineColor: '#1f61c8'
+                    },
+                ]
+            },
+            // reportSelectedOverallBarChart: [],
+            // reportSelectedOverallPieChart: [],
+            reportModalRubricData: [],
+            reportCompletedUnitIndexArray:[],
+            reportSelectBookName:'',
+            reportSelectData: { book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:'' },
+            reportByUnitMainTitle:'',
+            reportSelectFinder: { label: '', level: '', semester: 0, year: 0 },
+            reportLevel:'',
+            reportSemester:'',
+            reportSelectBoxDatas: [],
+            isNoData: true
+        }))
+    },
+    setSelectReportData: (data, year, semester, level, init) => {
         console.log('===setSelectReportData==727')
         // find data
         let dumyData:TReportByStudentPeriodLevel= {
@@ -746,7 +1106,19 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(get().reportModalRubricData));
         let dumyOverallBar:TOverallBarChartDataItem[] = JSON.parse(JSON.stringify(get().reportSelectedOverallBarChart));
         let dumyOverallPie:TAllDoughnutDatas = JSON.parse(JSON.stringify(get().reportSelectedOverallPieChart));
-
+        if (level==='') {
+            set(()=>({
+                isNoData:dumyIsNoData,
+                reportSelectedOverallBarChart: [],
+                reportSelectedOverallPieChart: [],
+                reportModalRubricData: [],
+                unitReportsData: dumyUnitReportsData,
+                unitRubricScoresData: rubricScoreDataStates,
+                reportSelectBookName: dumyData.book_name,
+                reportSelectData:dumyData,
+                reportCompletedUnitIndexArray:[],
+            }))
+        }
         // dumyOverallPie data check
         dumyOverallPie = dumyOverallPie.map((item)=>{
             const checkValue = item.data[0].value;
@@ -875,18 +1247,28 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     setReportSelectBoxValue: (data) => {
         const boxData = get().reportSelectBoxDatas;
         let dumpReportSelectFinder:TDropdownSelectBoxDataTypes = get().reportSelectFinder;
-        console.log('=== setReportSelectBoxValue ====', data) 
+        console.log('=== setReportSelectBoxValue ====', data.data) 
         if (data.init) {
-            dumpReportSelectFinder.label='';
-            dumpReportSelectFinder.semester=0;
-            dumpReportSelectFinder.level='';
-            dumpReportSelectFinder.year=0;
-            console.log('init ==',dumpReportSelectFinder)
-            set(()=>({
-                reportSelectFinder: dumpReportSelectFinder,
-                reportSemester: '',
-                reportLevel: '',
-            }))
+            console.log('data init===')
+            if (data.renderInit) {
+                console.log('setting before render init value')
+                set(()=>({
+                    reportSelectFinder: data.data,
+                    reportSemester: data.data.label,
+                    reportLevel: data.data.level,
+                }))
+            } else {
+                dumpReportSelectFinder.label='';
+                dumpReportSelectFinder.semester=0;
+                dumpReportSelectFinder.level='';
+                dumpReportSelectFinder.year=0;
+                console.log('init ==',dumpReportSelectFinder)
+                set(()=>({
+                    reportSelectFinder: dumpReportSelectFinder,
+                    reportSemester: '',
+                    reportLevel: '',
+                }))
+            }
         } else {
             if (data.level) {
                 let semester = '';
@@ -905,27 +1287,32 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 set(()=>({reportLevel: data.level, reportSemester: semester, reportSelectFinder:dumpReportSelectFinder}))
             } else if (data.semester) {
                 let level = '';
-                if (get().reportLevel === '') {
-                    if (data.semester === '') {
-                        level='';
+                // semester update => level initialize
+                const findLevelsInSemester = boxData.find((p)=> (p.label === data.data.label && p.year === data.data.year && p.semester === data.data.semester));
+                if (findLevelsInSemester) {
+                    if (findLevelsInSemester.level.length > 1) {
+                        level = '';
+                    } else if (findLevelsInSemester.level.length === 1) {
+                        level = findLevelsInSemester.level[0].name
                     } else {
-
-                        for (let i = 0; i < boxData.length; i++) {
-                            if (boxData[i].label === data.semester) {
-                                level = boxData[i].level[0].name;
-                                dumpReportSelectFinder.label=boxData[i].label;
-                                dumpReportSelectFinder.semester=boxData[i].semester;
-                                dumpReportSelectFinder.level=boxData[i].level[0].name;
-                                dumpReportSelectFinder.year=boxData[i].year;
-                                break;
-                            }
-                        }
+                        level = '';
                     }
-                } else {
-                    level = get().reportLevel;
                 }
                 console.log('semester ==',data, '\nlevel ==',level, '\ndumpReportSelectFinder==',dumpReportSelectFinder)
-                set(()=>({reportSemester: data.semester, reportLevel: level, reportSelectFinder:dumpReportSelectFinder}))
+                if (level === '') {
+                    set(()=>({
+                        reportSemester: data.semester,
+                        reportLevel: level,
+                        reportSelectFinder:dumpReportSelectFinder,
+                        reportSelectUnit: 0,
+                    }))
+                } else {
+                    set(()=>({
+                        reportSemester: data.semester,
+                        reportLevel: level,
+                        reportSelectFinder:dumpReportSelectFinder
+                    }))
+                }
             }
         }
     },
@@ -939,13 +1326,13 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     reportByUnitMainTitle: '',
     reportSelectUnit: 1,
     setReportSelectUnit: (unit_index) => {
-    console.log('setReportSelectUnit====962')
+        console.log('setReportSelectUnit====962')
         const reportAPIData = get().reportAPIData;
         let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
-        // console.log('=== setReportSelectUnit ====', reportAPIData)
-        // console.log('dumpUnitReportData =',dumpUnitReportData)
-        // console.log('rubricScoreDataStates =',rubricScoreDataStates)
+        console.log('=== setReportSelectUnit ====', reportAPIData)
+        console.log('dumpUnitReportData =',dumpUnitReportData)
+        console.log('rubricScoreDataStates =',rubricScoreDataStates)
         let updateCompleteDumpUnitReportData= 0;
         let updateCompleteRubricScoreDataStates=0;
         const modalRubric = get().reportModalRubricData;
@@ -1000,11 +1387,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
 
         
         const getUnitReports = get().unitReportsData;
-        // console.log('getUnitReports =',getUnitReports)
+        console.log('1 getUnitReports =',getUnitReports)
         for (let i = 0; i < getUnitReports.length; i++) {
             const targetUnit = getUnitReports[i].unit_index;
             if (targetUnit === unit_index) {
                 const targetUnitReport = getUnitReports[i].report;
+                console.log('2 targetUnitReport =',targetUnitReport)
                 dumpUnitReportData=getUnitReports[i].report;
                 updateCompleteDumpUnitReportData+=1;
                 const rubricCategories = targetUnitReport.rubric.categories;
@@ -1034,7 +1422,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 break;
             }
         }
-        
+        console.log('dumpUnitReportData  ==',dumpUnitReportData)
         set(()=>({
             reportSelectUnit: unit_index,
             unitRubricScoresData: rubricScoreDataStates,

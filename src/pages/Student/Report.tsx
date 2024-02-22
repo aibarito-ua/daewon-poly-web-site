@@ -14,10 +14,6 @@ import { useNavigate } from 'react-router-dom';
 const Report = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = React.useState<boolean>(false);
-    // const [isNoData, setIsNoData] = React.useState<boolean>(true);
-
-    // const [semesters, setSemesters ] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
-    // const [ levels, setLevels] = React.useState<TDropdownSelectBoxDataTypes[]>([]);
 
     const {role, userInfo, device_id,isMobile, setMaintenanceData} = useLoginStore();
     const {
@@ -30,13 +26,13 @@ const Report = () => {
         // selectFinder
         reportSelectFinder, setReportSelectedFinder,
         reportSelectBoxDatas, setReportSelectBoxDatas,
+        reportSemester, reportLevel,
         setReportSelectBoxValue,
         // select unit index
         reportSelectUnit, setReportSelectUnit,
         reportSelectBookName,
         forcedReadOnlyReportSelectBox, setForcedReadOnlyReportSelectBox,
         commonAlertOpen, commonAlertClose,
-        isNoData, setIsNoData
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI,
@@ -111,113 +107,6 @@ const Report = () => {
             }
             
         });
-    }
-
-    const getReportsData = async () => {
-        const student_code = userInfo.userCode;
-        
-        let getReportAll:TReportByStudentResponse = {periods:[]};
-        if (reportAPIData.periods.length > 0) {
-            getReportAll=reportAPIData;
-        } else {
-            const getAPIs = await getReportsAPI(student_code, userInfo.accessToken, userInfo.courseName).then((response) => {
-                if (response.is_server_error) {
-                    if (response.data) {
-                        let maintenanceInfo:TMaintenanceInfo = response.data;
-                        maintenanceInfo.start_date = response.data.start_date;
-                        maintenanceInfo.end_date = response.data.end_date;
-                        let dumyMaintenanceData:TMaintenanceData = {
-                            alertTitle: '시스템 점검 안내',
-                            data: maintenanceInfo,
-                            open: false,
-                            type: ''
-                        }
-                        console.log('login maintenanceInfo =',dumyMaintenanceData)
-                        setCommonStandbyScreen({openFlag:false})
-                        setMaintenanceData(dumyMaintenanceData)
-                        navigate('/')
-                    } else {
-                        setCommonStandbyScreen({openFlag:false})
-                        if (response.isDuplicateLogin) {
-                            commonAlertOpen({
-                                messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                                priorityLevel: 2,
-                                messageFontFamily:'NotoSansCJKKR',
-                                useOneButton: true,
-                                yesButtonLabel:'OK',
-                                yesEvent: async() => {
-                                    await logoutFn()
-                                }
-                            })
-                        } else {
-                            commonAlertOpen({
-                                messages: [
-                                    'Cannot connect to the server.',
-                                    'Please try again later.'
-                                ],
-                                priorityLevel: 2,
-                                useOneButton: true,
-                                yesButtonLabel:'OK',
-                                yesEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        }
-                    }
-                    return false;
-                } else {
-                    return response.result;
-                }
-                
-            });
-            if (getAPIs) getReportAll = getAPIs;
-        }
-        
-        if (getReportAll) {
-            let dumpReportSelectBoxDatas:TReportPageSelectBoxDatas[]=[];
-            for (let i = 0; i < getReportAll.periods.length; i++) {
-                // find year and semesters
-                const currentReportAll = getReportAll.periods[i];
-                const currentYearData = currentReportAll.year;
-                const currentSemester = currentReportAll.semester===1? '1st': '2nd';
-                const pushSemesterString = `${currentYearData} - ${currentSemester} Semester`;
-                let dumpReportSelectBoxDataItem:TReportPageSelectBoxDatas = {
-                    label: pushSemesterString, level: [], semester: currentReportAll.semester, year: currentYearData
-                }
-                dumpReportSelectBoxDataItem.level = currentReportAll.levels.map((item)=>{
-                    return {name: item.level_name}
-                })
-                dumpReportSelectBoxDatas.push(dumpReportSelectBoxDataItem)
-            };
-            console.log('get report all =', getReportAll)
-// 1
-            let allLevels:string[] = [];
-            for (let i = 0; getReportAll.periods.length; i++) {
-                if (getReportAll.periods[i].year === userInfo.year && getReportAll.periods[i].semester === userInfo.semester) {
-                    const target = getReportAll.periods[i].levels;
-                    for (let j = 0; j < target.length; j++) {
-                        allLevels.push(target[j].level_name);
-                    };
-                    break;
-                };
-            };
-            if (allLevels.length!==0) {
-                setProgressLevelBoxValue(allLevels[0])
-            } else {
-                setProgressLevelBoxValue('');
-            }
-            setProgressAllLevelBoxValues(allLevels);
-// 2
-
-
-            let dumyFinderData = {label:'', level:'', semester:0, year:0};
-            dumyFinderData.level = userInfo.courseName;
-            setReportSelectBoxDatas(dumpReportSelectBoxDatas);
-            setReportSelectedFinder(dumyFinderData);
-            setReportAPIData(getReportAll);
-            // setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
-            // setCommonStandbyScreen({openFlag: false})
-        }
     }
 
     const beforeRenderedFn = async () => {
@@ -308,21 +197,33 @@ const Report = () => {
             console.log('dumpReportSelectBoxDatas1 ===',dumpReportSelectBoxDatas)
             console.log('get report all =', getReportAll)
             let dumyFinderData = {label:'', level:'', semester:0, year:0};
-            dumyFinderData.level = userInfo.courseName;
-            setReportSelectBoxDatas(dumpReportSelectBoxDatas);
-            setReportSelectedFinder(dumyFinderData);
-            setReportAPIData(getReportAll);
-            setReportSelectBoxValue({data: {label:'', level:'', semester:0, year:0}, init:true})
+            console.log('userInfo ==',userInfo)
+
+            // dropdown button default setting
+            for await (const target of dumpReportSelectBoxDatas) {
+                if ( target.year === userInfo.year && target.semester === userInfo.semester ) {
+                    console.log('for await ::',target)
+                    dumyFinderData.label = target.label;
+                    dumyFinderData.year = target.year;
+                    dumyFinderData.semester = target.semester;
+                    dumyFinderData.level = userInfo.courseName;
+                }
+            }
+            if (dumyFinderData.label !== '') {
+                console.log('dumyFinderData ===',dumyFinderData)
+                setReportSelectBoxDatas(dumpReportSelectBoxDatas);
+                setReportSelectedFinder(dumyFinderData);
+                setReportAPIData(getReportAll);
+                setReportSelectBoxValue({data: dumyFinderData, init:true, renderInit:true})
+            }
         }
     }
     useComponentWillMount(async()=>{
         // 화면 강제로 랜더링을 위한 사이클 중복 실행
         const set1 = await beforeRenderFn1().then(async ()=>{
-            return await getReportsData().then(async()=>{
-                return await beforeRenderedFn().then(()=>{
-                    return true;
-                })
-            });
+            return await beforeRenderedFn().then(()=>{
+                return true;
+            })
         });
         if (set1) {
             setCommonStandbyScreen({openFlag: false})
@@ -343,6 +244,7 @@ const Report = () => {
         }
     },[reportSelectBoxDatas])
     
+    // dropdown button onChange Event
     const handleChange = (selectValue:string, data: TReportByStudentResponse, selectData:TDropdownSelectBoxDataTypes, isLevel:boolean , isInit?:boolean) => {
         console.log('select value =',selectValue)
         console.log('data =',data)
