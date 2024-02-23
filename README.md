@@ -1,47 +1,32 @@
-# Getting Started with Create React App
+# .env
+### `REACT_APP_BACK_HOST` :  backend host url
+### `REACT_APP_GRAMMAR_CREATE_ORIGIN_CHANGE_TEXTS` : proofreading end-point
+### `REACT_APP_PROOFREADING_COUNT_UPDATE` : proofreading temporary reset count end-point
+### `REACT_APP_CHATBOT_API_URL` : free chat end-point
+### `REACT_APP_LOGIN` : writing hub login -> Poly 로그인 후 기본값 체크
+### `REACT_APP_LOGIN_FORCE` : writing hub login -> validate 후 로그인 처리
+### `REACT_APP_LOGIN_JOIN_URL` : poly url ../signUpForm01.do
+### `REACT_APP_LOGIN_FIND_ID_URL` : poly url ../findIdForm01.do
+### `REACT_APP_LOGIN_FIND_PW_URL` : poly url ../findPwForm01.do
+### `REACT_APP_DRAFT_SAVE_TEMPORARY` : draft temporary save end-point
+### `REACT_APP_DRAFT_SUBMIT` : draft submit end-point
+### `REACT_APP_UNIT_INFO` : 학생의 course의 모든 unit 불러오기
+### `REACT_APP_SPARK_GET_REPORT_OVERALL_BY_STUDENT` : get Overall Report data
+### `REACT_APP_SPARK_GET_PORTFOLIO_BY_STUDENT` : get Portfolio data
+### `REACT_APP_POLY_SERVICE` : poly url ../service.do
+### `REACT_APP_POLY_PRIVACY` : poly url ../privacy.do
+### `REACT_APP_POLY_WITHDRAW` : 회원 탈퇴 처리
+### `REACT_APP_CHECK_DUPLICATE_LOGIN` : check device
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### `REACT_APP_MAINTENANCE` : 점검 관련 (쿠키 이름)
+### `REACT_APP_MAINTENANCE_ERROR_CODE` : 특정 에러 확인 코드
 
-## Available Scripts
+### `REACT_APP_IS_DEV` : 서버가 개발 서버인지 분류 및 체크 (임시 리셋 버튼)
+### `그외 변수` : 코드 내에서 사용되지 않거나 이전에 테스트를 위해 만들어진 변수들입니다.
 
-In the project directory, you can run:
+접속 시 앱 버전 정보가 없는 경우 사용하는 변수
+REACT_APP_ANDROID_VERSION=1.0.4
+REACT_APP_IOS_VERSION=1.0.5
+REACT_APP_ELECTRON_VERSION=1.0.6
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
 # poly-web-site
