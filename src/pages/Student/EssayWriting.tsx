@@ -1212,7 +1212,8 @@ const EssayWriting = () => {
             }
         } else {
             setCommonStandbyScreen({openFlag:false})
-            const topicReplace = targetData.topic.replace(/s$/gmi,'');
+            const topicReplace = targetData.topic.replace(/ies$/gi, 'y').replace(/s$/gi,'');
+            // .replace(/s$/gmi,'');
             commonAlertOpen({
                 messageFontFamily: 'Roboto',
                 useOneButton: true,

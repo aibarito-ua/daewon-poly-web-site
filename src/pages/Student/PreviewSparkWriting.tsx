@@ -1469,7 +1469,7 @@ const PreviewSparkWriting = (props:any) => {
                                 if (sparkWritingData[unitIndex].proofreading_count===2) {
                                     commonAlertOpen({
                                         messageFontFamily: 'Roboto',
-                                        messages:  ['You have already used AI proofreading twice.'],
+                                        messages:  ['You have already used the AI proofreading tool twice.'],
                                         useOneButton:true,
                                         yesButtonLabel: 'OK',
                                         // yesEvent: async () => await AIProofreadingYesOnClick()
@@ -1628,11 +1628,12 @@ const PreviewSparkWriting = (props:any) => {
                                         const currentSparkWritingData = sparkWritingData[unitIndex]
                                         const submitDate = currentSparkWritingData.draft_1_status.submit_date;
                                         let noMessages = '';
+                                        const replaceTopic = currentSparkWritingData.topic.replace(/ies$/gi, 'y').replace(/s$/gi,'')
+                                        // .replace(/s$/gmi,'');
                                         if (submitDate && submitDate!=='') {
-                                            noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${currentSparkWritingData.topic}'s 1st draft has been submitted.`
+                                            noMessages = `Your Unit ${currentSparkWritingData.unit_index} ${replaceTopic}'s 1st draft has been submitted.`
                                         }
                                         // onSubmitEvent()
-                                        const replaceTopic = currentSparkWritingData.topic.replace(/s$/gmi,'');
                                         console.log('replaceTopic =',replaceTopic)
                                         commonAlertOpen({
                                             messageFontFamily: 'Roboto',
