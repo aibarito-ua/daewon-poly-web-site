@@ -1101,6 +1101,10 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             book_name:'', level_name:'', rubric_info:[], overall_report:[], unit_reports: [], class_name:''
         }
         let dumyIsNoData = true;
+        let reportByUnitMainTitle = '';
+        
+        let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
+
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
         let dumyUnitReportsData:TUnitReportsData[] = JSON.parse(JSON.stringify(get().unitReportsData));
         let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(get().reportModalRubricData));
@@ -1130,22 +1134,82 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
 
         for (let i = 0; i < data.periods.length; i++) {
             const currentPeriod = data.periods[i];
-            console.log('currentPeriod ==',currentPeriod)
             // find year & semester
             if (currentPeriod.year === year && currentPeriod.semester === semester) {
+
                 for (let j = 0; j < currentPeriod.levels.length; j++) {
                     // find level
                     const currentData = currentPeriod.levels[j];
                     if (currentData.level_name === level) {
                         dumyData = currentData;
-                        
                         dumySelectReportRubricAllData = currentData.rubric_info;
-                        dumyUnitReportsData = currentData.unit_reports;
+                        dumyUnitReportsData = currentData.unit_reports.sort((a,b) => {
+                            return a.unit_index - b.unit_index;
+                        });
+                        if (currentData.unit_reports.length > 0) {
+                            dumpUnitReportData = dumyUnitReportsData[0].report;
+                            const initialUnitIndex = dumyUnitReportsData[0].unit_index;
+                            for (let m = 0; m < dumySelectReportRubricAllData.length; m++) {
+                                if (dumySelectReportRubricAllData[m].unit_index === initialUnitIndex) {
+                                    const findTopic = dumySelectReportRubricAllData[m].rubric.name
+                                    const topic = findTopic;
+                                    reportByUnitMainTitle = `Unit ${initialUnitIndex}. ${topic}`;
+                                }
+                            }
+                            const findRubricDescription = (unit_index: number, category:string, score:number) => {
+                                const scoreName = ['Excellent', 'Very Good', 'Good', 'Fair','Poor']
+                                for (let m = 0; m < dumySelectReportRubricAllData.length; m++) {
+                                    if (dumySelectReportRubricAllData[m].unit_index === unit_index) {
+                                        for (let n =0; n < dumySelectReportRubricAllData[m].rubric.rubric_description.length; n++) {
+                                            if (dumySelectReportRubricAllData[m].rubric.rubric_description[n].category === category) {
+                                                if (score===10) {
+                                                    return { title: scoreName[0], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].excellent }
+                                                } else if (score===8) {
+                                                    return { title: scoreName[1], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].very_good }
+                                                } else if (score===6) {
+                                                    return { title: scoreName[2], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].good }
+                                                } else if (score===4) {
+                                                    return { title: scoreName[3], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].fair }
+                                                } else if (score===2) {
+                                                    return { title: scoreName[4], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].poor }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // update unitRubricScoresData 
+                            const targetUnitReport = dumyUnitReportsData.find((p) => p.unit_index === initialUnitIndex);
+                            if (targetUnitReport) {
+                                const rubricCategories = targetUnitReport.report.rubric.categories;
+                                for (let j = 0; j < rubricCategories.length; j++) {
+                                    const currentScore = rubricCategories[j].score * 10;
+                                    rubricScoreDataStates.barChartData = rubricScoreDataStates.barChartData.map((barItem) => {
+                                        if (rubricCategories[j].category === barItem.name) {
+                                            barItem.score = currentScore;
+                                        }
+                                        return barItem;
+                                    })
+                                    for (let k = 0; k < rubricScoreDataStates.hexagonChartData.length; k++) {
+                                        const hexaColumn = rubricScoreDataStates.hexagonChartData[k];
+                                        if (rubricCategories[j].category === hexaColumn.target) {
+                                            rubricScoreDataStates.hexagonChartData[k].data[0].value = currentScore;
+                                            const findDesc = findRubricDescription(initialUnitIndex, hexaColumn.target, rubricCategories[j].score);
+                                            if (findDesc) {
+                                                rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.title = findDesc.title;
+                                                rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.content = findDesc.desc;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                 }
             }
         }
+        
         let sumData = [
             {name:'conventions', sum: 0},
             {name:'sentence fluency', sum: 0},
@@ -1173,9 +1237,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
 
                 for (let s = 0; s < sumData.length; s++) {
                     if (sumData[s].name === targetCateName) {
-                        console.log('targetCateName =',targetCateName)
-                        console.log('sumData[',s,'].name =',sumData[s].name)
-                        console.log('targetScore =',targetScore)
                         sumData[s].sum += targetScore;
                         break;
                     }
@@ -1184,7 +1245,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 for (let b = 0; b < dumyOverallBar.length; b++) {
                     const currentBarName = dumyOverallBar[b].target;
                     if (currentBarName === targetCateName) {
-                        
                         if (targetUnitIdx === 1) {
                             dumyOverallBar[b].unit1 = targetScore;
                             break;
@@ -1203,39 +1263,36 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                         }
                     }
                 } // end category bar data
-
             }
         }
-        console.log('dumyOverallBar===',dumyOverallBar)
-        console.log('sumData ==',sumData)
-        console.log('unit count =',unitCount)
         // set pie data
         for (let p = 0; p < dumyOverallPie.length; p++) {
             const currentPie = dumyOverallPie[p];
-            console.log('currentPie [',p,'] :',currentPie)
+            // console.log('currentPie [',p,'] :',currentPie)
             for (let s = 0; s < sumData.length; s++) {
                 if (sumData[s].name === currentPie.target) {
                     const maxScore = unitCount*10;
                     const percent = sumData[s].sum / maxScore * 100;
-                    console.log('percent ==',percent)
+                    // console.log('percent ==',percent)
                     dumyOverallPie[p].data[0].value = percent;
                 }
             }
         }
+        if (reportCompletedUnitIndexArray.length > 0) reportCompletedUnitIndexArray.sort((a,b) => {return a-b});
         
-        if (reportCompletedUnitIndexArray.length > 0) {
-            reportCompletedUnitIndexArray.sort((a,b) => {return a-b});
-        }
         set(()=>({
             isNoData:dumyIsNoData,
             reportSelectedOverallBarChart: dumyOverallBar,
             reportSelectedOverallPieChart: dumyOverallPie,
             reportModalRubricData: dumySelectReportRubricAllData,
             unitReportsData: dumyUnitReportsData,
+            unitReportData: dumpUnitReportData,
             unitRubricScoresData: rubricScoreDataStates,
             reportSelectBookName: dumyData.book_name,
             reportSelectData:dumyData,
             reportCompletedUnitIndexArray,
+            reportSelectUnit: dumyUnitReportsData.length > 0 ? dumyUnitReportsData[0].unit_index : 1,
+            reportByUnitMainTitle,
         }))
     },
     reportSelectFinder: {
@@ -1330,9 +1387,9 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
         const reportAPIData = get().reportAPIData;
         let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
-        console.log('=== setReportSelectUnit ====', reportAPIData)
-        console.log('dumpUnitReportData =',dumpUnitReportData)
-        console.log('rubricScoreDataStates =',rubricScoreDataStates)
+        // console.log('=== setReportSelectUnit ====', reportAPIData)
+        // console.log('dumpUnitReportData =',dumpUnitReportData)
+        // console.log('rubricScoreDataStates =',rubricScoreDataStates)
         let updateCompleteDumpUnitReportData= 0;
         let updateCompleteRubricScoreDataStates=0;
         const modalRubric = get().reportModalRubricData;
@@ -1387,12 +1444,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
 
         
         const getUnitReports = get().unitReportsData;
-        console.log('1 getUnitReports =',getUnitReports)
+        // console.log('1 getUnitReports =',getUnitReports)
         for (let i = 0; i < getUnitReports.length; i++) {
             const targetUnit = getUnitReports[i].unit_index;
             if (targetUnit === unit_index) {
                 const targetUnitReport = getUnitReports[i].report;
-                console.log('2 targetUnitReport =',targetUnitReport)
+                // console.log('2 targetUnitReport =',targetUnitReport)
                 dumpUnitReportData=getUnitReports[i].report;
                 updateCompleteDumpUnitReportData+=1;
                 const rubricCategories = targetUnitReport.rubric.categories;
@@ -1422,7 +1479,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 break;
             }
         }
-        console.log('dumpUnitReportData  ==',dumpUnitReportData)
+        // console.log('dumpUnitReportData  ==',dumpUnitReportData)
         set(()=>({
             reportSelectUnit: unit_index,
             unitRubricScoresData: rubricScoreDataStates,

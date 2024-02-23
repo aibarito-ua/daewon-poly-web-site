@@ -283,12 +283,13 @@ const Report = () => {
                                 const initializeUnitIndex = currentLevelInPeriod.overall_report[0].unit_index
                                 setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
                                 setValue(selectValue, selectData)
-    
+                                console.log('1 === setReportSelectUnit')
                                 setReportSelectUnit(initializeUnitIndex)
                             } else {
                                 // console.log('currentLevelInPeriod.overall_report =104=',currentLevelInPeriod.overall_report)
                                 setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
                                 setValue(selectValue, selectData)
+                                console.log('2 === setReportSelectUnit')
                                 setReportSelectUnit(1)
                             }
                         }

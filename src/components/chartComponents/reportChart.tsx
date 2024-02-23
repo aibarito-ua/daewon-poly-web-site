@@ -76,22 +76,19 @@ const renderActiveShape = (props: any) => {
     const radiusMid = outerRadius-innerRadius;
     const cornerRadius = radiusMid/2;
     const trackRadius = innerRadius + cornerRadius;
-// console.log('payload ==',payload)
-const textLabelCss:React.CSSProperties = {
-    width: '80px',
-    height: '80px',
-    backgroundColor: '#ffffff',
-    fill: payload.fillColor,
-    textTransform: 'capitalize'
-}
-const percentValue = Math.round(payload.value*10)/10;
-// const percentDotCheck = Math.round(payload.value*10)%10 === 0;
-const percentLengthCheck = percentValue===100 ? '3': (
-    percentValue >=0 && percentValue < 10 ? '1':'2'
-)
+    const textLabelCss:React.CSSProperties = {
+        width: '80px',
+        height: '80px',
+        backgroundColor: '#ffffff',
+        fill: payload.fillColor,
+        textTransform: 'capitalize'
+    }
+    const percentValue = Math.round(payload.value*10)/10;
+    const percentLengthCheck = percentValue===100 ? '3': (
+        percentValue >=0 && percentValue < 10 ? '1':'2'
+    )
 
-const titleName:string[] = payload.name.split(' ')
-// console.log('test pie ===',props)
+    const titleName:string[] = payload.name.split(' ')
   return (
     <g>
         <circle cx={cx} cy={cy}
@@ -144,20 +141,13 @@ const titleName:string[] = payload.name.split(' ')
 
 
 export default function App() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [clickIndex, setClickIndex] = useState<string>('');
-    const [tooltipData, setTooltipData] = useState<{value:number, outerRadius:number}>({
-        value: 0, outerRadius: 0
-    });
-    
-    const [addWidth, setAddWidth] = useState<number>(0);
-    const [decText, setDecText] = useState<number>(0);
-    const [tooltipLineColor, setTooltipLineColor] = useState<string>('');
     const [average, setAverage] = useState<number>(0);
 
-    const [tooltipContents, setTooltipContents] = useState<{title:string, content:string}>({title:'',content: ''});
     const [tooltipPosition, setTooltipPosition] = useState<{x:number, y:number}>({x:0,y:0});
-    const {unitRubricScoresData, reportSelectUnit} = useControlAlertStore();
+    const {
+        unitRubricScoresData,
+        reportSelectUnit,
+    } = useControlAlertStore();
     
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
     React.useEffect(()=>{
@@ -165,31 +155,15 @@ export default function App() {
         console.log('data ===',data)
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
-        // console.log('allData ===',data)
         let dumpAvr = 0;
         for (let i =0; i < dumpData.length; i++) {
             dumpAvr += dumpData[i].data[0].value;
         }
         const avg = parseFloat((dumpAvr/dumpData.length).toFixed(1));
+        console.log('avg =',avg)
         setAverage(avg)
-    },[reportSelectUnit])
-    const radiusDatas = [
-        { innerRadius: 44, outerRadius: 68 },
-        { innerRadius: 74, outerRadius: 98 },
-        { innerRadius: 104, outerRadius: 128 },
-        { innerRadius: 134, outerRadius: 158 },
-        { innerRadius: 164, outerRadius: 188 },
-        { innerRadius: 194, outerRadius: 218 }
-    ]
-    
-    const labelNames = [
-        'ideas',
-        'organization',
-        'voice',
-        'word choice',
-        'sentence fluency',
-        'conventions'
-    ];
+        
+    },[reportSelectUnit, unitRubricScoresData])
     // const avr = 90;
     const CustomTooltipDIV = (props:any) => {
         // console.log('===CustomTooltipDIV===',props)
@@ -217,30 +191,16 @@ export default function App() {
     }
     
 const mouseOnEvent = (e:any)=>{
-    // console.log('click =',e)
-    // console.log('active',activeIndex)
-    setClickIndex(e.name)
-    let value= e.value;
-    const tooltipContentsFromPayload = e.payload.tooltip;
-    // console.log('tooltipContentsFromPayload =',tooltipContentsFromPayload)
-    //   let outerR = e.outerRadius;
-    let outerR = e.innerRadius;
       let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));
       for (let i = 0; i < dumpAllData.length; i++) {
         const currentPayloadData = dumpAllData[i].data[0];
         if (currentPayloadData.name === e.name) {
             setTooltipPosition({x: e.cx, y:e.cy})
             dumpAllData[i].data[0].selectName=e.name
-            setTooltipContents({title: tooltipContentsFromPayload.title, content: tooltipContentsFromPayload.content})
-            setTooltipLineColor(dumpAllData[i].toolLineColor)
-            setActiveIndex(i+1)
-            setDecText(dumpAllData[i].fitText);
-            setAddWidth(dumpAllData[i].addWidth);
         } else {
             dumpAllData[i].data[0].selectName=''
         }
     }
-    setTooltipData({outerRadius:outerR, value: value})
     setAllData(dumpAllData);
 }
 const mouseOffEvent = (e:any) => {
@@ -248,12 +208,6 @@ const mouseOffEvent = (e:any) => {
     for (let i = 0; i < dumpAllData.length; i++) {
         dumpAllData[i].data[0].selectName=''
     }
-    setClickIndex('')
-    setTooltipLineColor('')
-    setActiveIndex(0)
-    setDecText(0)
-    setAddWidth(0)
-    setTooltipData({value: 0, outerRadius: 0})
     setAllData(dumpAllData)
 }
     const rad = 117.5
@@ -326,8 +280,7 @@ const mouseOffEvent = (e:any) => {
         >%</tspan>
         </text>
         <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}} content={<CustomTooltipDIV/>}/>
-        {/* <Tooltip content={<TextTooltip/>} /> */}
-        {/* {clickIndex!=='' && {TextTooltip}} */}
+        
     </PieChart>
   );
 }

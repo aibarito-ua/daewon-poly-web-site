@@ -430,13 +430,14 @@ export default function FormDialog() {
     console.log(' ==== onKeyUpEvent ====')
     if (e.key==='Enter' && !blockInput) {
         if (isMobile || !e.shiftKey) {
-          
-          e.currentTarget.value = '';
-          e.currentTarget.style.height = 'auto';
-          e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
-          const inputTextValue = inputText.replace(/\n$/gmi,'');
-          setBlockInput(true)
-          await callDialogAPIFN(inputTextValue);
+          if (e.currentTarget.value.replace(/\s+/gmi, '') !== '') {
+            e.currentTarget.value = '';
+            e.currentTarget.style.height = 'auto';
+            e.currentTarget.style.height = e.currentTarget.scrollHeight+'px';
+            const inputTextValue = inputText.replace(/\n$/gmi,'');
+            setBlockInput(true)
+            await callDialogAPIFN(inputTextValue);
+          }
         } 
     }
   }
