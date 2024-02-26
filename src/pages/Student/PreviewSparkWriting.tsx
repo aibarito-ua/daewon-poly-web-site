@@ -146,6 +146,14 @@ const PreviewSparkWriting = (props:any) => {
         }
         window.location.reload()
     }
+    const resetChatHistEvent = () => {
+        console.log('=== Reset Chat History ===')
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('ResetChat'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('ResetChat')
+        }
+    }
     // will mount grammar data check
     const beforeRenderedFn = async () => {
         let reloadData:boolean|undefined;
@@ -179,6 +187,7 @@ const PreviewSparkWriting = (props:any) => {
                             }
                             setCommonStandbyScreen({openFlag:false})
                             setMaintenanceData(dumyMaintenanceData)
+                            resetChatHistEvent()
                             navigate('/')
                         } else {
                             setCommonStandbyScreen({openFlag:false})
@@ -190,6 +199,7 @@ const PreviewSparkWriting = (props:any) => {
                                     useOneButton: true,
                                     yesButtonLabel:'OK',
                                     yesEvent: async() => {
+                                        resetChatHistEvent()
                                         await logoutFn()
                                     }
                                 })
@@ -294,6 +304,8 @@ const PreviewSparkWriting = (props:any) => {
         
        
     }
+    
+
     useComponentWillMount(async ()=>{
         setCommonStandbyScreen({openFlag:true})
         console.log('params =',params)
@@ -341,6 +353,7 @@ const PreviewSparkWriting = (props:any) => {
                                 useOneButton: true,
                                 yesButtonLabel:'OK',
                                 yesEvent: async() => {
+                                    resetChatHistEvent()
                                     await logoutFn()
                                 }
                             })
@@ -788,6 +801,7 @@ const PreviewSparkWriting = (props:any) => {
                 console.log('login maintenanceInfo =',dumyMaintenanceData)
                 setCommonStandbyScreen({openFlag:false})
                 setMaintenanceData(dumyMaintenanceData)
+                resetChatHistEvent()
                 navigate('/')
             } else {
                 if (isSaveTemporary.isDuplicateLogin) {
@@ -798,6 +812,7 @@ const PreviewSparkWriting = (props:any) => {
                         useOneButton: true,
                         yesButtonLabel:'OK',
                         yesEvent: async() => {
+                            resetChatHistEvent()
                             await logoutFn()
                         }
                     })
@@ -831,6 +846,7 @@ const PreviewSparkWriting = (props:any) => {
                 }
             }
         } else {
+            resetChatHistEvent()
             commonAlertClose()
             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
         }
@@ -911,6 +927,7 @@ const PreviewSparkWriting = (props:any) => {
                     yesButtonLabel:'Yes',
                     noButtonLabel: 'No',
                     yesEvent: async () => {
+                        resetChatHistEvent()
                         commonAlertClose();
                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                     },
@@ -1014,6 +1031,7 @@ const PreviewSparkWriting = (props:any) => {
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
+                                resetChatHistEvent()
                                 commonAlertClose();
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
@@ -1043,6 +1061,7 @@ const PreviewSparkWriting = (props:any) => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent()
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1066,6 +1085,7 @@ const PreviewSparkWriting = (props:any) => {
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
+                                resetChatHistEvent()
                                 commonAlertClose();
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
@@ -1095,6 +1115,7 @@ const PreviewSparkWriting = (props:any) => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent()
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1119,6 +1140,7 @@ const PreviewSparkWriting = (props:any) => {
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
+                                resetChatHistEvent()
                                 commonAlertClose();
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
@@ -1148,6 +1170,7 @@ const PreviewSparkWriting = (props:any) => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent()
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1170,6 +1193,7 @@ const PreviewSparkWriting = (props:any) => {
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
+                                resetChatHistEvent()
                                 commonAlertClose();
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
@@ -1199,6 +1223,7 @@ const PreviewSparkWriting = (props:any) => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent()
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -1258,6 +1283,7 @@ const PreviewSparkWriting = (props:any) => {
                             commonAlertClose();
                         },
                         yesEvent: () => {
+                            resetChatHistEvent()
                             commonAlertClose();
                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                         }
@@ -1269,26 +1295,7 @@ const PreviewSparkWriting = (props:any) => {
             })
         })
     }
-    const goBackEvent = () => {
-        setGoBackFromDraftInUnitPage(()=>{ 
-            commonAlertOpen({
-                messageFontFamily: 'Roboto',
-                messages: ['Do you want to exit?'],
-                alertType: 'warningContinue',
-                yesButtonLabel:'Yes',
-                noButtonLabel: 'No',
-                yesEvent: async () => {
-                    commonAlertClose();
-                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                },
-                closeEvent: () => {
-                    commonAlertClose();
-                }
-            })
-        })
-    }
     
-
     // Render Page
     return (
         <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
@@ -1374,6 +1381,7 @@ const PreviewSparkWriting = (props:any) => {
                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
                                             setCommonStandbyScreen({openFlag:false})
                                             setMaintenanceData(dumyMaintenanceData)
+                                            resetChatHistEvent()
                                             navigate('/')
                                         } else {
                                             setCommonStandbyScreen({openFlag:false})
@@ -1385,6 +1393,7 @@ const PreviewSparkWriting = (props:any) => {
                                                     useOneButton: true,
                                                     yesButtonLabel:'OK',
                                                     yesEvent: async() => {
+                                                        resetChatHistEvent()
                                                         await logoutFn()
                                                     }
                                                 })
@@ -1699,6 +1708,7 @@ const PreviewSparkWriting = (props:any) => {
                                                             console.log('login maintenanceInfo =',dumyMaintenanceData)
                                                             setCommonStandbyScreen({openFlag:false})
                                                             setMaintenanceData(dumyMaintenanceData)
+                                                            resetChatHistEvent()
                                                             navigate('/')
                                                         } else {
                                                             setCommonStandbyScreen({openFlag:false})
@@ -1710,6 +1720,7 @@ const PreviewSparkWriting = (props:any) => {
                                                                     useOneButton: true,
                                                                     yesButtonLabel:'OK',
                                                                     yesEvent: async() => {
+                                                                        resetChatHistEvent()
                                                                         await logoutFn()
                                                                     }
                                                                 })
@@ -1760,6 +1771,7 @@ const PreviewSparkWriting = (props:any) => {
                                                             <span><span style={{textDecoration:'underline', fontWeight:700}}>1<sup>st</sup> draft</span> has been submitted.</span>
                                                         ],
                                                         yesEvent: () => {
+                                                            resetChatHistEvent()
                                                             commonAlertClose()
                                                             CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role);
                                                         }

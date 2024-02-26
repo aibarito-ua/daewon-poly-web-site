@@ -242,14 +242,55 @@ const EssayWriting = () => {
             // setIsSaved(false);
         }
     });
+    /**
+     * app 소켓 통신 이벤트
+     * @param data 
+     */
+    const sendMessage = (data:any) => {
+        console.log('Send message data =',data)
+        const messageData = JSON.stringify(data);
+        window.ReactNativeWebView.postMessage(messageData);
+    };
+    const resetChatHistEvent = () => {
+        console.log('=== Reset Chat History ===')
+        if (isMobile) {
+            console.log('reset history in mobile ')
+            sendMessage('ResetChat')
+        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            const electronData = (window as any).api.toElectron.sendSync('ResetChat')
+            console.log('reset history in electron =',electronData)
+        }
+    }
+    const receiveMessage = (event: any) => {
+        console.log('Receive Message data =',event.data)
+        if (typeof event.data !== 'string') {return;}
+        const rnData = JSON.parse(event.data);
+    }
     React.useEffect(()=>{
         if (draft1stRefs.current) {
+            console.log('=== ref useEffect ===')
+            
+            
             if (draft1stRefs.current.length === foldFlag.length) {
+                // use callback
                 handleResizeHeightDraft1stInputs();
+                if (params.draft === '1') {
+                    // connect app message
+                    if (isMobile) {
+                        // connect mobile app event listener
+                        window.addEventListener('message', receiveMessage, true);
+                    }
+                }
             }
         }
         return () => {
             console.log('=== RETURE [draft1stRefs] ')
+            if (params.draft === '1') {
+                if (isMobile) {
+                    // remove app event listener
+                    window.removeEventListener('message', receiveMessage, true);
+                }
+            }
         }
     },[draft1stRefs])
 
@@ -456,6 +497,7 @@ const EssayWriting = () => {
                                             commonAlertClose();
                                         },
                                         yesEvent: () => {
+                                            resetChatHistEvent();
                                             commonAlertClose();
                                             setDraft2ndPageSet('')
                                             setDraft2ndSaveActive(false)
@@ -491,6 +533,7 @@ const EssayWriting = () => {
                                             commonAlertClose();
                                         },
                                         yesEvent: () => {
+                                            resetChatHistEvent();
                                             commonAlertClose();
                                             setDraft2ndPageSet('')
                                             setDraft2ndSaveActive(false)
@@ -515,6 +558,7 @@ const EssayWriting = () => {
                                 yesButtonLabel:'Yes',
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {
+                                    resetChatHistEvent();
                                     commonAlertClose();
                                     setDraft2ndPageSet('')
                                     setDraft2ndSaveActive(false)
@@ -973,6 +1017,7 @@ const EssayWriting = () => {
             const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
                 if (response) {
                     // setIsSaved(true);
+                    resetChatHistEvent();
                     commonAlertClose();
                 }
                 return response;
@@ -1001,6 +1046,7 @@ const EssayWriting = () => {
                             useOneButton: true,
                             yesButtonLabel:'OK',
                             yesEvent: async() => {
+                                resetChatHistEvent();
                                 await logoutFn()
                             }
                         })
