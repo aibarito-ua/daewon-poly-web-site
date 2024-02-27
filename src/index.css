@@ -631,6 +631,29 @@ body {
   rounded-lg
   shadow-[5px_5px_5px_rgba(0,0,0,0.25)]
 }
+.modal-popup-maintenance-stop-service-btn {
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #fff;
+  user-select: none;
+  @apply
+  flex
+  w-[180px]
+  h-[50px]
+  flex-grow-0
+  flex-row
+  justify-center
+  items-center
+  gap-[10px]
+  bg-[#42278f]
+  rounded-[15px]
+
+}
 .modal-popup-messages-div {
   @apply
   mb-5

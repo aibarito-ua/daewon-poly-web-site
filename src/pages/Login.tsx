@@ -205,9 +205,14 @@ export const Login = () => {
             return;
         } else {
             // alert(JSON.stringify(loginValues, null, 2))
+            console.log('handle submit!!!!')
             const rsp = await loginAPI(loginValues.username, loginValues.password, device_id).then((response)=>{
                 if (response.is_server_error===true) {
+                    console.log('response.is_server_error true= ',response.is_server_error)
                     if (response.data !== null) {
+                        console.log(
+                            'response.data !== null'
+                        )
                         let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
                         maintenanceInfo.start_date = response.data.maintenanceInfo.start_date;
                         maintenanceInfo.end_date = response.data.maintenanceInfo.end_date;

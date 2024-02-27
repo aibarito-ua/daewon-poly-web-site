@@ -927,7 +927,7 @@ const PreviewSparkWriting = (props:any) => {
                     yesButtonLabel:'Yes',
                     noButtonLabel: 'No',
                     yesEvent: async () => {
-                        resetChatHistEvent()
+                        resetChatHistEvent();
                         commonAlertClose();
                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                     },
@@ -1223,7 +1223,7 @@ const PreviewSparkWriting = (props:any) => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
-                                        resetChatHistEvent()
+                                        resetChatHistEvent();
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }

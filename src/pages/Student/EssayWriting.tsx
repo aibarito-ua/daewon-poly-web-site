@@ -716,6 +716,7 @@ const EssayWriting = () => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent();
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -750,6 +751,7 @@ const EssayWriting = () => {
                                         commonAlertClose();
                                     },
                                     yesEvent: () => {
+                                        resetChatHistEvent();
                                         commonAlertClose();
                                         CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                                     }
@@ -770,6 +772,7 @@ const EssayWriting = () => {
                             yesButtonLabel:'Yes',
                             noButtonLabel: 'No',
                             yesEvent: async () => {
+                                resetChatHistEvent();
                                 commonAlertClose();
                                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
                             },
@@ -893,6 +896,7 @@ const EssayWriting = () => {
                                                 commonAlertClose();
                                             },
                                             yesEvent: () => {
+                                                resetChatHistEvent();
                                                 commonAlertClose();
                                                 setDraft2ndPageSet('')
                                                 setDraft2ndSaveActive(false)
@@ -916,6 +920,7 @@ const EssayWriting = () => {
                                     yesButtonLabel:'Yes',
                                     noButtonLabel: 'No',
                                     yesEvent: async () => {
+                                        resetChatHistEvent();
                                         commonAlertClose();
                                         setDraft2ndPageSet('')
                                         setDraft2ndSaveActive(false)
@@ -937,6 +942,7 @@ const EssayWriting = () => {
                                 yesButtonLabel:'Yes',
                                 noButtonLabel: 'No',
                                 yesEvent: async () => {
+                                    resetChatHistEvent();
                                     commonAlertClose();
                                     setDraft2ndPageSet('')
                                     setDraft2ndSaveActive(false)

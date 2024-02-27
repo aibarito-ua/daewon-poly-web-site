@@ -37,6 +37,7 @@ interface IUserInfo {
     // MAINTENANCE(점검 )
     maintenanceData: TMaintenanceData;
     setMaintenanceData: (data:TMaintenanceData) => void;
+    closeMaintenanceModal: () => void;
     // Alert (Server Open/Close)
     
 }
@@ -44,7 +45,7 @@ type TMaintenanceData = {
     alertTitle: string;
     type: string;
     open:boolean;
-    data: TMaintenanceInfo
+    data: TMaintenanceInfo;
 }
 type TMaintenanceInfo = {
     start_date: string;
@@ -53,6 +54,8 @@ type TMaintenanceInfo = {
     maintenance_description_kr: string[];
     time_description_en: string;
     time_description_kr: string;
+    is_type_service_stopped: boolean;
+    is_type_maintenance: boolean;
 }
 type TRNSize = {
     height: number;

@@ -52,6 +52,7 @@ const SelectWritingClinic = () => {
                     setCommonStandbyScreen({openFlag:false})
                     setMaintenanceData(dumyMaintenanceData)
                     navigate('/')
+                    return false;
                 } else {
                     setCommonStandbyScreen({openFlag:false})
                     if (response.isDuplicateLogin===true) {
@@ -66,6 +67,7 @@ const SelectWritingClinic = () => {
                                 await logoutFn()
                             }
                         })
+                        return false;
                     } else if (response.isDuplicateLogin===false) {
                         commonAlertOpen({
                             messages: [
@@ -79,6 +81,7 @@ const SelectWritingClinic = () => {
                                 commonAlertClose();
                             }
                         })
+                        return false;
                     }
                 }
                 return false;

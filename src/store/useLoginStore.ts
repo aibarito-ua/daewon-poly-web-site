@@ -136,13 +136,32 @@ const useLoginStore = create<IUserInfo>((set,get) => ({
             end_date: '',
             maintenance_description_en:[ ],
             maintenance_description_kr:[ ],
-            time_description_en:'Monthly on the 14   and 28   00:30-01:00 AM',
-            time_description_kr:'매월 14일, 28일 새벽 00:30~01:00'
+            time_description_en:'',
+            time_description_kr:'',
+            is_type_maintenance: false,
+            is_type_service_stopped: false,
         },
         open: false,
         type: ''
     },
-
+    closeMaintenanceModal: () => {
+        let maintenanceData:TMaintenanceData = {
+            alertTitle: '',
+            data: {
+                start_date: '',
+                end_date: '',
+                maintenance_description_en:[ ],
+                maintenance_description_kr:[ ],
+                time_description_en:'',
+                time_description_kr:'',
+                is_type_maintenance: false,
+                is_type_service_stopped: false,
+            },
+            open: false,
+            type: ''
+        }
+        set(()=>({maintenanceData}))
+    }
 
 }))
 
