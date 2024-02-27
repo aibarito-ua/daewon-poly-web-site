@@ -4,8 +4,6 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import ReportModalComponent from '../ReportModalComponent';
-import { useComponentWillMount } from '../../../hooks/useEffectOnce';
 import useLoginStore from '../../../store/useLoginStore';
 interface TabPanelProps {
   children?: React.ReactNode;

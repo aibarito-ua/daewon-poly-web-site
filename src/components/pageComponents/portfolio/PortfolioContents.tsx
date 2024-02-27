@@ -10,7 +10,7 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
         displayPortfolioData,
         portfolioModal, setPortfolioModal,
         // selectSemester, selectLevel,
-        portfolioSelectFinder
+        // portfolioSelectFinder
 
     } = usePortfolioStore();
     const [viewJSX, setViewJSX] = React.useState<JSX.Element[]>([]);

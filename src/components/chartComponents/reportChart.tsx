@@ -1,21 +1,8 @@
 
-import React, { useCallback, useState } from "react";
-import { PieChart, Pie, Sector, Tooltip, Text } from "recharts";
+import React, { useState } from "react";
+import { PieChart, Pie, Sector, Tooltip } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
-import { commonIconSvgs } from "../../util/svgs/commonIconsSvg";
-// import {ReactComponent as ReportTooltipIMG} from './tooltips/reportTooltip copy.svg'
 
-
-const data1 = [
-  { name: "Group A", value: 90 },
-//   { name: "Group 1", value: 75 },
-//   { name: "Group 2", value: 40 },
-];
-const data2 = [
-    { name: "Group B", value: 10 },
-  //   { name: "Group 1", value: 75 },
-  //   { name: "Group 2", value: 40 },
-  ];
 const textmainCss:React.CSSProperties = {
     width: '80px',
     height: '80px',
@@ -45,34 +32,20 @@ lineHeight: 1.2,
 letterSpacing: 'normal',
 }
 const renderActiveShape = (props: any) => {
-    // console.log('props: ',props)
+    // console.log('=== renderActiveShape props: ',pr)
   const RADIAN = Math.PI / 180;
   const {
     cx,
     cy,
-    // midAngle,
     innerRadius,
     outerRadius,
-    // startAngle,
-    // endAngle,
-    
     fill,
     payload,
-    percent,
-    value
+    value,
+
   } = props;
-    const midAngle = 45;
     const startAngle = 90;
     const endAngle = 90-value/100*360;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? "start" : "end";
     const radiusMid = outerRadius-innerRadius;
     const cornerRadius = radiusMid/2;
     const trackRadius = innerRadius + cornerRadius;
@@ -87,7 +60,6 @@ const renderActiveShape = (props: any) => {
     const percentLengthCheck = percentValue===100 ? '3': (
         percentValue >=0 && percentValue < 10 ? '1':'2'
     )
-
     const titleName:string[] = payload.name.split(' ')
   return (
     <g>
@@ -138,9 +110,31 @@ const renderActiveShape = (props: any) => {
     </g>
   );
 };
-
+const CustomTooltipDIV = (props:any) => {
+    const { active, payload, viewBox } = props;
+    if (active && payload && payload.length) {
+        const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`;
+        const paddingLeftPX = viewBox.width >= 250 ? '10%': '25px';
+        return (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            paddingTop: '10px',
+            paddingBottom: '15px',
+            paddingLeft: paddingLeftPX,
+            paddingRight: '25px'
+          }} className={`${classNameStr} z-[1302]`} 
+          
+          >
+            <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
+            <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
+          </div>
+        );
+    } else return null;
+}
 
 export default function App() {
+    
     const [average, setAverage] = useState<number>(0);
 
     const [tooltipPosition, setTooltipPosition] = useState<{x:number, y:number}>({x:0,y:0});
@@ -150,11 +144,13 @@ export default function App() {
     } = useControlAlertStore();
     
     const [allData, setAllData] = useState<THexagonDoughnutData[]>([]);
+    
     React.useEffect(()=>{
         const data = unitRubricScoresData.hexagonChartData;
         console.log('data ===',data)
         const dumpData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(data));
         setAllData(dumpData);
+        
         let dumpAvr = 0;
         for (let i =0; i < dumpData.length; i++) {
             dumpAvr += dumpData[i].data[0].value;
@@ -162,54 +158,33 @@ export default function App() {
         const avg = parseFloat((dumpAvr/dumpData.length).toFixed(1));
         console.log('avg =',avg)
         setAverage(avg)
-        
     },[reportSelectUnit, unitRubricScoresData])
+
     // const avr = 90;
-    const CustomTooltipDIV = (props:any) => {
-        // console.log('===CustomTooltipDIV===',props)
-        const { active, payload, label, viewBox } = props;
-        // console.log('===payload',payload)
-        if (active && payload && payload.length) {
-            const classNameStr = `custom-tooltip-${payload[0].name.replace(' ','')}`
-            const paddingLeftPX = viewBox.width >= 250 ? '10%': '25px'
-            
-            return (
-              <div style={{
-                width: '100%',
-                height: '100%',
-                paddingTop: '10px',
-                paddingBottom: '15px',
-                paddingLeft: paddingLeftPX,
-                paddingRight: '25px'
-              }} className={`${classNameStr} z-[1302]`} >
-                <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
-                <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
-                
-              </div>
-            );
-        } else return null
-    }
     
-const mouseOnEvent = (e:any)=>{
-      let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));
-      for (let i = 0; i < dumpAllData.length; i++) {
-        const currentPayloadData = dumpAllData[i].data[0];
-        if (currentPayloadData.name === e.name) {
-            setTooltipPosition({x: e.cx, y:e.cy})
-            dumpAllData[i].data[0].selectName=e.name
-        } else {
+    
+    const mouseOnEvent = (e:any)=>{
+        console.log('mouse on e==',e.selectName)
+        let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));
+        for (let i = 0; i < dumpAllData.length; i++) {
+            const currentPayloadData = dumpAllData[i].data[0];
+            if (currentPayloadData.name === e.name) {
+                setTooltipPosition({x: e.cx, y:e.cy})
+                dumpAllData[i].data[0].selectName=e.name
+            } else {
+                dumpAllData[i].data[0].selectName=''
+            }
+        }
+        setAllData(dumpAllData);
+    }
+    const mouseOffEvent = (e:any) => {
+        console.log('mouse off e==',e.selectName)
+        let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));
+        for (let i = 0; i < dumpAllData.length; i++) {
             dumpAllData[i].data[0].selectName=''
         }
+        setAllData(dumpAllData)
     }
-    setAllData(dumpAllData);
-}
-const mouseOffEvent = (e:any) => {
-    let dumpAllData:THexagonDoughnutData[] = JSON.parse(JSON.stringify(allData));
-    for (let i = 0; i < dumpAllData.length; i++) {
-        dumpAllData[i].data[0].selectName=''
-    }
-    setAllData(dumpAllData)
-}
     const rad = 117.5
     const radAddX = 58.75
     const radAddY = 101.76
@@ -224,6 +199,7 @@ const mouseOffEvent = (e:any) => {
         {cx:stDotX-radAddY, cy:stDotY-radAddX},
     ]
   return (
+    
     <PieChart width={330} height={360} className="flex flex-1 z-[1302]">
         <circle cx={stDotX} cy={stDotY}
             r={117.5}
@@ -244,10 +220,9 @@ const mouseOffEvent = (e:any) => {
               outerRadius={56}
               fill={dataItem.data[0].fillColor}
               dataKey="value"
-            //   onClick={mouseOnEvent}
-            //   onMouseOut={mouseOffEvent}
-              onMouseOver={mouseOnEvent}
+                onMouseOver={mouseOnEvent}
               onMouseLeave={mouseOffEvent}
+              
             />
         })}
         <text x={stDotX} y={stDotY}
@@ -279,7 +254,7 @@ const mouseOffEvent = (e:any) => {
         fontSize={28}
         >%</tspan>
         </text>
-        <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}} content={<CustomTooltipDIV/>}/>
+        <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}}  content={<CustomTooltipDIV/>}/>
         
     </PieChart>
   );

@@ -2,7 +2,6 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import buttonImage from './img/report_image.png'
 import ReportComponentToPrint from '../commonComponents/printComponent/report/PrintReportComponent';
 import useLoginStore from '../../store/useLoginStore';
 import useControlAlertStore from '../../store/useControlAlertStore';

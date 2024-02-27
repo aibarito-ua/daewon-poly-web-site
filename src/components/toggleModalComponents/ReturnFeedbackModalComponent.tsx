@@ -1,17 +1,12 @@
 import * as React from 'react';
 import {
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
-
 } from '@mui/material';
 import useControlAlertStore from '../../store/useControlAlertStore';
 
-
-export default function ReturnFeedbackModalComponent (
-
-) {
+export default function ReturnFeedbackModalComponent () {
     const {
         return1stDraftReasonAlert, setReturn1stDraftReasonAlertOpen,
     } = useControlAlertStore();
@@ -32,7 +27,6 @@ export default function ReturnFeedbackModalComponent (
             handleClose();
             await return1stDraftReasonAlert.yesEvent();
         }
-
     }
 
     return (

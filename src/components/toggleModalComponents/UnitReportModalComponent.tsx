@@ -1,17 +1,11 @@
 import * as React from 'react';
-
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import useControlAlertStore from '../../store/useControlAlertStore';
-// import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
-
 import ReportByUnitComponent from '../chartComponents/reportByUnit/ReportByUnitComponent';
-import ReportItemComponents from '../chartComponents/reportByUnit/ItemComponents/ReportItemComponents';
-
 import PieChart from '../chartComponents/dounutChat';
 import BarChart from '../chartComponents/barChart'
 import ReportRubricModalComponent from './ReportRubricModalComponent';
 import PrintReportExportButton from '../commonComponents/printComponent/report/PrintComponent';
-
 
 export default function UnitReportModalComponent() {
     const {

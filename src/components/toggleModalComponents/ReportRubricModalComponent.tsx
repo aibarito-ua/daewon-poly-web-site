@@ -2,9 +2,7 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { IconButton } from '@mui/material';
 import useControlAlertStore from '../../store/useControlAlertStore';
-// import btnPreview from '../../util/png/btn_preview.png';
 
 interface IRubricTypeModalComponentProps {
     isPrev:boolean;

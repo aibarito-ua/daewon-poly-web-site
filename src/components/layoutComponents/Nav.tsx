@@ -2,8 +2,6 @@ import React from 'react'
 import useNavStore from "../../store/useNavStore";
 import useLoginStore from '../../store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
-import { CommonFunctions } from '../../util/common/commonFunctions';
-import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 
 type INavItems = {
     [key in TRole]: {

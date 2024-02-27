@@ -4,7 +4,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import useControlAlertStore from '../../store/useControlAlertStore';
 import {commonSvgs} from '../../util/svgs/commonModalSvgs'
-import {debounce} from 'lodash';
 import useDebounced from '../../hooks/useDebounced';
 
 export default function CommonAlertModalComponent(

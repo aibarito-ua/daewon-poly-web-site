@@ -9,9 +9,7 @@ import BarChart from '../../chartComponents/barChart'
 import ReportRubricModalComponent from '../../toggleModalComponents/ReportRubricModalComponent';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 import ReportByUnitComponent from '../../chartComponents/reportByUnit/ReportByUnitComponent';
-import ReportItemComponents from '../../chartComponents/reportByUnit/ItemComponents/ReportItemComponents';
 import PrintReportExportButton from '../../commonComponents/printComponent/report/PrintComponent';
-import TestModalComponent from '../../toggleModalComponents/TestModalComponent';
 
 interface StyledTabsProps {
   children?: React.ReactNode;
@@ -27,7 +25,6 @@ const StyledTabs = styled((props: StyledTabsProps) => (
         display: 'none', width: 0, height: 0
       }
     }}
-    // TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
 ))({
   height:'55px',

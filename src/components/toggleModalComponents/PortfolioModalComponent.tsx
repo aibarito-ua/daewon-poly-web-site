@@ -1,16 +1,14 @@
 import React from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import {ReactComponent as ReportClose} from './img/reportCloaseButtonIMG.svg';
-
+import { Dialog, DialogContent, DialogTitle} from '@mui/material';
 import PrintReportExportButton from '../commonComponents/printComponent/portfolio/PrintComponent';
 import usePortfolioStore from '../../store/usePortfolioStore';
 
 export default function PortfolioModalComponent() {
     const {
         displayPortfolioData,
-        portfolioApiData,
-        setPortfolioApiData,
+        // portfolioApiData,
+        // setPortfolioApiData,
         portfolioModal,
         setPortfolioModal,
         setPortfolioModalClose,
@@ -23,15 +21,15 @@ export default function PortfolioModalComponent() {
         data.menuControll=index;
         setPortfolioModal(data);
     }
-    const [printPreviewer, setPrintPreviewer] = React.useState<boolean>(false);
-    const printComponentRef = React.useRef<HTMLDivElement>(null);
+    // const [printPreviewer, setPrintPreviewer] = React.useState<boolean>(false);
+    // const printComponentRef = React.useRef<HTMLDivElement>(null);
     
-    const setIsPrevAndNext = (prev:boolean, next:boolean) => {
-        let data:TPortfolioModal = JSON.parse(JSON.stringify(portfolioModal));
-        data.isNext=next;
-        data.isPrev=prev;
-        setPortfolioModal(data);
-    }
+    // const setIsPrevAndNext = (prev:boolean, next:boolean) => {
+    //     let data:TPortfolioModal = JSON.parse(JSON.stringify(portfolioModal));
+    //     data.isNext=next;
+    //     data.isPrev=prev;
+    //     setPortfolioModal(data);
+    // }
     const setUnitIndex = (unit_index:number) => {
         let data:TPortfolioModal = JSON.parse(JSON.stringify(portfolioModal));
         data.selectUnit=unit_index;
@@ -39,8 +37,6 @@ export default function PortfolioModalComponent() {
     }
     
     const handlePrev = () => {
-
-        
         if (portfolioModal.isPrev && portfolioModal.selectUnit !== 1) {
             let allUnits:number[] = [];
             const allPortfolioData = displayPortfolioData.unit_portfolios;

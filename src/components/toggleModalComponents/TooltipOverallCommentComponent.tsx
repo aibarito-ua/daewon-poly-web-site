@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Estyled from '@emotion/styled'
@@ -10,24 +9,23 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        display: 'flex',
-        maxWidth: 'none',
+      display: 'flex',
+      maxWidth: 'none',
     flex: '1 1 0%',
     flexDirection: 'row',
-        backgroundColor: 'rgba(0,0,0,0)',
-        
-        color: '#222',
-        fontFamily: 'GothamRounded',
-        fontSize: '13px',
-        fontWeight: 'normal',
-        fontStretch: 'normal',
-        fontStyle: 'normal',
-        lineHeight: 1.38,
-        letterSpacing: 'normal',
-        textAlign: 'left',
-        border: '3px solid #21c4cc',
+      backgroundColor: 'rgba(0,0,0,0)',
+      
+      color: '#222',
+      fontFamily: 'GothamRounded',
+      fontSize: '13px',
+      fontWeight: 'normal',
+      fontStretch: 'normal',
+      fontStyle: 'normal',
+      lineHeight: 1.38,
+      letterSpacing: 'normal',
+      textAlign: 'left',
+      border: '3px solid #21c4cc',
     },
-    
   }));
   export const ArrowBubble = Estyled.div`
   display: flex;
@@ -93,7 +91,6 @@ export default function TooltipOverallCommentComponent(props: {
   };
   const test = 'Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea.Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea.'
   
-
   return (
     <div className='w-full'>
       <Grid container justifyContent="center">
@@ -102,7 +99,6 @@ export default function TooltipOverallCommentComponent(props: {
             <div>
               <Tooltip
                 className='w-[800px]'
-                
                 PopperProps={{
                   disablePortal: true,
                   sx:{
@@ -111,21 +107,13 @@ export default function TooltipOverallCommentComponent(props: {
                     height: '85px',
                   }
                 }}
-                
-                
                 onClose={handleTooltipClose}
                 open={open}
                 disableFocusListener
                 disableHoverListener
                 disableTouchListener
                 title={
-                    // <ArrowBubble >{'Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea.Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea. Good Writing. I like your idea.'}</ArrowBubble>
-                        <p className='w-full h-[85px]'>{test}</p>
-                    // <React.Fragment>
-                    // <ArrowBubble>
-                    // </ArrowBubble>
-                    // </React.Fragment>
-                    
+                  <p className='w-full h-[85px]'>{test}</p>
                 }
                 placement='left-end'
               >

@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
-
 } from '@mui/material';
 import draftViewBox from '../pageComponents/feedbackComponents/draftFeedback';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
@@ -14,11 +12,9 @@ export default function TeacherFeedbackDetailModalComponents (props: {
     draftItem: TSparkWritingData,
 }) {
     const [open, setOpen] = React.useState(false);
-    const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
+    const {commentFocusIdInModal} = useSparkWritingStore();
     const {draftItem} = props;
     const handleOpen = () => {
-        
-        // console.log('draftItem.draft_1_comment =',draftItem.draft_1_comment)
         setOpen(true)
     }
     const handleClose = () => {

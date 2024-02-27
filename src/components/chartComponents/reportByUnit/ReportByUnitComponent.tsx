@@ -1,5 +1,3 @@
-import React from 'react';
-import useControlAlertStore from "../../../store/useControlAlertStore";
 import ReportItemComponents from "./ItemComponents/ReportItemComponents";
 import ReportChart from '../reportChart';
 

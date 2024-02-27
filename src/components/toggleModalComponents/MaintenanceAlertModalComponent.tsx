@@ -10,7 +10,7 @@ export default function MaintenanceAlertModalComponent(
 ) {
   const {
     maintenanceData,
-    setMaintenanceData,
+    // setMaintenanceData,
     closeMaintenanceModal
   } = useLoginStore();  
   const [zIndexInit, setZIndexInit] = React.useState<number>();

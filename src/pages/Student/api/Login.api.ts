@@ -151,7 +151,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
             'Content-Type': 'application/json'
         },
     }).then((response)=>{
-        console.log('result =',response.data)
+        // console.log('result =',response.data)
         const is_withdrawed_successfully = response.data.data.is_withdrawed_successfully;
         return {
             is_withdrawed_successfully,

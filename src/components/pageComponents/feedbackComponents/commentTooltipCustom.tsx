@@ -11,7 +11,6 @@ import {
     useInteractions,
     FloatingPortal, 
     useClick,
-    useHover,
 } from '@floating-ui/react'
 import type {Placement} from '@floating-ui/react'
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
@@ -33,7 +32,7 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         textTagid,
         compareResultText,
         tooltipText,
-        usePage
+        // usePage
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
