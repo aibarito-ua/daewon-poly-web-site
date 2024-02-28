@@ -211,8 +211,10 @@ export default function UserInfoModalComponent() {
                                         },
                                         closeEvent: async () => {
                                             setCommonStandbyScreen({openFlag:true})
-                                            const rsp = await memberWithDraw(userInfo.webId, checkPW, userInfo.userCode).then((response) => {
+                                            const rsp = await memberWithDraw(userInfo.webId, checkPW, userInfo.userCode, userInfo.accessToken).then((response) => {
+                                                console.log('=== memberWithDraw :: response ==',response)
                                                 if (response.is_server_error) {
+                                                    console.log('is server error?')
                                                     if (response.data) {
                                                         let maintenanceInfo:TMaintenanceInfo = response.data;
                                                         maintenanceInfo.start_date = response.data.start_date;
@@ -257,6 +259,7 @@ export default function UserInfoModalComponent() {
                                                         return false;
                                                     }
                                                 } else {
+                                                    console.log('is not error')
                                                     return response;
                                                     
                                                 }
@@ -275,7 +278,7 @@ export default function UserInfoModalComponent() {
                                                             alertType: 'warning',
                                                             useOneButton: true,
                                                             yesButtonLabel: 'OK',
-                                                            messages: ['비밀번호를 확인해 주세요.'],
+                                                            messages: ['Incorrect password. Try again.'],
                                                             yesEvent: () => {
                                                                 commonAlertClose()
                                                                 setCheckPW('');

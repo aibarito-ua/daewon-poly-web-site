@@ -134,7 +134,7 @@ export async function logoutAPI(username:string, device_id: string):Promise<{
     })
 }
 
-export async function memberWithDraw(username:string, password:string, usercode:string): Promise<{
+export async function memberWithDraw(username:string, password:string, usercode:string, accessToken: string): Promise<{
     is_withdrawed_successfully:boolean;
     is_server_error:boolean;
     isDuplicateLogin:boolean;
@@ -148,10 +148,11 @@ export async function memberWithDraw(username:string, password:string, usercode:
     return await axios.post(reqUrl, data, {
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${accessToken}`
         },
     }).then((response)=>{
-        // console.log('result =',response.data)
+        console.log('result =',response.data)
         const is_withdrawed_successfully = response.data.data.is_withdrawed_successfully;
         return {
             is_withdrawed_successfully,
@@ -160,7 +161,7 @@ export async function memberWithDraw(username:string, password:string, usercode:
             is_retry:true
         };
     }).catch((reject) => {
-        console.log('reject =',JSON.stringify(reject))
+        console.log('reject =',reject)
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
         if (rsp.statusCode===401 && rsp.message === "Unauthorized" ) {
             return {
