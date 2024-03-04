@@ -5,14 +5,12 @@ import {
     DialogTitle,
 } from '@mui/material';
 import draftViewBox from '../pageComponents/feedbackComponents/draftFeedback';
-import useSparkWritingStore from '../../store/useSparkWritingStore';
 import CommentListWordCustom from '../pageComponents/feedbackComponents/commentListWordCustom';
 
 export default function TeacherFeedbackDetailModalComponents (props: {
     draftItem: TSparkWritingData,
 }) {
     const [open, setOpen] = React.useState(false);
-    const {commentFocusIdInModal} = useSparkWritingStore();
     const {draftItem} = props;
     const handleOpen = () => {
         setOpen(true)
@@ -20,10 +18,6 @@ export default function TeacherFeedbackDetailModalComponents (props: {
     const handleClose = () => {
         setOpen(false)
     }
-    React.useEffect(()=>{
-        console.log( 'commentFocusIdInModal ==', commentFocusIdInModal)
-        console.log('test ==',draftItem)
-    }, [commentFocusIdInModal])
     return (
         <div className='flex'>
             <div className={draftItem.draft_1_comment.length > 0 ? `draft-teacher-feedback-title-docs-find-button hover:cursor-pointer`: 'hidden'}

@@ -7,7 +7,6 @@ import { getPortfoliosAPI } from './api/EssayWriting.api';
 import usePortfolioStore from '../../store/usePortfolioStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import PortfolioContents from '../../components/pageComponents/portfolio/PortfolioContents';
-import PortfolioModalComponent from '../../components/toggleModalComponents/PortfolioModalComponent';
 import PortfolioSelectButton from '../../components/pageComponents/portfolio/PortfolioSelectButton';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
 import { logoutAPI } from './api/Login.api';

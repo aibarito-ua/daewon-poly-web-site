@@ -1,9 +1,8 @@
 import React from 'react';
-import useEssayWritingCenterDTStore from "../../store/useEssayWritingCenterDTStore";
 import useLoginStore from "../../store/useLoginStore";
 import useNavStore from "../../store/useNavStore";
 import useSparkWritingStore from "../../store/useSparkWritingStore";
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import contentComponent from '../../components/pageComponents/previewSparkWriting/contentComponent';
 import { grammarCheck, grammarReset } from './api/GrammarApi';
 import useGrammarStore from '../../store/useGrammarStore';
@@ -37,16 +36,9 @@ const PreviewSparkWriting = (props:any) => {
         setSelectUnitInfo,
         goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage
     } = useNavStore();
-    
-    // WritingCenter Store
-    const {} = useEssayWritingCenterDTStore();
     // current role
     const {userInfo, role, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {
-        // setGrammarBody, setGrammarTitle, 
-        // grammarTitle, grammarBody, grammarAll,
-        // resultTitle,resultBody, setGrammarResult,
-        // returnData, setGrammarOrigin,
         setGrammarAll,
         setGrammarResultInit
     } = useGrammarStore();
@@ -55,7 +47,6 @@ const PreviewSparkWriting = (props:any) => {
         commonStandbyScreen
     } = useControlAlertStore();
     
-
     // page States
     const [bodyHistory, setBodyHistory] = React.useState<TBodyHistorys>(
         {
@@ -135,7 +126,6 @@ const PreviewSparkWriting = (props:any) => {
     
     // Navigate hook
     const navigate = useNavigate();
-    const locationInfo = useLocation();
 
     const logoutFn =async () => {
         logoutAPI(userInfo.userCode, device_id)
@@ -1313,8 +1303,8 @@ const PreviewSparkWriting = (props:any) => {
                         onClick={isUndoBody ? ()=>undoValue():()=>{}}
                         >{
                             isUndoBody 
-                            ? <GrammarContentComponent.resetButtonIcon className='w-[34px] h-[34px]' />
-                            : <GrammarContentComponent.resetButtonDisabledIcon className='w-[34px] h-[34px]' />
+                            ? <GrammarContentComponent.ResetButtonIcon className='w-[34px] h-[34px]' />
+                            : <GrammarContentComponent.ResetButtonDisabledIcon className='w-[34px] h-[34px]' />
                         }</button>
                     )}
                 </div>

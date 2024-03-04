@@ -14,12 +14,8 @@ export default function ReportSelectButton(props:{
 }) {
   const {
     data,
-    // useDefaultEmptyValueFlag,
-    // disabledFlag,
     isLevel, 
-    // selectDataFn,
   } = props;
-  // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
   const [disabled, setDisabled] = React.useState<boolean>(false);
 
@@ -30,7 +26,6 @@ export default function ReportSelectButton(props:{
     reportSemester,
     setReportSelectBoxValue,
     reportAPIData,
-    // forcedReadOnlyReportSelectBox,
     setSelectReportData,
     setReportSelectUnit,
     setResetReportDatas,
@@ -40,11 +35,10 @@ export default function ReportSelectButton(props:{
       console.log('!!!! unmount button component !!!!!')
       setResetReportDatas();
     }
-  }, [])
+  }, [setResetReportDatas])
   React.useEffect(()=>{
     console.log('reportSemester =',reportSemester)
     console.log('reportLevel =',reportLevel)
-    // isLevel? (reportSemester===''?true:false):false
     let isDisabled = false;
     if (isLevel) {
       for (let i = 0; i < data.length; i++) {
@@ -65,20 +59,10 @@ export default function ReportSelectButton(props:{
       }
     }
     setDisabled(isDisabled)
-  },[reportSelectFinder, reportLevel, reportSemester])
-
-  // const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
-  //   console.log('value ==',value)
-  //   if (value==='') {
-  //     // setReportSelectBoxValue({data, init:true})
-  //   } else {
-  //     if (isLevel) {
-  //       // setReportSelectBoxValue({data,level:value})
-  //     } else {
-  //       // setReportSelectBoxValue({data,semester:value})
-  //     }
-  //   }
-  // }
+  },[
+    reportSelectFinder, reportLevel, reportSemester,
+    data, isLevel,
+  ])
   
   const handleChange = (event: SelectChangeEvent) => {
     console.log('reportSelectFinder ch =',reportSelectFinder)
@@ -243,9 +227,6 @@ export default function ReportSelectButton(props:{
             IconComponent={open? progressIcons.LevelSelectToggleUpArrowIcon: progressIcons.LevelSelectToggleDownArrowIcon}
             
         >
-            {/* {!isLevel && <MenuItem sx={{height: '45px', minHeight: '45px'}} value=''></MenuItem>}
-            
-            {isLevel && } */}
             {disabled && 
             <MenuItem sx={{height: '45px', minHeight: '45px',padding:0 }} value=''></MenuItem>
             }

@@ -36,6 +36,19 @@ export default function UserInfoModalComponent() {
         }
         window.location.reload()
     }
+    
+    const closeModal = () => {
+        setInfoModal({isOpen:false})
+    }
+    // const openModal = () => {
+    //     setInfoModal({isOpen:true})
+    // }
+    const onClickCheckBox = (flag:boolean, index: number) => {
+        let originData = agree;
+        originData[index] = flag;
+        setAgree(originData);
+    }
+
     React.useEffect(()=>{
         if (infoModalOpen.isOpen) {
 
@@ -44,23 +57,7 @@ export default function UserInfoModalComponent() {
             setPageName('MyInfo')
             setAgree([false,false])
         }
-    }, [infoModalOpen])
-    // React.useEffect(()=>{
-        // console.log('agree =',agree)
-
-    // }, [agree, checkPW])
-
-    const closeModal = () => {
-        setInfoModal({isOpen:false})
-    }
-    const openModal = () => {
-        setInfoModal({isOpen:true})
-    }
-    const onClickCheckBox = (flag:boolean, index: number) => {
-        let originData = agree;
-        originData[index] = flag;
-        setAgree(originData);
-    }
+    }, [infoModalOpen, setAgree, setPageName, setCheckPW])
    
   return (
     <div className='flex'>

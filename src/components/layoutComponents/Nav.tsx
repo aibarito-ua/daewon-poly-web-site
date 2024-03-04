@@ -1,7 +1,5 @@
 import React from 'react'
 import useNavStore from "../../store/useNavStore";
-import useLoginStore from '../../store/useLoginStore';
-import { useNavigate } from 'react-router-dom';
 
 type INavItems = {
     [key in TRole]: {
@@ -62,8 +60,6 @@ export const navItems:INavItems = {
 }
 
 export const Nav = () => {
-    const {role } = useLoginStore()
-    const navigate = useNavigate();
     const {
         sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged, subNavTitleString, subRightNavTitleString,
         goBackFromDraftInUnitPage,
@@ -72,7 +68,6 @@ export const Nav = () => {
         e.preventDefault();
         setSidebarFlagged(!sidebarFlagged)
     }
-    console.log('nav stores =',subNavTitleString, subRightNavTitleString)
     
     return (
     <nav id='navMain' className=''>

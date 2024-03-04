@@ -31,6 +31,36 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
     const {commentFocusIdInModal, setCommentFocusIdInModal} = useSparkWritingStore();
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
     
+    const {refs, context} = useFloating({
+        open: isOpen,
+        onOpenChange: setIsOpen,
+        placement,
+        whileElementsMounted: autoUpdate,
+        middleware: [
+            offset(10),
+            flip({
+                fallbackPlacements:['top-start','right','bottom-start'],
+                padding: 20
+            }),
+            shift({ padding: 20 }),
+        ],
+    });
+    const focus = useFocus(context,{
+        keyboardOnly:false,
+        enabled:true
+    });
+    const dismiss = useDismiss(context);
+    const click = useClick(context);
+    // Role props for screen readers
+    const role = useRole(context, {role: 'tooltip'});
+    // Merge all the interactions into prop getters
+    const {getReferenceProps} = useInteractions([
+        focus,
+        dismiss,
+        role,
+        click,
+    ]);
+
     React.useEffect(()=>{
         if (setCommentFocusIdInModal) {
             if (isOpen) {
@@ -40,9 +70,7 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
                 setCommentFocusIdInModal('')
             }
         }
-        console.log('isOpen =',commentClassName)
-    }, [isOpen])
-    React.useEffect(()=>{
+
         if (commentFocusIdInModal === commentClassName) {
             setIsOpen(true)
             refs.domReference.current?.scrollIntoView({
@@ -52,7 +80,12 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
         } else {
             setIsOpen(false)
         }
-    }, [commentFocusIdInModal])
+    }, [
+        commentClassName,
+        isOpen, commentFocusIdInModal,
+        refs, setCommentFocusIdInModal
+
+    ])
 
     React.useEffect(()=>{
         // console.log('tooltip opened', thisIndex)
@@ -66,47 +99,8 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
         } else {
             setPlacement('bottom-start')
         }
-    })
+    }, [mainTagkey])
 
-    const {refs, floatingStyles, context} = useFloating({
-        
-        open: isOpen,
-        onOpenChange: setIsOpen,
-        placement,
-        whileElementsMounted: autoUpdate,
-        middleware: [
-            offset(10),
-            flip({
-                // crossAxis: placement.includes("-"),
-
-                // fallbackAxisSideDirection: "end",
-                fallbackPlacements:['top-start','right','bottom-start'],
-                padding: 20
-            }),
-            shift({ padding: 20 }),
-            
-        ],
-        
-    });
-    const focus = useFocus(context,{
-        keyboardOnly:false,
-        enabled:true
-    });
-    const dismiss = useDismiss(context);
-    const click = useClick(context);
-    // const hover = useHover(context);
-    // Role props for screen readers
-    const role = useRole(context, {role: 'tooltip'});
-    // Merge all the interactions into prop getters
-    const {getReferenceProps, getFloatingProps} = useInteractions([
-        focus,
-        dismiss,
-        role,
-        // hover,
-        click,
-        
-        
-    ]);
     return (
         <div className={!isOpen 
             ?'flex w-[300px] border-[1px] border-[#dbdbdb] bg-white rounded-[15px] p-[10px]'
@@ -120,9 +114,6 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
             lineHeight: 1.38,
             textAlign:'left'
         }}
-        // onClick={()=>{
-        //     setIsOpen(true)
-        // }}
         >{comment}
             <FloatingPortal></FloatingPortal>
         </div>

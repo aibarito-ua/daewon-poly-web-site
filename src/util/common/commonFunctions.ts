@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import {Diff, diff_match_patch} from 'diff-match-patch'
+import {Diff} from 'diff-match-patch'
 import { CompareDiff } from './grammars/grammarComareDiff';
 export const GrammarCF = {
     compareText: (origin_text:string, change_text:string) => {
@@ -84,7 +84,7 @@ export const CommonEmoji={
 }
 export const CommonReplace={
     specialCharactors: (text:string) => {
-        const specialCharactorsRegexp = /[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/gmi;
+        const specialCharactorsRegexp = /[ []{}()<>?|`~!@#$%^&*-_+=,.;:"'\\]/gmi;
         return text.replace(specialCharactorsRegexp, '');
     },
     removeErrorCharactor: (text:string) => {
@@ -92,7 +92,7 @@ export const CommonReplace={
         // {, }, \, `(백탭), 특수문자 연속사용
         // const specialCharactorsRegexp = /[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/gmi;
         const removeOneSP = text.replace(/[{}`\\]|(&#)/gmi,'');
-        const removeContinue = removeOneSP.replace(/[\{\}\[\]\/?,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi, '');
+        const removeContinue = removeOneSP.replace(/[{}[\]/?,;:|)*~`!^\-_+<>@#$%&\\=('"]{2,}/gmi, '');
         return removeContinue;
     },
 }
@@ -100,11 +100,11 @@ export const CommonReplace={
  * regular expressions value
  */
 const ALL_REG_EXP_ITEMS = {
-    checkNotSC: /[\{\}|\\`]{1,}/gmi,
-    checkOneSC: /[\[\]\/;:*\-_+<>@\#$%&\\\=]{2,}/gmi,
-    checkDoubleQuetes: /[\'\"]{2,}/gmi,
-    checkSCemptySC: /([\[\]\/;:*\-_+<>@\#$%&\\\=]+\s+[\[\]\/;:*\-_+<>@\#$%&\\\=]+)/gmi,
-    checkAPemptyAP: /([\`]+\s+[\`]+)/gmi,
+    checkNotSC: /[{}|\\`]{1,}/gmi,
+    checkOneSC: /[[\]/;:*\-_+<>@#$%&\\=]{2,}/gmi,
+    checkDoubleQuetes: /['"]{2,}/gmi,
+    checkSCemptySC: /([[\]/;:*\-_+<>@#$%&\\=]+\s+[[\]/;:*\-_+<>@#$%&\\=]+)/gmi,
+    checkAPemptyAP: /([`]+\s+[`]+)/gmi,
     checkNotKR: /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi,
     checkContinuousSpace: /\s{10,}/gmi,
     checkChangeRow: /\n{3,}/gmi,
@@ -124,7 +124,7 @@ export const CommonInputValidate = {
      * @returns boolean -> true: 사용 가능 / false: 사용 불가
      */
     writingInput: (text: string) => {
-        const removeEmoji = CommonEmoji.remove(text);
+        // const removeEmoji = CommonEmoji.remove(text);
         
     },
     // 입력 제한
@@ -152,10 +152,10 @@ export const CommonInputValidate = {
             console.log('quetes 2개 이상 금지')
             return false;
         } else if (checkAemptyA !== null) {
-            console.log('\` \' \" 2개 연속 사용 금지')
+            console.log('` \' " 2개 연속 사용 금지')
             return false;
         } else if (checkSCemptySC !==null) {
-            console.log('특문 사이 공백 : \'\"는 제외')
+            console.log('특문 사이 공백 : \'"는 제외')
             return false;
         } else if (checkNotKR!==null) {
             console.log('한국어')
@@ -189,10 +189,10 @@ export const CommonInputValidate = {
             console.log('quetes 2개 이상 금지')
             return false;
         } else if (checkAemptyA !== null) {
-            console.log('\` \' \" 2개 연속 사용 금지')
+            console.log('` \' " 2개 연속 사용 금지')
             return false;
         } else if (checkSCemptySC !==null) {
-            console.log('특문 사이 공백 : \'\"는 제외')
+            console.log('특문 사이 공백 : \'"는 제외')
             return false;
         } else if (checkNotKR!==null) {
             console.log('한국어')

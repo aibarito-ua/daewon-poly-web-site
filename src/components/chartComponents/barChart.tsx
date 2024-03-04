@@ -5,12 +5,9 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Cell,
-  Tooltip,
   ReferenceArea,
 } from "recharts";
 import useControlAlertStore from "../../store/useControlAlertStore";
-import { ImplicitLabelType } from "recharts/types/component/Label";
 
 export default function App() {
 
@@ -73,14 +70,7 @@ const CustomXAxisTick = (props:any) => {
     return () => {
       setReportBarData([])
     }
-  },[reportSelectedOverallBarChart]);
-
-  const customLabel = (props:any):ImplicitLabelType => {
-    console.log('label props ==',props)
-    return {
-      position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12
-    }
-  }
+  },[reportSelectedOverallBarChart, check]);
 
   if (reportBarData.length > 0) {
     return (

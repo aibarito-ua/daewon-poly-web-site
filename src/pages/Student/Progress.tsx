@@ -2,14 +2,10 @@ import React from 'react';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { callUnitInfobyStudent, getReportsAPI } from './api/EssayWriting.api';
 import useLoginStore from '../../store/useLoginStore';
-import useNavStore from '../../store/useNavStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
-import useProgressPageStore from '../../store/useProgressPageStore';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
-import UnitReportModalComponent from '../../components/toggleModalComponents/UnitReportModalComponent';
 import useControlAlertStore from '../../store/useControlAlertStore';
-import { progressIcons } from '../../util/svgs/commonProgressIcons';
 import ProgressTable from '../../components/pageComponents/progress/ProgressTables';
 import SelectLabels from '../../components/pageComponents/progress/ProgressSelectButton';
 import { logoutAPI } from './api/Login.api';
@@ -17,19 +13,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Progress = () => {
     const navigate = useNavigate();
-    const [loading, setLoading] = React.useState<boolean>(false);
-    const {role, userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
-    const {secondGenerationOpen} = useNavStore();
+    const {userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {
         setCommonStandbyScreen,
         reportAPIData,
         setReportSelectBoxDatas,
         setReportSelectedFinder,
         setReportAPIData,
-        setReportSelectBoxValue,
         setProgressAllLevelBoxValues,
         setProgressLevelBoxValue,
-        progressLevelBoxValue,
         commonAlertOpen,
         commonAlertClose
     } = useControlAlertStore();
@@ -38,9 +30,6 @@ const Progress = () => {
         sparkWritingBookName,
         sparkWritingData,
     } = useSparkWritingStore();
-    const {
-        // progressTabActiveIndex,
-    } = useProgressPageStore();
 
     const logoutFn =async () => {
         logoutAPI(userInfo.userCode, device_id)
@@ -186,7 +175,7 @@ const Progress = () => {
             } else {
                 console.log('callUnitInfobyStudent ===',response)
                 if (response.book_name!=='') {
-                    setLoading(true)
+                    // setLoading(true)
                 }
                 setSparkWritingDataFromAPI(response.units, response.book_name)
                 
@@ -194,35 +183,34 @@ const Progress = () => {
             }
         });
     }
-    const findCallUnitInfobyStudent = async (studentCode: string,
-        courseName: string,
-        accessToken: string
-    ) => {
-        return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
-            if (response.data) {
-                let maintenanceInfo:TMaintenanceInfo = response.data;
-                maintenanceInfo.start_date = response.data.start_date;
-                maintenanceInfo.end_date = response.data.end_date;
-                let dumyMaintenanceData:TMaintenanceData = {
-                    alertTitle: '시스템 점검 안내',
-                    data: maintenanceInfo,
-                    open: false,
-                    type: ''
-                }
-                setCommonStandbyScreen({openFlag:false})
-                setMaintenanceData(dumyMaintenanceData)
-                navigate('/')
-            } else {
-                console.log('callUnitInfobyStudent ===',response)
-                if (response.book_name!=='') {
-                    setLoading(true)
-                }
-                setSparkWritingDataFromAPI(response.units)
-                
-                return response;
-            }
-        });
-    }
+    // const findCallUnitInfobyStudent = async (studentCode: string,
+    //     courseName: string,
+    //     accessToken: string
+    // ) => {
+    //     return await callUnitInfobyStudent(studentCode, courseName, accessToken).then((response) => {
+    //         if (response.data) {
+    //             let maintenanceInfo:TMaintenanceInfo = response.data;
+    //             maintenanceInfo.start_date = response.data.start_date;
+    //             maintenanceInfo.end_date = response.data.end_date;
+    //             let dumyMaintenanceData:TMaintenanceData = {
+    //                 alertTitle: '시스템 점검 안내',
+    //                 data: maintenanceInfo,
+    //                 open: false,
+    //                 type: ''
+    //             }
+    //             setCommonStandbyScreen({openFlag:false})
+    //             setMaintenanceData(dumyMaintenanceData)
+    //             navigate('/')
+    //         } else {
+    //             console.log('callUnitInfobyStudent ===',response)
+    //             if (response.book_name!=='') {
+    //                 // setLoading(true)
+    //             }
+    //             setSparkWritingDataFromAPI(response.units)
+    //             return response;
+    //         }
+    //     });
+    // }
     useComponentWillMount(async()=>{
         
         await beforeRenderedFn();

@@ -89,6 +89,7 @@ const loadFeedbackDraftTitle = (
                         returnValue=[];
                     }
                 }
+                return true;
             });
 
             return <div className='draft-title-paragragh-wrap h-fit'
@@ -187,6 +188,7 @@ const loadFeedbackDraftBody = (
                         returnValue=[];
                     }
                 }
+                return true;
             });
 
             return <div className='draft-body-paragragh-wrap'

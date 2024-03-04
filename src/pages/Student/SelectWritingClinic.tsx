@@ -4,7 +4,6 @@ import useLoginStore from "../../store/useLoginStore";
 import {Button} from 'flowbite-react'
 import { CommonFunctions } from "../../util/common/commonFunctions";
 import useNavStore from '../../store/useNavStore';
-import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { callUnitInfobyStudent } from './api/EssayWriting.api';
 import useSparkWritingStore from '../../store/useSparkWritingStore';
@@ -22,7 +21,6 @@ const SelectWritingClinic = () => {
     const {
         setSparkWritingDataFromAPI,
         setLastUnitIndex, lastUnitIndex,
-        sparkWritingBookName
     } = useSparkWritingStore()
     const navigate = useNavigate();
     const logoutFn =async () => {

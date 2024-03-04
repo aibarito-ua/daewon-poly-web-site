@@ -13,9 +13,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Report = () => {
     const navigate = useNavigate();
-    const [loading, setLoading] = React.useState<boolean>(false);
+    // const [loading, setLoading] = React.useState<boolean>(false);
 
-    const {role, userInfo, device_id,isMobile, setMaintenanceData} = useLoginStore();
+    const {userInfo, device_id,isMobile, setMaintenanceData} = useLoginStore();
     const {
         setCommonStandbyScreen,
         
@@ -24,20 +24,17 @@ const Report = () => {
         setSelectReportData,
 
         // selectFinder
-        reportSelectFinder, setReportSelectedFinder,
+        setReportSelectedFinder,
         reportSelectBoxDatas, setReportSelectBoxDatas,
-        reportSemester, reportLevel,
         setReportSelectBoxValue,
         // select unit index
-        reportSelectUnit, setReportSelectUnit,
+        setReportSelectUnit,
         reportSelectBookName,
-        forcedReadOnlyReportSelectBox, setForcedReadOnlyReportSelectBox,
+        setForcedReadOnlyReportSelectBox,
         commonAlertOpen, commonAlertClose,
     } = useControlAlertStore();
     const {
         setSparkWritingDataFromAPI,
-        setProgressLevelBoxValue,
-        setProgressAllLevelBoxValues,
         sparkWritingBookName
     } = useSparkWritingStore();
 
@@ -50,8 +47,11 @@ const Report = () => {
         }
         window.location.reload()
     }
+    
+    
 
     const beforeRenderFn1 = async () => {
+        console.log('=== beforeRenderFn1::check user ===')
         setCommonStandbyScreen({openFlag: true})
         return await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
             if (response.is_server_error) {
@@ -99,7 +99,7 @@ const Report = () => {
                 return false;
             } else {
                 if (response.book_name!=='') {
-                    setLoading(true)
+                    // setLoading(true)
                 }
                 setSparkWritingDataFromAPI(response.units)
                 
@@ -110,6 +110,7 @@ const Report = () => {
     }
 
     const beforeRenderedFn = async () => {
+        console.log('=== beforeRenderedFn ===')
         const student_code = userInfo.userCode;
         // setCommonStandbyScreen({openFlag: true})
         let getReportAll:TReportByStudentResponse = {periods:[]};
@@ -194,10 +195,10 @@ const Report = () => {
                 ]
                 dumpReportSelectBoxDatas.push(dumpBoxData)
             };
-            console.log('dumpReportSelectBoxDatas1 ===',dumpReportSelectBoxDatas)
-            console.log('get report all =', getReportAll)
+            // console.log('dumpReportSelectBoxDatas1 ===',dumpReportSelectBoxDatas)
+            // console.log('get report all =', getReportAll)
             let dumyFinderData = {label:'', level:'', semester:0, year:0};
-            console.log('userInfo ==',userInfo)
+            // console.log('userInfo ==',userInfo)
 
             // dropdown button default setting
             for await (const target of dumpReportSelectBoxDatas) {
@@ -210,11 +211,14 @@ const Report = () => {
                 }
             }
             if (dumyFinderData.label !== '') {
-                console.log('dumyFinderData ===',dumyFinderData)
+                // console.log('dumyFinderData ===',dumyFinderData)
+                // console.log('dumpReportSelectBoxDatas =',dumpReportSelectBoxDatas)
+                // console.log('getReportAll =',getReportAll)
                 setReportSelectBoxDatas(dumpReportSelectBoxDatas);
                 setReportSelectedFinder(dumyFinderData);
                 setReportAPIData(getReportAll);
                 setReportSelectBoxValue({data: dumyFinderData, init:true, renderInit:true})
+                setSelectReportData(getReportAll,dumyFinderData.year,dumyFinderData.semester,dumyFinderData.level)
             }
         }
     }
@@ -229,28 +233,9 @@ const Report = () => {
             setCommonStandbyScreen({openFlag: false})
         }
     })
-    React.useEffect(()=>{
-        if (reportSelectBoxDatas.length === 1) {
-            console.log('reportSelectBoxDatas ===',reportSelectBoxDatas)
-            handleChange(reportSelectBoxDatas[0].label, reportAPIData, {
-                label: reportSelectBoxDatas[0].label,
-                level: reportSelectBoxDatas[0].level[0].name,
-                semester: reportSelectBoxDatas[0].semester,
-                year: reportSelectBoxDatas[0].year
-            }, false )
-            setForcedReadOnlyReportSelectBox([true,true])
-        } else if (reportSelectBoxDatas.length === 0) {
-            setForcedReadOnlyReportSelectBox([true,true])
-        }
-    },[reportSelectBoxDatas])
-    
     // dropdown button onChange Event
-    const handleChange = (selectValue:string, data: TReportByStudentResponse, selectData:TDropdownSelectBoxDataTypes, isLevel:boolean , isInit?:boolean) => {
-        console.log('select value =',selectValue)
-        console.log('data =',data)
-        console.log('selectData =',selectData)
-        console.log('isLevel =',isLevel)
-        
+    const handleChange = React.useCallback((selectValue:string, data: TReportByStudentResponse, selectData:TDropdownSelectBoxDataTypes, isLevel:boolean , isInit?:boolean) => {
+        console.log('=== handleChange ===')
         const setValue = (value:string, data:TDropdownSelectBoxDataTypes) => {
             if (value==='') {
                 setReportSelectBoxValue({data, init:true})
@@ -265,28 +250,21 @@ const Report = () => {
         if (isInit) {
             console.log('init values')
             setValue(selectValue, selectData)
-            // setIsNoData(true);
         } else {
             console.log('set values')
-            // console.log('reportSelectBoxDatas =',reportSelectBoxDatas)
             for (let i = 0; i < reportAPIData.periods.length; i++) {
                 const currentPeriod = reportAPIData.periods[i];
                 if (currentPeriod.year === selectData.year && currentPeriod.semester === selectData.semester) {
-                    // console.log('currentPeriod =',currentPeriod)
                     for (let j = 0; j < currentPeriod.levels.length; j++) {
                         const currentLevelInPeriod = currentPeriod.levels[j];
-                        // console.log('currentLevelInPeriod.level_name =',currentLevelInPeriod.level_name)
-                        // console.log('selectData.level =',selectData.level)
                         if (currentLevelInPeriod.level_name === selectData.level) {
                             if (currentLevelInPeriod.overall_report.length > 0) {
-                                // console.log('currentLevelInPeriod.overall_report =has over=',currentLevelInPeriod.overall_report)
                                 const initializeUnitIndex = currentLevelInPeriod.overall_report[0].unit_index
                                 setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
                                 setValue(selectValue, selectData)
                                 console.log('1 === setReportSelectUnit')
                                 setReportSelectUnit(initializeUnitIndex)
                             } else {
-                                // console.log('currentLevelInPeriod.overall_report =104=',currentLevelInPeriod.overall_report)
                                 setSelectReportData(data,selectData.year,selectData.semester,selectData.level)
                                 setValue(selectValue, selectData)
                                 console.log('2 === setReportSelectUnit')
@@ -296,9 +274,25 @@ const Report = () => {
                     }
                 }
             }
-            
         }
-    }
+    },[reportAPIData, setReportSelectBoxValue, setReportSelectUnit, setSelectReportData])
+    React.useEffect(()=>{
+        if (reportSelectBoxDatas.length === 1) {
+            console.log('reportSelectBoxDatas ===',reportSelectBoxDatas)
+            handleChange(reportSelectBoxDatas[0].label, reportAPIData, {
+                label: reportSelectBoxDatas[0].label,
+                level: reportSelectBoxDatas[0].level[0].name,
+                semester: reportSelectBoxDatas[0].semester,
+                year: reportSelectBoxDatas[0].year
+            }, false )
+            setForcedReadOnlyReportSelectBox([true,true])
+        } else if (reportSelectBoxDatas.length === 0) {
+            setForcedReadOnlyReportSelectBox([true,true])
+        }
+    },[
+        reportSelectBoxDatas, reportAPIData, setForcedReadOnlyReportSelectBox,
+        handleChange,
+    ])
     
     return (
         <section className="section-common-layout use-nav-aside min-w-[1060px] over" >

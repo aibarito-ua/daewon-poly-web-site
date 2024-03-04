@@ -577,19 +577,25 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     },
     setSparkWritingUnitEnd: (unit, draft) => {
         const date = new Date();
-        const dateIso = date.toISOString();
+        // const dateIso = date.toISOString();
         const endTime = date.getTime();
         let sparkWritingUnitDurationOriginData:TSparkWritingTimeCheckAllUnits = JSON.parse(JSON.stringify(get().sparkWritingUnitDurationData));
         const originDataLength = sparkWritingUnitDurationOriginData.length;
         if (originDataLength > 0) {
             let startAt = '';
-            let sparkWritingUnitDurationData = sparkWritingUnitDurationOriginData.map((item, index)=>{
+            // let sparkWritingUnitDurationData = sparkWritingUnitDurationOriginData.map((item, index)=>{
+            //     if (item.unit === unit && item.draft === draft) {
+            //         startAt = item.startAt;
+            //         item.endAt = dateIso;
+            //         return item;
+            //     } else return item;
+            // })
+            for (const item of sparkWritingUnitDurationOriginData) {
                 if (item.unit === unit && item.draft === draft) {
                     startAt = item.startAt;
-                    item.endAt = dateIso;
-                    return item;
-                } else return item;
-            })
+                    // item.endAt
+                }
+            }
             const startTime = new Date(startAt).getTime();
             const gapTime = endTime - startTime;
             console.log('start =',startTime,', end =',endTime, ', gap =',gapTime)

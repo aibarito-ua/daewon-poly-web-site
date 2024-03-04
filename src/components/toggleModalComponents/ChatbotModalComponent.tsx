@@ -44,8 +44,8 @@ export default function FormDialog() {
    * @returns boolean -> true: 사용 가능 / false: 사용 불가
    */
   const checkInputCharactersRegExps = (targetText: string) => {
-    const checkNotSC = targetText.match(/[\{\}|\\`]{1,}/gmi)
-    const checkOneSC = targetText.match(/[\[\]\/;:\)*\-_+<>@\#$%&\\\=\(\'\"]{2,}/gmi)
+    const checkNotSC = targetText.match(/[{}|\\`]{1,}/gmi)
+    const checkOneSC = targetText.match(/[[\]/;:)*\-_+<>@#$%&\\=('"]{2,}/gmi)
     const checkNotKR = targetText.match(/[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi)
     if (checkNotSC!==null) {
         console.log('불가 문자 입력')
@@ -84,99 +84,6 @@ export default function FormDialog() {
     window.location.reload()
   }
   
-  React.useEffect(() => {
-    if(isMobile) {
-      window.addEventListener('message', receiveMessage, true);
-    }
-    return () => {
-      if (isMobile) {
-        window.removeEventListener('message', receiveMessage, true)
-      }
-    }
-  }, [])
-  
-  React.useEffect(()=>{
-    console.log('=== open effect ===')
-    if (!open) {
-      setInputText('')
-      setChatHistory([])
-      setDataHist([])
-      setHistoryTokens([])
-      setBeforeTurnTotalToken(217)
-      setIsInptFocus(false)
-    } else {
-      if( isMobile) {
-        sendMessage('open-chatbot-modal')
-      } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-        const electronData = (window as any).api.toElectron.sendSync('open-chatbot-modal')
-        console.log('electron data:', electronData)
-        if (electronData) {
-          const isExistElectronData = receiveElectronData(electronData);
-          if (!isExistElectronData) {
-            const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
-            setChatHistory(initHist)
-          }
-        }
-      }
-      setIsInptFocus(true)
-    }
-
-  }, [
-    open, user_name, isMobile,
-  ])
-  React.useEffect(()=>{
-    if (inputText === '') {
-        let evt=document.getElementById('chatbot-modal-input-textarea');
-        if (evt) {
-            evt.style.height = 'auto';
-            evt.style.height = evt.scrollHeight + 'px';
-        }
-    }
-  }, [inputText])
-  React.useEffect(()=>{
-    console.log('chat history log =',chatHistory)
-    console.log('dataHist log =',dataHist)
-    console.log('set init chat history')
-    if (chatHistory.length === 0) {
-      const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
-      setChatHistory(initHist)
-    }
-    scrollToBottom()
-  },[chatHistory, dataHist])
-
-  React.useLayoutEffect(()=>{
-    console.log('platform=',platform)
-    if (isInputFocus) {
-      if(isMobile) {
-        sendMessage('InputFocus')
-      }
-      if (inputRef.current) {
-        const target = inputRef.current;
-        target.blur();
-        if (isMobile) {
-          setMobileChatWindow()
-        } else {
-          target.focus();
-          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-        }
-      }
-    } else {
-      if (inputRef.current) {
-        const target = inputRef.current;
-        target.blur();
-        const screenDiv = document.getElementById('route-wrapper-div');
-        if (platform==='ios') {
-          if (screenDiv) {
-            const screenRootSize = windowSize.height;
-            const deviceScreenSize = deviceSize.height;
-            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
-            screenDiv.style.marginTop= '0'
-          }
-        }
-      }
-    }
-  },[isInputFocus, inputRef])
-
   // electron receive
   const receiveElectronData = async (rnData:any) => {
     let isExistData = false;
@@ -212,83 +119,7 @@ export default function FormDialog() {
     const messageData = JSON.stringify(data);
     window.ReactNativeWebView.postMessage(messageData);
   };
-  const receiveMessage = (event: any) => {
-    console.log('Receive message data =',event.data);
-    if(typeof event.data !== 'string')
-        return
-    const data = JSON.parse(event.data)
-    const rnData = JSON.parse(event.data);
-    if (rnData['chatHistory']) {
-      console.log('set chat history')
-      setChatHistory(rnData['chatHistory'])
-    }
-    if (rnData['dataHist']) {
-      console.log('set data history')
-      setDataHist(rnData['dataHist'])
-    }
-    if (rnData['historyTokens']) {
-      console.log('set history tokens')
-      setHistoryTokens(rnData['historyTokens'])
-    }
-    if (rnData['beforeTurnTotalToken']) {
-      console.log('set beforeTurnTotalToken')
-      setBeforeTurnTotalToken(rnData['beforeTurnTotalToken'])
-    }
 
-    if (inputRef.current) {
-      const target = inputRef.current;
-      target.blur();
-      if (isMobile) {
-        if(data['keyboardDidHide'] == true) {
-          return;
-        }
-        if(data['isExternalKeyboard']) {
-          setIsKeyboardExrernal(true)
-          target.focus();
-          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-          return
-        } else {
-          setIsKeyboardExrernal(false)
-        }
-        setMobileChatWindow()
-      } else {
-        target.focus();
-        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-      }
-    }
-  }
-
-  /**
-   * app 화면별 viewer setting
-   */
-  const setMobileChatWindow = () => {
-    if (inputRef.current) {
-      const target = inputRef.current;
-      target.blur();
-      if (isMobile) {
-        if (platform==='ios') {
-          target.focus({
-            preventScroll:true
-          });
-          const screenDiv = document.getElementById('route-wrapper-div');
-          if (screenDiv) {
-            const screenRootSize = windowSize.height;
-            const deviceScreenSize = deviceSize.height;
-            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
-            const gapSize = screenRootSize-deviceScreenSize;
-            screenDiv.style.marginTop= gapSize+'px';
-          }
-        }
-        if (platform==='android') {
-          target.focus();
-          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-        }
-      } else {
-        target.focus();
-        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
-      }
-    }
-  }
   const scrollToBottom = () => {
     console.log('===scrollToBottom ===')
     if(messagesEndRef.current)
@@ -372,7 +203,9 @@ export default function FormDialog() {
         }
   
         let targetTotalToken = res.usages.total_tokens;
-        for await (const target of chatHistory) {
+        for await (const _v of chatHistory) {
+          console.log('_v =',_v)
+          console.log('targetTotalToken =',targetTotalToken)
           if (targetTotalToken > 3000) {
             // delete
             const deleteToken = dumyHistAllTokens.splice(0,1);
@@ -380,6 +213,7 @@ export default function FormDialog() {
             dumyDataHist.splice(0,1);
           }
         }
+
         pushValue.push(resultData);
         dumyChatHist.push(pushValue);
         setIsInptFocus(true)
@@ -442,6 +276,180 @@ export default function FormDialog() {
     }
   }
   const marginTopTrueValue = platform==='ios'? '-430px':'0px';
+
+  /**
+   * app 화면별 viewer setting
+   */
+  const setMobileChatWindow = React.useCallback(() => {
+    if (inputRef.current) {
+      const target = inputRef.current;
+      target.blur();
+      if (isMobile) {
+        if (platform==='ios') {
+          target.focus({
+            preventScroll:true
+          });
+          const screenDiv = document.getElementById('route-wrapper-div');
+          if (screenDiv) {
+            const screenRootSize = windowSize.height;
+            const deviceScreenSize = deviceSize.height;
+            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+            const gapSize = screenRootSize-deviceScreenSize;
+            screenDiv.style.marginTop= gapSize+'px';
+          }
+        }
+        if (platform==='android') {
+          target.focus();
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+        }
+      } else {
+        target.focus();
+        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+      }
+    }
+  },[deviceSize, isMobile, platform, windowSize])
+
+  const receiveMessage = React.useCallback((event: any) => {
+    console.log('Receive message data =',event.data);
+    if(typeof event.data !== 'string')
+        return
+    const data = JSON.parse(event.data)
+    const rnData = JSON.parse(event.data);
+    if (rnData['chatHistory']) {
+      console.log('set chat history')
+      setChatHistory(rnData['chatHistory'])
+    }
+    if (rnData['dataHist']) {
+      console.log('set data history')
+      setDataHist(rnData['dataHist'])
+    }
+    if (rnData['historyTokens']) {
+      console.log('set history tokens')
+      setHistoryTokens(rnData['historyTokens'])
+    }
+    if (rnData['beforeTurnTotalToken']) {
+      console.log('set beforeTurnTotalToken')
+      setBeforeTurnTotalToken(rnData['beforeTurnTotalToken'])
+    }
+
+    if (inputRef.current) {
+      const target = inputRef.current;
+      target.blur();
+      if (isMobile) {
+        if(data['keyboardDidHide'] === true) {
+          return;
+        }
+        if(data['isExternalKeyboard']) {
+          setIsKeyboardExrernal(true)
+          target.focus();
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+          return
+        } else {
+          setIsKeyboardExrernal(false)
+        }
+        setMobileChatWindow()
+      } else {
+        target.focus();
+        inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+      }
+    }
+  }, [
+    isMobile, setMobileChatWindow,
+  ])
+
+  React.useEffect(() => {
+    if(isMobile) {
+      window.addEventListener('message', receiveMessage, true);
+    }
+    return () => {
+      if (isMobile) {
+        window.removeEventListener('message', receiveMessage, true)
+      }
+    }
+  }, [isMobile, receiveMessage])
+  
+  React.useEffect(()=>{
+    console.log('=== open effect ===')
+    if (!open) {
+      setInputText('')
+      setChatHistory([])
+      setDataHist([])
+      setHistoryTokens([])
+      setBeforeTurnTotalToken(217)
+      setIsInptFocus(false)
+    } else {
+      if( isMobile) {
+        sendMessage('open-chatbot-modal')
+      } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+        const electronData = (window as any).api.toElectron.sendSync('open-chatbot-modal')
+        console.log('electron data:', electronData)
+        if (electronData) {
+          const isExistElectronData = receiveElectronData(electronData);
+          if (!isExistElectronData) {
+            const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
+            setChatHistory(initHist)
+          }
+        }
+      }
+      setIsInptFocus(true)
+    }
+
+  }, [
+    open, user_name, isMobile,
+  ])
+  React.useEffect(()=>{
+    if (inputText === '') {
+        let evt=document.getElementById('chatbot-modal-input-textarea');
+        if (evt) {
+            evt.style.height = 'auto';
+            evt.style.height = evt.scrollHeight + 'px';
+        }
+    }
+  }, [inputText])
+  React.useEffect(()=>{
+    console.log('chat history log =',chatHistory)
+    console.log('dataHist log =',dataHist)
+    console.log('set init chat history')
+    if (chatHistory.length === 0) {
+      const initHist = [ [ai_name, [ `Hi, ${user_name}`, 'How can I help you?' ]] ]
+      setChatHistory(initHist)
+    }
+    scrollToBottom()
+  },[chatHistory, dataHist, user_name])
+
+  React.useLayoutEffect(()=>{
+    console.log('platform=',platform)
+    if (isInputFocus) {
+      if(isMobile) {
+        sendMessage('InputFocus')
+      }
+      if (inputRef.current) {
+        const target = inputRef.current;
+        target.blur();
+        if (isMobile) {
+          setMobileChatWindow()
+        } else {
+          target.focus();
+          inputRef.current.scrollIntoView({behavior:'auto', block:'nearest'})
+        }
+      }
+    } else {
+      if (inputRef.current) {
+        const target = inputRef.current;
+        target.blur();
+        const screenDiv = document.getElementById('route-wrapper-div');
+        if (platform==='ios') {
+          if (screenDiv) {
+            const screenRootSize = windowSize.height;
+            const deviceScreenSize = deviceSize.height;
+            console.log('sizeGap: ',screenRootSize-deviceScreenSize)
+            screenDiv.style.marginTop= '0'
+          }
+        }
+      }
+    }
+  },[isInputFocus, inputRef, deviceSize, isMobile, platform, setMobileChatWindow, windowSize])
+
   return (
     <div className='flex'>
     <button 

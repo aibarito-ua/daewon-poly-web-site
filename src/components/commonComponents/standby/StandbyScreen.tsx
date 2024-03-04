@@ -78,7 +78,7 @@ const KeyFrames = styled("div")({
 })
 
 export default function StandbyScreen() {
-  const {commonStandbyScreen, setCommonStandbyScreen, commonAlertPriorityLevel} = useControlAlertStore();
+  const {commonStandbyScreen} = useControlAlertStore();
   
   return (
     <div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { CONFIG } from '../../../config';
 import axios from 'axios';
 
@@ -195,13 +194,13 @@ export async function grammarReset(data:{student_code:string, unit_id:number, pr
     })
 }
 
-type TGrammarCompareResponse = {
-    compare_text: (number|string)[][]
-}
-export async function grammarCompare(originText:string,changeText:string):Promise<any> {
+// type TGrammarCompareResponse = {
+//     compare_text: (number|string)[][]
+// }
+// export async function grammarCompare(originText:string,changeText:string):Promise<any> {
 
-}
+// }
 
-export const previewTest = {
+// export const previewTest = {
     
-}
+// }

@@ -17,13 +17,9 @@ import useSparkWritingStore from '../../../store/useSparkWritingStore';
 
 interface IGrammarTooltipCustomProps {
     mainTagkey: string;
-    // textTagid: string;
     compareResultText: string|JSX.Element;
     tooltipText: string;
     usePage?: 'Modal'|'';
-
-    // thisIndex: number[];
-    
     [key:string]: any;
 }
 const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
@@ -31,8 +27,6 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
         mainTagkey,
         textTagid,
         compareResultText,
-        // tooltipText,
-        // usePage
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
@@ -40,47 +34,7 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
         commentFocusIdInModal, setCommentFocusIdInModal,
     } = useSparkWritingStore();
 
-    React.useEffect(()=>{
-        // console.log('tooltip opened', thisIndex)
-        const target = document.getElementById(textTagid);
-        const windowXWidth = document.getElementById('root')?.clientWidth;
-        let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
-        let testWidth = windowXWidth !== undefined ? windowXWidth : 0;
-        let testValue = targetLeft/testWidth > 0.6;
-        if (testValue) {
-            setPlacement('bottom-end')
-        } else {
-            setPlacement('bottom-start')
-        }
-    })
-    React.useEffect(()=>{
-        if (setCommentFocusIdInModal) {
-            if (isOpen) {
-                setCommentFocusIdInModal(mainTagkey)
-            } else {
-                setCommentFocusIdInModal('')
-            }
-        }
-
-        console.log('tooltip main key ',mainTagkey)
-        console.log('isOpen =',isOpen,)
-    }, [isOpen])
-    React.useEffect(()=>{
-        
-            if (commentFocusIdInModal === mainTagkey) {
-                setIsOpen(true)
-                refs.domReference.current?.scrollIntoView({
-                    behavior: "auto",
-                    block: 'nearest'
-                })
-            } else {
-                setIsOpen(false)
-            }
-        
-    }, [commentFocusIdInModal])
-
-    const {refs, floatingStyles, context} = useFloating({
-        
+    const {refs, context} = useFloating({
         open: isOpen,
         onOpenChange: setIsOpen,
         placement,
@@ -88,16 +42,11 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
         middleware: [
             offset(10),
             flip({
-                // crossAxis: placement.includes("-"),
-
-                // fallbackAxisSideDirection: "end",
                 fallbackPlacements:['top-start','right','bottom-start'],
                 padding: 20
             }),
             shift({ padding: 20 }),
-            
         ],
-        
     });
     const focus = useFocus(context,{
         keyboardOnly:false,
@@ -109,15 +58,50 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
     // Role props for screen readers
     const role = useRole(context, {role: 'tooltip'});
     // Merge all the interactions into prop getters
-    const {getReferenceProps, getFloatingProps} = useInteractions([
+    const {getReferenceProps} = useInteractions([
         focus,
         dismiss,
         role,
-        // hover,
         click,
-        
-        
     ]);
+
+    React.useEffect(()=>{
+        // textTagid effects
+        const target = document.getElementById(textTagid);
+        const windowXWidth = document.getElementById('root')?.clientWidth;
+        let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
+        let testWidth = windowXWidth !== undefined ? windowXWidth : 0;
+        let testValue = targetLeft/testWidth > 0.6;
+        if (testValue) {
+            setPlacement('bottom-end')
+        } else {
+            setPlacement('bottom-start')
+        };
+
+        // isOpen effects
+        if (setCommentFocusIdInModal) {
+            if (isOpen) {
+                setCommentFocusIdInModal(mainTagkey)
+            } else {
+                setCommentFocusIdInModal('')
+            }
+        };
+
+        // commentFocusIdInModal effects
+        if (commentFocusIdInModal === mainTagkey) {
+            setIsOpen(true)
+            refs.domReference.current?.scrollIntoView({
+                behavior: "auto",
+                block: 'nearest'
+            })
+        } else {
+            setIsOpen(false)
+        }
+    }, [
+        textTagid, isOpen, commentFocusIdInModal,
+        mainTagkey, refs, setCommentFocusIdInModal,
+    ])
+
     return (
         <span key={mainTagkey} 
         className={`whitespace-pre-line hover:cursor-pointer z-[9999] relative rounded-[5px]`}>

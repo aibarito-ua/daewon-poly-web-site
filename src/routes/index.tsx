@@ -49,7 +49,7 @@ export default function Roter() {
             const start_date = startDate.getTime();
             const start_current_gap_timeNumber = start_date - currentTime.getTime()
             const startCurrentGapTime_min = Math.floor(start_current_gap_timeNumber/ ( 60*1000));
-            const gap_st = Math.floor(start_current_gap_timeNumber)
+            // const gap_st = Math.floor(start_current_gap_timeNumber)
             // console.log('gap_st= ',gap_st)
             
             if (start_current_gap_timeNumber <= 0) {

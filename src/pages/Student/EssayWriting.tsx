@@ -95,15 +95,7 @@ const EssayWriting = () => {
         commonStandbyScreen
     } = useControlAlertStore();
 
-    const logoutFn =async () => {
-        logoutAPI(userInfo.userCode, device_id)
-        if(isMobile)
-            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
-        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-            (window as any).api.toElectron.send('clear')
-        }
-        window.location.reload()
-    }
+    
 
     const pageInitSetting = async () => {
         const init = await callUnitInfobyStudent(userInfo.userCode, userInfo.courseName, userInfo.accessToken).then((response) => {
@@ -222,26 +214,7 @@ const EssayWriting = () => {
         }
         return init;
     }
-    useComponentWillMount(async ()=>{
-        const currentDraft = params.draft ? params.draft : '';
-        console.log('unit data =', sparkWritingData[parseInt(UnitIndex)-1])
-        console.log('essay writing 102 | draft test =',)
-        setCommonStandbyScreen({openFlag:true})
-        const initEnd = await pageInitSetting().then((init) => {
-            console.log('=====> useComponentWillMount last')
-            setCommonStandbyScreen({openFlag:false})
-            return init;
-        })
-        if (initEnd) {
-            setCommonStandbyScreen({openFlag:false})
-        }
-        
-        
-        return ()=>{
-            console.log('is did un mout?')
-            // setIsSaved(false);
-        }
-    });
+    
     /**
      * app 소켓 통신 이벤트
      * @param data 
@@ -251,935 +224,15 @@ const EssayWriting = () => {
         const messageData = JSON.stringify(data);
         window.ReactNativeWebView.postMessage(messageData);
     };
-    const resetChatHistEvent = () => {
-        console.log('=== Reset Chat History ===')
-        if (isMobile) {
-            console.log('reset history in mobile ')
-            sendMessage('ResetChat')
-        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-            const electronData = (window as any).api.toElectron.sendSync('ResetChat')
-            console.log('reset history in electron =',electronData)
-        }
-    }
+    
     const receiveMessage = (event: any) => {
         console.log('Receive Message data =',event.data)
         if (typeof event.data !== 'string') {return;}
-        const rnData = JSON.parse(event.data);
     }
-    React.useEffect(()=>{
-        if (draft1stRefs.current) {
-            console.log('=== ref useEffect ===')
-            
-            
-            if (draft1stRefs.current.length === foldFlag.length) {
-                // use callback
-                handleResizeHeightDraft1stInputs();
-                if (params.draft === '1') {
-                    // connect app message
-                    if (isMobile) {
-                        // connect mobile app event listener
-                        window.addEventListener('message', receiveMessage, true);
-                    }
-                }
-            }
-        }
-        return () => {
-            console.log('=== RETURE [draft1stRefs] ')
-            if (params.draft === '1') {
-                if (isMobile) {
-                    // remove app event listener
-                    window.removeEventListener('message', receiveMessage, true);
-                }
-            }
-        }
-    },[draft1stRefs])
-
-    React.useEffect(()=>{
-        setTopNavHiddenFlagged(true);
-        setSubNavTitleString(`${selectUnitInfo.main} ${selectUnitInfo.sub}`);
-        // path param to number
-        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
-        const draftIndex:number = parseInt(params.draft !== undefined ? params.draft: '1');
-        if(paramValues === undefined) {
-            setParamValues({unitIndex:unitIndex, draft:draftIndex})
-        }
-        
-        // fold
-        if (foldFlag.length === 0) {
-            const data = sparkWritingData[unitIndex];
-            let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
-            let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-            
-            let dumyFold = allNames.map((nameItem)=>{
-                let foldItem = false;
-                for (let i = 0; i < data.draft_1_outline.length; i++) {
-                    const title = data.draft_1_outline[i].name.replace(/(_)?([0-9]{1,})/gmi,'');
-                    console.log('title =',title);
-                    if (nameItem === title) {
-                        foldItem = data.draft_1_outline[i].is_input_open;
-                        break;
-                    }
-                }
-                return foldItem;
-            })
-            
-            setFoldFlag(dumyFold)
-        } else {
-            if (updateFoldIndex !== undefined) {
-                const controllClass = `foldFlag:::[${updateFoldIndex}]`;
-                const data = sparkWritingData[unitIndex];
-                let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
-                let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-                for (let i = 0; i < outlineOrigin.length; i++) {
-                    const target = draft1stRefs.current[i];
-                    if (target) {
-                        const targetBeforeIdName = target.id.replace(/(_)?([0-9]{1,})/gmi,'');
-                        const targetTitleName = target.id.replace(/\d$/gmi,'').split('_');
-                        if (target.className.includes(controllClass)) {
-                            target.style.height='auto';
-                            target.style.height = target.scrollHeight+'px';
-                            
-                        }
-                    }
-                }
-            }
-        }
-
-        if (params.draft === '1') {
-            const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
-            setSubRightNavTitleString(rightTitle)
-            handleResizeHeightDraft1stInputs();
-        } else {
-            if (originalTargetData.length>0) {
-                console.log('draft 2 value update')
-                const draft2Outlines = sparkWritingData[unitIndex].draft_2_outline;
-                const dumyDraft2Outlines = originalTargetData[unitIndex].draft_2_outline;
-                let isUpdate2nd = false;
-                for (let i = 0; i < draft2Outlines.length; i++) {
-                    if (draft2Outlines[i].input_content !== dumyDraft2Outlines[i].input_content) {
-                        isUpdate2nd = true;
-                        break;
-                    }
-                }
-                console.log('isUpdate =',isUpdate2nd)
-                setIsUpdateDraft2Inputs(isUpdate2nd);
-            } 
-            const rightTitle = <span>{'Step 2.'}<span className='ordinal pl-2 pr-1'>{'2nd'}</span>{'Draft'}</span>
-            setSubRightNavTitleString(rightTitle)
-        }
-        if (essayTopicInput === undefined || essayTopicInput === '') {
-            
-            // nav header setting
-            setEssayTopicInput(sparkWritingData[unitIndex].topic);
-        }
-        
-        callbackCheckValues();
-        
-        return () => {
-            console.log('did unmount in Essay Writing Page')
-            setTopNavHiddenFlagged(false)
-            setSubNavTitleString('')
-            setSubRightNavTitleString('')
-            setIsPreviewButtonOpen(false);
-            setIsSaveButtonOpen(false);
-            setIsUpdateDraft2Inputs(false);
-        }
     
-    },[
-        // page state
-        params,
-        foldFlag,
-        essayTopicInput,
-        paramValues,
-        draft2ndPageSet, draft2ndSaveActive, draft2ndSubmitActive,
-        // nav store
-        setTopNavHiddenFlagged, 
-        setSubNavTitleString,
-        setSubRightNavTitleString,
-        selectUnitInfo,
-        // WritingCenter Store
-        essayWritingInputItems,
-        sparkWritingData
-        // Spark Store
-    ])
-
-    React.useEffect(()=>{
-        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
-        const target = sparkWritingData[unitIndex].draft_2_outline;
-        // 2nd draft check
-        if (params.draft && params.draft==='1') {
-
-            if (sparkWritingData !== undefined) {
-                if (DraftIndex==='1') {
-                    const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
-                    const max_leng = targetDataOutline.length;
-                    let titleMaxLengthCheck = false;
     
-                    let orderIndex = -1;
-                    let unitId = -1;
-                    let unitIndex = -1;
-                    let redoTitleText = '';
+
     
-                    let targetFlags = Array.from({length:max_leng},()=>1)
-                    console.log('return 0/1 1')
-                    targetFlags = targetDataOutline.map((v,i) => {
-                        const target_leng = v.input_content.replaceAll(' ','').length;
-                        if (v.name === 'Title') {
-                            console.log('input =',target_leng,', ',v.input_content,)
-                            const lengthTitle = v.input_content.length;
-                            orderIndex = v.order_index;
-                            unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
-                            unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
-                            if (lengthTitle > 120) {
-                                redoTitleText = v.input_content.substring(0, 120);
-                                titleMaxLengthCheck = true;
-                            }
-
-                            if (target_leng > 0) {
-                                // 1자 이상
-                                return 0;
-                            } else {
-                                // 1자 미만
-                                return 1;
-                            }
-                        } else {
-                            if (target_leng >= 10) {
-                                // 10자 이상
-                                return 0;
-                            } else {
-                                // 10자 미만
-                                return 1;
-                            }
-                        }
-
-                    })
-                    if (titleMaxLengthCheck) {
-                        commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages:['The title cannot be more than 120 characters.'],
-                            useOneButton: true,
-                            yesButtonLabel: 'OK',
-                            yesEvent: () => {
-                                setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
-                                commonAlertClose();
-                            }
-                        })
-                        return;
-                    }
-                    handleResizeHeightDraft1stInputs();
-                    const sum = targetFlags.reduce((a,b) => (a+b));
-                    
-                    // sum === 0 => Preview && save 활성화
-                    // sum >0, sum < targetFlags.length; -> save 활성화
-                    // else -> 모든 버튼 비활성화
-                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags)
-                    if (sum === 0) {
-    
-                        setIsSaveButtonOpen(true)
-                        setIsPreviewButtonOpen(true);
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    callbackCheckValues()
-                                    commonAlertOpen({
-                                        messageFontFamily: 'Roboto',
-                                        messages: ['Do you want to save your current','progress before you leave?'],
-                                        alertType: 'warningContinue',
-                                        yesButtonLabel: `No`,
-                                        noButtonLabel: `Yes`,
-                                        closeEvent: async ()=> {
-                                            await temporarySaveFunction();
-                                            commonAlertClose();
-                                        },
-                                        yesEvent: () => {
-                                            resetChatHistEvent();
-                                            commonAlertClose();
-                                            setDraft2ndPageSet('')
-                                            setDraft2ndSaveActive(false)
-                                            setDraft2ndSubmitActive(false)
-                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                        }
-                                    })
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                    } else if (sum > 0 && sum < targetFlags.length) {
-                        setIsSaveButtonOpen(true)
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    callbackCheckValues()
-                                    commonAlertOpen({
-                                        messageFontFamily: 'Roboto',
-                                        messages: ['Do you want to save your current','progress before you leave?'],
-                                        alertType: 'warningContinue',
-                                        yesButtonLabel: `No`,
-                                        noButtonLabel: `Yes`,
-                                        closeEvent: async ()=> {
-                                            await temporarySaveFunction();
-                                            commonAlertClose();
-                                        },
-                                        yesEvent: () => {
-                                            resetChatHistEvent();
-                                            commonAlertClose();
-                                            setDraft2ndPageSet('')
-                                            setDraft2ndSaveActive(false)
-                                            setDraft2ndSubmitActive(false)
-                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                        }
-                                    })
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                    } else {
-                        setIsPreviewButtonOpen(false);
-                        setIsSaveButtonOpen(false)
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    resetChatHistEvent();
-                                    commonAlertClose();
-                                    setDraft2ndPageSet('')
-                                    setDraft2ndSaveActive(false)
-                                    setDraft2ndSubmitActive(false)
-                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                    }
-                }
-            }
-        }
-        return () => {
-            console.log('=== RETURE [sparkWritingData] ')
-        }
-    }, [sparkWritingData]);
-
-    React.useEffect(()=>{
-        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
-        const target = sparkWritingData[unitIndex]
-        console.log('draft2ndPageSet ==',draft2ndPageSet)
-        if (target.draft_2_status.status === 0||target.draft_2_status.status === 5) {
-            console.log('1')
-            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
-                console.log('1-1')
-                if (draft2ndPageSet==='revise') {
-                    console.log('revise')
-                    const target1st = target.draft_1_outline;
-                    console.log('==target1st=',target1st)
-                    let titleInput = '';
-                    let bodyInput = '';
-                    for (let i = 0; i < target1st.length; i++) {
-                        const current1stTarget = target1st[i];
-                        console.log('==current1stTarget=',current1stTarget)
-                        if (current1stTarget.name === 'Title') {
-                            titleInput = current1stTarget.input_content
-                        } else {
-                            bodyInput += current1stTarget.input_content+'\n\n';
-                        }
-                    }
-                    console.log('titleInput =',titleInput)
-                    console.log('bodyInput =',bodyInput)
-                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
-                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
-                } else if (draft2ndPageSet==='fresh') {
-                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
-                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
-                } else {
-                    
-                }
-            } else {
-                console.log('1-2')
-            }
-        } else if (target.draft_2_status.status === 1) {
-            console.log('2')
-            if (draft2ndPageSet === '') {
-                setDraft2ndPageSet(target.draft_2_init_page_flag)
-            }
-            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
-                if (draft2ndPageSet==='revise') {
-                    console.log('revise')
-                    const target1st = target.draft_1_outline;
-                    console.log(' target =',target)
-                    let titleInput = '';
-                    let bodyInput = '';
-                    for (let i = 0; i < target1st.length; i++) {
-                        const current1stTarget = target1st[i];
-                        console.log(' current1stTarget = ',current1stTarget)
-                        if (current1stTarget.name === 'Title') {
-                            titleInput = current1stTarget.input_content
-                        } else {
-                            bodyInput += current1stTarget.input_content+'\n\n';
-                        }
-                    }
-                    console.log('titleInput =',titleInput)
-                    console.log('bodyInput =',bodyInput)
-            
-                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
-                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
-                    setDraft2ndSaveActive(true)
-                    setDraft2ndSubmitActive(true)
-                } else if (draft2ndPageSet==='fresh') {
-                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
-                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
-                } else {
-                    
-                }
-            }
-            
-        }
-        return () => {
-            console.log('=== RETURE [draft2ndPageSet] ')
-        }
-    }, [draft2ndPageSet])
-    
-    const callbackCheckValues = React.useCallback( ()=>{
-        if (sparkWritingData !== undefined) {
-            if (DraftIndex==='1') {
-                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
-                const max_leng = targetDataOutline.length;
-                console.log('return 0/1 2')
-                let targetFlags = Array.from({length:max_leng},()=>1)
-                targetFlags = targetDataOutline.map((v,i) => {
-                    const target_leng = v.input_content.replaceAll(' ','').length;
-                    if (v.name==='Title') {
-                        if (target_leng > 0) {
-                            // 1자 이상
-                            return 0;
-                        } else {
-                            // 1자 미만
-                            return 1;
-                        }
-                    } else {
-                        if (target_leng >= 10) {
-                            // 10자 이상
-                            return 0;
-                        } else {
-                            // 10자 미만
-                            return 1;
-                        }
-                    }
-                })
-                
-                    
-                const sum = targetFlags.reduce((a,b) => (a+b));
-                // sum === 0 => Preview && save 활성화
-                // sum >0, sum < targetFlags.length; -> save 활성화
-                // else -> 모든 버튼 비활성화
-                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
-
-                if (sum === 0) {
-
-                    setIsSaveButtonOpen(true)
-                    console.log('setGoBackFromDraftInUnitPage 1')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                callbackCheckValues()
-                                commonAlertOpen({
-                                    messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to save your current','progress before you leave?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel: `No`,
-                                    noButtonLabel: `Yes`,
-                                    closeEvent: async ()=> {
-                                        await temporarySaveFunction();
-                                        commonAlertClose();
-                                    },
-                                    yesEvent: () => {
-                                        resetChatHistEvent();
-                                        commonAlertClose();
-                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                    }
-                                })
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
-                    setIsPreviewButtonOpen(true);
-                } else if (sum > 0 && sum < targetFlags.length) {
-                    setIsSaveButtonOpen(true)
-                    console.log('setGoBackFromDraftInUnitPage 2')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                callbackCheckValues()
-                                commonAlertOpen({
-                                    messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to save your current','progress before you leave?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel: `No`,
-                                    noButtonLabel: `Yes`,
-                                    closeEvent: async ()=> {
-                                        await temporarySaveFunction();
-                                        commonAlertClose();
-                                    },
-                                    yesEvent: () => {
-                                        resetChatHistEvent();
-                                        commonAlertClose();
-                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                    }
-                                })
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
-                } else {
-                    console.log('setGoBackFromDraftInUnitPage 3')
-                    setGoBackFromDraftInUnitPage(()=>{
-                        commonAlertOpen({
-                            messageFontFamily: 'Roboto',
-                            messages: ['Do you want to exit?'],
-                            alertType: 'warningContinue',
-                            yesButtonLabel:'Yes',
-                            noButtonLabel: 'No',
-                            yesEvent: async () => {
-                                resetChatHistEvent();
-                                commonAlertClose();
-                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                            },
-                            closeEvent: () => {
-                                commonAlertClose();
-                            }
-                        })
-                    })
-                    setIsPreviewButtonOpen(false);
-                    setIsSaveButtonOpen(false)
-                }
-            } else if (DraftIndex==='2') {
-
-                // title validate
-                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_2_outline;
-                const max_leng = targetDataOutline.length;
-                let targetFlags = Array.from({length:max_leng},()=>1)
-                console.log('return 0/1 3')
-                targetFlags = targetDataOutline.map((item,i) => {
-                    const target_length = item.input_content.replaceAll(' ','').length;
-                    if (item.name==='Title') {
-                        if (target_length > 0) {
-                            // 1자 이상
-                            return 0;
-                        } else {
-                            // 1자 미만
-                            return 1;
-                        }
-                    } else {
-                        if (target_length >= 10) {
-                            // 10자 이상
-                            return 0;
-                        } else {
-                            // 10자 미만
-                            return 1;
-                        }
-                    }
-                })
-                const sum = targetFlags.reduce((a,b) => (a+b));
-                // sum 0 -> submit
-                // sum 1 -> save
-                // sum 2 -> 버튼 비활성화
-                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
-                
-                
-                console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
-                if (sum === 0) {
-                    setDraft2ndSubmitActive(true);
-                    setDraft2ndSaveActive(true);
-                } else if (sum === 1) {
-                    setDraft2ndSubmitActive(false);
-                    setDraft2ndSaveActive(true);
-                } else {
-                    setDraft2ndSubmitActive(false);
-                    setDraft2ndSaveActive(false);
-                }
-                
-
-                // draft2ndSaveActive
-                // draft2ndSubmitActive
-                let questionOpenSave = false;
-                if (draft2ndSaveActive) {
-                    if (draft2ndSubmitActive) {
-                        if (isUpdateDraft2Inputs ) {
-                            questionOpenSave = true;
-                        } else {
-                            questionOpenSave = false;
-                        }
-                    } else {
-                        questionOpenSave = false;
-                    }
-                } else {
-                    questionOpenSave = false;
-                }
-                console.log('test callback flags =',questionOpenSave)
-            }
-        }
-
-        return () => {
-            console.log('=== RETURE Callback[] ')
-        }
-    },[]);
-
-    React.useEffect(()=>{
-        console.log(' ==== current ref 2nd draft before!!!')
-        if (draft2ndWritingPageRef.current) {
-            console.log(' ==== current ref 2nd draft set')
-            if (sparkWritingData !== undefined) {
-                if (DraftIndex==='2') {
-                    callbackCheckValues()
-                    // draft2ndSaveActive
-                    // draft2ndSubmitActive
-                    let questionOpenSave = false;
-                    if (draft2ndSaveActive||draft2ndSubmitActive) {
-                        questionOpenSave = true;
-                    } else {
-                        questionOpenSave = false;
-                    }
-                    if (isUpdateDraft2Inputs) {
-                        if (questionOpenSave) {
-                            console.log('setGoBackFromDraftInUnitPage 6')
-                            setGoBackFromDraftInUnitPage(()=>{
-                                commonAlertOpen({
-                                    messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to exit?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel:'Yes',
-                                    noButtonLabel: 'No',
-                                    yesEvent: async () => {
-                                        callbackCheckValues()
-                                        commonAlertOpen({
-                                            messageFontFamily: 'Roboto',
-                                            messages: ['Do you want to save your current','progress before you leave?'],
-                                            alertType: 'warningContinue',
-                                            yesButtonLabel: `No`,
-                                            noButtonLabel: `Yes`,
-                                            closeEvent: async ()=> {
-                                                setCommonStandbyScreen({openFlag:true})
-                                                setDraft2ndPageSet('')
-                                                await temporarySaveFunction();
-                                                commonAlertClose();
-                                            },
-                                            yesEvent: () => {
-                                                resetChatHistEvent();
-                                                commonAlertClose();
-                                                setDraft2ndPageSet('')
-                                                setDraft2ndSaveActive(false)
-                                                setDraft2ndSubmitActive(false)
-                                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                            }
-                                        })
-                                    },
-                                    closeEvent: () => {
-                                        commonAlertClose();
-                                    }
-                                })
-                            })
-                        } else {
-                            console.log('setGoBackFromDraftInUnitPage 7')
-                            setGoBackFromDraftInUnitPage(()=>{
-                                commonAlertOpen({
-                                    messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to exit?'],
-                                    alertType: 'warningContinue',
-                                    yesButtonLabel:'Yes',
-                                    noButtonLabel: 'No',
-                                    yesEvent: async () => {
-                                        resetChatHistEvent();
-                                        commonAlertClose();
-                                        setDraft2ndPageSet('')
-                                        setDraft2ndSaveActive(false)
-                                        setDraft2ndSubmitActive(false)
-                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                    },
-                                    closeEvent: () => {
-                                        commonAlertClose();
-                                    }
-                                })
-                            })
-                        }
-                    } else {
-                        setGoBackFromDraftInUnitPage(()=>{
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to exit?'],
-                                alertType: 'warningContinue',
-                                yesButtonLabel:'Yes',
-                                noButtonLabel: 'No',
-                                yesEvent: async () => {
-                                    resetChatHistEvent();
-                                    commonAlertClose();
-                                    setDraft2ndPageSet('')
-                                    setDraft2ndSaveActive(false)
-                                    setDraft2ndSubmitActive(false)
-                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-                                },
-                                closeEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        })
-                    }
-                    
-                }
-            }
-
-        }
-        
-        return () => {
-            console.log('=== RETURE [draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs] ')
-        }
-        
-    },[
-        draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs
-    ])
-
-    const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
-        console.log(' === handleResizeHeightDraft1stInputs ===')
-        const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
-        const inputIds = outlines.map((item,idx) => {
-            const targetRef = draft1stRefs.current[idx];
-            if (targetRef) {
-                targetRef.style.height = 'auto';
-                targetRef.style.height = targetRef.scrollHeight + 'px';
-                return targetRef.id;
-            }
-        })
-        console.log('inputIds ==',inputIds)
-        return () => {
-            console.log('resize callback')
-        }
-    },[])
-
-    const temporarySaveFunction = async () => {
-        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
-        const draftIndex = parseInt(DraftIndex);
-        if (draftIndex === 1){
-            console.log('foldFlag ==',foldFlag)
-            const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
-                // input content 바뀐부분 확인 필요 240117
-                const input_content = item.input_content.replace(/\s{2,}/g, ' ');
-                
-                console.log('item[',item.order_index-1,'] =',item)
-                return {
-                    heading_name: item.name,
-                    input_content,
-                    grammar_correction_content_student: item.grammar_correction_content_student!==''? (isSaveButtonOpen?'':item.grammar_correction_content_student):'',
-                    order_index: item.order_index,
-                    is_input_open: item.is_input_open
-                }
-            })
-            
-            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
-            const data:TSparkWritingTemporarySaveData = {
-                student_code: userInfo.userCode,
-                student_name_en: userInfo.memberNameEn,
-                student_name_kr: userInfo.memberNameKr,
-                class_name: userInfo.className,
-                unit_id: targetData.unit_id,
-                draft_index: draftIndex,
-                proofreading_count: targetData.proofreading_count,
-                contents: contensData,
-                draft_2_init_page_flag:'',
-                campus_name: userInfo.campusName,
-                duration:gapTime
-            }
-            
-            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
-                if (response) {
-                    // setIsSaved(true);
-                    resetChatHistEvent();
-                    commonAlertClose();
-                }
-                return response;
-            });
-            if (isSaveTemporary.is_server_error) {
-                if (isSaveTemporary.data) {
-                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data;
-                    maintenanceInfo.start_date = isSaveTemporary.data.start_date;
-                    maintenanceInfo.end_date = isSaveTemporary.data.end_date;
-                    let dumyMaintenanceData:TMaintenanceData = {
-                        alertTitle: '시스템 점검 안내',
-                        data: maintenanceInfo,
-                        open: false,
-                        type: ''
-                    }
-                    console.log('login maintenanceInfo =',dumyMaintenanceData)
-                    setMaintenanceData(dumyMaintenanceData)
-                    navigate('/')
-                } else {
-                    if (isSaveTemporary.isDuplicateLogin) {
-                        setCommonStandbyScreen({openFlag:false})
-                        commonAlertOpen({
-                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                            priorityLevel: 2,
-                            messageFontFamily:'NotoSansCJKKR',
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: async() => {
-                                resetChatHistEvent();
-                                await logoutFn()
-                            }
-                        })
-                    } else {
-                        if (isSaveTemporary.is_retry) {
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to save your current','progress and return to the main menu?'],
-                                yesButtonLabel: `Yes`,
-                                noButtonLabel: `No`,
-                                yesEvent: async ()=> await temporarySaveFunction(),
-                                closeEvent: async () => commonAlertClose()
-                            })
-                        } else {
-                            commonAlertOpen({
-                                messages: [
-                                    'Cannot connect to the server.',
-                                    'Please try again later.'
-                                ],
-                                priorityLevel: 2,
-                                useOneButton: true,
-                                yesButtonLabel:'OK',
-                                yesEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        }
-                    }
-                }
-            } else {
-                setDraft2ndPageSet('')
-                setDraft2ndSaveActive(false)
-                setDraft2ndSubmitActive(false)
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-            }
-            
-        } else if (draftIndex === 2) {
-            const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
-                const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
-                return {
-                    grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
-                    input_content,
-                    heading_name: item.name,
-                    order_index: item.order_index,
-                    is_input_open: false
-                }
-            });
-            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
-            const data:TSparkWritingTemporarySaveData = {
-                student_code: userInfo.userCode,
-                student_name_en: userInfo.memberNameEn,
-                student_name_kr: userInfo.memberNameKr,
-                class_name: userInfo.className,
-                unit_id: targetData.unit_id,
-                draft_index: draftIndex,
-                proofreading_count: targetData.proofreading_count,
-                contents: contentsData,
-                draft_2_init_page_flag: draft2ndPageSet,
-                campus_name: userInfo.campusName,
-                duration:gapTime
-            };
-            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
-
-            if (isSaveTemporary.is_server_error) {
-                if (isSaveTemporary.data) {
-                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data;
-                    maintenanceInfo.start_date = isSaveTemporary.data.start_date;
-                    maintenanceInfo.end_date = isSaveTemporary.data.end_date;
-                    let dumyMaintenanceData:TMaintenanceData = {
-                        alertTitle: '시스템 점검 안내',
-                        data: maintenanceInfo,
-                        open: false,
-                        type: ''
-                    }
-                    console.log('login maintenanceInfo =',dumyMaintenanceData)
-                    setMaintenanceData(dumyMaintenanceData)
-                    navigate('/')
-                } else {
-                    if (isSaveTemporary.isDuplicateLogin) {
-                        setCommonStandbyScreen({openFlag:false})
-                        commonAlertOpen({
-                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
-                            priorityLevel: 2,
-                            messageFontFamily:'NotoSansCJKKR',
-                            useOneButton: true,
-                            yesButtonLabel:'OK',
-                            yesEvent: async() => {
-                                await logoutFn()
-                            }
-                        })
-                    } else {
-                        if (isSaveTemporary.is_retry) {
-                            commonAlertOpen({
-                                messageFontFamily: 'Roboto',
-                                messages: ['Do you want to save your current','progress and return to the main menu?'],
-                                yesButtonLabel: `Yes`,
-                                noButtonLabel: `No`,
-                                yesEvent: async ()=> await temporarySaveFunction(),
-                                closeEvent: async () => commonAlertClose()
-                            })
-                        } else {
-                            commonAlertOpen({
-                                messages: [
-                                    'Cannot connect to the server.',
-                                    'Please try again later.'
-                                ],
-                                priorityLevel: 2,
-                                useOneButton: true,
-                                yesButtonLabel:'OK',
-                                yesEvent: () => {
-                                    commonAlertClose();
-                                }
-                            })
-                        }
-                    }
-                }
-            } else {
-                setCommonStandbyScreen({openFlag:false});
-                // setIsSaved(true);
-                commonAlertClose();
-                setDraft2ndPageSet('')
-                setDraft2ndSaveActive(false)
-                setDraft2ndSubmitActive(false)
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
-            }
-        }
-    }
 
     const submit2ndDraftFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
@@ -1298,30 +351,7 @@ const EssayWriting = () => {
         setIsOpenFold(unitIndex, title);
         setUpdateFoldIndex(i);
     }
-    // 수정된 데이터인지 체크
-    const checkNewLine = () => {
-        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
-        const draftIndex = parseInt(DraftIndex);
-        const originalTarget = originalTargetData[parseInt(UnitIndex)-1];
-        console.log('originalTarget =',originalTarget)
-        let checkFlag = false;
-        const targetOutline = originalTarget? originalTarget.draft_1_outline:[];
-        const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item, itemIndex) => {
-            const input_content = item.input_content.replace(/\s{2,}/g, ' ');
-            const originalInputContent = targetOutline[itemIndex]?.input_content.replace(/\s{2,}/g, ' ');
-            if (input_content !== originalInputContent) {
-                checkFlag=true;
-            }
-            return {
-                heading_name: item.name,
-                input_content,
-                grammar_correction_content_student: item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
-                order_index: item.order_index,
-                is_input_open: item.is_input_open
-            }
-        })
-        return checkFlag;
-    }
+    
     // 문장 안의 글자수 제한
     const wordLengthLimit = (sentence:string) => {
         const targetValue = sentence.split(/[\n|\s]/gmi);
@@ -1336,7 +366,6 @@ const EssayWriting = () => {
     
     const outlineBody = (outlineItem: TSparkWritingData ) => {
         let outlineOrigin:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineItem.draft_1_outline));
-        const targetMaxLength = outlineOrigin.length;
         // title 정리
         let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
         // 데이터 폼 만들기
@@ -1749,6 +778,7 @@ const EssayWriting = () => {
                                                     bodyValueLengthCheckFlag = true;
                                                     return cutting1800Character;
                                                 }
+                                                return undefined;
                                             })
 
                                             if (bodyValueLengthCheckFlag) {
@@ -1982,6 +1012,985 @@ const EssayWriting = () => {
             </div>
         )
     }
+
+    const logoutFn = React.useCallback(async () => {
+        logoutAPI(userInfo.userCode, device_id)
+        if(isMobile)
+            window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
+        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            (window as any).api.toElectron.send('clear')
+        }
+        window.location.reload()
+    }, [device_id, isMobile, userInfo])
+    const resetChatHistEvent = React.useCallback(() => {
+        console.log('=== Reset Chat History ===')
+        if (isMobile) {
+            console.log('reset history in mobile ')
+            sendMessage('ResetChat')
+        } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+            const electronData = (window as any).api.toElectron.sendSync('ResetChat')
+            console.log('reset history in electron =',electronData)
+        }
+    },[ isMobile ])
+    const temporarySaveFunction = React.useCallback(async () => {
+        const targetData = sparkWritingData[parseInt(UnitIndex)-1]
+        const draftIndex = parseInt(DraftIndex);
+        if (draftIndex === 1){
+            console.log('foldFlag ==',foldFlag)
+            const contensData:TSparkWritingSaveTemporaryContent[] = targetData.draft_1_outline.map((item) => {
+                // input content 바뀐부분 확인 필요 240117
+                const input_content = item.input_content.replace(/\s{2,}/g, ' ');
+                
+                console.log('item[',item.order_index-1,'] =',item)
+                return {
+                    heading_name: item.name,
+                    input_content,
+                    grammar_correction_content_student: item.grammar_correction_content_student!==''? (isSaveButtonOpen?'':item.grammar_correction_content_student):'',
+                    order_index: item.order_index,
+                    is_input_open: item.is_input_open
+                }
+            })
+            
+            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
+            const data:TSparkWritingTemporarySaveData = {
+                student_code: userInfo.userCode,
+                student_name_en: userInfo.memberNameEn,
+                student_name_kr: userInfo.memberNameKr,
+                class_name: userInfo.className,
+                unit_id: targetData.unit_id,
+                draft_index: draftIndex,
+                proofreading_count: targetData.proofreading_count,
+                contents: contensData,
+                draft_2_init_page_flag:'',
+                campus_name: userInfo.campusName,
+                duration:gapTime
+            }
+            
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken).then((response)=>{
+                if (response) {
+                    // setIsSaved(true);
+                    resetChatHistEvent();
+                    commonAlertClose();
+                }
+                return response;
+            });
+            if (isSaveTemporary.is_server_error) {
+                if (isSaveTemporary.data) {
+                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data;
+                    maintenanceInfo.start_date = isSaveTemporary.data.start_date;
+                    maintenanceInfo.end_date = isSaveTemporary.data.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
+                } else {
+                    if (isSaveTemporary.isDuplicateLogin) {
+                        setCommonStandbyScreen({openFlag:false})
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                resetChatHistEvent();
+                                await logoutFn()
+                            }
+                        })
+                    } else {
+                        if (isSaveTemporary.is_retry) {
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                yesButtonLabel: `Yes`,
+                                noButtonLabel: `No`,
+                                yesEvent: async ()=> await temporarySaveFunction(),
+                                closeEvent: async () => commonAlertClose()
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
+                    }
+                }
+            } else {
+                setDraft2ndPageSet('')
+                setDraft2ndSaveActive(false)
+                setDraft2ndSubmitActive(false)
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+            }
+            
+        } else if (draftIndex === 2) {
+            const contentsData:TSparkWritingSaveTemporaryContent[] = targetData.draft_2_outline.map((item) => {
+                const input_content = item.input_content.replace(/[^\S\n]{2,}/g, ' ');
+                return {
+                    grammar_correction_content_student:item.grammar_correction_content_student!==''? item.grammar_correction_content_student:'',
+                    input_content,
+                    heading_name: item.name,
+                    order_index: item.order_index,
+                    is_input_open: false
+                }
+            });
+            const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
+            const data:TSparkWritingTemporarySaveData = {
+                student_code: userInfo.userCode,
+                student_name_en: userInfo.memberNameEn,
+                student_name_kr: userInfo.memberNameKr,
+                class_name: userInfo.className,
+                unit_id: targetData.unit_id,
+                draft_index: draftIndex,
+                proofreading_count: targetData.proofreading_count,
+                contents: contentsData,
+                draft_2_init_page_flag: draft2ndPageSet,
+                campus_name: userInfo.campusName,
+                duration:gapTime
+            };
+            const isSaveTemporary = await draftSaveTemporary(data, userInfo.accessToken);
+
+            if (isSaveTemporary.is_server_error) {
+                if (isSaveTemporary.data) {
+                    let maintenanceInfo:TMaintenanceInfo = isSaveTemporary.data;
+                    maintenanceInfo.start_date = isSaveTemporary.data.start_date;
+                    maintenanceInfo.end_date = isSaveTemporary.data.end_date;
+                    let dumyMaintenanceData:TMaintenanceData = {
+                        alertTitle: '시스템 점검 안내',
+                        data: maintenanceInfo,
+                        open: false,
+                        type: ''
+                    }
+                    console.log('login maintenanceInfo =',dumyMaintenanceData)
+                    setMaintenanceData(dumyMaintenanceData)
+                    navigate('/')
+                } else {
+                    if (isSaveTemporary.isDuplicateLogin) {
+                        setCommonStandbyScreen({openFlag:false})
+                        commonAlertOpen({
+                            messages: ['중복 로그인으로 자동 로그아웃 처리 되었습니다.'],
+                            priorityLevel: 2,
+                            messageFontFamily:'NotoSansCJKKR',
+                            useOneButton: true,
+                            yesButtonLabel:'OK',
+                            yesEvent: async() => {
+                                await logoutFn()
+                            }
+                        })
+                    } else {
+                        if (isSaveTemporary.is_retry) {
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                yesButtonLabel: `Yes`,
+                                noButtonLabel: `No`,
+                                yesEvent: async ()=> await temporarySaveFunction(),
+                                closeEvent: async () => commonAlertClose()
+                            })
+                        } else {
+                            commonAlertOpen({
+                                messages: [
+                                    'Cannot connect to the server.',
+                                    'Please try again later.'
+                                ],
+                                priorityLevel: 2,
+                                useOneButton: true,
+                                yesButtonLabel:'OK',
+                                yesEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        }
+                    }
+                }
+            } else {
+                setCommonStandbyScreen({openFlag:false});
+                // setIsSaved(true);
+                commonAlertClose();
+                setDraft2ndPageSet('')
+                setDraft2ndSaveActive(false)
+                setDraft2ndSubmitActive(false)
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+            }
+        }
+    },[
+        DraftIndex, UnitIndex, 
+        commonAlertClose, commonAlertOpen,
+        draft2ndPageSet, foldFlag, isSaveButtonOpen, logoutFn, navigate, resetChatHistEvent, role, setCommonStandbyScreen, setDraft2ndPageSet,
+        setMaintenanceData, setSparkWritingUnitEnd, sparkWritingData, userInfo, 
+    ])
+    
+    const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
+        console.log(' === handleResizeHeightDraft1stInputs ===')
+        const outlines = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+        const inputIds = outlines.map((item,idx) => {
+            const targetRef = draft1stRefs.current[idx];
+            if (targetRef) {
+                targetRef.style.height = 'auto';
+                targetRef.style.height = targetRef.scrollHeight + 'px';
+                return targetRef.id;
+            }else return undefined;
+        })
+        console.log('inputIds ==',inputIds)
+        return () => {
+            console.log('resize callback')
+        }
+    },[UnitIndex, sparkWritingData])
+    const callbackCheckValues = React.useCallback( ()=>{
+        if (sparkWritingData !== undefined) {
+            if (DraftIndex==='1') {
+                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+                const max_leng = targetDataOutline.length;
+                console.log('return 0/1 2')
+                let targetFlags = Array.from({length:max_leng},()=>1)
+                targetFlags = targetDataOutline.map((v,i) => {
+                    const target_leng = v.input_content.replaceAll(' ','').length;
+                    if (v.name==='Title') {
+                        if (target_leng > 0) {
+                            // 1자 이상
+                            return 0;
+                        } else {
+                            // 1자 미만
+                            return 1;
+                        }
+                    } else {
+                        if (target_leng >= 10) {
+                            // 10자 이상
+                            return 0;
+                        } else {
+                            // 10자 미만
+                            return 1;
+                        }
+                    }
+                })
+                
+                    
+                const sum = targetFlags.reduce((a,b) => (a+b));
+                // sum === 0 => Preview && save 활성화
+                // sum >0, sum < targetFlags.length; -> save 활성화
+                // else -> 모든 버튼 비활성화
+                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
+
+                if (sum === 0) {
+
+                    setIsSaveButtonOpen(true)
+                    console.log('setGoBackFromDraftInUnitPage 1')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messageFontFamily: 'Roboto',
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    yesEvent: () => {
+                                        resetChatHistEvent();
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                    setIsPreviewButtonOpen(true);
+                } else if (sum > 0 && sum < targetFlags.length) {
+                    setIsSaveButtonOpen(true)
+                    console.log('setGoBackFromDraftInUnitPage 2')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messageFontFamily: 'Roboto',
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                callbackCheckValues()
+                                commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to save your current','progress before you leave?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel: `No`,
+                                    noButtonLabel: `Yes`,
+                                    closeEvent: async ()=> {
+                                        await temporarySaveFunction();
+                                        commonAlertClose();
+                                    },
+                                    yesEvent: () => {
+                                        resetChatHistEvent();
+                                        commonAlertClose();
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    }
+                                })
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                } else {
+                    console.log('setGoBackFromDraftInUnitPage 3')
+                    setGoBackFromDraftInUnitPage(()=>{
+                        commonAlertOpen({
+                            messageFontFamily: 'Roboto',
+                            messages: ['Do you want to exit?'],
+                            alertType: 'warningContinue',
+                            yesButtonLabel:'Yes',
+                            noButtonLabel: 'No',
+                            yesEvent: async () => {
+                                resetChatHistEvent();
+                                commonAlertClose();
+                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                            },
+                            closeEvent: () => {
+                                commonAlertClose();
+                            }
+                        })
+                    })
+                    setIsPreviewButtonOpen(false);
+                    setIsSaveButtonOpen(false)
+                }
+            } else if (DraftIndex==='2') {
+
+                // title validate
+                const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_2_outline;
+                const max_leng = targetDataOutline.length;
+                let targetFlags = Array.from({length:max_leng},()=>1)
+                console.log('return 0/1 3')
+                targetFlags = targetDataOutline.map((item,i) => {
+                    const target_length = item.input_content.replaceAll(' ','').length;
+                    if (item.name==='Title') {
+                        if (target_length > 0) {
+                            // 1자 이상
+                            return 0;
+                        } else {
+                            // 1자 미만
+                            return 1;
+                        }
+                    } else {
+                        if (target_length >= 10) {
+                            // 10자 이상
+                            return 0;
+                        } else {
+                            // 10자 미만
+                            return 1;
+                        }
+                    }
+                })
+                const sum = targetFlags.reduce((a,b) => (a+b));
+                // sum 0 -> submit
+                // sum 1 -> save
+                // sum 2 -> 버튼 비활성화
+                console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags,'len =',targetFlags.length)
+                
+                
+                console.log('isUpdateDraft2Inputs =',isUpdateDraft2Inputs)
+                if (sum === 0) {
+                    setDraft2ndSubmitActive(true);
+                    setDraft2ndSaveActive(true);
+                } else if (sum === 1) {
+                    setDraft2ndSubmitActive(false);
+                    setDraft2ndSaveActive(true);
+                } else {
+                    setDraft2ndSubmitActive(false);
+                    setDraft2ndSaveActive(false);
+                }
+                
+
+                // draft2ndSaveActive
+                // draft2ndSubmitActive
+                let questionOpenSave = false;
+                if (draft2ndSaveActive) {
+                    if (draft2ndSubmitActive) {
+                        if (isUpdateDraft2Inputs ) {
+                            questionOpenSave = true;
+                        } else {
+                            questionOpenSave = false;
+                        }
+                    } else {
+                        questionOpenSave = false;
+                    }
+                } else {
+                    questionOpenSave = false;
+                }
+                console.log('test callback flags =',questionOpenSave)
+            }
+        }
+
+        return () => {
+            console.log('=== RETURE Callback[] ')
+        }
+    },[
+        DraftIndex, UnitIndex,
+        draft2ndSaveActive, draft2ndSubmitActive,
+        isUpdateDraft2Inputs,
+        sparkWritingData,
+        role,
+        commonAlertClose, commonAlertOpen,
+        navigate, resetChatHistEvent, setGoBackFromDraftInUnitPage,
+        temporarySaveFunction,
+    ]);
+
+    useComponentWillMount(async ()=>{
+        console.log('essay writing 102 | draft test =',)
+        setCommonStandbyScreen({openFlag:true})
+        const initEnd = await pageInitSetting().then((init) => {
+            console.log('=====> useComponentWillMount last')
+            setCommonStandbyScreen({openFlag:false})
+            return init;
+        })
+        if (initEnd) {
+            setCommonStandbyScreen({openFlag:false})
+        }
+        
+        return ()=>{
+            console.log('is did un mout?')
+        }
+    });
+    React.useEffect(()=>{
+        console.log(' ==== current ref 2nd draft before!!!')
+        if (draft2ndWritingPageRef.current) {
+            console.log(' ==== current ref 2nd draft set')
+            if (sparkWritingData !== undefined) {
+                if (DraftIndex==='2') {
+                    callbackCheckValues()
+                    // draft2ndSaveActive
+                    // draft2ndSubmitActive
+                    let questionOpenSave = false;
+                    if (draft2ndSaveActive||draft2ndSubmitActive) {
+                        questionOpenSave = true;
+                    } else {
+                        questionOpenSave = false;
+                    }
+                    if (isUpdateDraft2Inputs) {
+                        if (questionOpenSave) {
+                            console.log('setGoBackFromDraftInUnitPage 6')
+                            setGoBackFromDraftInUnitPage(()=>{
+                                commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to exit?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel:'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        callbackCheckValues()
+                                        commonAlertOpen({
+                                            messageFontFamily: 'Roboto',
+                                            messages: ['Do you want to save your current','progress before you leave?'],
+                                            alertType: 'warningContinue',
+                                            yesButtonLabel: `No`,
+                                            noButtonLabel: `Yes`,
+                                            closeEvent: async ()=> {
+                                                setCommonStandbyScreen({openFlag:true})
+                                                setDraft2ndPageSet('')
+                                                await temporarySaveFunction();
+                                                commonAlertClose();
+                                            },
+                                            yesEvent: () => {
+                                                resetChatHistEvent();
+                                                commonAlertClose();
+                                                setDraft2ndPageSet('')
+                                                setDraft2ndSaveActive(false)
+                                                setDraft2ndSubmitActive(false)
+                                                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                            }
+                                        })
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                    }
+                                })
+                            })
+                        } else {
+                            console.log('setGoBackFromDraftInUnitPage 7')
+                            setGoBackFromDraftInUnitPage(()=>{
+                                commonAlertOpen({
+                                    messageFontFamily: 'Roboto',
+                                    messages: ['Do you want to exit?'],
+                                    alertType: 'warningContinue',
+                                    yesButtonLabel:'Yes',
+                                    noButtonLabel: 'No',
+                                    yesEvent: async () => {
+                                        resetChatHistEvent();
+                                        commonAlertClose();
+                                        setDraft2ndPageSet('')
+                                        setDraft2ndSaveActive(false)
+                                        setDraft2ndSubmitActive(false)
+                                        CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                    },
+                                    closeEvent: () => {
+                                        commonAlertClose();
+                                    }
+                                })
+                            })
+                        }
+                    } else {
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    resetChatHistEvent();
+                                    commonAlertClose();
+                                    setDraft2ndPageSet('')
+                                    setDraft2ndSaveActive(false)
+                                    setDraft2ndSubmitActive(false)
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
+                    }
+                    
+                }
+            }
+
+        }
+        
+        return () => {
+            console.log('=== RETURE [draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs] ')
+        }
+        
+    },[
+        draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs,
+        isMobile, params,
+        sparkWritingData,
+        DraftIndex, role,
+        callbackCheckValues, commonAlertClose, commonAlertOpen, navigate, resetChatHistEvent, 
+        setCommonStandbyScreen, setDraft2ndPageSet, setGoBackFromDraftInUnitPage,
+        temporarySaveFunction, handleResizeHeightDraft1stInputs,
+    ])
+    React.useEffect(()=>{
+        if (draft1stRefs.current) {
+            console.log('=== ref useEffect ===')
+            
+            
+            if (draft1stRefs.current.length === foldFlag.length) {
+                // use callback
+                handleResizeHeightDraft1stInputs();
+                if (params.draft === '1') {
+                    // connect app message
+                    if (isMobile) {
+                        // connect mobile app event listener
+                        window.addEventListener('message', receiveMessage, true);
+                    }
+                }
+            }
+        }
+        return () => {
+            console.log('=== RETURE [draft1stRefs] ')
+            if (params.draft === '1') {
+                if (isMobile) {
+                    // remove app event listener
+                    window.removeEventListener('message', receiveMessage, true);
+                }
+            }
+        }
+    },[
+        draft1stRefs, foldFlag, handleResizeHeightDraft1stInputs, isMobile, params
+    ])
+
+    React.useEffect(()=>{
+        setTopNavHiddenFlagged(true);
+        setSubNavTitleString(`${selectUnitInfo.main} ${selectUnitInfo.sub}`);
+        // path param to number
+        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        const draftIndex:number = parseInt(params.draft !== undefined ? params.draft: '1');
+        if(paramValues === undefined) {
+            setParamValues({unitIndex:unitIndex, draft:draftIndex})
+        }
+        
+        // fold
+        if (foldFlag.length === 0) {
+            const data = sparkWritingData[unitIndex];
+            let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
+            let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
+            
+            let dumyFold = allNames.map((nameItem)=>{
+                let foldItem = false;
+                for (let i = 0; i < data.draft_1_outline.length; i++) {
+                    const title = data.draft_1_outline[i].name.replace(/(_)?([0-9]{1,})/gmi,'');
+                    console.log('title =',title);
+                    if (nameItem === title) {
+                        foldItem = data.draft_1_outline[i].is_input_open;
+                        break;
+                    }
+                }
+                return foldItem;
+            })
+            
+            setFoldFlag(dumyFold)
+        } else {
+            if (updateFoldIndex !== undefined) {
+                const controllClass = `foldFlag:::[${updateFoldIndex}]`;
+                const data = sparkWritingData[unitIndex];
+                let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
+                // let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
+                for (let i = 0; i < outlineOrigin.length; i++) {
+                    const target = draft1stRefs.current[i];
+                    if (target) {
+                        // const targetBeforeIdName = target.id.replace(/(_)?([0-9]{1,})/gmi,'');
+                        // const targetTitleName = target.id.replace(/\d$/gmi,'').split('_');
+                        if (target.className.includes(controllClass)) {
+                            target.style.height='auto';
+                            target.style.height = target.scrollHeight+'px';
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+        if (params.draft === '1') {
+            const rightTitle = <span>{'Step 1.'}<span className='ordinal pl-2 pr-1'>{'1st'}</span>{'Draft'}</span>
+            setSubRightNavTitleString(rightTitle)
+            handleResizeHeightDraft1stInputs();
+        } else {
+            if (originalTargetData.length>0) {
+                console.log('draft 2 value update')
+                const draft2Outlines = sparkWritingData[unitIndex].draft_2_outline;
+                const dumyDraft2Outlines = originalTargetData[unitIndex].draft_2_outline;
+                let isUpdate2nd = false;
+                for (let i = 0; i < draft2Outlines.length; i++) {
+                    if (draft2Outlines[i].input_content !== dumyDraft2Outlines[i].input_content) {
+                        isUpdate2nd = true;
+                        break;
+                    }
+                }
+                console.log('isUpdate =',isUpdate2nd)
+                setIsUpdateDraft2Inputs(isUpdate2nd);
+            } 
+            const rightTitle = <span>{'Step 2.'}<span className='ordinal pl-2 pr-1'>{'2nd'}</span>{'Draft'}</span>
+            setSubRightNavTitleString(rightTitle)
+        }
+        if (essayTopicInput === undefined || essayTopicInput === '') {
+            
+            // nav header setting
+            setEssayTopicInput(sparkWritingData[unitIndex].topic);
+        }
+        
+        callbackCheckValues();
+        
+        return () => {
+            console.log('did unmount in Essay Writing Page')
+            setTopNavHiddenFlagged(false)
+            setSubNavTitleString('')
+            setSubRightNavTitleString('')
+            setIsPreviewButtonOpen(false);
+            setIsSaveButtonOpen(false);
+            setIsUpdateDraft2Inputs(false);
+        }
+    
+    },[
+        // page state
+        params,
+        foldFlag,
+        essayTopicInput,
+        paramValues,
+        draft2ndPageSet, draft2ndSaveActive, draft2ndSubmitActive,
+        // nav store
+        setTopNavHiddenFlagged, 
+        setSubNavTitleString,
+        setSubRightNavTitleString,
+        selectUnitInfo,
+        // WritingCenter Store
+        essayWritingInputItems,
+        sparkWritingData,
+        // Spark Store
+        callbackCheckValues, handleResizeHeightDraft1stInputs,
+        originalTargetData, updateFoldIndex,
+    ])
+
+    React.useEffect(()=>{
+        // const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        // const target = sparkWritingData[unitIndex].draft_2_outline;
+        // 2nd draft check
+        if (params.draft && params.draft==='1') {
+
+            if (sparkWritingData !== undefined) {
+                if (DraftIndex==='1') {
+                    const targetDataOutline = sparkWritingData[parseInt(UnitIndex)-1].draft_1_outline;
+                    const max_leng = targetDataOutline.length;
+                    let titleMaxLengthCheck = false;
+    
+                    let orderIndex = -1;
+                    let unitId = -1;
+                    let unitIndex = -1;
+                    let redoTitleText = '';
+    
+                    let targetFlags = Array.from({length:max_leng},()=>1)
+                    console.log('return 0/1 1')
+                    targetFlags = targetDataOutline.map((v,i) => {
+                        const target_leng = v.input_content.replaceAll(' ','').length;
+                        if (v.name === 'Title') {
+                            console.log('input =',target_leng,', ',v.input_content,)
+                            const lengthTitle = v.input_content.length;
+                            orderIndex = v.order_index;
+                            unitId = sparkWritingData[parseInt(UnitIndex)-1].unit_id;
+                            unitIndex = sparkWritingData[parseInt(UnitIndex)-1].unit_index;
+                            if (lengthTitle > 120) {
+                                redoTitleText = v.input_content.substring(0, 120);
+                                titleMaxLengthCheck = true;
+                            }
+
+                            if (target_leng > 0) {
+                                // 1자 이상
+                                return 0;
+                            } else {
+                                // 1자 미만
+                                return 1;
+                            }
+                        } else {
+                            if (target_leng >= 10) {
+                                // 10자 이상
+                                return 0;
+                            } else {
+                                // 10자 미만
+                                return 1;
+                            }
+                        }
+
+                    })
+                    if (titleMaxLengthCheck) {
+                        commonAlertOpen({
+                            messageFontFamily: 'Roboto',
+                            messages:['The title cannot be more than 120 characters.'],
+                            useOneButton: true,
+                            yesButtonLabel: 'OK',
+                            yesEvent: () => {
+                                setOutlineInputText(redoTitleText, unitId, unitIndex, orderIndex, 1)
+                                commonAlertClose();
+                            }
+                        })
+                        return;
+                    }
+                    handleResizeHeightDraft1stInputs();
+                    const sum = targetFlags.reduce((a,b) => (a+b));
+                    
+                    // sum === 0 => Preview && save 활성화
+                    // sum >0, sum < targetFlags.length; -> save 활성화
+                    // else -> 모든 버튼 비활성화
+                    console.log('in callback effect - sum: ', sum,', targetFlags: ',targetFlags)
+                    if (sum === 0) {
+    
+                        setIsSaveButtonOpen(true)
+                        setIsPreviewButtonOpen(true);
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    callbackCheckValues()
+                                    commonAlertOpen({
+                                        messageFontFamily: 'Roboto',
+                                        messages: ['Do you want to save your current','progress before you leave?'],
+                                        alertType: 'warningContinue',
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
+                                            await temporarySaveFunction();
+                                            commonAlertClose();
+                                        },
+                                        yesEvent: () => {
+                                            resetChatHistEvent();
+                                            commonAlertClose();
+                                            setDraft2ndPageSet('')
+                                            setDraft2ndSaveActive(false)
+                                            setDraft2ndSubmitActive(false)
+                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                        }
+                                    })
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
+                    } else if (sum > 0 && sum < targetFlags.length) {
+                        setIsSaveButtonOpen(true)
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    callbackCheckValues()
+                                    commonAlertOpen({
+                                        messageFontFamily: 'Roboto',
+                                        messages: ['Do you want to save your current','progress before you leave?'],
+                                        alertType: 'warningContinue',
+                                        yesButtonLabel: `No`,
+                                        noButtonLabel: `Yes`,
+                                        closeEvent: async ()=> {
+                                            await temporarySaveFunction();
+                                            commonAlertClose();
+                                        },
+                                        yesEvent: () => {
+                                            resetChatHistEvent();
+                                            commonAlertClose();
+                                            setDraft2ndPageSet('')
+                                            setDraft2ndSaveActive(false)
+                                            setDraft2ndSubmitActive(false)
+                                            CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                        }
+                                    })
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
+                    } else {
+                        setIsPreviewButtonOpen(false);
+                        setIsSaveButtonOpen(false)
+                        setGoBackFromDraftInUnitPage(()=>{
+                            commonAlertOpen({
+                                messageFontFamily: 'Roboto',
+                                messages: ['Do you want to exit?'],
+                                alertType: 'warningContinue',
+                                yesButtonLabel:'Yes',
+                                noButtonLabel: 'No',
+                                yesEvent: async () => {
+                                    resetChatHistEvent();
+                                    commonAlertClose();
+                                    setDraft2ndPageSet('')
+                                    setDraft2ndSaveActive(false)
+                                    setDraft2ndSubmitActive(false)
+                                    CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                                },
+                                closeEvent: () => {
+                                    commonAlertClose();
+                                }
+                            })
+                        })
+                    }
+                }
+            }
+        }
+        return () => {
+            console.log('=== RETURE [sparkWritingData] ')
+        }
+    }, [
+        sparkWritingData, DraftIndex, UnitIndex, params, role,
+        callbackCheckValues, commonAlertClose, commonAlertOpen, handleResizeHeightDraft1stInputs, navigate,
+        resetChatHistEvent, setDraft2ndPageSet, setGoBackFromDraftInUnitPage,setOutlineInputText, temporarySaveFunction,
+    ]);
+    React.useEffect(()=>{
+        const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
+        const target = sparkWritingData[unitIndex]
+        console.log('draft2ndPageSet ==',draft2ndPageSet)
+        if (target.draft_2_status.status === 0||target.draft_2_status.status === 5) {
+            console.log('1')
+            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
+                console.log('1-1')
+                if (draft2ndPageSet==='revise') {
+                    console.log('revise')
+                    const target1st = target.draft_1_outline;
+                    console.log('==target1st=',target1st)
+                    let titleInput = '';
+                    let bodyInput = '';
+                    for (let i = 0; i < target1st.length; i++) {
+                        const current1stTarget = target1st[i];
+                        console.log('==current1stTarget=',current1stTarget)
+                        if (current1stTarget.name === 'Title') {
+                            titleInput = current1stTarget.input_content
+                        } else {
+                            bodyInput += current1stTarget.input_content+'\n\n';
+                        }
+                    }
+                    console.log('titleInput =',titleInput)
+                    console.log('bodyInput =',bodyInput)
+                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
+                } else if (draft2ndPageSet==='fresh') {
+                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
+                } else {
+                    
+                }
+            } else {
+                console.log('1-2')
+            }
+        } else if (target.draft_2_status.status === 1) {
+            console.log('2')
+            if (draft2ndPageSet === '') {
+                setDraft2ndPageSet(target.draft_2_init_page_flag)
+            }
+            if (target.draft_2_outline[0].input_content==='' && target.draft_2_outline[1].input_content==='') {
+                if (draft2ndPageSet==='revise') {
+                    console.log('revise')
+                    const target1st = target.draft_1_outline;
+                    console.log(' target =',target)
+                    let titleInput = '';
+                    let bodyInput = '';
+                    for (let i = 0; i < target1st.length; i++) {
+                        const current1stTarget = target1st[i];
+                        console.log(' current1stTarget = ',current1stTarget)
+                        if (current1stTarget.name === 'Title') {
+                            titleInput = current1stTarget.input_content
+                        } else {
+                            bodyInput += current1stTarget.input_content+'\n\n';
+                        }
+                    }
+                    console.log('titleInput =',titleInput)
+                    console.log('bodyInput =',bodyInput)
+            
+                    setOutlineInputText(titleInput, target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText(bodyInput, target.unit_id, target.unit_index, 2,2)
+                    setDraft2ndSaveActive(true)
+                    setDraft2ndSubmitActive(true)
+                } else if (draft2ndPageSet==='fresh') {
+                    setOutlineInputText('', target.unit_id, target.unit_index, 1,2)
+                    setOutlineInputText('', target.unit_id, target.unit_index, 2,2)
+                } else {
+                    
+                }
+            }
+            
+        }
+        return () => {
+            console.log('=== RETURE [draft2ndPageSet] ')
+        }
+    }, [
+        draft2ndPageSet, params, sparkWritingData,
+        setDraft2ndPageSet, setOutlineInputText, 
+    ])
+
     return (
         <section className={`section-spark-writing z-0 use-nav-top bg-draft-background-image bg-no-repeat bg-cover object-contain`}>
             {/* draft 1 => chat */}

@@ -1,24 +1,17 @@
 import React from 'react';
 import useLoginStore from '../store/useLoginStore';
-import { SvgLogoElla } from '../util/svgs/svgLogoElla';
-import { SvgLogoPoly } from '../util/svgs/svgLogoPoly';
 import { CONFIG } from '../config';
 import { svgIcons } from '../util/svgs/loginSvgs';
 import { forcedLoginAPI, loginAPI } from './Student/api/Login.api';
 import useControlAlertStore from '../store/useControlAlertStore';
-import { RN } from '../util/RN/commonPostMessage';
 import useNavStore from '../store/useNavStore';
 import { detect } from 'detect-browser';
 import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
     const navigate = useNavigate();
-    const ANDROID_VERSION=process.env.REACT_APP_ANDROID_VERSION ? process.env.REACT_APP_ANDROID_VERSION:'';
-    const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
-    const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
-    const IS_MAINTENANCE = process.env.REACT_APP_MAINTENANCE ? process.env.REACT_APP_MAINTENANCE:'NO';
     const { 
-        userInfo, setUserInfo, setIsOpen, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform,
+        setUserInfo, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform,
         setMaintenanceData
      } = useLoginStore();
     const {setSelectMenu} = useNavStore();
@@ -29,9 +22,9 @@ export const Login = () => {
     const [saveId, setSaveId] = React.useState<boolean>(false)
     const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
     const [version, setVersion] = React.useState<string>('');
-    const [checkDevice, setCheckDevice] = React.useState<"Android"|"iOS"|"Electron"|"">("");
-    const [isShouldChangeVersion, setIsShouldChangeVersion] = React.useState<boolean>(false);
-    const [isUnderMaintenance, setIsUnderMaintenance] = React.useState<boolean>(false);
+    // const [checkDevice, setCheckDevice] = React.useState<"Android"|"iOS"|"Electron"|"">("");
+    // const [isShouldChangeVersion, setIsShouldChangeVersion] = React.useState<boolean>(false);
+    // const [isUnderMaintenance, setIsUnderMaintenance] = React.useState<boolean>(false);
 
     const {
         commonAlertOpen, commonAlertClose
@@ -119,7 +112,7 @@ export const Login = () => {
             setUserInfo(response.data);
         } 
     }
-    const forceLoginRN = async (loginvalues: {username: string, password: string}, deviceid: string, saveid: boolean) => {
+    const forceLoginRN = React.useCallback(async (loginvalues: {username: string, password: string}, deviceid: string, saveid: boolean) => {
         console.log('loggin in with', loginvalues)
         const response = await forcedLoginAPI(loginvalues?.username, loginvalues?.password, deviceid).then((res) => {
             console.log('response =',res)
@@ -154,43 +147,8 @@ export const Login = () => {
             setSelectMenu('WritingClinic')
             setUserInfo(response.data);
         } 
-    }
-    const confirmUpdateNewVersion = () => {
-        if (isUnderMaintenance) {
-            confirmUnderMaintenanceAlert();
-        } else {
-            if (isShouldChangeVersion) {
-                commonAlertOpen({
-                    useOneButton:true,
-                    alertType: 'warningContinue',
-                    yesButtonLabel: 'OK',
-                    messageFontFamily: 'NotoSansCJKKR',
-                    messages: [
-                        "새로운 버전으로 업데이트를 진행해주세요."
-                    ],
-                    yesEvent: () => {
-                        commonAlertClose();
-                        
-                    }
-                })
-            }
-        }
-    }
-    const confirmUnderMaintenanceAlert = () => {
-        commonAlertOpen({
-            useOneButton:true,
-            alertType: 'warningContinue',
-            yesButtonLabel: 'OK',
-            messageFontFamily: 'NotoSansCJKKR',
-            messages: [
-                "서비스 안정화를 위한 점검중이에요."
-            ],
-            yesEvent: () => {
-                commonAlertClose();
-                
-            }
-        })
-    }
+    },[isMobile, navigate, setMaintenanceData, setSelectMenu, setUserInfo])
+
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
@@ -311,7 +269,7 @@ export const Login = () => {
                                 setErrors({displayMessage: '아이디 또는 비밀번호를 다시 확인하세요.'})
                             }
                         }
-                        setLoginValues({...loginValues, ['password']: ''})
+                        setLoginValues({...loginValues, password: ''})
                         document.getElementById('password')?.focus();
                     } else {
                         // 2 사용대상이 아닌 경우-> Writing Hub 사용 권한이 없는 계정입니다. 
@@ -400,7 +358,7 @@ export const Login = () => {
         const messageData = JSON.stringify(data);
         window.ReactNativeWebView.postMessage(messageData);
     };
-    const receiveMessage = async (event:any) => {
+    const receiveMessage = React.useCallback(async (event:any) => {
         console.log('Receive message data =',event.data);
         if(typeof event.data !== 'string')
             return
@@ -436,10 +394,10 @@ export const Login = () => {
             // we use rnData, because react state is updated in the next render cycle
             await forceLoginRN(rnData['loginValues'], rnData['deviceId'], rnData['saveId'])
         }
-    };
+    }, [forceLoginRN, loginValues, setDeviceId, setPlatform, setSize, setUserInfo])
 
     // electron js
-    const receiveElectronData = async (data: any) => {
+    const receiveElectronData = React.useCallback(async (data: any) => {
         const autoLoginValue = data['loginValues']
         if(autoLoginValue) {
             setLoginValues(autoLoginValue)
@@ -458,10 +416,10 @@ export const Login = () => {
             setVersion(data['version'])
         }
         await forceLoginRN(data['loginValues'], data['deviceId'], data['saveId'])
-    }
+    },[forceLoginRN, setDeviceId, setUserInfo])
 
     // is not mobile id
-    const fetchIpAddress = async () => {
+    const fetchIpAddress = React.useCallback(async () => {
         const response = await fetch('https://api64.ipify.org?format=json').then((res) => {return res}).catch((rej) => {return ''});
         if (typeof(response)!=='string') {
             const data = await response.json();
@@ -470,7 +428,7 @@ export const Login = () => {
         } else {
             setDeviceId('');
         }
-    }
+    }, [setDeviceId])
 
     React.useEffect(()=>{
         const sendData = "AutoLogin"
@@ -480,17 +438,17 @@ export const Login = () => {
         if (browser?.name === 'chromium-webview') {
             // mobile
             // alert('mobile')
-            setCheckDevice('Android')
+            // setCheckDevice('Android')
             setMobile(true)
             window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
         } else if (browser?.name==='ios-webview') {
-            setCheckDevice('iOS')
+            // setCheckDevice('iOS')
             setMobile(true)
             window.addEventListener('message', receiveMessage, true);
             sendMessage(sendData)
         } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-            setCheckDevice('Electron')
+            // setCheckDevice('Electron')
             const electronData = (window as any).api.toElectron.sendSync('autologin')
             console.log('electron data:', electronData)
             receiveElectronData(electronData)
@@ -505,7 +463,9 @@ export const Login = () => {
                 window.removeEventListener('message', receiveMessage, true)
             }
         }
-    },[])
+    },[
+        fetchIpAddress, isMobile, receiveElectronData, receiveMessage, setMobile, setSelectMenu
+    ])
 
     React.useEffect(()=>{
         const checkName = loginValues.username.replace(/\s{1,}/gmi,'')==='';
@@ -516,79 +476,6 @@ export const Login = () => {
             setIsLoginBtn(true);
         }
     }, [loginValues])
-
-    React.useEffect(()=>{
-        const isMaintenanceCheck = IS_MAINTENANCE;
-        // console.log('isMain =',isMaintenanceCheck)
-        // if (isMaintenanceCheck==='YES') {
-        //     setIsUnderMaintenance(true);
-        //     commonAlertOpen({
-        //         useOneButton:true,
-        //         alertType: 'warningContinue',
-        //         yesButtonLabel: 'OK',
-        //         messages: [
-        //             "서비스 안정화를 위한 점검중이에요."
-        //         ],
-        //         yesEvent: () => {
-        //             commonAlertClose();
-                    
-        //         }
-        //     })
-        // } else {
-            setIsUnderMaintenance(false)
-            // in ENV should update 
-            // REACT_APP_ANDROID_VERSION=1.0.5
-            // REACT_APP_IOS_VERSION=1.0.3
-            // REACT_APP_ELECTRON_VERSION=1.0.0
-            if (checkDevice === 'Android') {
-                if (version !== ANDROID_VERSION) {
-                    setIsShouldChangeVersion(true);
-                } else {
-                    setIsShouldChangeVersion(false);
-                }
-            } else if (checkDevice === 'iOS') {
-                if (version !== IOS_VERSION) {
-                    setIsShouldChangeVersion(true);
-                } else {
-                    setIsShouldChangeVersion(false);
-                }
-            } else if (checkDevice === 'Electron') {
-                if (version !== ELECTRON_VERSION) {
-                    setIsShouldChangeVersion(true);
-                } else {
-                    setIsShouldChangeVersion(false);
-                }
-            } else {
-                // version check 무시
-                console.log('version =',version)
-                if (version !== '') {
-                    setIsShouldChangeVersion(true);
-                } else {
-                    setIsShouldChangeVersion(false);
-                }
-            }
-        // }
-    }, [version])
-
-    // React.useEffect(()=>{
-        // if (isShouldChangeVersion) {
-        //     commonAlertOpen({
-        //         useOneButton:true,
-        //         alertType: 'warningContinue',
-        //         yesButtonLabel: 'OK',
-        //         messages: [
-        //             "새로운 버전으로 업데이트를 진행해주세요."
-        //         ],
-        //         yesEvent: () => {
-        //             commonAlertClose();
-        //         }
-        //     })
-        // } else {
-        // }
-    // }, [isShouldChangeVersion])
-
-    
-
 
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right bg-cover justify-center items-center bg-login-img relative'>

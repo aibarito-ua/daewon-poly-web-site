@@ -5,8 +5,6 @@ import useSparkWritingStore from '../../store/useSparkWritingStore';
 import {CommonFunctions} from '../../util/common/commonFunctions'
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/useLoginStore';
-import { SvgIconCheck } from '../../util/svgs/svgCheck';
-import { CircleIcon, NoEntryCircleIcon, SavedCircleIcon, CompleteCircleIcon, ReLearningCircleIcon } from '../../util/svgs/heroIcons/CircleIcon';
 import SmallHead from '../../components/commonComponents/SmallHeadComponent/SmallHead';
 import { commonIconSvgs } from '../../util/svgs/commonIconsSvg';
 import { callUnitInfobyStudent, getReportsAPI } from './api/EssayWriting.api';
@@ -18,12 +16,12 @@ import { logoutAPI } from './api/Login.api';
 
 export default function SelectUnit () {
     const navigate = useNavigate();
-    const {role, userInfo, setUserInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
+    const {role, userInfo, device_id, isMobile, setMaintenanceData} = useLoginStore();
     const {
-        setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo, secondGenerationOpen,
+        setTopNavHiddenFlagged, setSubNavTitleString, setSubRightNavTitleString, setSelectUnitInfo,
         goBackFromDraftInUnitPage, setGoBackFromDraftInUnitPage,
     } = useNavStore()
-    const { proceedingTopicIndex, completeTopicIndex, setCompleteTopicIndex, setInitCompleteTopicIndex} = useEssayWritingCenterDTStore();
+    const { proceedingTopicIndex, setCompleteTopicIndex} = useEssayWritingCenterDTStore();
     const {
         sparkWritingData, sparkWritingBookName,setSparkWritingDataFromAPI,
         // hover event
@@ -35,17 +33,14 @@ export default function SelectUnit () {
     const {
         setCommonStandbyScreen,
         // report modal
-        reportAPIData, setReportAPIData,
+        setReportAPIData,
         setSelectReportData,
-        reportSelectFinder, setReportSelectedFinder,
-        reportSelectUnit, setReportSelectUnit,
-        reportSelectBookName,
-
+        setReportSelectedFinder,
+        setReportSelectUnit,
+        
         setUnitReportModal,
         // test
-        unitReportsData, unitReportData, unitRubricScoresData, reportModalRubricData
-        ,reportSelectedOverallBarChart, reportSelectedOverallPieChart,
-
+        unitRubricScoresData, reportSelectedOverallBarChart, reportSelectedOverallPieChart,
         commonAlertClose, commonAlertOpen,
         // feedback initialize
         setTeacherFeedbackInit
@@ -77,7 +72,9 @@ export default function SelectUnit () {
         setSubRightNavTitleString,
         proceedingTopicIndex,
         setCompleteTopicIndex,
-        sparkWritingData
+        sparkWritingData,
+        lastUnitIndex,
+        setLastUnitIndex,
     ])
     const beforeRenderedFn = async () => {
         setCommonStandbyScreen({openFlag:true})
@@ -219,17 +216,6 @@ export default function SelectUnit () {
         });
     })
     
-
-    // const reportOpen = async (data:TSparkWritingData) => {
-    //     const student_code = userInfo.userCode;
-    //     const getAllReport = await getReportsAPI(student_code,userInfo.accessToken, userInfo.courseName);
-    //     if (getAllReport) {
-    //         const reportByYears = getAllReport.periods;
-    //         for (let i = 0; i < reportByYears.length; i++) {
-                
-    //         }
-    //     }
-    // }
     const test = (data:TReportByStudentResponse,
         year:number,
         semester:number,
@@ -239,8 +225,6 @@ export default function SelectUnit () {
         }
 
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(unitRubricScoresData));
-        let dumyUnitReportsData:TUnitReportsData[] = JSON.parse(JSON.stringify(unitReportsData));
-        let dumySelectReportRubricAllData: TRubricInfo[] = JSON.parse(JSON.stringify(reportModalRubricData));
         let dumyOverallBar:TOverallBarChartDataItem[] = JSON.parse(JSON.stringify(reportSelectedOverallBarChart));
         let dumyOverallPie:TAllDoughnutDatas = JSON.parse(JSON.stringify(reportSelectedOverallPieChart));
 
@@ -254,17 +238,12 @@ export default function SelectUnit () {
                     const currentData = currentPeriod.levels[j];
                     if (currentData.level_name === level) {
                         dumyData = currentData;
-                        
-                        dumySelectReportRubricAllData = currentData.rubric_info;
-                        dumyUnitReportsData = currentData.unit_reports;
                         break;
                     }
                 }
             }
-        }
-
-        
-        const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
+        };
+        // const categoryNames = ['ideas', 'organization', 'voice','word choice','sentence fluency', 'conventions'];
         let sumData = [
             {name:'conventions', sum: 0},
             {name:'sentence fluency', sum: 0},

@@ -4,37 +4,34 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useLoginStore from '../../../store/useLoginStore';
 import { progressIcons } from '../../../util/svgs/commonProgressIcons';
-import { styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 import useSparkWritingStore from '../../../store/useSparkWritingStore';
 import { callUnitInfobyStudent } from '../../../pages/Student/api/EssayWriting.api';
 import { useNavigate } from 'react-router-dom';
 
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
-    '& .MuiInputBase-input': {
-        borderRadius: '15px',
-        position: 'relative',
-        border: '1px solid #ced4da',
-        fontFamily: 'Noto Sans CJK KR',
-        fontWeight: 400,
-        fontSize: '18px',
-        textAlign: 'left',
-        backgroundColor: '#fff',
-    },
-}));
+// import { styled } from '@mui/material/styles';
+// import InputBase from '@mui/material/InputBase';
+// const BootstrapInput = styled(InputBase)(({ theme }) => ({
+//     '& .MuiInputBase-input': {
+//         borderRadius: '15px',
+//         position: 'relative',
+//         border: '1px solid #ced4da',
+//         fontFamily: 'Noto Sans CJK KR',
+//         fontWeight: 400,
+//         fontSize: '18px',
+//         textAlign: 'left',
+//         backgroundColor: '#fff',
+//     },
+// }));
 
 export default function SelectLabels() {
-  // const [value, setValue] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const {userInfo, setMaintenanceData} = useLoginStore();
-  // const [levels, setLevels] = React.useState<string[]>([]);
   const [isReadOnly, setIsReadOnly] = React.useState<boolean>(false);
   
   const {
     reportAPIData,
-    reportSelectBoxDatas,
     progressLevelBoxValue,
     progressAllLevelsValue,
     setProgressLevelBoxValue,
@@ -85,7 +82,7 @@ export default function SelectLabels() {
         return response;
       } 
     });
-}
+  };
   
   const handleChange = async (event: SelectChangeEvent) => {
     console.log('user info =',userInfo)
@@ -98,8 +95,6 @@ export default function SelectLabels() {
       setCommonStandbyScreen({openFlag:false})
     }
   };
-
-  
 
   return (
     <div className='flex items-center h-[45px] '>

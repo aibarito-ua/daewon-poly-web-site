@@ -31,38 +31,30 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   '& .MuiTabs-flexContainer': {
     
   }
-  // '& .MuiTabs-indicator': {
-  //   display: 'none',
-  // },
-  // '& .MuiTabs-indicatorSpan': {
-  //   maxWidth: 40,
-  //   width: '100%',
-  //   backgroundColor: '#fff',
-  // },
 });
 
-interface StyledTabProps {
-  label: string;
-}
+// interface StyledTabProps {
+//   label: string;
+// }
 
-const StyledTab = styled((props: StyledTabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  backgroundColor: '#3e61aa',
-  paddingLeft: '27px',
-  paddingRight: '27px',
-  paddingTop: '23px',
-  paddingBottom: '18px',
-  color: '#fff',
-  position: 'relative',
-  '&.Mui-selected': {
-    color: '#192878',
-    height: '55.2px',
-    borderTopLeftRadius: '24px',
-    borderTopRightRadius: '24px',
-    borderBottomLeftRadius: '-24px',
-},
-}));
+// const StyledTab = styled((props: StyledTabProps) => (
+//   <Tab disableRipple {...props} />
+// ))(({ theme }) => ({
+//   backgroundColor: '#3e61aa',
+//   paddingLeft: '27px',
+//   paddingRight: '27px',
+//   paddingTop: '23px',
+//   paddingBottom: '18px',
+//   color: '#fff',
+//   position: 'relative',
+//   '&.Mui-selected': {
+//     color: '#192878',
+//     height: '55.2px',
+//     borderTopLeftRadius: '24px',
+//     borderTopRightRadius: '24px',
+//     borderBottomLeftRadius: '-24px',
+// },
+// }));
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -118,6 +110,7 @@ export default function CustomizedReportTabs() {
 
   React.useEffect(()=>{
     // console.log('isNoData ==',isNoData)
+    console.log('=== Report Tab Component::Effect::check isNoData ===')
     if (isNoData) {
       setValue(0);
     }
@@ -125,6 +118,7 @@ export default function CustomizedReportTabs() {
   }, [isNoData])
   
   React.useEffect(()=>{
+    console.log('=== Report Tab Component ===')
     if (!isNoData) {
 
       if (unitReportsData.length > 0) {
@@ -172,8 +166,7 @@ export default function CustomizedReportTabs() {
           }
       }
     }
-    
-  },[unitReportsData, reportCompletedUnitIndexArray, reportSelectUnit, reportSelectFinder])
+  },[isNoData,unitReportsData, reportCompletedUnitIndexArray, reportSelectUnit, reportSelectFinder])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

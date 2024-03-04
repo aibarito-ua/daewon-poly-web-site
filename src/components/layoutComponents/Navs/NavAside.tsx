@@ -9,32 +9,20 @@ import { useComponentWillMount } from '../../../hooks/useEffectOnce';
 import { checkDuplicateLogin, logoutAPI } from '../../../pages/Student/api/Login.api';
 import useControlAlertStore from '../../../store/useControlAlertStore';
 
-// export const logoutFn =async () => {
-//     const {device_id, isMobile, userInfo} = useLoginStore()
-//     logoutAPI(userInfo.userCode, device_id)
-//     if(isMobile)
-//         window.ReactNativeWebView.postMessage(JSON.stringify('logout'))
-//     else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-//         (window as any).api.toElectron.send('clear')
-//     }
-//     window.location.reload()
-// }
-
 const NavAside = () => {
     const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
-    const { companyName, name, role, setIsOpen, setUserInfo, setLogoutUser, userInfo, device_id, isMobile, setMaintenanceData } = useLoginStore();
-    const { commonAlertClose, commonAlertOpen} = useControlAlertStore()
-    // const [menuLocateValue, setMenuLocateValue] = useState("");
+    const { role, userInfo, device_id, isMobile, setMaintenanceData } = useLoginStore();
+    const { commonAlertClose, commonAlertOpen} = useControlAlertStore();
     const location = useLocation();
     const navigate = useNavigate();
     const handleMenuClick = async (role:TRole, menuTitle: string) => {
-        if (selectedMenu === menuTitle) {
-            // await setSelectMenu(null);
-        } else {
+        if (selectedMenu !== menuTitle) {
             console.log('menuTitle =',menuTitle,', ',selectedMenu, ', sidebarFlagged=',sidebarFlagged,', role=',role)
             await setSelectMenu(menuTitle,);
             setSidebarFlagged(!sidebarFlagged);
             await goLink(role,menuTitle);
+        } else {
+            // await setSelectMenu(null);
         }
     };
     useComponentWillMount(()=>{
@@ -56,23 +44,39 @@ const NavAside = () => {
         }
         window.location.reload()
     }
+    // React.useEffect(()=>{
+    //     console.log('test effect selectedMenu= ',selectedMenu,', sidebarFlagged=',sidebarFlagged)
+    //     if (selectedMenu==='') {
+    //         const menuTitle = navItems[role].selectedMenu[0].path;
+    //         setSelectMenu(menuTitle)
+    //         setSidebarFlagged(true);
+    //     }
+    // },[selectedMenu, role, ])
+    // React.useEffect(()=>{
+        
+        // console.log('navigate =',checkTargetPath)
+        // console.log('nav =',navItems[role].selectedMenu[0].path)
+        
+    // },[location])
     React.useEffect(()=>{
-        console.log('test effect selectedMenu= ',selectedMenu,', sidebarFlagged=',sidebarFlagged)
+        // selectedMenu effects
         if (selectedMenu==='') {
             const menuTitle = navItems[role].selectedMenu[0].path;
             setSelectMenu(menuTitle)
             setSidebarFlagged(true);
         }
-    },[selectedMenu])
-    React.useEffect(()=>{
+
+        // location effects
         const checkTargetPath = location.pathname.split('/')[2];
         const selectedTargetPath = navItems[role].selectedMenu[0].path;
-        // console.log('navigate =',checkTargetPath)
-        // console.log('nav =',navItems[role].selectedMenu[0].path)
         if (checkTargetPath!==selectedTargetPath) {
             setSelectMenu(checkTargetPath);
         }
-    },[location])
+    }, [
+        role, selectedMenu, setSelectMenu,
+        setSidebarFlagged,
+        location, 
+    ])
 
     return (
         <nav id={'navAside'} className=''>
@@ -98,16 +102,16 @@ const NavAside = () => {
                                 selectedMenu===v.path 
                                 ? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]'
                                 : (
-                                    i==0&&selectedMenu===undefined? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]':''
+                                    i===0&&selectedMenu===undefined? 'border-[3px] border-[#21c39a] rounded-[27px] bg-[#ffffff]':''
                                 )
                             }`}
                             onClick={()=>handleMenuClick(role, v.path)}>
                                 <div className="flex flex-row items-center p-2 w-full h-full gap-[10px]">
                                 <div className='w-[45px] h-[45px]'>
-                                {selectedMenu===v.path ? v.onMenuIcon :(i==0&&selectedMenu===undefined?v.onMenuIcon:v.offMenuIcon) }
+                                {selectedMenu===v.path ? v.onMenuIcon :(i===0&&selectedMenu===undefined?v.onMenuIcon:v.offMenuIcon) }
                                 </div>
                                 <span className={selectedMenu===v.path? 'nav-menu-on':(
-                                    i==0&&selectedMenu===undefined ? 'nav-menu-on':'nav-menu-off'
+                                    i===0&&selectedMenu===undefined ? 'nav-menu-on':'nav-menu-off'
                                 )}>{v.label}</span>
                                 </div>
                             </li>

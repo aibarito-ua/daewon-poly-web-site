@@ -5,11 +5,7 @@ import usePortfolioStore from "../../../../store/usePortfolioStore";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 
-const PortfolioPrintComponent = (props: {
-    
-})=> {
-    const {
-    } = props;
+const PortfolioPrintComponent = ()=> {
     const componentRef = React.useRef(null);
     const divRef = React.useRef<HTMLDivElement>(null);
     
@@ -98,7 +94,7 @@ const PortfolioPrintComponent = (props: {
             setIsReplace(false);
             setReplaceBody([]);
         }
-    }, [portfolioModal, isReplace])
+    }, [portfolioModal, isReplace, selectUnit])
 
     const printRegular = useReactToPrint({
         content: () => componentRef.current

@@ -10,7 +10,7 @@ export default function SmallHead (props: {
     subTitle?: string,
 }) {
     const { userInfo, setInfoModal } = useLoginStore();
-    const {progressTabActiveIndex, setProgressTabActiveIndex} = useProgressPageStore();
+    const {progressTabActiveIndex} = useProgressPageStore();
     const [isProfileImage, setIsProfileImage] = React.useState<boolean>(false);
     const progressButtonLabel = [
         'spark writing',
@@ -20,7 +20,6 @@ export default function SmallHead (props: {
     const testUrl = 'http://file.koreapolyschool.com'
     // console.log('userInfo.userImagePath =',userInfo.userImagePath)
     React.useEffect(()=>{
-        console.log('')
         if (userInfo.userImagePath === testUrl) {
             setIsProfileImage(false)
         } else {
@@ -32,7 +31,7 @@ export default function SmallHead (props: {
                 setIsProfileImage(false)
             })
         }
-    }, [])
+    }, [userInfo])
     return (
         <div className='flex flex-row justify-between'>
             <div className="flex flex-col">

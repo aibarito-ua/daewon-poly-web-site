@@ -1,7 +1,5 @@
-import React from 'react';
 import { CONFIG } from '../../../config';
 import axios from 'axios';
-import { url } from 'inspector';
 
 export async function callDialogAPI(ai_name:string, user_name:string, history: string[][], accessToken:string):Promise<{
     text:string[][];
@@ -160,7 +158,7 @@ export async function callUnitInfobyStudent (
         console.log('Server Rejected: ',reject)
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
         const statusCode = rsp.statusCode;
-        const message = rsp.message;
+        // const message = rsp.message;
         if (statusCode===401) {
             return {
                 book_name: '',
@@ -229,7 +227,7 @@ export async function draftSaveTemporary(
         const rsp:TProofReadingCountUpdateReject = reject.response.data;
         console.log('Server Rejected: ',rsp)
         const statusCode = rsp.statusCode;
-        const message = rsp.message;
+        // const message = rsp.message;
         if (statusCode===401 ) {
             return {
                 result: false,

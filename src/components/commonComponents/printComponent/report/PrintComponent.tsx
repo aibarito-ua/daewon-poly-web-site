@@ -4,7 +4,6 @@ import useLoginStore from "../../../../store/useLoginStore";
 import ReportComponentToPrint from "./PrintReportComponent";
 import useControlAlertStore from "../../../../store/useControlAlertStore";
 import jsPDF from "jspdf";
-import PrintReportDoughnutChart from "../../../chartComponents/printReportDoughnutChart";
 
 const PrintReportExportButton = (props: {
     isActivityPage?:boolean;
@@ -16,12 +15,7 @@ const PrintReportExportButton = (props: {
     const divRef = React.useRef<HTMLDivElement>(null);
     
     const [replaceBody, setReplaceBody] = React.useState<JSX.Element[][]>([]);
-    const [isReplace, setIsReplace] = React.useState<boolean>(false);
     const [isMulti, setIsMulti] = React.useState<boolean>(false);
-    // const [doughnutChatScreen, setDoughnutChatScreen] = React.useState<JSX.Element>();
-    // const []
-    // <PrintReportBarChart />
-
     const {userInfo, isMobile} = useLoginStore();
     const {
         reportModalRubricData,
@@ -32,75 +26,56 @@ const PrintReportExportButton = (props: {
         reportByUnitMainTitle,
     } = useControlAlertStore();
     React.useEffect(() => {
-        // console.log('isActi',isReplace)
-        // if (!isReplace) {
-            if (divRef.current) {
-                const checkRef = divRef.current;
-                checkRef.style.display='block';
-                const oneRowHeight = checkRef.children[0].children[0].clientHeight; 
-                const clientHeight = checkRef.clientHeight
-                const offsetHeight = checkRef.offsetHeight;
-                
-                const scrollHeight = checkRef.scrollHeight;
-                // console.log('clientHeight =',clientHeight)
-                // console.log('offsetHeight =',offsetHeight)
-                // console.log('scrollHeight =',scrollHeight)
-                
-                let newHeight = oneRowHeight;
-                let newTags:JSX.Element[][]=[];
-                const childRef = checkRef.children;
-                for (let i = 0; i < childRef.length; i++) {
-                    const childRow = childRef[i].children;
-                    for (let j = 0; j< childRow.length; j++) {
-                        const childSpanText = childRow[j].textContent;
-                        // console.log('child span text =',childSpanText)
-                        const spanHeight = childRow[j].clientHeight;
-                        // console.log('span height =',spanHeight)
-                        newHeight += spanHeight;
-                        const newtagsLength = newTags.length;
-                        // console.log('new tags leng =',newtagsLength)
-                        const jsxChildSpan = <span key={childSpanText+'print-'+i+j} className='export-report-wr-oc-input'>{childSpanText}</span>;
-                        if (newtagsLength === 0) {
-                            // console.log('clientHeight =',clientHeight)
-                            // console.log('newHeight =',newHeight)
-                            // if (clientHeight > newHeight) {
-                                newTags.push([])
-                                newTags[0].push(jsxChildSpan);
-                            // }
-                        } else if (newtagsLength===1) {
-                            const lastIdx = newtagsLength-1;
+        if (divRef.current) {
+            const checkRef = divRef.current;
+            checkRef.style.display='block';
+            const oneRowHeight = checkRef.children[0].children[0].clientHeight; 
+            const clientHeight = checkRef.clientHeight;
+            
+            let newHeight = oneRowHeight;
+            let newTags:JSX.Element[][]=[];
+            const childRef = checkRef.children;
+            for (let i = 0; i < childRef.length; i++) {
+                const childRow = childRef[i].children;
+                for (let j = 0; j< childRow.length; j++) {
+                    const childSpanText = childRow[j].textContent;
+                    const spanHeight = childRow[j].clientHeight;
+                    newHeight += spanHeight;
+                    const newtagsLength = newTags.length;
+                    const jsxChildSpan = <span key={childSpanText+'print-'+i+j} className='export-report-wr-oc-input'>{childSpanText}</span>;
+                    if (newtagsLength === 0) {
+                        newTags.push([])
+                        newTags[0].push(jsxChildSpan);
+                    } else if (newtagsLength===1) {
+                        const lastIdx = newtagsLength-1;
 
-                            if (clientHeight > newHeight) {
-                                newTags[lastIdx].push(jsxChildSpan);
-                            } else if (clientHeight <= newHeight) {
-                                newHeight = 0;
-                                newTags.push([]);
-                                newTags[lastIdx+1].push(jsxChildSpan);
-                            }
-                        } else {
-                            const lastIdx = newtagsLength-1;
-                            if (clientHeight > newHeight) {
-                                newTags[lastIdx].push(jsxChildSpan);
-                            } else if (clientHeight <= newHeight) {
-                                newHeight=0;
-                                newTags.push([]);
-                                newTags[lastIdx+1].push(jsxChildSpan)
-                            }
+                        if (clientHeight > newHeight) {
+                            newTags[lastIdx].push(jsxChildSpan);
+                        } else if (clientHeight <= newHeight) {
+                            newHeight = 0;
+                            newTags.push([]);
+                            newTags[lastIdx+1].push(jsxChildSpan);
                         }
-                    };// for j end
-                }// for i end
-                checkRef.style.display='none';
-                if (newTags.length>1) {
-                    setIsMulti(true);
-                } else {
-                    setIsMulti(false);
-                }
-                setIsReplace(true);
-                // console.log('new tags =',newTags)
-                setReplaceBody(newTags);
-                // setDoughnutChatScreen(<PrintReportDoughnutChart />);
+                    } else {
+                        const lastIdx = newtagsLength-1;
+                        if (clientHeight > newHeight) {
+                            newTags[lastIdx].push(jsxChildSpan);
+                        } else if (clientHeight <= newHeight) {
+                            newHeight=0;
+                            newTags.push([]);
+                            newTags[lastIdx+1].push(jsxChildSpan)
+                        }
+                    }
+                };// for j end
+            }// for i end
+            checkRef.style.display='none';
+            if (newTags.length>1) {
+                setIsMulti(true);
+            } else {
+                setIsMulti(false);
             }
-        // }
+            setReplaceBody(newTags);
+        }
     }, [reportSelectUnit])
 
     const printRegular = useReactToPrint({

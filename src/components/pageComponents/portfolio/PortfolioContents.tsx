@@ -1,31 +1,14 @@
 import React from "react";
 import usePortfolioStore from "../../../store/usePortfolioStore";
-interface IPortfolioContentComponentsProps {
 
-}
-export default function PortfolioContents (props: IPortfolioContentComponentsProps) {
-
-    const {} = props;
+export default function PortfolioContents () {
     const {
         displayPortfolioData,
         portfolioModal, setPortfolioModal,
-        // selectSemester, selectLevel,
-        // portfolioSelectFinder
 
     } = usePortfolioStore();
     const [viewJSX, setViewJSX] = React.useState<JSX.Element[]>([]);
-    React.useEffect(()=>{
-        console.log('displayPortfolioData ==',displayPortfolioData)
-        // console.log('semesters all data =',semesters)
-        let dumpViewJSX=[]
-        for (let i = 0; i < 5; i++) {
-            const data = displayRow(i+1);
-            dumpViewJSX.push(data);
-        }
-        setViewJSX(dumpViewJSX)
-        
-    },[displayPortfolioData])
-
+    
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -35,7 +18,7 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
         });
     }
     
-    const displayRow = (index:number) => {
+    const displayRow = React.useCallback((index:number) => {
         const portfoliosData = displayPortfolioData.unit_portfolios;
         let checkIsOpen = [];
         let unitLabel = '';
@@ -83,7 +66,20 @@ export default function PortfolioContents (props: IPortfolioContentComponentsPro
                 </div>
             </div>
         }
-    }
+    }, [displayPortfolioData, portfolioModal, setPortfolioModal])
+
+    React.useEffect(()=>{
+        console.log('displayPortfolioData ==',displayPortfolioData)
+        // console.log('semesters all data =',semesters)
+        let dumpViewJSX=[]
+        for (let i = 0; i < 5; i++) {
+            const data = displayRow(i+1);
+            dumpViewJSX.push(data);
+        }
+        setViewJSX(dumpViewJSX)
+        
+    },[displayPortfolioData, displayRow])
+
     return <div className={
         window.navigator.userAgent.toLowerCase().indexOf('electron') > -1 
         ? "portfolio-container-wrap-electron"

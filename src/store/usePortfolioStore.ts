@@ -30,7 +30,7 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
     setSelectSemester: (semesterLabel)=> {
         const dumpPortfolioSelectBoxValue: TReportPageSelectBoxDatas[] = get().portfolioSelectBoxValue;
         
-        const data = get().portfolioApiData;
+        // const data = get().portfolioApiData;
         // default set selected finder 
         let dumySelectedFinder:TDropdownSelectBoxDataTypes = {
             label:'',level:'',semester:0,year:0
@@ -74,7 +74,7 @@ const usePortfolioStore = create<IUsePortfolioProps>((set,get) => ({
         //     }
         // }
         const dumpPortfolioSelectBoxValue: TReportPageSelectBoxDatas[] = get().portfolioSelectBoxValue;
-        const semesterLabel = get().selectSemester;
+        // const semesterLabel = get().selectSemester;
         let currentSelectedFinder = get().portfolioSelectFinder;
         
         const data = get().portfolioApiData;

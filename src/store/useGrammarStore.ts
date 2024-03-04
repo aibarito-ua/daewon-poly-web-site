@@ -32,28 +32,28 @@ const useGrammarStore = create<IUseGrammarStore>((set, get)=>({
     resultBody: [],
     setGrammarResult: (data:any) => {
         // console.log('origin data =',data)
-        const title = data.splice(0, 1);
-        const body = data
+        // const title = data.splice(0, 1);
+        // const body = data
         // console.log('title =',title)
         // console.log('body =',body)
-        const compareDiffs = (data:any) => {
-            let compareResults = [];
-            for (const paragraghIdx in data) {
-                let paragraghResult = [];
-                const origin_array = data[paragraghIdx].origin_text_array;
-                const change_array = data[paragraghIdx].change_text_array;
-                for (const spliteSentenceIndex in origin_array) {
-                    const origin = origin_array[spliteSentenceIndex];
-                    const change = change_array[spliteSentenceIndex];
-                    const compareResult = GrammarCF.compareText(origin, change);
-                    paragraghResult.push(compareResult);
-                }
-                compareResults.push(paragraghResult);
-            }
-            return compareResults;
-        };
-        const titleCompare = compareDiffs(title);
-        const bodyCompare = compareDiffs(body);
+        // const compareDiffs = (data:any) => {
+        //     let compareResults = [];
+        //     for (const paragraghIdx in data) {
+        //         let paragraghResult = [];
+        //         const origin_array = data[paragraghIdx].origin_text_array;
+        //         const change_array = data[paragraghIdx].change_text_array;
+        //         for (const spliteSentenceIndex in origin_array) {
+        //             const origin = origin_array[spliteSentenceIndex];
+        //             const change = change_array[spliteSentenceIndex];
+        //             const compareResult = GrammarCF.compareText(origin, change);
+        //             paragraghResult.push(compareResult);
+        //         }
+        //         compareResults.push(paragraghResult);
+        //     }
+        //     return compareResults;
+        // };
+        // const titleCompare = compareDiffs(title);
+        // const bodyCompare = compareDiffs(body);
 
         // set(()=>({
         //     resultTitle: titleCompare,

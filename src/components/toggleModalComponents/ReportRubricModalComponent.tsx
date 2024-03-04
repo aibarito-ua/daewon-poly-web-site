@@ -24,12 +24,7 @@ interface IRubricTableDataItem {
 
 export default function ReportRubricModalComponent(props:IRubricTypeModalComponentProps) {
 
-  const {
-    // keyValue, rubric_type, rubric_type_datas, isFinalDraft
-    // isNext, isPrev, setIsNext, setIsPrev, 
-    // handleNext, handlePrev, 
-    isActivityPage, isNoData
-  } = props;
+  const { isActivityPage } = props;
     
   const [open, setOpen] = React.useState(false);
   const [viewRubric, setViewRubric] = React.useState<IRubricTableDataItem[][]>([]);
@@ -54,54 +49,6 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
       setSelectUnitIndex(currentIndex-1)
     }
   }
-
-  React.useEffect(()=>{
-    if (!open) {
-      setViewRubric([])
-      setViewRubricHead([])
-      setSelectUnitIndex(1);
-    } else {
-        console.log('reportModalRubricData =',reportModalRubricData)
-        const allRubricData = reportModalRubricData;
-        if (allRubricData.length > 0) {
-          let currentUnit = selectUnitIndex;
-            for (let i = 0; i < allRubricData.length; i++) {
-                if (allRubricData[i].unit_index === selectUnitIndex) {
-                    const targetRubricData = allRubricData[i].rubric;
-                    const dataHead:TRubricTypeHeader[] = [
-                        {accessor: 'category', header: 'Category'},
-                        {accessor: 'explanation', header: 'Explanation'},
-                        {accessor: 'excellent', header: 'Excellent'},
-                        {accessor: 'very_good', header: 'Very Good'},
-                        {accessor: 'good', header: 'Good'},
-                        {accessor: 'fair', header: 'Fair'},
-                        {accessor: 'poor', header: 'Poor'},
-                    ];
-                    const rubric_type_data:TRubricTypeData = {
-                        data: targetRubricData.rubric_description,
-                        dataHead: dataHead
-                    }
-                    const topic = targetRubricData.name
-                    const targetText = `Unit ${selectUnitIndex}. ${topic}`;
-                    setTitle(targetText)
-                    processTableData(rubric_type_data);
-                }
-            };
-          if (currentUnit === 1) {
-            setIsNext(true);
-            setIsPrev(false);
-          } else if (currentUnit === 5) {
-            setIsNext(false);
-            setIsPrev(true);
-          } else {
-            setIsNext(true);
-            setIsPrev(true);
-          }
-        }
-    
-
-    }
-  }, [open, selectUnitIndex])
 
   // process table data 
   const processTableData = (allDatas:TRubricTypeData ) => {
@@ -195,6 +142,55 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
   const handleClose = () => {
     setOpen(false);
   };
+
+  React.useEffect(()=>{
+    if (!open) {
+      setViewRubric([])
+      setViewRubricHead([])
+      setSelectUnitIndex(1);
+    } else {
+        console.log('reportModalRubricData =',reportModalRubricData)
+        const allRubricData = reportModalRubricData;
+        if (allRubricData.length > 0) {
+          let currentUnit = selectUnitIndex;
+            for (let i = 0; i < allRubricData.length; i++) {
+                if (allRubricData[i].unit_index === selectUnitIndex) {
+                    const targetRubricData = allRubricData[i].rubric;
+                    const dataHead:TRubricTypeHeader[] = [
+                        {accessor: 'category', header: 'Category'},
+                        {accessor: 'explanation', header: 'Explanation'},
+                        {accessor: 'excellent', header: 'Excellent'},
+                        {accessor: 'very_good', header: 'Very Good'},
+                        {accessor: 'good', header: 'Good'},
+                        {accessor: 'fair', header: 'Fair'},
+                        {accessor: 'poor', header: 'Poor'},
+                    ];
+                    const rubric_type_data:TRubricTypeData = {
+                        data: targetRubricData.rubric_description,
+                        dataHead: dataHead
+                    }
+                    const topic = targetRubricData.name
+                    const targetText = `Unit ${selectUnitIndex}. ${topic}`;
+                    setTitle(targetText)
+                    processTableData(rubric_type_data);
+                }
+            };
+          if (currentUnit === 1) {
+            setIsNext(true);
+            setIsPrev(false);
+          } else if (currentUnit === 5) {
+            setIsNext(false);
+            setIsPrev(true);
+          } else {
+            setIsNext(true);
+            setIsPrev(true);
+          }
+        }
+    
+
+    }
+  }, [open, selectUnitIndex, reportModalRubricData])
+  
   return (
     <div className='flex justify-center'>
     <span className="flex flex-row hover:cursor-pointer text-center items-center min-w-max px-[20px]"

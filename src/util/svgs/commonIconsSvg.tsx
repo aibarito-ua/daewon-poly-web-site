@@ -1,4 +1,3 @@
-import { SVGAttributes } from 'react';
 function ExitButton(props: React.SVGAttributes<SVGElement>) {
     return (
         <svg {...props} width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -339,43 +338,7 @@ function DownArrowIcon(props: React.SVGAttributes<SVGElement>) {
 }
 
 function TooltipInReportChart(props: any) {
-    // React.SVGAttributes<SVGElement>
     console.log('TooltipInReportChart props =',props)
-    const {
-        cx,
-        cy,
-        // midAngle,
-        innerRadius,
-        outerRadius,
-        // startAngle,
-        // endAngle,
-        
-        fill,
-        payload,
-        percent,
-        value
-    } = props;
-    const RADIAN = Math.PI / 180;
-    const midAngle = 45;
-    const startAngle = 90;
-    const endAngle = 90-value/100*360;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? "start" : "end";
-    const radiusMid = outerRadius-innerRadius;
-    const cornerRadius = radiusMid/2;
-    const trackRadius = innerRadius + cornerRadius;
-
-    const pX = sx - 40;
-    const pY = sy - 24;
-    
-
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="257" height="123" viewBox="0 0 257 123" fill="none">
             <g filter="url(#filter0_d_620_1668)">
@@ -397,8 +360,8 @@ C12.4805 5.37258 17.8531 0 24.4805 0
 H240.48
 Z
 `}/>
-                </mask>
-                <path fillRule="evenodd" clipRule="evenodd" 
+    </mask>
+    <path fillRule="evenodd" clipRule="evenodd" 
 d={`
 M240.48 0
 C247.108 0 252.48 5.37258 252.48 12

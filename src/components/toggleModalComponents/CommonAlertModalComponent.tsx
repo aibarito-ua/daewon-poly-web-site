@@ -43,7 +43,7 @@ export default function CommonAlertModalComponent(
     } else if (commonAlertPriorityLevel === 3) {
       setZIndexInit(2147483647)
     }
-  }, [commonAlertOpenFlag])
+  }, [commonAlertOpenFlag, commonAlertPriorityLevel])
 
   useDebounced(
     ()=>{

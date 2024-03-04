@@ -1156,22 +1156,22 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                                     reportByUnitMainTitle = `Unit ${initialUnitIndex}. ${topic}`;
                                 }
                             }
-                            const findRubricDescription = (unit_index: number, category:string, score:number) => {
+                            const findRubricDescription = (rubricInfoArray : TRubricInfo[], unit_index: number, category:string, score:number) => {
                                 const scoreName = ['Excellent', 'Very Good', 'Good', 'Fair','Poor']
-                                for (let m = 0; m < dumySelectReportRubricAllData.length; m++) {
-                                    if (dumySelectReportRubricAllData[m].unit_index === unit_index) {
-                                        for (let n =0; n < dumySelectReportRubricAllData[m].rubric.rubric_description.length; n++) {
-                                            if (dumySelectReportRubricAllData[m].rubric.rubric_description[n].category === category) {
+                                for (let m = 0; m < rubricInfoArray.length; m++) {
+                                    if (rubricInfoArray[m].unit_index === unit_index) {
+                                        for (let n =0; n < rubricInfoArray[m].rubric.rubric_description.length; n++) {
+                                            if (rubricInfoArray[m].rubric.rubric_description[n].category === category) {
                                                 if (score===10) {
-                                                    return { title: scoreName[0], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].excellent }
+                                                    return { title: scoreName[0], desc: rubricInfoArray[m].rubric.rubric_description[n].excellent }
                                                 } else if (score===8) {
-                                                    return { title: scoreName[1], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].very_good }
+                                                    return { title: scoreName[1], desc: rubricInfoArray[m].rubric.rubric_description[n].very_good }
                                                 } else if (score===6) {
-                                                    return { title: scoreName[2], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].good }
+                                                    return { title: scoreName[2], desc: rubricInfoArray[m].rubric.rubric_description[n].good }
                                                 } else if (score===4) {
-                                                    return { title: scoreName[3], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].fair }
+                                                    return { title: scoreName[3], desc: rubricInfoArray[m].rubric.rubric_description[n].fair }
                                                 } else if (score===2) {
-                                                    return { title: scoreName[4], desc: dumySelectReportRubricAllData[m].rubric.rubric_description[n].poor }
+                                                    return { title: scoreName[4], desc: rubricInfoArray[m].rubric.rubric_description[n].poor }
                                                 }
                                             }
                                         }
@@ -1194,7 +1194,7 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                                         const hexaColumn = rubricScoreDataStates.hexagonChartData[k];
                                         if (rubricCategories[j].category === hexaColumn.target) {
                                             rubricScoreDataStates.hexagonChartData[k].data[0].value = currentScore;
-                                            const findDesc = findRubricDescription(initialUnitIndex, hexaColumn.target, rubricCategories[j].score);
+                                            const findDesc = findRubricDescription(dumySelectReportRubricAllData, initialUnitIndex, hexaColumn.target, rubricCategories[j].score);
                                             if (findDesc) {
                                                 rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.title = findDesc.title;
                                                 rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.content = findDesc.desc;
@@ -1384,19 +1384,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     reportSelectUnit: 1,
     setReportSelectUnit: (unit_index) => {
         console.log('setReportSelectUnit====962')
-        const reportAPIData = get().reportAPIData;
         let dumpUnitReportData:TReportByStudent = JSON.parse(JSON.stringify(get().unitReportData));
         let rubricScoreDataStates:TUnitScoreData = JSON.parse(JSON.stringify(get().unitRubricScoresData));
-        // console.log('=== setReportSelectUnit ====', reportAPIData)
-        // console.log('dumpUnitReportData =',dumpUnitReportData)
-        // console.log('rubricScoreDataStates =',rubricScoreDataStates)
-        let updateCompleteDumpUnitReportData= 0;
-        let updateCompleteRubricScoreDataStates=0;
         const modalRubric = get().reportModalRubricData;
         let title = '';
         for (let m = 0; m < modalRubric.length; m++) {
             if (modalRubric[m].unit_index === unit_index) {
-                // const findTopic = modalRubric[m].rubric.name.split('_');
                 const findTopic = modalRubric[m].rubric.name
                 const topic = findTopic;
                 title = `Unit ${unit_index}. ${topic}`;
@@ -1409,7 +1402,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 if (modalRubric[m].unit_index === unit_index) {
                     for (let n =0; n < modalRubric[m].rubric.rubric_description.length; n++) {
                         if (modalRubric[m].rubric.rubric_description[n].category === category) {
-                            // console.log('Find Unit Rubric =',modalRubric[m].rubric.rubric_description[n])
                             if (score===10) {
                                 return {
                                     title: scoreName[0],
@@ -1442,16 +1434,12 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
             }
         }
 
-        
         const getUnitReports = get().unitReportsData;
-        // console.log('1 getUnitReports =',getUnitReports)
         for (let i = 0; i < getUnitReports.length; i++) {
             const targetUnit = getUnitReports[i].unit_index;
             if (targetUnit === unit_index) {
                 const targetUnitReport = getUnitReports[i].report;
-                // console.log('2 targetUnitReport =',targetUnitReport)
                 dumpUnitReportData=getUnitReports[i].report;
-                updateCompleteDumpUnitReportData+=1;
                 const rubricCategories = targetUnitReport.rubric.categories;
                 for (let j = 0; j < rubricCategories.length; j++) {
                     const currentScore = rubricCategories[j].score * 10;
@@ -1470,7 +1458,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                             if (findDesc) {
                                 rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.title = findDesc.title;
                                 rubricScoreDataStates.hexagonChartData[k].data[0].tooltip.content = findDesc.desc;
-                                updateCompleteRubricScoreDataStates+=1;
                             }
                             break;
                         }
@@ -1479,7 +1466,6 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
                 break;
             }
         }
-        // console.log('dumpUnitReportData  ==',dumpUnitReportData)
         set(()=>({
             reportSelectUnit: unit_index,
             unitRubricScoresData: rubricScoreDataStates,

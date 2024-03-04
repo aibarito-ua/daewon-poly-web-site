@@ -47,35 +47,11 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         changeTagString,
         beforeDeleteId,
         deleteTagString,
-        // changeId,
         thisIndex,
         addEmpty,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
     const [placement, setPlacement] = React.useState<Placement>('bottom-start');
-    React.useEffect(()=>{
-        // console.log('tooltip opened', thisIndex)
-        // console.log('tooltipText =',tooltipText)
-        const target = document.getElementById(textTagid);
-        const windowXWidth = document.getElementById('root')?.clientWidth;
-        let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
-        let testWidth = windowXWidth !== undefined ? windowXWidth : 0;
-        let testValue = targetLeft/testWidth > 0.6;
-        if (testValue) {
-            setPlacement('bottom-end')
-        } else {
-            setPlacement('bottom-start')
-        }
-    })
-    const RedArrow = (props:React.SVGAttributes<SVGElement>) => {
-        return (
-            <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="arrow">
-            <path id="Vector 70" d="M13 19L16.2929 15.7071C16.6834 15.3166 16.6834 14.6834 16.2929 14.2929L13 11" stroke="#EB3A3A" strokeWidth="2" strokeLinecap="round"/>
-            </g>
-            </svg>
-        )
-    }
     const {refs, floatingStyles, context} = useFloating({
         open: isOpen,
         onOpenChange: setIsOpen,
@@ -84,8 +60,6 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         middleware: [
             offset(10),
             flip({
-                // crossAxis: placement.includes("-"),
-
                 fallbackAxisSideDirection: "end",
                 padding: 20
             }),
@@ -104,12 +78,20 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         role,
         click
     ]);
-    // console.log(compareResultText.toString().length)
-    // console.log('compareResultText=[',compareResultText,']')
-    const displayResultText = compareResultText!==' ' ? compareResultText : ''
-    // if (tagType === 'delete') {
-    //     console.log('disp ==',compareResultText.valueOf() === ' ')
-    // }
+
+    React.useEffect(()=>{
+        const target = document.getElementById(textTagid);
+        const windowXWidth = document.getElementById('root')?.clientWidth;
+        let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
+        let testWidth = windowXWidth !== undefined ? windowXWidth : 0;
+        let testValue = targetLeft/testWidth > 0.6;
+        if (testValue) {
+            setPlacement('bottom-end')
+        } else {
+            setPlacement('bottom-start')
+        }
+    }, [ setPlacement, textTagid])
+
     return (
         <span key={mainTagkey} 
         className={`whitespace-pre-line hover:cursor-pointer rounded-[5px] 

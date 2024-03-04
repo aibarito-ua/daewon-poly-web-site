@@ -20,30 +20,7 @@ export default function PortfolioSelectButton(props:{
     portfolioSelectBoxValue,
     // portfolioSelectFinder
   } = usePortfolioStore();
-  React.useEffect(()=>{
-    let readOnlyFlag = false;
-    if (isUse === 'level') {
-      for (let i = 0; i < portfolioSelectBoxValue.length; i++) {
-        if (portfolioSelectBoxValue[i].label === selectSemester) {
-          if (portfolioSelectBoxValue[i].level.length > 1) {
-            // 2개 이상
-            readOnlyFlag = false;
-          } else {
-            setSelectLevel(portfolioSelectBoxValue[i].level[0].name)
-            readOnlyFlag = true;
-          }
-        }
-      }
-    } else if (isUse==='semester') {
-      if (portfolioSelectBoxValue.length > 1) {
-        readOnlyFlag = false;
-      } else {
-        readOnlyFlag = true;
-      }
-    }
-    setIsReadOnly(readOnlyFlag)
-  }, [selectLevel, selectSemester, portfolioSelectBoxValue])
-
+  
   const selectValue = () => {
     if (isUse==='level') {
       return selectLevel;
@@ -87,6 +64,29 @@ export default function PortfolioSelectButton(props:{
     return returnDisplayValue;
   }
 
+  React.useEffect(()=>{
+    let readOnlyFlag = false;
+    if (isUse === 'level') {
+      for (let i = 0; i < portfolioSelectBoxValue.length; i++) {
+        if (portfolioSelectBoxValue[i].label === selectSemester) {
+          if (portfolioSelectBoxValue[i].level.length > 1) {
+            // 2개 이상
+            readOnlyFlag = false;
+          } else {
+            setSelectLevel(portfolioSelectBoxValue[i].level[0].name)
+            readOnlyFlag = true;
+          }
+        }
+      }
+    } else if (isUse==='semester') {
+      if (portfolioSelectBoxValue.length > 1) {
+        readOnlyFlag = false;
+      } else {
+        readOnlyFlag = true;
+      }
+    }
+    setIsReadOnly(readOnlyFlag)
+  }, [selectLevel, selectSemester, portfolioSelectBoxValue, isUse, setSelectLevel])
 
   return (
     <div className='flex items-center h-[45px] ' >

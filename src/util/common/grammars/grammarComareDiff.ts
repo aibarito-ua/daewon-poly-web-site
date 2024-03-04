@@ -1,7 +1,7 @@
 import {diff_match_patch, Diff} from 'diff-match-patch'
 
 export class CompareDiff {
-    constructor(){}
+    // constructor(){}
     // compareDiff(text1:string, text2: string){
     //     let dmp = new diff_match_patch();
     //     dmp.Diff_Timeout =0;
@@ -13,8 +13,8 @@ export class CompareDiff {
     static diff_lineMode(text1: string, text2:string) {
         let dmp = new diff_match_patch();
         const {chars1, chars2, lineArray} = this.diff_wordMode(text1, text2);
-        const jsonDatas = {chars1,chars2,lineArray}
-        const consoleJson = JSON.stringify(jsonDatas)
+        // const jsonDatas = {chars1,chars2,lineArray}
+        // const consoleJson = JSON.stringify(jsonDatas)
         // console.log('test=',consoleJson)
         const diffs = dmp.diff_main(chars1,chars2, false);
         this.override_diff_charsToLines_(diffs, lineArray);

@@ -32,8 +32,6 @@ lineHeight: 1.2,
 letterSpacing: 'normal',
 }
 const renderActiveShape = (props: any) => {
-    // console.log('=== renderActiveShape props: ',pr)
-  const RADIAN = Math.PI / 180;
   const {
     cx,
     cy,
