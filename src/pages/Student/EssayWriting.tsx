@@ -1021,7 +1021,7 @@ const EssayWriting = () => {
             (window as any).api.toElectron.send('clear')
         }
         window.location.reload()
-    }, [device_id, isMobile, userInfo])
+    }, [])
     const resetChatHistEvent = React.useCallback(() => {
         console.log('=== Reset Chat History ===')
         if (isMobile) {
@@ -1031,7 +1031,7 @@ const EssayWriting = () => {
             const electronData = (window as any).api.toElectron.sendSync('ResetChat')
             console.log('reset history in electron =',electronData)
         }
-    },[ isMobile ])
+    },[])
     const temporarySaveFunction = React.useCallback(async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
@@ -1225,12 +1225,7 @@ const EssayWriting = () => {
                 CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             }
         }
-    },[
-        DraftIndex, UnitIndex, 
-        commonAlertClose, commonAlertOpen,
-        draft2ndPageSet, foldFlag, isSaveButtonOpen, logoutFn, navigate, resetChatHistEvent, role, setCommonStandbyScreen, setDraft2ndPageSet,
-        setMaintenanceData, setSparkWritingUnitEnd, sparkWritingData, userInfo, 
-    ])
+    },[])
     
     const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
         console.log(' === handleResizeHeightDraft1stInputs ===')
@@ -1581,15 +1576,7 @@ const EssayWriting = () => {
             console.log('=== RETURE [draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs] ')
         }
         
-    },[
-        draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs,
-        isMobile, params,
-        sparkWritingData,
-        DraftIndex, role,
-        callbackCheckValues, commonAlertClose, commonAlertOpen, navigate, resetChatHistEvent, 
-        setCommonStandbyScreen, setDraft2ndPageSet, setGoBackFromDraftInUnitPage,
-        temporarySaveFunction, handleResizeHeightDraft1stInputs,
-    ])
+    },[ draft2ndSaveActive,draft2ndSubmitActive,isUpdateDraft2Inputs ])
     React.useEffect(()=>{
         if (draft1stRefs.current) {
             console.log('=== ref useEffect ===')
@@ -1616,9 +1603,7 @@ const EssayWriting = () => {
                 }
             }
         }
-    },[
-        draft1stRefs, foldFlag, handleResizeHeightDraft1stInputs, isMobile, params
-    ])
+    },[ draft1stRefs ])
 
     React.useEffect(()=>{
         setTopNavHiddenFlagged(true);
@@ -1725,10 +1710,8 @@ const EssayWriting = () => {
         selectUnitInfo,
         // WritingCenter Store
         essayWritingInputItems,
-        sparkWritingData,
+        sparkWritingData
         // Spark Store
-        callbackCheckValues, handleResizeHeightDraft1stInputs,
-        originalTargetData, updateFoldIndex,
     ])
 
     React.useEffect(()=>{
@@ -1906,9 +1889,7 @@ const EssayWriting = () => {
             console.log('=== RETURE [sparkWritingData] ')
         }
     }, [
-        sparkWritingData, DraftIndex, UnitIndex, params, role,
-        callbackCheckValues, commonAlertClose, commonAlertOpen, handleResizeHeightDraft1stInputs, navigate,
-        resetChatHistEvent, setDraft2ndPageSet, setGoBackFromDraftInUnitPage,setOutlineInputText, temporarySaveFunction,
+        sparkWritingData,
     ]);
     React.useEffect(()=>{
         const unitIndex:number = parseInt(params.unit!==undefined? params.unit:'1') - 1;
@@ -1987,8 +1968,7 @@ const EssayWriting = () => {
             console.log('=== RETURE [draft2ndPageSet] ')
         }
     }, [
-        draft2ndPageSet, params, sparkWritingData,
-        setDraft2ndPageSet, setOutlineInputText, 
+        draft2ndPageSet, 
     ])
 
     return (

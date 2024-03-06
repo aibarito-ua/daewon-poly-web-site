@@ -66,7 +66,7 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
     ]);
 
     React.useEffect(()=>{
-        // textTagid effects
+        // console.log('tooltip opened', thisIndex)
         const target = document.getElementById(textTagid);
         const windowXWidth = document.getElementById('root')?.clientWidth;
         let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
@@ -76,18 +76,22 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
             setPlacement('bottom-end')
         } else {
             setPlacement('bottom-start')
-        };
-
-        // isOpen effects
+        }
+    })
+    React.useEffect(()=>{
         if (setCommentFocusIdInModal) {
             if (isOpen) {
                 setCommentFocusIdInModal(mainTagkey)
             } else {
                 setCommentFocusIdInModal('')
             }
-        };
+        }
 
-        // commentFocusIdInModal effects
+        console.log('tooltip main key ',mainTagkey)
+        console.log('isOpen =',isOpen,)
+    }, [isOpen])
+    React.useEffect(()=>{
+        
         if (commentFocusIdInModal === mainTagkey) {
             setIsOpen(true)
             refs.domReference.current?.scrollIntoView({
@@ -97,10 +101,8 @@ const CommentTooltipCustomInModal = (props: IGrammarTooltipCustomProps) => {
         } else {
             setIsOpen(false)
         }
-    }, [
-        textTagid, isOpen, commentFocusIdInModal,
-        mainTagkey, refs, setCommentFocusIdInModal,
-    ])
+        
+    }, [commentFocusIdInModal])
 
     return (
         <span key={mainTagkey} 

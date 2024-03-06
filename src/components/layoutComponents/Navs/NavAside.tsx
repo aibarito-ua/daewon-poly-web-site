@@ -10,23 +10,24 @@ import { checkDuplicateLogin, logoutAPI } from '../../../pages/Student/api/Login
 import useControlAlertStore from '../../../store/useControlAlertStore';
 
 const NavAside = () => {
-    const {setSelectMenu, selectedMenu, sidebarFlagged, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
+    const {setSelectMenu, selectedMenu, setSidebarFlagged, topNavHiddenFlagged} = useNavStore();
     const { role, userInfo, device_id, isMobile, setMaintenanceData } = useLoginStore();
     const { commonAlertClose, commonAlertOpen} = useControlAlertStore();
     const location = useLocation();
     const navigate = useNavigate();
     const handleMenuClick = async (role:TRole, menuTitle: string) => {
         if (selectedMenu !== menuTitle) {
-            console.log('menuTitle =',menuTitle,', ',selectedMenu, ', sidebarFlagged=',sidebarFlagged,', role=',role)
-            await setSelectMenu(menuTitle,);
-            setSidebarFlagged(!sidebarFlagged);
+            console.log('menuTitle =',menuTitle,', ',selectedMenu,', role=',role)
+            await setSelectMenu(menuTitle);
             await goLink(role,menuTitle);
         } else {
             // await setSelectMenu(null);
         }
     };
     useComponentWillMount(()=>{
-        setSelectMenu('WritingClinic')
+        if (selectedMenu==='') {
+            setSelectMenu('WritingClinic')
+        }
     })
 
     const goLink = async (role: TRole, link: string) => {
@@ -44,37 +45,25 @@ const NavAside = () => {
         }
         window.location.reload()
     }
-    // React.useEffect(()=>{
-    //     console.log('test effect selectedMenu= ',selectedMenu,', sidebarFlagged=',sidebarFlagged)
-    //     if (selectedMenu==='') {
-    //         const menuTitle = navItems[role].selectedMenu[0].path;
-    //         setSelectMenu(menuTitle)
-    //         setSidebarFlagged(true);
-    //     }
-    // },[selectedMenu, role, ])
-    // React.useEffect(()=>{
-        
-        // console.log('navigate =',checkTargetPath)
-        // console.log('nav =',navItems[role].selectedMenu[0].path)
-        
-    // },[location])
     React.useEffect(()=>{
         // selectedMenu effects
+        console.log('=== selectedMenu effects ===')
         if (selectedMenu==='') {
             const menuTitle = navItems[role].selectedMenu[0].path;
+            console.log('menuTitle =',menuTitle)
             setSelectMenu(menuTitle)
             setSidebarFlagged(true);
         }
 
         // location effects
+        console.log('===location effects===')
         const checkTargetPath = location.pathname.split('/')[2];
         const selectedTargetPath = navItems[role].selectedMenu[0].path;
         if (checkTargetPath!==selectedTargetPath) {
+            console.log('checkTargetPath =',checkTargetPath)
             setSelectMenu(checkTargetPath);
         }
     }, [
-        role, selectedMenu, setSelectMenu,
-        setSidebarFlagged,
         location, 
     ])
 

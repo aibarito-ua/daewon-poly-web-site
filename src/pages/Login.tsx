@@ -98,6 +98,7 @@ export const Login = () => {
             } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
                 (window as any).api.toElectron.send('saveUser', rnData)
             }
+            console.log('===LOGIN::forceLogin===')
             setSelectMenu('WritingClinic')
             if (response.data.maintenanceInfo) {
                 let maintenanceInfo:TMaintenanceInfo = response.data.maintenanceInfo;
@@ -148,6 +149,7 @@ export const Login = () => {
             } else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
                 (window as any).api.toElectron.send('saveUser', rnData)
             }
+            console.log('===LOGIN::forceLoginRN===')
             setSelectMenu('WritingClinic')
             setUserInfo(response.data);
         } 
@@ -494,6 +496,7 @@ export const Login = () => {
         }
 
         return () => {
+            console.log('=== LOGIN:: did unmount ::===')
             setSelectMenu('WritingClinic')
             if (isMobile) {
                 document.removeEventListener('message', receiveMessage, true);

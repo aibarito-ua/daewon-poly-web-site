@@ -172,7 +172,7 @@ const loadFeedbackDraftBody = (
                             cursor: 'pointer'
                         }}
                         >{returnValue}</span>;
-                        const tooltipSpans = usePage 
+                        const tooltipSpans = usePage==='Modal' 
                         ? <CommentTooltipCustomInModal 
                             compareResultText={createSpan}
                             mainTagkey={currentCommentItem.comment_className}

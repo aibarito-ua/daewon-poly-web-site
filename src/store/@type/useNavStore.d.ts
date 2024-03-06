@@ -1,7 +1,7 @@
 interface INavItem {
     secondGenerationOpen:boolean;
     selectedMenu: TStudentNavItem | string;
-    setSelectMenu:any;
+    setSelectMenu:(selectdMenuStr: string, selectedMenuTitle?: string)=>void;
     sidebarFlagged: boolean;
     setSidebarFlagged: any;
     topNavHiddenFlagged: boolean;

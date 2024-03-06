@@ -14,10 +14,14 @@ const useNavStore = create<INavItem>((set) => ({
         sub: ''
     },
 
-    setSelectMenu: (selectdMenuStr: string, selectedMenuTitle: string) => {
-        console.log("selectNumber :::", selectdMenuStr)
-        console.log("selectedMenuTitle::,",selectedMenuTitle)
-        set(()=>({selectedMenu:selectdMenuStr, selectedMenuTitle}))
+    setSelectMenu: (selectdMenuStr: string, selectedMenuTitle?: string) => {
+        if (selectedMenuTitle) {
+            console.log("selectedMenuTitle::,",selectedMenuTitle)
+            set(()=>({selectedMenu:selectdMenuStr, selectedMenuTitle}))
+        } else {
+            console.log("selectNumber :::", selectdMenuStr)
+            set(()=>({selectedMenu:selectdMenuStr}))
+        }
     },
     setSidebarFlagged: (sidebarFlagged:boolean) => {
         set(()=>({sidebarFlagged}))

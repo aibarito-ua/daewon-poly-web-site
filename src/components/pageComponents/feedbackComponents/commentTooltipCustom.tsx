@@ -70,7 +70,7 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
     ]);
 
     React.useEffect(()=>{
-        // textTagid effects
+        // console.log('tooltip opened', thisIndex)
         const target = document.getElementById(textTagid);
         const windowXWidth = document.getElementById('root')?.clientWidth;
         let targetLeft = target?.getBoundingClientRect().left !== undefined ? target?.getBoundingClientRect().left : 0;
@@ -80,18 +80,21 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             setPlacement('bottom-end')
         } else {
             setPlacement('bottom-start')
-        };
-
-        // isOpen effects
+        }
+    })
+    React.useEffect(()=>{
+        
         if (setCommentFocusId) {
             if (isOpen) {
                 setCommentFocusId(mainTagkey)
             } else {
                 setCommentFocusId('')
             }
-        };
-
-        // commentFocusId effects
+        }
+        console.log('tooltip main key ',mainTagkey)
+        console.log('isOpen =',isOpen,)
+    }, [isOpen])
+    React.useEffect(()=>{
         if (commentFocusId === mainTagkey) {
             setIsOpen(true)
             refs.domReference.current?.scrollIntoView({
@@ -101,34 +104,7 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         } else {
             setIsOpen(false)
         }
-
-    }, [
-        isOpen, commentFocusId, textTagid,
-        mainTagkey, refs, setCommentFocusId
-    ])
-    // React.useEffect(()=>{
-        
-    //     if (setCommentFocusId) {
-    //         if (isOpen) {
-    //             setCommentFocusId(mainTagkey)
-    //         } else {
-    //             setCommentFocusId('')
-    //         }
-    //     }
-    //     console.log('tooltip main key ',mainTagkey)
-    //     console.log('isOpen =',isOpen,)
-    // }, [isOpen])
-    // React.useEffect(()=>{
-    //     if (commentFocusId === mainTagkey) {
-    //         setIsOpen(true)
-    //         refs.domReference.current?.scrollIntoView({
-    //             behavior: "auto",
-    //             block: 'nearest'
-    //         })
-    //     } else {
-    //         setIsOpen(false)
-    //     }
-    // }, [commentFocusId])
+    }, [commentFocusId])
 
     return (
         <span key={mainTagkey} 
