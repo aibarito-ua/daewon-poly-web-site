@@ -37,6 +37,11 @@ interface ISparkWritingStore {
     // 2nd draft Fresh Page or Revise 1st Draft flag
     draft2ndPageSet:TDraft2ndPageSet,
     setDraft2ndPageSet: (draft2ndPageSet:TDraft2ndPageSet) => void;
+    
+    /** Preview화면에서 1st draft 편집화면 이동 시 사용(저장하지 않고 이동시 필요) */
+    tempDraft1PageOutlineType?: TDraft1stOulinePageType;
+    /** 1st draft 편집화면 > Preview화면 이동 시 설정 */
+    setTempDraft1PageOutlineType: (type?:TDraft1stOulinePageType) => void;
 
     // control modal
     commentFocusId: string;
@@ -70,8 +75,10 @@ interface ISparkWritingStore {
 
     
 }
-type TPreviewPageInitFlag = "UPDATE_WRITE"|"PREVIEW"|"ETC"|"";
-type TDraft2ndPageSet = 'fresh'|'revise'|'';
+type TPreviewPageInitFlag = "UPDATE_WRITE" | "PREVIEW" | "ETC" | "";
+/** WL: 'W'ith Out'l'ine, WO: 'W'ith'o'ut Outline */
+type TDraft1stOulinePageType = 'WL' | 'WO';
+type TDraft2ndPageSet = 'fresh' | 'revise' | ''; 
 type TSparkWritingDatas = TSparkWritingData[]
 type TSparkWritingData = {
     unit_id: number;
@@ -84,6 +91,7 @@ type TSparkWritingData = {
     draft_2_outline: TSparkWritingDataOutline[];
     draft_1_comment: TCommentDataList;
     draft_2_comment: TCommentDataList;
+    draft_1_page_outline_type?: TDraft1stOulinePageType;
     draft_2_init_page_flag: TDraft2ndPageSet;
 }
 type TDraftStatus = {
@@ -122,6 +130,7 @@ type TSparkWritingTemporarySaveData = {
     unit_id: number;
     draft_index: number;
     proofreading_count: number;
+    draft_1_page_outline_type?: TDraft1stOulinePageType;
     draft_2_init_page_flag?: string;
     contents: TSparkWritingSaveTemporaryContent[];
     campus_name: string;
@@ -202,6 +211,7 @@ type TSubmit1stDraftRequestData = {
     proofreading_count: number;
     campus_name: string;
     duration:number;
+    draft_1_page_outline_type?: TDraft1stOulinePageType;
 }
 type TSubmit1stDraftReqDataContent = {
     input_content:string;

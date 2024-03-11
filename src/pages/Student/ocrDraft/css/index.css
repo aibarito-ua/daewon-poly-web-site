@@ -1,0 +1,389 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/** Outline 버튼 디자인 */
+.ocr-draft-outline-btn {
+  margin-right: 10px;
+  position: relative;
+  font-family: GothamRounded;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 5px 0 0 #1a9fa6;
+  line-height: normal;
+  letter-spacing: normal;
+  z-index: 50;
+  @apply
+  flex
+  justify-center
+  items-center
+  rounded-[24px]
+  w-[160px]
+  h-[49px]
+  text-white
+  bg-[#21c4cc]
+}
+
+.ocr-draft-outline-btn-text {
+  font-style: normal;
+  font-stretch: normal;
+  text-align: left ;
+  @apply
+  h-[19px]
+}
+
+.ocr-draft-outline-btn-icon {
+  background-image: url(../../../../util/png/ocr/ic_outline.png);
+}
+
+.ocr-draft-no-outline-btn-icon {
+  background-image: url(../../../../util/png/ocr/ic_no_outline.png);
+}
+
+.wrap-content-spark-writing-ocr {
+  flex-grow: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 515px;
+  @apply
+  w-full
+  bg-white
+}
+
+.orc-1st-draft-top-guide-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  background-color: #7861bb;
+  border-radius: 20px 20px 0 0;
+  @apply
+  w-full
+  h-[50px]
+}
+
+/** 1st draft 입력 가이드 문구 */
+.orc-1st-draft-top-guide-text {
+  flex-grow: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+/** 1st draft 박스 사이 공간 */
+.ocr-1st-draft-line-gap {
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px 0 0;
+  @apply
+  w-full
+}
+
+/** 1st draft 제목 입력 디자인 */
+.ocr-1st-draft-title-box {
+  flex-grow: 0;
+  display: flex;
+  @apply
+  w-full
+  h-[50px]
+}
+
+.ocr-1st-draft-title-text {
+  flex-grow: 0;
+  margin: 14px 5px 14px 0;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.22;
+  letter-spacing: normal;
+  text-align: left;
+  color: #333;
+  min-width: 50px;
+  @apply
+  h-[22px]
+}
+
+.ocr-1st-draft-title-input-box {
+  flex-grow: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* margin: 0 0 0 9px; */
+  padding: 13px 15px 13px 13px;
+  border-radius: 10px;
+  border: solid 1px #ccc;
+  @apply
+  w-full
+  h-[50px]
+  bg-white
+}
+
+.ocr-1st-draft-title-input-box-active {
+  border: solid 2px #3e61aa;
+}
+
+.ocr-1st-draft-title-input {
+  padding: 0 0 0 0;
+  flex-grow: 1;
+  font-family: Roboto;
+  font-size: 17px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  text-align: left;
+  outline: none;
+  margin-right: 10px;
+  /* color: #aaa; */
+  @apply
+  border-none
+  focus:border-none
+  focus:ring-0
+}
+
+.ocr-1st-draft-ocr-btn {
+  border-radius: 10px;
+  background-image: url(../../../../util/png/ocr/bt_ocr.png);
+  flex-shrink: 0;
+  @apply
+  w-[36px]
+  h-[38px]
+}
+
+/** 1st draft 본문 입력 디자인 */
+.ocr-1st-draft-content-box {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 15px 7px 15px 15px;
+  border-radius: 10px;
+  border: solid 1px #ccc;
+  @apply
+  w-full
+  bg-white
+}
+
+.ocr-1st-draft-content-box-active {
+  border: solid 2px #3e61aa;
+}
+
+.ocr-1st-draft-content-textarea {
+  flex-grow: 0;
+  align-self: stretch;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  text-align: left;
+  padding: 0 52px 0 0;
+  @apply
+  w-full
+  h-full
+  resize-none
+  border-none
+  focus:border-none
+  focus:ring-0
+}
+
+.ocr-1st-draft-content-place-holder {
+  position: absolute;
+  flex-grow: 1;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  text-align: center;
+  color: #aaa;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 170px;
+  @apply
+  h-[28px]
+}
+
+/** OCR 팝업 디자인 */
+.ocr-modal-pc-frame {
+  flex-grow: 0;
+  margin:24px 24px 0 0;
+  border-radius: 30px;
+  @apply
+  w-[1100px]
+  h-[650px]
+}
+
+.ocr-modal-pad-frame {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  @apply
+  w-full
+  h-full
+}
+
+.ocr-modal-pc-header-box {
+  border-radius: 30px 30px 0 0;
+  background-color: #7861bb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @apply
+  h-[50px]
+}
+
+.ocr-modal-pad-header-box {
+  background-color: #7861bb;
+  display: flex;
+  align-items: center;
+  @apply
+  h-[70px]
+}
+
+.ocr-modal-back-btn {
+  position: absolute;
+  @apply
+  w-[67px]
+  h-[67px]
+}
+
+.ocr-modal-back-btn-icon {
+  background-image: url(../../../../util/svgs/commonIconPNG/btn-back-page-icon.png);
+  @apply
+  w-[67px]
+  h-[67px]
+}
+
+.ocr-modal-pc-header-text {
+  font-family: GothamRounded;
+  font-size: 18px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: white;
+  margin: 0 auto;
+  @apply
+  h-[22px]
+}
+
+.ocr-modal-pc-body-box {
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  border-left: solid 6px #7861bb;
+  border-right: solid 6px #7861bb;
+  background-color: #f0e9ff;
+  /* margin: 50px 0 0; */
+  @apply
+  h-[530px]
+}
+
+.ocr-modal-pad-body-box {
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  background-color: #f0e9ff;
+  @apply
+  h-[660px]
+}
+
+.ocr-modal-textarea-box {
+  flex-grow: 0;
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 20px;
+  @apply
+  w-full
+  h-full
+  bg-white
+}
+
+.ocr-modal-textarea {
+  flex-grow: 0;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  text-align: left;
+  @apply
+  w-full
+  h-full
+  resize-none
+  border-none
+  focus:border-none
+  focus:ring-0
+  p-0
+}
+
+.ocr-modal-pc-footer-box {
+  border-radius: 0 0 30px 30px;
+  background-color: #7861bb;
+  padding: 11px 20px 10px 940px;
+  @apply
+  h-[70px]
+}
+
+.ocr-modal-pad-footer-box {
+  background-color: #7861bb;
+  flex-grow: 0;
+  padding: 11px 20px 10px;
+  display: flex;
+  justify-content: end;
+  /** scan again 버튼이 존재할 경우 필요
+  /* justify-content: space-between; */
+  @apply
+  h-[70px]
+}
+
+.ocr-modal-footer-btn {
+  font-family: GothamRounded;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 5px 0 0 #1a9fa6;
+  line-height: normal;
+  letter-spacing: normal;
+  z-index: 50;
+  @apply
+  flex
+  justify-center
+  items-center
+  rounded-[22px]
+  w-[140px]
+  h-[44px]
+  text-white
+  bg-[#21c4cc]
+}

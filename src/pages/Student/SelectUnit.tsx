@@ -12,6 +12,7 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import UnitReportModalComponent from '../../components/toggleModalComponents/UnitReportModalComponent';
 import { logoutAPI } from './api/Login.api';
+import { getDraftPath } from './ocrDraft/controller/Navigate';
 
 
 export default function SelectUnit () {
@@ -208,6 +209,10 @@ export default function SelectUnit () {
             test(getReportAll,userInfo.year,userInfo.semester,userInfo.courseName);
             // setReportSelectUnit(1)
         }
+        // draft 화면 진입 시 마지막 저장된 데이터로 화면이 갱신되지 않는 오류 수정
+        if (!getReportAll && allUnitsDataFromAPI) {
+            setSparkWritingDataFromAPI(allUnitsDataFromAPI.units, allUnitsDataFromAPI.book_name);
+        }
     }
     useComponentWillMount(async ()=>{
         await beforeRenderedFn().then(()=>{
@@ -320,12 +325,12 @@ export default function SelectUnit () {
 
     const SelectBoxUnitMapLoop = (props: {items:TSparkWritingDatas}) => {
 
-        const selectWritingTopic = async (unitNum:string, unitTitle:string, draftNum: string ) => {
+        const selectWritingTopic = async (unitNum:string, unitTitle:string, draftNum: string, pageType?: TDraft1stOulinePageType) => {
             console.log('unitNum: ',unitTitle)
             setLastUnitIndex(parseInt(unitNum))
             setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
             setSparkWritingUnitStart(unitNum, draftNum);
-            const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
+            const path = getDraftPath(unitNum, draftNum, pageType);
             CommonFunctions.goLink(path, navigate, role);
         }
         const selectTemporaryPreview = async (unitNum:string, unitTitle:string, draftNum: string ) => {
@@ -451,20 +456,20 @@ export default function SelectUnit () {
                             // 1차 진입 가능
                             if (firstDraft === 0) {
                                 // 1차 진행 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1', item.draft_1_page_outline_type);
                             } else if (firstDraft === 1) {
                                 // 1차 임시저장 -> 편집 가능
                                 if (isGrammarSave1st) {
                                     await selectTemporaryPreview(selectUnitIndex, selectUnitSubTitle, '1');
                                 } else {
-                                    await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                    await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1', item.draft_1_page_outline_type);
                                 }
                             } else if (firstDraft === 2|| firstDraft === 3) {
                                 // 1차 완료(submit) -> 편집 x, 뷰잉만
                                 await selectPreview(selectUnitIndex, selectUnitSubTitle, '1')
                             } else if (firstDraft === 5) {
                                 // 1차 재학습 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '1', item.draft_1_page_outline_type);
                             } else if (firstDraft === 4) {
                                 // 2차 진입 가능
                             }
@@ -473,16 +478,16 @@ export default function SelectUnit () {
                             // 2차 진입 가능
                             if (secondDraft === 0) {
                                 // 2차 진행 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2', item.draft_1_page_outline_type);
                             } else if (secondDraft === 1) {
                                 // 2차 임시저장 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2', item.draft_1_page_outline_type);
                             } else if (secondDraft === 2 || secondDraft === 3) {
                                 // 2차 완료(submit) -> 편집 x, 뷰잉만
                                 await selectPreview(selectUnitIndex, selectUnitSubTitle, '2')
                             } else if (secondDraft === 5) {
                                 // 2차 재학습 -> 편집 가능
-                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2');
+                                await selectWritingTopic(selectUnitIndex, selectUnitSubTitle, '2', item.draft_1_page_outline_type);
                             } else if (secondDraft === 4) {
                                 // -> final
                             }

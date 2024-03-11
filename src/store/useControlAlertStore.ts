@@ -1558,7 +1558,14 @@ const useControlAlertStore = create<IUseControlAlertStore>((set, get) => ({
     setIsNoData: (flag) => {
         set(()=>({isNoData: flag}))
     },
-    
+   
+    // OCR
+    ocrModalData: {
+        openFlag: false,
+    },
+    setOcrModalData: (data) => {
+        set(()=>({ocrModalData:data}))
+    },
 }))
 
 export default useControlAlertStore;

@@ -14,6 +14,9 @@ import draftViewBox from '../../components/pageComponents/feedbackComponents/dra
 import TeacherFeedbackDetailModalComponents from '../../components/toggleModalComponents/TeacherFeedbackDetailModalComponents';
 import { checkDuplicateLogin, logoutAPI } from './api/Login.api';
 import {CommonInputValidate} from '../../util/common/commonFunctions'
+import OcrDraftFormatBtn from './ocrDraft/commonComponents/OcrDraftFormatBtn';
+import SecondDraftOcrBtn from './ocrDraft/commonComponents/SecondDraftOcrBtn';
+import { WO_LAST_SUBPATH } from './ocrDraft/consts';
 const EssayWriting = () => {
 
     // 1nd draft에서 완료 후 툴팁 제어
@@ -614,6 +617,8 @@ const EssayWriting = () => {
                                             const draftIndex = parseInt(DraftIndex);
                                             historyDataDelete(unitIndex, draftIndex)
                                             setPreviewPageInitFlag('UPDATE_WRITE');
+                                            // preview로 넘어가기 전에 타입 지정 필요(저장하지 않고 넘어가는 경우 대비)
+                                            useSparkWritingStore.getState().setTempDraft1PageOutlineType('WL');
                                             CommonFunctions.goLink(`WritingClinic/SparkWriting/${params.unit}/${params.draft}/Preview`, navigate, role);
                                             commonAlertClose();
                                         }
@@ -683,10 +688,10 @@ const EssayWriting = () => {
                         {/* Fresh Page */}
                         {draft2ndPageSet === 'fresh' &&
                             <div className='wrap-content-2nd-spark-writing'>
-                            <div className='draft-2nd-title-font items-center'>
+                            <div className='draft-2nd-title-font items-center p-[10px]'>
                                 {/* 2nd draft title content */}
                                 <textarea className='draft-2nd-title-wrap-textarea'
-                                    placeholder='Enter text here.'
+                                    placeholder='Enter text here by typing or scanning your writing.'
                                     maxLength={120}
                                     rows={1}
                                     ref={(textarea)=>{
@@ -747,10 +752,11 @@ const EssayWriting = () => {
                                     }}
                                     value={draftItem.draft_2_outline[0].input_content}
                                 />
+                                <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1'>
+                            <div className='flex flex-1 pr-[10px]'>
                                 {/* 2nd draft body content */}
-                                <textarea className='draft-2nd-body-wrap-textarea'
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
@@ -813,16 +819,17 @@ const EssayWriting = () => {
                                         }
                                         
                                     }}
-                                    placeholder='Enter text here.'
+                                    placeholder='Enter text here by typing or scanning your writing.'
                                     value={draftItem.draft_2_outline[1].input_content}
                                 />
+                                <SecondDraftOcrBtn textType={'content'} inputText={draftItem.draft_2_outline[1].input_content} />
                             </div>
                             </div>
                         }
                         {/* Revise 1st Draft Page */}
                         {draft2ndPageSet === 'revise' &&
                             <div className='wrap-content-2nd-spark-writing'>
-                            <div className='draft-2nd-title-font items-center'>
+                            <div className='draft-2nd-title-font items-center p-[10px]'>
                                 {/* 2nd draft title content */}
                                 <textarea className='draft-2nd-title-wrap-textarea'
                                     placeholder='Enter text here.'
@@ -884,11 +891,12 @@ const EssayWriting = () => {
                                         }
                                     }}
                                     value={draftItem.draft_2_outline[0].input_content}
-                                />
+                                    />
+                                    <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1'>
+                            <div className='flex flex-1 pr-[10px]'>
                                 {/* 2nd draft body content */}
-                                <textarea className='draft-2nd-body-wrap-textarea'
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
@@ -951,9 +959,10 @@ const EssayWriting = () => {
                                         }
                                         
                                     }}
-                                    placeholder='Enter text here.'
+                                    placeholder='Enter text here by typing or scanning your writing.'
                                     value={draftItem.draft_2_outline[1].input_content}
-                                />
+                                    />
+                                    <SecondDraftOcrBtn textType={'content'} inputText={draftItem.draft_2_outline[1].input_content} />
                             </div>
                             </div>
                         }
@@ -1061,6 +1070,7 @@ const EssayWriting = () => {
                 draft_index: draftIndex,
                 proofreading_count: targetData.proofreading_count,
                 contents: contensData,
+                draft_1_page_outline_type: window.location.pathname.includes(WO_LAST_SUBPATH) ? 'WO' : 'WL',
                 draft_2_init_page_flag:'',
                 campus_name: userInfo.campusName,
                 duration:gapTime
@@ -1910,6 +1920,11 @@ const EssayWriting = () => {
                         console.log('==current1stTarget=',current1stTarget)
                         if (current1stTarget.name === 'Title') {
                             titleInput = current1stTarget.input_content
+                        } else if (target.draft_1_page_outline_type === 'WO') {
+                            // 1st draft 제출 타입이 WO이면 개행하지 않음.
+                            const inputContent = current1stTarget.input_content;
+                            // 텍스트가 공백이면 공백 정리 후 추가
+                            bodyInput += inputContent.trim().length === 0 ? '' : inputContent;
                         } else {
                             bodyInput += current1stTarget.input_content+'\n\n';
                         }
@@ -1976,7 +1991,7 @@ const EssayWriting = () => {
             {/* draft 1 => chat */}
             {DraftIndex === '1' && (
                 <div className='absolute w-fit h-fit top-[15px] right-[20px] overflow-auto'>
-                    <FormDialog />
+                    <FormDialog draft1stOutlineTypeBtnElem={<OcrDraftFormatBtn />} />
                 </div>
             )}
             {DraftIndex === '2' && (

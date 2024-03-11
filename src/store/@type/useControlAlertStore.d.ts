@@ -110,6 +110,10 @@ interface IUseControlAlertStore {
     isNoData:boolean;
     setIsNoData: (flag:boolean) => void;
 
+    // OCR modal
+    ocrModalData: TOcrModalData;
+    setOcrModalData: (data: TOcrModalData) => void;
+    
     // report buttons at unmount event
     setResetReportDatas: () => void;
 }
@@ -392,3 +396,17 @@ type THexagonDoughnutData = {
     fitText: number;
     toolLineColor: string;
 }
+
+// OCR data
+type TOcrModalData = {
+    /** 팝업 표시 중 유무 */
+    openFlag: boolean;
+    /** 제목 or 본문 */
+    textType?: 'title' | 'content';
+    /** 입력된 텍스트 */
+    inputText?: string;
+    /** 선택된 이미지 */
+    imgFile?: File;
+    /** OCR 결과 전달 콜백 */
+    onResOcrEvent?: Function;
+};

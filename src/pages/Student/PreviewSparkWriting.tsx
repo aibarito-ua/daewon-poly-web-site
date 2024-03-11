@@ -12,6 +12,7 @@ import { CommonFunctions } from '../../util/common/commonFunctions';
 import { callUnitInfobyStudent, draft1stSubmit, draftSaveTemporary } from './api/EssayWriting.api';
 import { useComponentWillMount } from '../../hooks/useEffectOnce';
 import { checkDuplicateLogin, logoutAPI } from './api/Login.api';
+import { getDraftPath } from './ocrDraft/controller/Navigate';
 
 const PreviewSparkWriting = (props:any) => {
     // stores
@@ -27,7 +28,8 @@ const PreviewSparkWriting = (props:any) => {
         // page init set
         previewPageInitFlag,
         setPreviewPageInitFlag,
-
+        tempDraft1PageOutlineType,
+        setTempDraft1PageOutlineType,
         setSparkWritingUnitEnd
     } = useSparkWritingStore();
     // Nav Store
@@ -317,7 +319,11 @@ const PreviewSparkWriting = (props:any) => {
             setCommonStandbyScreen({openFlag:true})
             // use grammar API
             console.log('user info =',userInfo.memberNameEn)
-            const res = await grammarCheck(sparkWritingData[unitIndex].draft_1_outline, userInfo.accessToken, userInfo.memberNameEn).then((response)=>{
+            // Without Outline인 경우 1, 2번째 아웃라인만 사용
+            const draft1OutlineType = tempDraft1PageOutlineType ? tempDraft1PageOutlineType : sparkWritingData[unitIndex].draft_1_page_outline_type;
+            const draft1Outlines = sparkWritingData[unitIndex].draft_1_outline;
+            const targetDraft1Outline = draft1OutlineType === 'WO' ? draft1Outlines.filter(item => item.order_index <= 2) : draft1Outlines;
+            const res = await grammarCheck(targetDraft1Outline, userInfo.accessToken, userInfo.memberNameEn).then((response)=>{
                 if (response.is_server_error) {
                     if (response.data) {
                         let maintenanceInfo:TMaintenanceInfo = response.data;
@@ -491,7 +497,12 @@ const PreviewSparkWriting = (props:any) => {
         const outlineData:TSparkWritingData = sparkWritingData[unitIndex];
         // margin index setting
         const bodyItemDump:TSparkWritingDataOutline[] = JSON.parse(JSON.stringify(outlineData.draft_1_outline));
-        const bodyOutlineItems = bodyItemDump.splice(1);
+        let bodyOutlineItems = bodyItemDump.splice(1);
+        // Without Outline인 경우 본문은 2번째 아웃라인만 사용
+        const draft1OutlineType = tempDraft1PageOutlineType ? tempDraft1PageOutlineType : sparkWritingData[unitIndex].draft_1_page_outline_type;
+        if (draft1OutlineType === 'WO') {
+            bodyOutlineItems = bodyOutlineItems.filter(item => item.order_index === 2);
+        }
         const bodyItemNames = CommonFunctions.outlineNameLists(bodyOutlineItems);
         const bodyItemRemake:TSparkWritingDataOutline[][] = CommonFunctions.outlineDataFormRemake(bodyItemNames, bodyOutlineItems);
         const remakeItem:number[][] = [];
@@ -774,6 +785,8 @@ const PreviewSparkWriting = (props:any) => {
             contents: contentsData,
             campus_name: userInfo.campusName,
             duration: gapTime,
+            // draft에서 preview로 넘어왔으면 tempDraft1PageOutlineType를 사용, 아니면 기존 데이터 사용
+            draft_1_page_outline_type: tempDraft1PageOutlineType ? tempDraft1PageOutlineType : targetData.draft_1_page_outline_type,
         };
       //  console.log('data ==',data)
         const isSaveTemporary = await draftSaveTemporary(data,userInfo.accessToken);
@@ -1253,6 +1266,11 @@ const PreviewSparkWriting = (props:any) => {
         console.log('sparkWritingData: ',sparkWritingData)
     }, [sparkWritingData])
 
+    // preview 화면 나갈 경우 초기화
+    React.useEffect(() => {
+        return () => setTempDraft1PageOutlineType();        
+    }, []);
+
     const goBackEventSave = () => {
         setGoBackFromDraftInUnitPage(()=>{ 
             commonAlertOpen({
@@ -1417,8 +1435,9 @@ const PreviewSparkWriting = (props:any) => {
                                         
                                         const draftNum = params.draft ? params.draft:'';
                                         
-                                        setSelectUnitInfo(`Unit ${unitNum}.`,unitTitle)
-                                        const path = `WritingClinic/SparkWriting/${unitNum}/${draftNum}`
+                                        setSelectUnitInfo(`Unit ${unitNum}.`, unitTitle)
+                                        // draft에서 preview로 넘어왔으면 tempDraft1PageOutlineType를 사용, 아니면 기존 데이터 사용
+                                        const path = getDraftPath(unitNum, draftNum, tempDraft1PageOutlineType ? tempDraft1PageOutlineType : targetData.draft_1_page_outline_type);
                                         // console.log('path =',path)
                                         CommonFunctions.goLink(path, navigate, role);  
                                     }
@@ -1645,7 +1664,7 @@ const PreviewSparkWriting = (props:any) => {
                                             ],
                                             noButtonLabel: 'Yes',
                                             closeEvent: async () => {
-        
+                                                const draft1OutlineType = tempDraft1PageOutlineType ? tempDraft1PageOutlineType : currentSparkWritingData.draft_1_page_outline_type;
                                                 // submit
                                                 const unitNum = (unitIndex+1).toString();
                                                 const gapTime = setSparkWritingUnitEnd(unitNum.toString(), '1')
@@ -1655,6 +1674,29 @@ const PreviewSparkWriting = (props:any) => {
                                                     const currentGrammarIndex = item.order_index-2;
                                                     // console.log('item =',item)
                                                     // console.log('currentGrammarIndex =',currentGrammarIndex)
+
+                                                    // Without Outline의 경우 본문은 하나만 사용
+                                                    if (draft1OutlineType === 'WO') {
+                                                        let grammar_correction_content_student = item.grammar_correction_content_student;
+                                                        if (guideFlag === 1) {
+                                                            if (item.name === 'Title') {
+                                                                grammar_correction_content_student = JSON.stringify(bodyHistory.title.present);
+                                                            } else if (item.name !== 'Title' && currentGrammarIndex === 0) {
+                                                                grammar_correction_content_student = JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data);
+                                                            } else {
+                                                                grammar_correction_content_student = '';
+                                                            }
+                                                        }
+                                                        
+                                                        return {
+                                                            // 서버 제약 조건(not empty strign) 따른 우회 처리
+                                                            input_content: item.input_content.length > 0 ? item.input_content : ' ',
+                                                            grammar_correction_content_student,
+                                                            heading_name: item.name,
+                                                            order_index: item.order_index
+                                                        }
+                                                    }
+
                                                     const grammar_correction_content_student = guideFlag===1 ? (
                                                         item.name==='Title'? JSON.stringify(bodyHistory.title.present): JSON.stringify(bodyHistory.body.present[currentGrammarIndex].data)
                                                     ):(
@@ -1678,7 +1720,8 @@ const PreviewSparkWriting = (props:any) => {
                                                     contents: contentsData,
                                                     proofreading_count: currentSparkWritingData.proofreading_count,
                                                     campus_name: userInfo.campusName,
-                                                    duration: gapTime
+                                                    duration: gapTime,
+                                                    draft_1_page_outline_type: draft1OutlineType,
                                                 }
                                               //  console.log('submit item = ',submitData)
                                                 commonAlertClose();

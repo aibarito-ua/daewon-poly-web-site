@@ -23,6 +23,8 @@ import MaintenanceAlertModalComponent from '../components/toggleModalComponents/
 import { logoutAPI } from '../pages/Student/api/Login.api';
 import ErrorBoundary from './errorBoundary';
 import { useInterval } from '../hooks/useInterval';
+import OcrModalComponent from '../pages/Student/ocrDraft/commonComponents/ocrModal';
+import { OcrDraft } from '../pages/Student/ocrDraft';
 
 
 export default function Roter() {
@@ -141,7 +143,7 @@ export default function Roter() {
                         <Route path='/student/Portfolio' element={<Portfolio />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview' element={<PreviewSparkWriting />}></Route>
                         <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/Preview/:status' element={<PreviewSparkWriting />}></Route>
-
+                        <Route path='/student/WritingClinic/SparkWriting/:unit/:draft/WithoutOutline' element={ <OcrDraft />}></Route>
                     </Route>
                     {/* <Route path='' element={ }></Route> */}
 
@@ -154,6 +156,7 @@ export default function Roter() {
                 <PortfolioModalComponent />
                 <ReturnFeedbackModalComponent />
                 <UserInfoModalComponent />
+                <OcrModalComponent />
                 </ErrorBoundary>
             </div>
           

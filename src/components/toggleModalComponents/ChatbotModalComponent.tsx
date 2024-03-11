@@ -10,7 +10,11 @@ import useControlAlertStore from '../../store/useControlAlertStore';
 import { logoutAPI } from '../../pages/Student/api/Login.api';
 import { useNavigate } from 'react-router-dom';
 
-export default function FormDialog() {
+interface IProps {
+  draft1stOutlineTypeBtnElem: JSX.Element;
+}
+
+export default function FormDialog({ draft1stOutlineTypeBtnElem }: IProps): JSX.Element {
   const navigate = useNavigate();
   const inputRef = React.useRef<HTMLTextAreaElement|null>(null);
   const chatDivRef = React.useRef<HTMLDivElement|null>(null);
@@ -452,6 +456,7 @@ export default function FormDialog() {
 
   return (
     <div className='flex'>
+      {draft1stOutlineTypeBtnElem}
     <button 
         className={open ? `chatbot-modal-button`:'chatbot-modal-button-inactive'}
         onClick={handleClickOpen}

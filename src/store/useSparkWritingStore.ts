@@ -503,6 +503,8 @@ const useSparkWritingStore = create<ISparkWritingStore>((set,get)=>({
     commentFocusIdInModal:'',
     setCommentFocusIdInModal: (commentFocusIdInModal) => set(()=>({commentFocusIdInModal})),
 
+    setTempDraft1PageOutlineType: (type) => set(() => ({ tempDraft1PageOutlineType: type })),
+
     // progress select box
     
     progressAllLevelsValue: [],
