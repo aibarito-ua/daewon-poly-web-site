@@ -267,6 +267,7 @@
   @apply
   w-[67px]
   h-[67px]
+  left-[10px]
 }
 
 .ocr-modal-back-btn-icon {
@@ -274,6 +275,21 @@
   @apply
   w-[67px]
   h-[67px]
+}
+
+.ocr-modal-rotate-btn {
+  position: absolute;
+  @apply
+  w-[70px]
+  h-[70px]
+  right-[10px]
+}
+
+.ocr-modal-rotate-btn-icon {
+  background-image: url(../../../../util/png/ocr/bt_back.png);
+  @apply
+  w-[70]
+  h-[70px]
 }
 
 .ocr-modal-pc-header-text {

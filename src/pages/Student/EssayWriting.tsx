@@ -754,9 +754,9 @@ const EssayWriting = () => {
                                 />
                                 <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1 pr-[10px]'>
+                            <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'pr-[56px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
@@ -894,9 +894,9 @@ const EssayWriting = () => {
                                     />
                                     <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1 pr-[10px]'>
+                            <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'pr-[56px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)

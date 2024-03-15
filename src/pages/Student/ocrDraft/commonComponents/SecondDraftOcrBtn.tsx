@@ -28,7 +28,7 @@ const SecondDraftOcrBtn = (props: IProps): JSX.Element => {
   }, [inputText, params.unit, setOutlineInputText, sparkWritingData, textType]);
 
   return (
-    <OcrBtn textType={textType} inputText={inputText} onConvertOcrText={handleConvertOcrText} />
+    <OcrBtn textType={textType} inputText={inputText} className={textType === "content" ? "absolute right-[52px]" : undefined} onConvertOcrText={handleConvertOcrText} />
   );
 };
 

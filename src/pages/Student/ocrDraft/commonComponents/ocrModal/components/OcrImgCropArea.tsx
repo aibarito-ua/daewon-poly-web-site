@@ -1,34 +1,43 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
-// import "react-image-crop/dist/ReactCrop.css";
 import "../../../css/ReactCrop.css";
 import BottomBtns from "./BottomBtns";
 import { tryGetOcrText } from "../../../controller/OcrController";
 import { MAX_IMAGE_PAD_HEIGHT, MAX_IMAGE_PAD_WIDTH, MAX_IMAGE_PC_HEIGHT, MAX_IMAGE_PC_WIDTH } from "../consts";
+import Header from "./Header";
 
 const MIN_CROPABLE_SIZE = 100;
+
+enum ImgRotationDegree {
+  DEGREE_0 = 0,
+  DEGREE_90 = 90,
+  DEGREE_180 = 180,
+  DEGREE_270 = 270,
+}
 
 interface IProps {
   fullScreen: boolean;
   originImgUrl: string;
   onChangeImage: (file: File) => void;
   onConvertOcrText: (croppedImgUrl: string, ocrText: string) => void;
+  onClose: () => void;
 }
 
 export default function OcrImgCropArea(props: IProps) {
-  const { fullScreen, originImgUrl, onChangeImage, onConvertOcrText } = props;
+  const { fullScreen, originImgUrl, onChangeImage, onConvertOcrText, onClose } = props;
 
-  // const [selectedFileSrc, setSelectedFileSrc] = useState<string>("");
+  const [imgSrc, setImgSrc] = useState<string>(originImgUrl);
   const [crop, setCrop] = useState<Crop>(makeInitCrop());
   const [croppedBlob, setCroppedBlob] = useState<Blob | undefined>();
-  // const [scale, setScale] = useState<number>(1);
+  const rotationType = useRef<ImgRotationDegree>(ImgRotationDegree.DEGREE_0);
 
   const imgRef = useRef<HTMLImageElement>(null);
 
+  useEffect(() => {
+    setImgSrc(originImgUrl);
+  }, [originImgUrl]);
+
   const handleLoadImg = useCallback((evt: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    // const baseHeight = isMobile ? MAX_IMAGE_PAD_HEIGHT : MAX_IMAGE_PC_HEIGHT;
-    // const scale = baseHeight / evt.currentTarget.height;
-    // setScale(scale);
 
     const { width, height } = evt.currentTarget;
     const pxCrop: PixelCrop = {
@@ -61,10 +70,16 @@ export default function OcrImgCropArea(props: IProps) {
     onConvertOcrText(URL.createObjectURL(croppedBlob), ocrText);
   }, [croppedBlob, onConvertOcrText]);
 
+  const handleClickRotate = useCallback(() => {
+    rotationType.current = (rotationType.current + 90) % 360;
+    rotateBase64Image(originImgUrl, rotationType.current).then((base64) => setImgSrc(base64));
+  }, [originImgUrl]);
+
   const imageHeight = fullScreen ?  MAX_IMAGE_PAD_HEIGHT : MAX_IMAGE_PC_HEIGHT;
   const imageWidth = fullScreen ?  MAX_IMAGE_PAD_WIDTH : MAX_IMAGE_PC_WIDTH;
   return (
     <>
+      <Header fullScreen={fullScreen} guideText={'Select the area you want to convert.'} onClose={onClose} onClickRotate={handleClickRotate}/>
       <div className={fullScreen ? 'ocr-modal-pad-body-box' : 'ocr-modal-pc-body-box'}>
         <div className={`flex flex-1 justify-center items-center w-[${imageWidth}px] h-[${imageHeight}px]`}>
           <ReactCrop
@@ -75,7 +90,7 @@ export default function OcrImgCropArea(props: IProps) {
             onChange={handleChangeImgCrop}
             onComplete={handleCompleteImgCrop}
           >
-            <img src={originImgUrl}
+            <img src={imgSrc}
               alt="Crop me"
               ref={imgRef}
               onLoad={handleLoadImg}
@@ -147,5 +162,58 @@ function imgCropToBlob(imgElem: HTMLImageElement, crop: PixelCrop): Promise<Blob
       "image/jpeg",
       1.0
     );
+  });
+}
+
+function rotateBase64Image(originBase64: string, rotType: ImgRotationDegree): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (rotType === ImgRotationDegree.DEGREE_0) {
+      resolve(originBase64);
+      return;
+    }
+
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    if (!ctx)  {
+      reject(new Error("No ctx"));
+      return;
+    }
+
+    var img = new Image();
+    img.src = originBase64;
+
+    var image = new Image();
+    image.src = originBase64;
+    image.onload = function () {
+      if (!ctx) return;
+
+      if (rotType === ImgRotationDegree.DEGREE_90 || rotType === ImgRotationDegree.DEGREE_270) {
+        canvas.height = img.width;
+        canvas.width = img.height;
+
+        // max height보다 canvas.height가 큰 경우 scale down
+        if (canvas.height > MAX_IMAGE_PAD_HEIGHT) {
+          const scale = MAX_IMAGE_PAD_HEIGHT / canvas.height;
+          const reveredScale = canvas.height / MAX_IMAGE_PAD_HEIGHT;
+          canvas.height = MAX_IMAGE_PAD_HEIGHT;
+          canvas.width = img.height * scale;
+          ctx.scale(scale, scale);
+          ctx.rotate(rotType * Math.PI / 180);
+          ctx.translate(rotType === ImgRotationDegree.DEGREE_270 ? -canvas.height * reveredScale : 0, rotType === ImgRotationDegree.DEGREE_90 ? -canvas.width * reveredScale : 0);
+        } else {
+          ctx.rotate(rotType * Math.PI / 180);
+          ctx.translate(rotType === ImgRotationDegree.DEGREE_270 ? -canvas.height : 0, rotType === ImgRotationDegree.DEGREE_90 ? -canvas.width : 0);
+        }
+      } else if (rotType === ImgRotationDegree.DEGREE_180) {
+        canvas.height = img.height;
+        canvas.width = img.width;
+        ctx.rotate(rotType * Math.PI / 180);
+        ctx.translate(-canvas.width, -canvas.height);
+      }
+
+      ctx.drawImage(image, 0, 0); 
+      resolve(canvas.toDataURL("image/jpeg", 100));
+    };
   });
 }

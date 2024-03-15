@@ -45,7 +45,10 @@ export const ContentArea = ({ content, onChangeText }: IProps): JSX.Element => {
     }, [content, onChangeText]);
 
     const handleFocus = useCallback(() => setFocused(true), []);
-    const handleBlur = useCallback(() => setFocused(false), []);
+    const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
+        setFocused(false);
+        onChangeText(CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value));
+    }, []);
 
     const handleClickPlaceHolder = useCallback(() => {
         if (focused) return;
