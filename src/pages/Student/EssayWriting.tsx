@@ -17,6 +17,7 @@ import {CommonInputValidate} from '../../util/common/commonFunctions'
 import OcrDraftFormatBtn from './ocrDraft/commonComponents/OcrDraftFormatBtn';
 import SecondDraftOcrBtn from './ocrDraft/commonComponents/SecondDraftOcrBtn';
 import { WO_LAST_SUBPATH } from './ocrDraft/consts';
+import Message from './ocrDraft/Message';
 const EssayWriting = () => {
 
     // 1nd draft에서 완료 후 툴팁 제어
@@ -536,7 +537,7 @@ const EssayWriting = () => {
                                 callbackCheckValues()
                                 commonAlertOpen({
                                     messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                    messages: sparkWritingData[parseInt(UnitIndex)-1].draft_1_page_outline_type === 'WO' ? Message.Popups.SAVE_OUTLINE : ['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: `Yes`,
                                     noButtonLabel: `No`,
                                     yesEvent: async ()=> await temporarySaveFunction(),
@@ -1116,7 +1117,7 @@ const EssayWriting = () => {
                         if (isSaveTemporary.is_retry) {
                             commonAlertOpen({
                                 messageFontFamily: 'Roboto',
-                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                messages: sparkWritingData[parseInt(UnitIndex)-1].draft_1_page_outline_type === 'WO' ? Message.Popups.SAVE_OUTLINE : ['Do you want to save your current','progress and return to the main menu?'],
                                 yesButtonLabel: `Yes`,
                                 noButtonLabel: `No`,
                                 yesEvent: async ()=> await temporarySaveFunction(),

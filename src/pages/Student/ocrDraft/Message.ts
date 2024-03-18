@@ -10,6 +10,8 @@ const Popups = {
     MAX_NUMBER_OF_PARAGRAPH_CHARACTERS: ["One paragraph cannot exceed 1,800 characters.", "If you wish to write more, press the Enter/Return", "key to create a new paragraph."],
     MAX_NUMBER_OF_CHARACTERS: ["You have exceeded the maximum number of characters allowed."],
     SAVE: ["Do you want to save your current", "progress and return to the main menu?"],
+    SAVE_NO_OUTLINE: ["Do you want to save and return to the main menu?", "　", "* Any saved content on the Outline page will be deleted."],
+    SAVE_OUTLINE: ["Do you want to save and return to the main menu?", "　", "* Any saved content on the No Outline page will be deleted."],
     PREVIEW: ["Are you ready to preview your writing?"],
     LOGIN_DUPLICATED: ["중복 로그인으로 자동 로그아웃 처리 되었습니다."],
     SERVER_NOT_CONNECTED: ["Cannot conntect to the server.", "Please try again later."],

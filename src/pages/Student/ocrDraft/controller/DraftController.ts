@@ -50,7 +50,14 @@ export function initPage(unitIdxStr: string | undefined, draft: string | undefin
 }
 
 /** 1st draft 임시 저장 */
-export async function saveTemporarily(unitIdxStr: string | undefined, draft: string | undefined, navigate: NavigateFunction) {
+export async function saveTemporarily(params: {
+    unitIdxStr?: string;
+    draft?: string;
+    pageOutlineType?: TDraft1stOulinePageType;
+    navigate: NavigateFunction
+}) {
+    const { unitIdxStr, draft, pageOutlineType, navigate } = params;
+
     const { draft_1_outline, unit_id, proofreading_count } = useSparkWritingStore.getState().sparkWritingData[getUnitIndex(unitIdxStr)];
     const tempContents: TSparkWritingSaveTemporaryContent[] = draft_1_outline.map((item) => {
         return {
@@ -89,10 +96,10 @@ export async function saveTemporarily(unitIdxStr: string | undefined, draft: str
                 messageFontFamily: "Roboto",
                 yesButtonLabel: "Yes",
                 noButtonLabel: "No",
-                messages: Message.Popups.SAVE,
+                messages: pageOutlineType === "WL" ? Message.Popups.SAVE_NO_OUTLINE : Message.Popups.SAVE,
                 yesEvent: () => {
                     useControlAlertStore.getState().commonAlertClose();
-                    saveTemporarily(unitIdxStr, draft, navigate);
+                    saveTemporarily({ unitIdxStr, draft, pageOutlineType, navigate });
                 },
                 closeEvent: () => useControlAlertStore.getState().commonAlertClose(),
             });
@@ -120,7 +127,7 @@ export async function previewDraft(unit: string | undefined, draft: string | und
                 messages: Message.Popups.SAVE,
                 yesEvent: () => {
                     useControlAlertStore.getState().commonAlertClose();
-                    saveTemporarily(unit, draft, navigate);
+                    saveTemporarily({ unitIdxStr: unit, draft, navigate });
                 },
                 closeEvent: () => useControlAlertStore.getState().commonAlertClose(),
             });
@@ -194,6 +201,7 @@ function registerGoBackFromDraftInUnitPage(unitIdxStr: string | undefined, draft
     useNavStore.getState().setGoBackFromDraftInUnitPage(() => {
         const unitIndex = getUnitIndex(unitIdxStr);
         const targetDataOutline = useSparkWritingStore.getState().sparkWritingData[unitIndex].draft_1_outline;
+        const pageOutlineType = useSparkWritingStore.getState().sparkWritingData[unitIndex].draft_1_page_outline_type;
         const inputContentExistCount = getMinTextRequiredCount(targetDataOutline);
 
         const showConfirmExitSave = () => {
@@ -204,7 +212,7 @@ function registerGoBackFromDraftInUnitPage(unitIdxStr: string | undefined, draft
                 alertType: 'warningContinue',
                 // 저장
                 yesCb: async () => {
-                    await saveTemporarily(unitIdxStr, draft, navigate);
+                    await saveTemporarily({ unitIdxStr, draft, pageOutlineType, navigate });
                 },
                 noCb: () => {
                     resetChatHistEvent();
