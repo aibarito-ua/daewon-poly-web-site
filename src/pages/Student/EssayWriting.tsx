@@ -17,6 +17,7 @@ import {CommonInputValidate} from '../../util/common/commonFunctions'
 import OcrDraftFormatBtn from './ocrDraft/commonComponents/OcrDraftFormatBtn';
 import SecondDraftOcrBtn from './ocrDraft/commonComponents/SecondDraftOcrBtn';
 import { WO_LAST_SUBPATH } from './ocrDraft/consts';
+import Message from './ocrDraft/Message';
 const EssayWriting = () => {
 
     // 1nd draft에서 완료 후 툴팁 제어
@@ -536,7 +537,7 @@ const EssayWriting = () => {
                                 callbackCheckValues()
                                 commonAlertOpen({
                                     messageFontFamily: 'Roboto',
-                                    messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                    messages: sparkWritingData[parseInt(UnitIndex)-1].draft_1_page_outline_type === 'WO' ? Message.Popups.SAVE_OUTLINE : ['Do you want to save your current','progress and return to the main menu?'],
                                     yesButtonLabel: `Yes`,
                                     noButtonLabel: `No`,
                                     yesEvent: async ()=> await temporarySaveFunction(),
@@ -754,9 +755,9 @@ const EssayWriting = () => {
                                 />
                                 <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1 pr-[10px]'>
+                            <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'pr-[56px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
@@ -894,9 +895,9 @@ const EssayWriting = () => {
                                     />
                                     <SecondDraftOcrBtn textType={'title'} inputText={draftItem.draft_2_outline[0].input_content} />
                             </div>
-                            <div className='flex flex-1 pr-[10px]'>
+                            <div className='flex flex-1'>
                                 {/* 2nd draft body content */}
-                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'mr-[10px]'}`}
+                                <textarea className={`draft-2nd-body-wrap-textarea ${draftItem.draft_2_outline[1].input_content.length > 0 && 'pr-[56px]'}`}
                                     onBlur={(e) => {
                                         const replacedValue = CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value);
                                         setOutlineInputText(replacedValue, draftItem.unit_id, draftItem.unit_index, 2,2)
@@ -1116,7 +1117,7 @@ const EssayWriting = () => {
                         if (isSaveTemporary.is_retry) {
                             commonAlertOpen({
                                 messageFontFamily: 'Roboto',
-                                messages: ['Do you want to save your current','progress and return to the main menu?'],
+                                messages: sparkWritingData[parseInt(UnitIndex)-1].draft_1_page_outline_type === 'WO' ? Message.Popups.SAVE_OUTLINE : ['Do you want to save your current','progress and return to the main menu?'],
                                 yesButtonLabel: `Yes`,
                                 noButtonLabel: `No`,
                                 yesEvent: async ()=> await temporarySaveFunction(),

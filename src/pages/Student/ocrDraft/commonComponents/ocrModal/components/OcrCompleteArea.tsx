@@ -3,6 +3,8 @@ import BottomBtns from "./BottomBtns";
 import { KOREAN_REGEX, NEW_LINE_REGEX, THREE_OR_MORE_NEW_LINE_REGEX, TWO_OR_MORE_SPACE_REGEX } from "../../../consts";
 import { OcrTextType } from "../../../types";
 import useLoginStore from "../../../../../../store/useLoginStore";
+import { CommonInputValidate } from "../../../../../../util/common/commonFunctions";
+import Header from "./Header";
 
 // const MAX_PC_MODAL_CROPPED_IMG_HEIGHT = 426;
 const MAX_PC_CROPPED_IMG_HEIGHT = 552;
@@ -17,10 +19,11 @@ interface IProps {
   onChangeText: (ocrText: string) => void;
   onChangeImage: (file: File) => void;
   onClickNext: () => void;
+  onClose: () => void;
 }
 
 export default function OcrCompleteArea(props: IProps) {
-  const { fullScreen, croppedImgUrl, ocrText, textType, onChangeText, onChangeImage, onClickNext } = props;
+  const { fullScreen, croppedImgUrl, ocrText, textType, onChangeText, onChangeImage, onClickNext, onClose } = props;
   const { isMobile } = useLoginStore();
 
   const handleChangeText = useCallback(
@@ -31,12 +34,16 @@ export default function OcrCompleteArea(props: IProps) {
       
       onChangeText(evt.target.value);
   }, [onChangeText, textType]);
+  
+  const handleBlurText = useCallback(
+    (evt: React.FocusEvent<HTMLTextAreaElement>) => {
+      onChangeText(CommonInputValidate.replaceTextareaBlurCheck(evt.target.value));
+  }, [onChangeText, textType]);
 
   return (
     <>
-      <div
-        className={fullScreen ? 'ocr-modal-pad-body-box' : 'ocr-modal-pc-body-box'}
-      >
+      <Header fullScreen={fullScreen} guideText={"Review the converted text, then click the 'Next' button to confirm."} onClose={onClose} />
+      <div className={fullScreen ? 'ocr-modal-pad-body-box' : 'ocr-modal-pc-body-box'}>
         <img
           alt="Crop preview"
           src={croppedImgUrl}
@@ -47,6 +54,7 @@ export default function OcrCompleteArea(props: IProps) {
             className='ocr-modal-textarea'
             value={ocrText}
             onChange={handleChangeText}
+            onBlur={handleBlurText}
           />
         </div>
       </div>

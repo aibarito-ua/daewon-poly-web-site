@@ -1,11 +1,12 @@
 interface IProps {
   fullScreen: boolean;
-  isFirstGuide: boolean;
+  guideText: string;
   onClose: () => void;
+  onClickRotate?: () => void;
 }
 
 export default function Header(props: IProps) {
-  const { fullScreen, isFirstGuide, onClose } = props;
+  const { fullScreen, guideText, onClose, onClickRotate } = props;
 
 
   return (
@@ -14,7 +15,7 @@ export default function Header(props: IProps) {
         <div className="ocr-modal-back-btn-icon bg-no-repeat bg-contain" />
       </div>}
       <span className='ocr-modal-pc-header-text'>
-        {isFirstGuide ? 'Select the area you want to convert.' : "Review the converted text, then click the 'Next' button to confirm."}
+        {guideText}
       </span>
       {!fullScreen && <button
         style={{
@@ -33,6 +34,9 @@ export default function Header(props: IProps) {
         />
       </button>
       }
+      {onClickRotate && <div className='ocr-modal-rotate-btn div-to-button-hover-effect' onClick={onClickRotate}>
+        <div className="ocr-modal-rotate-btn-icon bg-no-repeat bg-contain" />
+      </div>}
     </div>
   );
 }

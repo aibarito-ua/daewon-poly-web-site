@@ -37,8 +37,8 @@ export const QUOTES_SPACE_REGEX = /([`]+\s+[`]+)/gmi;
 /** 한글 정규식 */
 export const KOREAN_REGEX = /[ㄱ-ㅎㅏ-ㅣ가-힣]/gmi;
 
-/** 3개 이상 공백 정규식 */
-export const TWO_OR_MORE_SPACE_REGEX = /\s{2,}/gmi;
+/** 2개 이상 공백 정규식 */
+export const TWO_OR_MORE_SPACE_REGEX = /[ \t]{3,}/g;
 
 /** 3개 이상 줄바꿈 정규식 */
 export const THREE_OR_MORE_NEW_LINE_REGEX = /[\n]{3,}/gmi;
@@ -51,6 +51,10 @@ export const LAST_NEW_LINE_REGEX = /\n+$/;
 
 /** 문자열의 마지막 공백 문자 정규식 */
 export const LAST_SPACE_REGEX = /\s+$/;
+
+/** 허용되지 않는 문자 정규식 */
+export const NOT_ALLOWED_CHARACTERS_REGEX =
+  /[^a-zA-Z0-9\s\n~!@#$%^&*()_+-=/[\]:;"',.<>ñéÑÉ]/g;
 
 /** Without Outline 마지막 경로 */
 export const WO_LAST_SUBPATH = '/WithoutOutline';

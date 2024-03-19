@@ -8,9 +8,12 @@ import { OcrTextType } from "../../types";
 import { checkMaxNumberOfContentCharacters, checkMaxNumberOfParagraphCharacters, checkMaxNumberOfTitleCharacters, checkMaxNumberOfWordCharacters } from "../../controller/DraftController";
 import Message from "../../Message";
 import { showAlertPopup, showConfirmPopup } from "../../controller/AlertModalController";
-import { CONTINUOUS_SPECIAL_CHARACTERS_REGEX, DOUBLE_QUATES_REGEX, LAST_NEW_LINE_REGEX, LAST_SPACE_REGEX, NOT_ALLOWED_SPECIAL_CHARACTERS_REGEX, QUOTES_SPACE_REGEX, SPECIAL_CHARACTERS_SPACE_REGEX } from "../../consts";
+import { CONTINUOUS_SPECIAL_CHARACTERS_REGEX, DOUBLE_QUATES_REGEX, LAST_NEW_LINE_REGEX, LAST_SPACE_REGEX, NOT_ALLOWED_CHARACTERS_REGEX, QUOTES_SPACE_REGEX, SPECIAL_CHARACTERS_SPACE_REGEX } from "../../consts";
 import { MAX_IMAGE_PAD_HEIGHT, MAX_IMAGE_PAD_WIDTH, MAX_IMAGE_PC_HEIGHT, MAX_IMAGE_PC_WIDTH, isAlwaysFullScreenOcrModal } from "./consts";
 import Header from "./components/Header";
+import { CommonInputValidate } from "../../../../../util/common/commonFunctions";
+
+const MAX_DISPLAY_SPECIAL_CHARACTERS = 10;
 
 export default function OcrModalComponent() {
   const { ocrModalData, setOcrModalData } = useControlAlertStore();
@@ -77,8 +80,15 @@ export default function OcrModalComponent() {
   }, [handleClose, ocrModalData, ocrText]);
 
   const handleConvertOcrText = useCallback((croppedImgUrl: string, ocrText: string) => {
+    const adjustText = CommonInputValidate.replaceTextareaBlurCheck(ocrText.replace(NOT_ALLOWED_CHARACTERS_REGEX, "").replace(/\n/g, " "));
+
+    if (adjustText.trim().length === 0) {
+      showAlertPopup(Message.Popups.OCR_PROCESSING_FAILED);
+      return;
+    }
+
     setCroppedImgUrl(croppedImgUrl);
-    setOcrText(ocrText.replace(/\n/g, " "));
+    setOcrText(adjustText);
   }, []);
 
   const fullScreen = isAlwaysFullScreenOcrModal();
@@ -104,13 +114,13 @@ export default function OcrModalComponent() {
         onClose={handleClose}
       >
         <div className={fullScreen ? 'ocr-modal-pad-frame' : 'ocr-modal-pc-frame'}>
-          <Header fullScreen={fullScreen} isFirstGuide={!croppedImgUrl} onClose={handleClose} />
           {!croppedImgUrl && (
             <OcrImgCropArea
               fullScreen={fullScreen}
               originImgUrl={originImgSrc}
               onChangeImage={handleChangeImgFile}
               onConvertOcrText={handleConvertOcrText}
+              onClose={handleClose}
             />)}
           {croppedImgUrl && (
             <OcrCompleteArea
@@ -121,6 +131,7 @@ export default function OcrModalComponent() {
               onChangeText={setOcrText}
               onChangeImage={handleChangeImgFile}
               onClickNext={handleNext}
+              onClose={handleClose}
             />)}
         </div>
       </Dialog>
@@ -135,13 +146,11 @@ function validateTitle(textType: OcrTextType, inputText: string, ocrText: string
   const text = inputText.length > 0 && !LAST_SPACE_REGEX.test(inputText) ? inputText + " " + ocrText : inputText + ocrText;
 
    // 특수문자 점검
-   if (text.match(NOT_ALLOWED_SPECIAL_CHARACTERS_REGEX)) {
-    showAlertPopup(Message.Popups.NOT_ALLOWED_SPECIAL_CHARACTERS);
+   if (!validateNotAllowedSpecialCharacters(text)) {
     return false;
   }
 
-  if (!checkNotAllowSpecialSymbols(text)) {
-    showAlertPopup(Message.Popups.NOT_ALLOWED_SPECIAL_SYMBOLS);
+  if (!validateNotAllowSpecialSymbols(text)) {
     return false;
   }
 
@@ -165,13 +174,11 @@ function validateContent(textType: OcrTextType, text: string) {
   if (textType === 'title') return true;
 
   // 특수문자 점검
-  if (text.match(NOT_ALLOWED_SPECIAL_CHARACTERS_REGEX)) {
-    showAlertPopup(Message.Popups.NOT_ALLOWED_SPECIAL_CHARACTERS);
+  if (!validateNotAllowedSpecialCharacters(text)) {
     return false;
   }
 
-  if (!checkNotAllowSpecialSymbols(text)) {
-    showAlertPopup(Message.Popups.NOT_ALLOWED_SPECIAL_SYMBOLS);
+  if (!validateNotAllowSpecialSymbols(text)) {
     return false;
   }
 
@@ -196,12 +203,30 @@ function validateContent(textType: OcrTextType, text: string) {
   return true;
 }
 
-/** 허용 불가 문자 체크 */
-function checkNotAllowSpecialSymbols(text: string) {
-  if (text.match(CONTINUOUS_SPECIAL_CHARACTERS_REGEX)) return false;
-  if (text.match(DOUBLE_QUATES_REGEX)) return false;
-  if (text.match(QUOTES_SPACE_REGEX)) return false;
-  if (text.match(SPECIAL_CHARACTERS_SPACE_REGEX)) return false;
+/** 특수문자 점검 */
+function validateNotAllowedSpecialCharacters(text: string) {
+  const foundMatch = text.match(NOT_ALLOWED_CHARACTERS_REGEX);
+  if (foundMatch) {
+    const uniqueMatch = new Set(foundMatch);
+    const limitedUniqueMatch = Array.from(uniqueMatch).slice(0, MAX_DISPLAY_SPECIAL_CHARACTERS).join("　");
+    showAlertPopup([...Message.Popups.NOT_ALLOWED_SPECIAL_CHARACTERS, limitedUniqueMatch]);
+    return false;
+  }
+
+  return true;
+}
+
+/** 허용 불가 연속 문자 점검 */
+function validateNotAllowSpecialSymbols(text: string) {
+  let allMatchedStr = text.match(CONTINUOUS_SPECIAL_CHARACTERS_REGEX)?.join("") ?? "";
+  allMatchedStr += text.match(DOUBLE_QUATES_REGEX)?.join("") ?? "";
+  allMatchedStr += text.match(SPECIAL_CHARACTERS_SPACE_REGEX)?.join("") ?? "";
+  allMatchedStr += text.match(DOUBLE_QUATES_REGEX)?.join("") ?? "";
+  if (allMatchedStr.length > 0) {
+    const uniqueMatch = new Set(allMatchedStr.split(""));
+    showAlertPopup([...Message.Popups.NOT_ALLOWED_SPECIAL_SYMBOLS, Array.from(uniqueMatch).slice(0, MAX_DISPLAY_SPECIAL_CHARACTERS).join("　")]);
+    return false;
+  }
 
   return true;
 }

@@ -54,11 +54,13 @@ export default function useOcrDraft(): {
     const onSave = useCallback(() => {
       if (commonStandbyScreen.openFlag) return;
 
+      const unitIndex = getUnitIndex(params.unit);
+      const pageOutlineType = sparkWritingData[unitIndex].draft_1_page_outline_type;
       showConfirmPopup({
-        messages: Message.Popups.SAVE,
+        messages: pageOutlineType === "WL" ? Message.Popups.SAVE_NO_OUTLINE : Message.Popups.SAVE,
         btnNames: ['Yes', 'No'],
         yesIdx: 0,
-        yesCb: () => saveTemporarily(params.unit, params.draft, navigate)
+        yesCb: () => saveTemporarily({ unitIdxStr: params.unit, draft: params.draft, pageOutlineType, navigate })
       });
     }, [commonStandbyScreen.openFlag, navigate, params.draft, params.unit]);
 

@@ -36,7 +36,10 @@ export const TitleArea = ({ title, onChangeText }: IProps): JSX.Element => {
     }, [onChangeText, title]);
 
     const handleFocus = useCallback(() => setFocused(true), []);
-    const handleBlur = useCallback(() => setFocused(false), []);
+    const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+        setFocused(false);
+        onChangeText(CommonInputValidate.replaceTextareaBlurCheck(e.currentTarget.value));
+    }, []);
 
     return (
         <div className='ocr-1st-draft-title-box'>
