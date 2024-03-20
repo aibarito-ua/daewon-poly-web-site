@@ -1055,7 +1055,7 @@ const EssayWriting = () => {
                 return {
                     heading_name: item.name,
                     input_content,
-                    grammar_correction_content_student: item.grammar_correction_content_student!==''? (isSaveButtonOpen?'':item.grammar_correction_content_student):'',
+                    grammar_correction_content_student: '',
                     order_index: item.order_index,
                     is_input_open: item.is_input_open
                 }
