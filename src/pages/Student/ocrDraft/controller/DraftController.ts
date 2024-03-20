@@ -3,7 +3,7 @@ import useControlAlertStore from "../../../../store/useControlAlertStore";
 import useLoginStore from "../../../../store/useLoginStore";
 import useSparkWritingStore from "../../../../store/useSparkWritingStore";
 import { callUnitInfobyStudent, draftSaveTemporary } from "../../api/EssayWriting.api";
-import { MAX_DRAFT_CONTENT_LENGTH, MAX_DRAFT_PARAGRAPH_LENGTH, MAX_DRAFT_TITLE_LENGTH, MAX_NUMBER_OF_WORD_CHARACTERS, MIN_DRAFT_CONTENT_LENGTH, MIN_DRAFT_TITLE_LENGTH, TITLE_OUTLINE_NAME } from "../consts";
+import { MAX_DRAFT_CONTENT_LENGTH, MAX_DRAFT_PARAGRAPH_LENGTH, MAX_DRAFT_TITLE_LENGTH, MAX_NO_OUTLINE_COTENT_ORDER_INDEX, MAX_NUMBER_OF_WORD_CHARACTERS, MIN_DRAFT_CONTENT_LENGTH, MIN_DRAFT_TITLE_LENGTH, TITLE_OUTLINE_NAME } from "../consts";
 import { goSparkWriting, goSparkWritingPreview } from "./Navigate";
 import { handleExceptionServerErr, setMaintenanceData } from "./ServerErrorExceptionHandling";
 import Message from "../Message";
@@ -62,8 +62,8 @@ export async function saveTemporarily(params: {
     const tempContents: TSparkWritingSaveTemporaryContent[] = draft_1_outline.map((item) => {
         return {
             heading_name: item.name,
-            input_content: item.input_content,
-            grammar_correction_content_student: item.grammar_correction_content_student,
+            input_content: item.order_index <= MAX_NO_OUTLINE_COTENT_ORDER_INDEX ? item.input_content : '',
+            grammar_correction_content_student: '',
             order_index: item.order_index,
             is_input_open: item.is_input_open
         }

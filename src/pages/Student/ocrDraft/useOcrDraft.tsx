@@ -8,6 +8,8 @@ import useLoginStore from '../../../store/useLoginStore';
 import Message from './Message';
 import { showConfirmPopup } from './controller/AlertModalController';
 
+const MIN_REQUIRED_COUNT_FOR_PREVIEW_BTN = 2;
+
 export default function useOcrDraft(): {
   saveBtnVisible: boolean;
   previewBtnVisible: boolean;
@@ -46,9 +48,7 @@ export default function useOcrDraft(): {
       const targetDataOutline = sparkWritingData[unitIndex].draft_1_outline;
       const totalRequiredCount = getMinTextRequiredCount(targetDataOutline);
       setSaveBtnVisible(totalRequiredCount > 0);
-      // TODO: 실 데이터 기반의 갯수로 바꿔야 함.
-      // setPreviewBtnVisible(totalRequiredCount === targetDataOutline.length);
-      setPreviewBtnVisible(totalRequiredCount === 2);
+      setPreviewBtnVisible(totalRequiredCount >= MIN_REQUIRED_COUNT_FOR_PREVIEW_BTN);
     }, [params.unit, sparkWritingData]);
 
     const onSave = useCallback(() => {

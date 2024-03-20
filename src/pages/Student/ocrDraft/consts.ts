@@ -19,6 +19,9 @@ export const TITLE_OUTLINE_NAME = 'Title';
 /** 단어당 최대 글자 수 */
 export const MAX_NUMBER_OF_WORD_CHARACTERS = 45;
 
+/** No Outline 페이지는 1(제목), 2(본문)까지만 사용 */
+export const MAX_NO_OUTLINE_COTENT_ORDER_INDEX = 2;
+
 /** 입력 불가 특수 문자 - `, |, {, }, \ */
 export const NOT_ALLOWED_SPECIAL_CHARACTERS_REGEX = /[`|{}\\]{1,}/gmi;
 
