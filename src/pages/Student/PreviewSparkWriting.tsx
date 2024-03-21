@@ -1334,7 +1334,7 @@ const PreviewSparkWriting = (props:any) => {
                             {bodyHistory.title && (
                                 <div className='flex flex-1 w-full h-fit justify-center z-0'>
                                     <div className='flex flex-row w-full h-fit max-h-full text-center'>
-                                        <div className='flow-root w-full overflow-y-auto' style={{fontWeight:700}}>
+                                        <div className='flow-root w-full overflow-y-auto preview-proofreading-content-title-font'>
                                         {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
                                         </div>
                                     </div>
@@ -1342,7 +1342,7 @@ const PreviewSparkWriting = (props:any) => {
                             )}
                             <div className='flex flex-col text-start w-full h-full max-h-full pt-[26px] overflow-y-auto overflow-x-hidden z-0'>
                             {(draftIndex!==2 && isStandbyFeedback==='') && bodyHistory.body.present && Array.isArray(bodyHistory.body.present) && remakeBodyItem.map((bodyRemakeStruct, bodyRemakeStructIndex)=> {
-                                return <span className='pb-[20px] w-full' key={bodyRemakeStructIndex}>
+                                return <span className='pb-[20px] w-full preview-proofreading-content-body-font' key={bodyRemakeStructIndex}>
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
                                         // console.log('==test draft jsx ===',v)
@@ -1483,6 +1483,7 @@ const PreviewSparkWriting = (props:any) => {
                                 )
                         } 
                         onClick={()=>{
+                            console.log('process.env.REACT_APP_IS_DEV =',process.env.REACT_APP_IS_DEV)
                             if (!commonStandbyScreen.openFlag) {
                                 if (sparkWritingData[unitIndex].proofreading_count===2) {
                                     commonAlertOpen({

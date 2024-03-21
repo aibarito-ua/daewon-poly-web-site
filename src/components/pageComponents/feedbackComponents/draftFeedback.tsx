@@ -142,16 +142,16 @@ const loadFeedbackDraftBody = (
                 // 'update-words'
                 if (currentType === -1) {
                     const jsxTag=<span key={mainTagKey} className='update-words'>
-                        <span className='text-[#eb3a3a] line-through h-fit'>{wordItem.text}</span></span>
+                        <span className='text-[#eb3a3a] line-through h-fit whitespace-pre-wrap'>{wordItem.text}</span></span>
                     returnValue.push(jsxTag);
                     
                 } else if (currentType === 1) {
                     const jsxTag = <span key={mainTagKey} className='update-words'>
-                        <span className='text-[#00be91]'>{wordItem.text}</span></span>
+                        <span className='text-[#00be91] whitespace-pre-wrap'>{wordItem.text}</span></span>
                     returnValue.push(jsxTag);
                 } else {
                     // type 0
-                    const jsxTag=<span className='update-words' key={mainTagKey}>{wordItem.text}</span>
+                    const jsxTag=<span className='update-words whitespace-pre-wrap' key={mainTagKey}>{wordItem.text}</span>
                     returnValue.push(jsxTag);
                 }
                 // comment check

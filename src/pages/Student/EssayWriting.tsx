@@ -637,6 +637,7 @@ const EssayWriting = () => {
 
     const Draft2ndWritingPage = () => {
         const draftItem = sparkWritingData[parseInt(UnitIndex)-1];
+        console.log('test =',draft2ndPageSet)
         console.log(' 2ND DRAFT draftItem :',draftItem)
         console.log('draft2ndSaveActive =',draft2ndSaveActive)
         console.log('draft2ndSubmitActive',draft2ndSubmitActive)
@@ -1042,7 +1043,8 @@ const EssayWriting = () => {
             console.log('reset history in electron =',electronData)
         }
     },[])
-    const temporarySaveFunction = React.useCallback(async () => {
+    // hook 구독 관련 이슈로 callback hook -> function으로 변경
+    const temporarySaveFunction = async () => {
         const targetData = sparkWritingData[parseInt(UnitIndex)-1]
         const draftIndex = parseInt(DraftIndex);
         if (draftIndex === 1){
@@ -1158,6 +1160,7 @@ const EssayWriting = () => {
                 }
             });
             const gapTime = setSparkWritingUnitEnd(UnitIndex, draftIndex.toString())
+            console.log('in 2nd save draft2ndPageSet =',draft2ndPageSet)
             const data:TSparkWritingTemporarySaveData = {
                 student_code: userInfo.userCode,
                 student_name_en: userInfo.memberNameEn,
@@ -1233,10 +1236,10 @@ const EssayWriting = () => {
                 setDraft2ndPageSet('')
                 setDraft2ndSaveActive(false)
                 setDraft2ndSubmitActive(false)
-                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                // CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             }
         }
-    },[])
+    }
     
     const handleResizeHeightDraft1stInputs = React.useCallback(()=>{
         console.log(' === handleResizeHeightDraft1stInputs ===')

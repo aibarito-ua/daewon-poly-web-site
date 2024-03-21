@@ -1474,6 +1474,22 @@ bg-[#ffea2c]
   text-align: center;
   color: #7861bb;
 }
+.preview-proofreading-content-font {
+  font-family: 'Roboto';
+  font-size: 18px;
+  line-height: 1.44;
+  letter-spacing: normal;
+}
+.preview-proofreading-content-title-font {
+  font-weight: 700;
+  @apply
+  preview-proofreading-content-font
+}
+.preview-proofreading-content-body-font {
+  font-weight: 400;
+  @apply
+  preview-proofreading-content-font
+}
 .preview-text-pre {
   font-family: 'Roboto';
   font-size: 18px;
@@ -1503,6 +1519,7 @@ bg-[#ffea2c]
   flex-auto
   overflow-hidden
   break-keep
+  whitespace-pre-wrap
 }
 .preview-body-text-pre-empty {
   font-family: 'Roboto';
@@ -2573,6 +2590,7 @@ bg-[#ffea2c]
   text-start
   align-middle
   py-[2px]
+  whitespace-pre-wrap
 }
 .draft-hover-tooltip-content-wrap {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.1);

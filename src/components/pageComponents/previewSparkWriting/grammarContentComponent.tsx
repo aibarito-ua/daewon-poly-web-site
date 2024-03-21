@@ -518,13 +518,6 @@ const GrammarContentComponent = {
                                     reasons,
                                     displayWordInModal
                                 ]
-                                // const textTagId = 'title-'+mainTagKey+'-del'
-                                // const describeText = [
-                                //     reasons,
-                                //     <span className='grammar-tooltip-custom-content-wrap'>
-                                //     <pre className='grammar-tooltip-custom-content-delete-text'>{displayText}</pre>
-                                //     </span>
-                                // ];
                                 returnValue = (
                                     <GrammarTooltipCustom 
                                         addEmpty={displayTextCheck}
@@ -541,7 +534,8 @@ const GrammarContentComponent = {
                             } else if (compareWordFlag === 0) {
                                 // original
                                 const textTagId = 'title-'+mainTagKey + '-ori'
-                                returnValue = <span key={mainTagKey}><span id={textTagId}>{currentWord}</span></span>
+                                returnValue = <span key={mainTagKey}><span id={textTagId} className='whitespace-pre-wrap'>{currentWord}</span></span>
+                                
                             }
                         } else {
                             
