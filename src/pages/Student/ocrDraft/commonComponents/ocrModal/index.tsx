@@ -8,9 +8,8 @@ import { OcrTextType } from "../../types";
 import { checkMaxNumberOfContentCharacters, checkMaxNumberOfParagraphCharacters, checkMaxNumberOfTitleCharacters, checkMaxNumberOfWordCharacters } from "../../controller/DraftController";
 import Message from "../../Message";
 import { showAlertPopup, showConfirmPopup } from "../../controller/AlertModalController";
-import { CONTINUOUS_SPECIAL_CHARACTERS_REGEX, DOUBLE_QUATES_REGEX, LAST_NEW_LINE_REGEX, LAST_SPACE_REGEX, NOT_ALLOWED_CHARACTERS_REGEX, QUOTES_SPACE_REGEX, SPECIAL_CHARACTERS_SPACE_REGEX } from "../../consts";
+import { CONTINUOUS_SPECIAL_CHARACTERS_REGEX, DOUBLE_QUATES_REGEX, LAST_NEW_LINE_REGEX, LAST_SPACE_REGEX, NOT_ALLOWED_CHARACTERS_REGEX, SPECIAL_CHARACTERS_SPACE_REGEX } from "../../consts";
 import { MAX_IMAGE_PAD_HEIGHT, MAX_IMAGE_PAD_WIDTH, MAX_IMAGE_PC_HEIGHT, MAX_IMAGE_PC_WIDTH, isAlwaysFullScreenOcrModal } from "./consts";
-import Header from "./components/Header";
 import { CommonInputValidate } from "../../../../../util/common/commonFunctions";
 
 const MAX_DISPLAY_SPECIAL_CHARACTERS = 10;
@@ -64,7 +63,7 @@ export default function OcrModalComponent() {
     const inputText = ocrModalData.inputText ?? "";
     if (!validateTitle(textType, inputText, ocrText)) return;
 
-    if (!validateContent(textType, inputText + ocrText)) return;
+    if (!validateContent(textType, inputText, ocrText)) return;
 
     if (ocrModalData.onResOcrEvent) {
       let resultText = ocrText;
@@ -146,11 +145,11 @@ function validateTitle(textType: OcrTextType, inputText: string, ocrText: string
   const text = inputText.length > 0 && !LAST_SPACE_REGEX.test(inputText) ? inputText + " " + ocrText : inputText + ocrText;
 
    // 특수문자 점검
-   if (!validateNotAllowedSpecialCharacters(text)) {
+   if (!validateNotAllowedSpecialCharacters(ocrText)) {
     return false;
   }
 
-  if (!validateNotAllowSpecialSymbols(text)) {
+  if (!validateNotAllowSpecialSymbols(ocrText)) {
     return false;
   }
 
@@ -170,15 +169,16 @@ function validateTitle(textType: OcrTextType, inputText: string, ocrText: string
 }
 
 /** 본문 오류 체크 및 팝업 표시 */
-function validateContent(textType: OcrTextType, text: string) {
+function validateContent(textType: OcrTextType, inputText: string, ocrText: string) {
   if (textType === 'title') return true;
 
+  const text = inputText + ocrText;
   // 특수문자 점검
-  if (!validateNotAllowedSpecialCharacters(text)) {
+  if (!validateNotAllowedSpecialCharacters(ocrText)) {
     return false;
   }
 
-  if (!validateNotAllowSpecialSymbols(text)) {
+  if (!validateNotAllowSpecialSymbols(ocrText)) {
     return false;
   }
 
