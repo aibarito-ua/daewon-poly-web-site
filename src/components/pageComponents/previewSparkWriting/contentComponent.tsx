@@ -37,7 +37,6 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
                         return <span className='preview-body-text-pre' key={innerSplitTagKey}>{splitedText}</span>
                     }
                 })}
-                {/* <span className='preview-body-text-pre'>{text}</span> */}
             </span>)
         }
         // draft 2 body
@@ -67,8 +66,14 @@ const contentComponent = ( outlineItem: TSparkWritingData, draftStatus: string )
                         )
                     })}
                     {draftStatus==='2' && bodyItem.map((item, itemIndex) => (
+                        // 2024 03 22 : 모든 텍스트는 입력 당시의 포멧으로 사용 ( 추가 변형은 모두 삭제 )
+                        // <div key={itemIndex} className='pb-[20px]'>
+                        //     {item.map((innerItem, innerItemIndex)=> contentBodyComponent2(innerItemIndex, innerItem.input_content, '') )}
+                        // </div>
                         <div key={itemIndex} className='pb-[20px]'>
-                            {item.map((innerItem, innerItemIndex)=> contentBodyComponent2(innerItemIndex, innerItem.input_content, '') )}
+                            {item.map((innerItem, innerItemIndex)=>{
+                                return contentBodyComponent(innerItemIndex, innerItem.input_content, '')
+                            })}
                         </div>
                     ))}
                 </div>
