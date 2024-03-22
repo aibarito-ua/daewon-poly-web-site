@@ -1236,7 +1236,7 @@ const EssayWriting = () => {
                 setDraft2ndPageSet('')
                 setDraft2ndSaveActive(false)
                 setDraft2ndSubmitActive(false)
-                // CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
+                CommonFunctions.goLink('WritingClinic/SparkWriting',navigate, role)
             }
         }
     }
