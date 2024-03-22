@@ -57,7 +57,7 @@ export const LAST_SPACE_REGEX = /\s+$/;
 
 /** 허용되지 않는 문자 정규식 */
 export const NOT_ALLOWED_CHARACTERS_REGEX =
-  /[^a-zA-Z0-9\s\n~!@#$%^&*()_+-=/[\]:;"',.<>ñéÑÉ]/g;
+  /[^a-zA-Z0-9\s\n~!?@#$%^&*()_+-=/[\]:;"',.<>ñéÑÉ]/g;
 
 /** Without Outline 마지막 경로 */
 export const WO_LAST_SUBPATH = '/WithoutOutline';
