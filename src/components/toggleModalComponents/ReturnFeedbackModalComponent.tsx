@@ -36,7 +36,7 @@ export default function ReturnFeedbackModalComponent () {
                 borderRadius: '20px',
                 paddingX: '25px',
                 paddingY:'0px',
-                width: '500px',
+                width: '550px',
                 height: '623.4px',
             }}}
             open={return1stDraftReasonAlert.openFlag}
@@ -58,9 +58,10 @@ export default function ReturnFeedbackModalComponent () {
                         paddingLeft: '13px',
                         userSelect: 'none'
                     }}
-                ><div className='h-fit'>
-                    <div>{'Your teacher has returned your writing'}</div>
-                    <div>{'for the following reason(s):'}</div>
+                ><div className='block h-fit w-fit whitespace-nowrap'>
+                    {/* <div>{'Your teacher has returned your writing'}</div>
+                    <div>{'for the following reason(s):'}</div> */}
+                    {'Your teacher has returned your writing for the following reason(s):'}
                 </div></DialogTitle>
                 <DialogContent className='flex flex-1 flex-col'
                 sx={{padding:0}}>
