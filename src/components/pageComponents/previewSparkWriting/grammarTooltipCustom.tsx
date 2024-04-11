@@ -91,12 +91,14 @@ const GrammarTooltipCustom = (props: IGrammarTooltipCustomProps) => {
             setPlacement('bottom-start')
         }
     }, [ setPlacement, textTagid])
-
+    // 2024 04 11 update 이전 태그 칼라 선택
+// ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}
     return (
         <span key={mainTagkey} 
-        className={`whitespace-pre-wrap hover:cursor-pointer rounded-[5px] 
+        className={`whitespace-pre-wrap hover:cursor-pointer rounded-[2px]
             ${tagType==='delete'? 'line-through': ''} 
-            ${tagType==='add'? 'text-[#00be91] bg-[#def4e7]':'text-[#eb3a3a] bg-[#ffe8e8]'}
+            text-white px-[3px]
+            ${tagType==='add'? 'bg-[#00be90]':'bg-[#ff7676]'}
             ${addEmpty!==undefined && (
                 addEmpty==='before'? 'ml-[3px]': (addEmpty==='after'? 'mr-[3px]':'')
             )} `}>

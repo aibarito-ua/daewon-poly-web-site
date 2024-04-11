@@ -38,7 +38,7 @@ const GrammarContentComponent = {
             return (
                 <svg {...props} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="arrow">
-                <path id="Vector 70" d="M13 19L16.2929 15.7071C16.6834 15.3166 16.6834 14.6834 16.2929 14.2929L13 11" stroke="#EB3A3A" strokeWidth="2" strokeLinecap="round"/>
+                <path id="Vector 70" d="M13 19L16.2929 15.7071C16.6834 15.3166 16.6834 14.6834 16.2929 14.2929L13 11" stroke="#ff7676" strokeWidth="2" strokeLinecap="round"/>
                 </g>
                 </svg>
             )

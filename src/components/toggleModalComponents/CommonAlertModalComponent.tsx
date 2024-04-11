@@ -167,8 +167,9 @@ export default function CommonAlertModalComponent(
                 </div>
               ):(
                 <div className='flex flex-1 flex-row justify-center w-full h-[50px] mb-[10px] mx-[10px] gap-[10px] items-center'>
-                  <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#dcdadf] rounded-[15px] text-[#959aaa] hover:cursor-pointer items-center'
-                  
+                  <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] 
+                    bg-white rounded-[15px] text-[#42278f] border-[2px] border-[#42278f]
+                    hover:cursor-pointer items-center'
                   onClick={(e)=>handleLeft(e)}
                   >{commonAlertYesLabel}</div>
                   <div className='flex flex-1 h-full max-w-[180px] justify-center font-[Roboto] font-[700] text-[16px] bg-[#42278f] rounded-[15px] text-[#ffffff] hover:cursor-pointer items-center'

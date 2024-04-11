@@ -1335,7 +1335,8 @@ const PreviewSparkWriting = (props:any) => {
                                 <div className='flex flex-1 w-full h-fit justify-center z-0'>
                                     <div className='flex flex-row w-full h-fit max-h-full text-center'>
                                         <div className='flow-root w-full overflow-y-auto preview-proofreading-content-title-font'>
-                                        {bodyHistory.title.present && Array.isArray(bodyHistory.title.present) &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
+                                        { bodyHistory.title.present && Array.isArray(bodyHistory.title.present) 
+                                            &&bodyHistory.title.present.map((v, i) => GrammarContentComponent.titleCompareDif1(v, i, clickTooltip))}
                                         </div>
                                     </div>
                                 </div>
@@ -1346,8 +1347,7 @@ const PreviewSparkWriting = (props:any) => {
                                     {bodyRemakeStruct.map((bodyRemakeNumber, bodyRemakeNumberIndex)=>{
                                         const v = bodyHistory.body.present[bodyRemakeNumber];
                                         // console.log('==test draft jsx ===',v)
-                                        return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip)
-                                        // return <></>
+                                        return GrammarContentComponent.bodyCompareDif1(v, bodyRemakeNumber, clickTooltip);
                                     })}
                                 </span>
                             } )}

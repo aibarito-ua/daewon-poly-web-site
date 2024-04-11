@@ -1346,9 +1346,11 @@ bg-[#ffea2c]
   @apply
   px-[4px]
   py-[1px]
-  rounded-[5px]
-  text-[#eb3a3a]
-  bg-[#ffe8e8]
+  rounded-[2px]
+  /* text-[#eb3a3a] */
+  /* bg-[#ffe8e8] */
+  text-white
+  bg-[#ff7676]
   line-through
   select-none
 }
@@ -1361,9 +1363,11 @@ bg-[#ffea2c]
   @apply
   px-[4px]
   py-[1px]
-  rounded-[5px]
-  text-[#00be91]
-  bg-[#def4e7]
+  rounded-[2px]
+  /* text-[#00be91] */
+  /* bg-[#def4e7] */
+  text-white
+  bg-[#00be90]
   select-none
 }
 

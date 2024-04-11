@@ -108,10 +108,6 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
             reportModalRubricData,
             reportSelectFinder,
             reportSelectUnit,
-            // reportSelectedOverallBarChart,
-            // reportSelectedOverallPieChart,
-            // unitReportsData,
-            // unitRubricScoresData,
 
             unitLabel,
             reportSelectBookName,
@@ -137,7 +133,6 @@ class ReportComponentToPrint extends React.PureComponent<IReportComponentToPrint
         
         const skillAnalysis = sortLabels.map((categoryName) => {
 
-            
             let aimed_result:string[]=[];
             let score_name:string='';
             let score_desc:string='';

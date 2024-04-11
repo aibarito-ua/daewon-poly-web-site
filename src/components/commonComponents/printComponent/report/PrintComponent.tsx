@@ -27,31 +27,62 @@ const PrintReportExportButton = (props: {
     } = useControlAlertStore();
     React.useEffect(() => {
         if (divRef.current) {
+            console.log('=== print effect ===')
             const checkRef = divRef.current;
             checkRef.style.display='block';
-            const oneRowHeight = checkRef.children[0].children[0].clientHeight; 
+            const oneRowHeight = checkRef.children[0].children[0].clientHeight;
             const clientHeight = checkRef.clientHeight;
-            
+            // console.log('clientHeight =',clientHeight)
+            // console.log('oneRowHeight =',oneRowHeight)
             let newHeight = oneRowHeight;
             let newTags:JSX.Element[][]=[];
+            const minimumPrintTextCountNumber = 490;
+
             const childRef = checkRef.children;
             for (let i = 0; i < childRef.length; i++) {
                 const childRow = childRef[i].children;
                 for (let j = 0; j< childRow.length; j++) {
                     const childSpanText = childRow[j].textContent;
+                    // console.log('childSpanText[j =',j,'] =',childSpanText)
                     const spanHeight = childRow[j].clientHeight;
                     newHeight += spanHeight;
                     const newtagsLength = newTags.length;
-                    const jsxChildSpan = <span key={childSpanText+'print-'+i+j} className='export-report-wr-oc-input'>{childSpanText}</span>;
+                    const jsxChildSpan:JSX.Element = <span key={childSpanText+'print-'+i+j} className='export-report-wr-oc-input'>{childSpanText}</span>;
                     if (newtagsLength === 0) {
-                        newTags.push([])
-                        newTags[0].push(jsxChildSpan);
+                        // console.log('1 : length 0 push')
+                        // 1줄인 경우 길이 체크
+                        if (clientHeight > newHeight) {
+                            // 박스 높이가 내용보다 큰 경우
+                            newTags.push([])
+                            newTags[0].push(jsxChildSpan);
+                        } else {
+                            // 박스 범위를 벗어난 높이인 경우
+                            newTags.push([]);
+                            const remainingText = childSpanText?.slice(0, minimumPrintTextCountNumber);
+                            // console.log('remainingText length =',remainingText?.length)
+                            // console.log('remainingText =',remainingText)
+                            const remainingSpan = <span key={remainingText+'print-'+i+j} className="export-report-wr-oc-input">{remainingText}</span>;
+                            newTags[0].push(remainingSpan);
+
+                            const overflowText = childSpanText?.slice(minimumPrintTextCountNumber);
+                            if (overflowText) {
+                                newHeight = 0;
+                                const overflowSpan = <span key={overflowText+'print-'+i+j} className="export-report-wr-oc-input">{overflowText}</span>;
+                                newTags.push([]);
+                                newTags[1].push(overflowSpan)
+                            } else {
+                                newHeight += spanHeight;
+                            }
+                        }
+                        
                     } else if (newtagsLength===1) {
                         const lastIdx = newtagsLength-1;
 
                         if (clientHeight > newHeight) {
+                            // console.log('2 : clientHeight > newHeight push')
                             newTags[lastIdx].push(jsxChildSpan);
                         } else if (clientHeight <= newHeight) {
+                            // console.log('3 : clientHeight <= newHeight push')
                             newHeight = 0;
                             newTags.push([]);
                             newTags[lastIdx+1].push(jsxChildSpan);
@@ -59,8 +90,10 @@ const PrintReportExportButton = (props: {
                     } else {
                         const lastIdx = newtagsLength-1;
                         if (clientHeight > newHeight) {
+                            // console.log('4 :')
                             newTags[lastIdx].push(jsxChildSpan);
                         } else if (clientHeight <= newHeight) {
+                            // console.log('5 :')
                             newHeight=0;
                             newTags.push([]);
                             newTags[lastIdx+1].push(jsxChildSpan)
@@ -69,6 +102,7 @@ const PrintReportExportButton = (props: {
                 };// for j end
             }// for i end
             checkRef.style.display='none';
+            // console.log('newTags.length =',newTags)
             if (newTags.length>1) {
                 setIsMulti(true);
             } else {
@@ -76,7 +110,10 @@ const PrintReportExportButton = (props: {
             }
             setReplaceBody(newTags);
         }
-    }, [reportSelectUnit])
+    }, [reportSelectUnit, divRef.current])
+    React.useEffect(()=>{
+        console.log('is Multi =',isMulti)
+    },[isMulti])
 
     const printRegular = useReactToPrint({
         content: () => componentRef.current
