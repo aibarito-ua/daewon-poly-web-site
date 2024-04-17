@@ -341,20 +341,6 @@ const EssayWriting = () => {
             })
         }
     }
-    const foldFlagFunction = (i:number, title:string,unitIndex:number) => {
-        
-        const dumpFlags = foldFlag.map((foldItem, foldIndex)=>{
-            if (foldIndex === i) {
-                if (!foldItem) {
-                    return true
-                } else return true;
-            } else return foldItem;
-        })
-        console.log('fold settings ==',dumpFlags)
-        setFoldFlag(dumpFlags)
-        setIsOpenFold(unitIndex, title);
-        setUpdateFoldIndex(i);
-    }
     
     // 문장 안의 글자수 제한
     const wordLengthLimit = (sentence:string) => {
@@ -381,15 +367,11 @@ const EssayWriting = () => {
             return <div className={`flex flex-wrap flex-col w-full h-fit z-0 relative ${foldFlag[i]? 'bg-white':'bg-transparent'}`} 
             key={i} id={title+i}>
                 <div className='outline-accordion-div-wrap'>
-                    <button type="button" 
-                        className="outline-accordion-button"
-                        onClick={()=>foldFlagFunction(i,title,outlineItem.unit_index)}
-                    >
+                    <div className="outline-accordion-button">
                         <span className='outline-accordion-button-inner'>
                             <span className='outline-accordion-button-inner-text'>{title}</span>
-                            <span className={foldFlag[i] ? 'hidden':'outline-accordion-button-inner-arrow'}><commonIconSvgs.DownArrowIcon/></span>
                         </span>
-                    </button>
+                    </div>
                     <div className="text-left">
                         <div className={`${foldFlag[i]? 'pt-[5px] pb-[20px]': 'hidden'}`} id={`fold-div-${i}`}>
                             { manufactureItem[i].map((item, itemIndex) => {
@@ -1630,44 +1612,15 @@ const EssayWriting = () => {
         }
         
         // fold
-        if (foldFlag.length === 0) {
+        if (foldFlag.length===0) {
+            // Issue #17103 :: 모든 아웃라인 Open
             const data = sparkWritingData[unitIndex];
             let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
             let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-            
-            let dumyFold = allNames.map((nameItem)=>{
-                let foldItem = false;
-                for (let i = 0; i < data.draft_1_outline.length; i++) {
-                    const title = data.draft_1_outline[i].name.replace(/(_)?([0-9]{1,})/gmi,'');
-                    console.log('title =',title);
-                    if (nameItem === title) {
-                        foldItem = data.draft_1_outline[i].is_input_open;
-                        break;
-                    }
-                }
-                return foldItem;
+            let dumyFold = allNames.map((_v) => {
+                return true;
             })
-            
             setFoldFlag(dumyFold)
-        } else {
-            if (updateFoldIndex !== undefined) {
-                const controllClass = `foldFlag:::[${updateFoldIndex}]`;
-                const data = sparkWritingData[unitIndex];
-                let outlineOrigin:TSparkWritingDataOutline[] = data.draft_1_outline;
-                // let allNames:string[] = CommonFunctions.outlineNameLists(outlineOrigin);
-                for (let i = 0; i < outlineOrigin.length; i++) {
-                    const target = draft1stRefs.current[i];
-                    if (target) {
-                        // const targetBeforeIdName = target.id.replace(/(_)?([0-9]{1,})/gmi,'');
-                        // const targetTitleName = target.id.replace(/\d$/gmi,'').split('_');
-                        if (target.className.includes(controllClass)) {
-                            target.style.height='auto';
-                            target.style.height = target.scrollHeight+'px';
-                            
-                        }
-                    }
-                }
-            }
         }
 
         if (params.draft === '1') {

@@ -62,17 +62,30 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
     ]);
 
     React.useEffect(()=>{
-        if (setCommentFocusIdInModal) {
+        // if (setCommentFocusIdInModal) {
             if (isOpen) {
                 console.log('tooltip main key ')
                 setCommentFocusIdInModal(commentClassName)
             } else {
                 setCommentFocusIdInModal('')
             }
-        }
+        // }
 
+        // if (commentFocusIdInModal === commentClassName) {
+        //     setIsOpen(true)
+        //     refs.domReference.current?.scrollIntoView({
+        //         behavior: "auto",
+        //         block: 'nearest'
+        //     })
+        // } else {
+        //     setIsOpen(false)
+        // }
+    }, [
+        isOpen, setCommentFocusIdInModal
+    ])
+    React.useEffect(()=>{
         if (commentFocusIdInModal === commentClassName) {
-            setIsOpen(true)
+            setIsOpen(true);
             refs.domReference.current?.scrollIntoView({
                 behavior: "auto",
                 block: 'nearest'
@@ -81,10 +94,7 @@ const CommentListWordCustom = (props: ICommentListWordCustomProps) => {
             setIsOpen(false)
         }
     }, [
-        commentClassName,
-        isOpen, commentFocusIdInModal,
-        refs, setCommentFocusIdInModal
-
+        commentFocusIdInModal
     ])
 
     React.useEffect(()=>{

@@ -42,10 +42,10 @@ const CommentTooltipCustom = (props: IGrammarTooltipCustomProps) => {
         placement,
         whileElementsMounted: autoUpdate,
         middleware: [
-            offset(10),
+            offset(-2),
             flip({
                 fallbackPlacements:['top-start','right','bottom-start'],
-                padding: 20
+                padding: 10
             }),
             shift({ padding: 20 }),
             

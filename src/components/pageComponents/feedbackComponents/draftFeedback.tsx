@@ -73,6 +73,9 @@ const loadFeedbackDraftTitle = (
                             cursor: 'pointer',
                         }}
                         >{returnValue}</span>;
+                        // console.log('createSpan =',createSpan)
+                        // console.log('comment_className =',currentCommentItem.comment_className)
+                        
                         const tooltipSpans = usePage 
                         ? <CommentTooltipCustomInModal 
                             compareResultText={createSpan}
@@ -172,7 +175,9 @@ const loadFeedbackDraftBody = (
                             cursor: 'pointer'
                         }}
                         >{returnValue}</span>;
-                        const tooltipSpans = usePage==='Modal' 
+                        // console.log('createSpan =',createSpan)
+                        // console.log('comment_className =',currentCommentItem.comment_className)
+                        const tooltipSpans = usePage
                         ? <CommentTooltipCustomInModal 
                             compareResultText={createSpan}
                             mainTagkey={currentCommentItem.comment_className}
