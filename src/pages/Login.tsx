@@ -10,10 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
     const navigate = useNavigate();
-    // const ANDROID_VERSION=process.env.REACT_APP_ANDROID_VERSION ? process.env.REACT_APP_ANDROID_VERSION:'';
-    // const IOS_VERSION = process.env.REACT_APP_IOS_VERSION ? process.env.REACT_APP_IOS_VERSION:'';
-    // const ELECTRON_VERSION = process.env.REACT_APP_ELECTRON_VERSION ? process.env.REACT_APP_ELECTRON_VERSION:'';
-    // const IS_MAINTENANCE = process.env.REACT_APP_MAINTENANCE ? process.env.REACT_APP_MAINTENANCE:'NO';
     const { 
         setUserInfo, setDeviceId, setMobile, isMobile, device_id, setSize,setPlatform,
         setMaintenanceData
@@ -26,14 +22,11 @@ export const Login = () => {
     const [saveId, setSaveId] = React.useState<boolean>(false)
     const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
     const [version, setVersion] = React.useState<string>('');
-    // const [checkDevice, setCheckDevice] = React.useState<"Android"|"iOS"|"Electron"|"">("");
-    // const [isShouldChangeVersion, setIsShouldChangeVersion] = React.useState<boolean>(false);
-    // const [isUnderMaintenance, setIsUnderMaintenance] = React.useState<boolean>(false);
 
     const {
         commonAlertOpen, commonAlertClose
     } = useControlAlertStore();
-    
+
     const validate=()=>{
         const errors = {
             displayMessage: '',
@@ -49,7 +42,15 @@ export const Login = () => {
         return errors;
     }
     const goPasswordUpdatePage = () => {
+        // 아이디/비밀번호 변경
         window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW, "_blank", "noopener, noreferrer" )
+    }
+    const goPasswordChangePage = (token: string) => {
+        // 6개월 경과 비밀번호 변경
+        const url = CONFIG.LOGIN.LINK.POLY.CHANGE_PW+encodeURIComponent(token);
+        
+        console.log('test =',url)
+        window.open(url, '_blank', 'noopener, norefferrer')
     }
     const forceLogin = async (loginvalues: {username: string, password: string}, deviceid: string, saveid: boolean) => {
         console.log('loggin in with', loginvalues)
@@ -329,7 +330,7 @@ export const Login = () => {
                                     messages: ['비밀번호 변경 후 6개월이 경과했습니다.','POLY 홈페이지에서 비밀번호를 변경해주세요.'],
                                     useOneButton: true,
                                     yesButtonLabel: 'OK',
-                                    yesEvent: goPasswordUpdatePage
+                                    yesEvent: ()=>goPasswordChangePage(response.polyToken)
                                 })
                             } else {
                                 // 4

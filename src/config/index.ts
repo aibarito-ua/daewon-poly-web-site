@@ -11,6 +11,9 @@ const FORCE_LOGIN:string=process.env.REACT_APP_LOGIN_FORCE?process.env.REACT_APP
 const JOIN_URL:string=process.env.REACT_APP_LOGIN_JOIN_URL?process.env.REACT_APP_LOGIN_JOIN_URL:'';
 const FIND_ID_URL:string=process.env.REACT_APP_LOGIN_FIND_ID_URL?process.env.REACT_APP_LOGIN_FIND_ID_URL:'';
 const FIND_PW_URL:string=process.env.REACT_APP_LOGIN_FIND_PW_URL?process.env.REACT_APP_LOGIN_FIND_PW_URL:'';
+const CHANGE_PW_URL:string=process.env.REACT_APP_LOGIN_CHANGE_PW_URL ? process.env.REACT_APP_LOGIN_CHANGE_PW_URL:'';
+// token secret key
+const POLY_CREATE_TOKEN_KEY:string=process.env.REACT_APP_POLY_CREATE_TOKEN_KEY?process.env.REACT_APP_POLY_CREATE_TOKEN_KEY:'';
 
 // Draft 
 // Get
@@ -69,8 +72,10 @@ export const CONFIG = {
                 JOIN: JOIN_URL,
                 FIND_ID:FIND_ID_URL,
                 FIND_PW:FIND_PW_URL,
+                CHANGE_PW:CHANGE_PW_URL,
                 SERVICE: POLY_SERVICE,
-                PRIVACY: POLY_PRIVACY
+                PRIVACY: POLY_PRIVACY,
+                CREATE_TOKEN_SECRET: POLY_CREATE_TOKEN_KEY,
             }
         },
         DUPLICATE_CHECK: BACK_HOST+CHECK_DUPLICATE_LOGIN

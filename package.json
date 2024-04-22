@@ -16,6 +16,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "axios": "1.4.0",
+    "crypto-js": "^4.2.0",
     "detect-browser": "5.3.0",
     "diff-match-patch": "1.0.5",
     "flowbite": "1.6.5",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/diff-match-patch": "1.0.32",
     "@types/lodash": "4.14.195",
     "autoprefixer": "10.4.14",
