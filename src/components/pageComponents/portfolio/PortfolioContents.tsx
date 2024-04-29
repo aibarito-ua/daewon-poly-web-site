@@ -85,7 +85,7 @@ export default function PortfolioContents () {
         ? "portfolio-container-wrap-electron"
         : "portfolio-container-wrap"
     }>
-        <div className="flex flex-col gap-[15px]">
+        <div className="flex flex-col gap-[15px] select-none">
             <div className="flex flex-row w-full h-fit justify-center items-center gap-[20px]">
                 {/* {displayRow(1)}
                 {displayRow(2)} */}

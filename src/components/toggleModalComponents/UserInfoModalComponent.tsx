@@ -165,14 +165,14 @@ export default function UserInfoModalComponent() {
                         <span>{'1. 사용하고 계신 아이디는 탈퇴할 경우 재사용 및 복구가 불가능합니다.'}</span>
                         <span>{'2. 탈퇴한 아이디는 본인과 타인 모두 재사용 및 복구가 불가하오니 신중하게 선택하시기 바랍니다.'}</span>
                     </div>
-                    <div className='flex flex-row w-full justify-end mt-[6px]'>
+                    <div className='flex flex-row w-full justify-end mt-[6px] select-none'>
                         <CustomizedCheckbox value={agree[0]} setValue={onClickCheckBox} index={0}/>
                     </div>
                     <div className='user-info-modal-info-cancel-value-agree-text mt-[9px]'>
                         <span>{'1. 탈퇴 후 회원정보 및 이용기록은 모두 삭제됩니다.'}</span>
                         <span>{'2. 회원정보 및 서비스 이용기록은 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.'}</span>
                     </div>
-                    <div className='flex flex-row w-full justify-end mt-[6px]'>
+                    <div className='flex flex-row w-full justify-end mt-[6px] select-none'>
                         <CustomizedCheckbox value={agree[1]} setValue={onClickCheckBox} index={1}/>
                     </div>
                     <div className='flex flex-row user-info-modal-info-cancel-value-title mt-[9px]'>

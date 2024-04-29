@@ -235,7 +235,7 @@ const handleNext = (currentIndex:number) => {
             },
           }}
         >
-          <Tab  sx={{
+          <Tab disableRipple sx={{
             height: '55px',
             paddingLeft: '27px',
             paddingRight: '27px',
@@ -255,7 +255,7 @@ const handleNext = (currentIndex:number) => {
           }} 
           className={value===0? 'bg-no-repeat w-[240px] bg-tab-title-active-bg-svg bg-cover':'opacity-[0.5]'}
           label="Overall Report" />
-          <Tab sx={{
+          <Tab disableRipple sx={{
             height: '55px',
             paddingLeft: '27px',
             paddingRight: '27px',
@@ -329,7 +329,7 @@ const handleNext = (currentIndex:number) => {
                         <PieChart />
                     </div>
                     {/* right bar chart */}
-                    <div className='flex flex-col items-center justify-center gap-[20px]'>
+                    <div className='flex flex-col items-center justify-center gap-[20px] select-none'>
                         <BarChart />
                         <div className='bg-tab-overall-bar-legend-img-svg bg-no-repeat w-[393px] h-[15px]' />
                     </div>
@@ -346,7 +346,7 @@ const handleNext = (currentIndex:number) => {
                   : 'report-chart-pannel-report-by-unit-wrap'
                 }>
                     {/* title */}
-                    <div className='flex flex-row report-by-unit-page-title-font pb-[15px]'>
+                    <div className='flex flex-row report-by-unit-page-title-font pb-[15px] select-none'>
                         {reportByUnitMainTitle}
                     </div>
                     {/* unit report */}

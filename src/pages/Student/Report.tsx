@@ -307,7 +307,7 @@ const Report = () => {
                         </div>
                         <span className='writing-activity-page-title-text' >{ reportSelectBookName==='' ? sparkWritingBookName: reportSelectBookName }</span>
                     </div>
-                    <div className='flex flex-1 h-[45px] items-center justify-end'>
+                    <div className='flex flex-1 h-[45px] items-center justify-end select-none'>
                         <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={false} useDefaultEmptyValueFlag={false} selectDataFn={handleChange} isLevel={false}/>
                         <ReportSelectButton data={reportSelectBoxDatas} disabledFlag={true} useDefaultEmptyValueFlag={true} selectDataFn={handleChange} isLevel={true}/>
                     </div>

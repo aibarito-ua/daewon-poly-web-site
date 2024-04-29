@@ -608,17 +608,17 @@ export const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-1 flex-col ml-[75px]'>
                         {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
-                        <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain'></div>
+                        <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain select-none'></div>
                         
                         <div className='flex flex-row mt-[30px]'>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none select-none">
                                     <svgIcons.Icons.IdIcon className='w-4 h-4'/>
                                 </div>
                                 <input type="text"
                                     id='username'
                                     name="username"
-                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6]" 
+                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
                                     placeholder="User Name"
                                     value={loginValues.username}
                                     onChange={(evt)=>{handleChange(evt)}}/>
@@ -633,7 +633,7 @@ export const Login = () => {
                                     id='password'
                                     name="password"
                                     autoComplete='on'
-                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6]" 
+                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
                                     placeholder="Password"
                                     value={loginValues.password}
                                     onChange={(evt) => {handleChange(evt)}}/>
@@ -648,7 +648,7 @@ export const Login = () => {
                                 
                             </div>
                         </div>
-                        <div className='flex flex-row mt-[5.3px] h-fit items-center'>
+                        <div className='flex flex-row mt-[5.3px] h-fit items-center select-none'>
                                 <input id="login-save-id-checkbox" type='checkbox' 
                                     className='flex rounded-[5px] w-[20px] h-[20px] text-[#42278F] border-[#dddddd] focus:ring-transparent focus:ring-0 checked:bg-[#42278F]'
                                     onChange={(value)=>{
@@ -667,7 +667,7 @@ export const Login = () => {
                             disabled={!isLoginBtn}
                                 type='submit'
                             >
-                                <span className='uppercase text-[#ffffff] font-notoSansCJKKR'>login</span>
+                                <span className='uppercase text-[#ffffff] font-notoSansCJKKR select-none'>login</span>
                             </button>
                         </div>
                         {/* <div className='flex flex-row'>

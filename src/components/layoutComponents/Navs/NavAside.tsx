@@ -68,7 +68,7 @@ const NavAside = () => {
     ])
 
     return (
-        <nav id={'navAside'} className=''>
+        <nav id={'navAside'} className='select-none'>
         <div className={`absolute left-0 top-0 z-50 w-[190px] h-full max-h-[800px] transition-transform ${
             // !sidebarFlagged ? '-translate-x-full':'translate-x-0'
             ''
@@ -79,7 +79,7 @@ const NavAside = () => {
         // aria-label="Sidebar"
         >
             <div className="h-full  pb-4 overflow-y-auto bg-[#3c2481]">
-            <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain' />
+            <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain select-none' />
                 <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`
@@ -110,7 +110,7 @@ const NavAside = () => {
                 </ul>
                 {role !== 'logout' && (
                     
-                    <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer' 
+                    <commonIconSvgs.ExitButton className='w-[140px] h-[40px] absolute left-[25px] bottom-[30px] hover:cursor-pointer select-none' 
                     onClick={async ()=>{
                         const check = await checkDuplicateLogin(userInfo.accessToken);
                         if (check.is_server_error) { 

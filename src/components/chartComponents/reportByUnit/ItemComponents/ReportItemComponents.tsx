@@ -225,7 +225,7 @@ const ReportCorrectionSummaryComponent = (
                         {item.grammar_correction.punctuation && PuctuationSentence(item.grammar_correction.punctuation)}
                         
                     </div>
-                    <div className={'ml-[13px] report-chart-righ-correction-content-wrap-2 w-full'}>
+                    <div className={'ml-[13px] report-chart-righ-correction-content-wrap-2 w-full select-none'}>
                         {correctionDiv}
                     </div>
                 </div>

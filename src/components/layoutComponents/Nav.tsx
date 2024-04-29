@@ -70,7 +70,7 @@ export const Nav = () => {
     }
     
     return (
-    <nav id='navMain' className=''>
+    <nav id='navMain' className='select-none'>
         <div className={`absolute top-0 left-0 z-50 max-w-[1280px] w-full max-h-20 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${
             // topNavHiddenFlagged ? 'hidden': ''
             'hidden'

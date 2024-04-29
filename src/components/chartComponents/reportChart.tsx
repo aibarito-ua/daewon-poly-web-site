@@ -121,11 +121,11 @@ const CustomTooltipDIV = (props:any) => {
             paddingBottom: '15px',
             paddingLeft: paddingLeftPX,
             paddingRight: '25px'
-          }} className={`${classNameStr} z-[1302]`} 
+          }} className={`${classNameStr} z-[1302] select-none`} 
           
           >
-            <div className="custom-tooltip-title z-[1302]">{`${payload[0].payload.tooltip.title}`}</div>
-            <div className="custom-tooltip-content z-[1302] mt-[12px]">{`${payload[0].payload.tooltip.content}`}</div>
+            <div className="custom-tooltip-title z-[1302] select-none">{`${payload[0].payload.tooltip.title}`}</div>
+            <div className="custom-tooltip-content z-[1302] mt-[12px] select-none">{`${payload[0].payload.tooltip.content}`}</div>
           </div>
         );
     } else return null;
@@ -198,7 +198,7 @@ export default function App() {
     ]
   return (
     
-    <PieChart width={330} height={360} className="flex flex-1 z-[1302]">
+    <PieChart width={330} height={360} className="flex flex-1 z-[1302] select-none">
         <circle cx={stDotX} cy={stDotY}
             r={117.5}
             fill="none"
@@ -208,7 +208,7 @@ export default function App() {
         {allData.map((dataItem, dataIndex)=>{
             const polygonDot = polygonDotArr[dataIndex]
             return <Pie key={dataItem.target}
-                className="pie-button-effect-none"
+                className="pie-button-effect-none select-none"
               activeIndex={0}
               activeShape={renderActiveShape}
               data={dataItem.data}
@@ -230,6 +230,7 @@ export default function App() {
         fontWeight={500}
         fontSize={17}
         fill="#222"
+        style={{userSelect:'none'}}
         >{`Unit ${reportSelectUnit}`}</text>
         <text x={stDotX} y={stDotY}
         dy={-5}
@@ -238,6 +239,7 @@ export default function App() {
         fontSize={17}
         fill="#222"
         textAnchor="middle"
+        style={{userSelect:'none'}}
         >{`Overall Score`}</text>
         <text x={stDotX} y={stDotY} width={190} height={80}
         dx={5} dy={35}
@@ -246,10 +248,11 @@ export default function App() {
         fontWeight={700}
         fontSize={35}
         fill="#333"
-        style={{textShadow: '2px 2px 0 rgba(0,0,0,0.16)'}}
+        style={{textShadow: '2px 2px 0 rgba(0,0,0,0.16)',userSelect:'none'}}
         >{average}
         <tspan 
         fontSize={28}
+        style={{userSelect:'none'}}
         >%</tspan>
         </text>
         <Tooltip position={{x:tooltipPosition.x+55, y:tooltipPosition.y-60}}  content={<CustomTooltipDIV/>}/>

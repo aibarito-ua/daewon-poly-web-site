@@ -165,15 +165,15 @@ export default function PortfolioModalComponent() {
             height: '530px',
             overflow: 'hidden',
         }}>
-            <div className='flex flex-row h-[50px]'>
-                <div className='report-modal-menu-buttons'>
+            <div className='flex flex-row h-[50px] select-none'>
+                <div className='report-modal-menu-buttons select-none'>
                     <div className={`${portfolioModal.menuControll===0 ? 'report-modal-menu-button-active': 'report-modal-menu-button'}`}
                     onClick={()=>setMenuControl(0)}
                     >Portfolio</div>
                 </div>
                 <div className='absolute top-[55px] right-[30px]'>
                     {portfolioModal.menuControll===0 && (
-                        <div className='absolute top-[0px] right-[25px]'>
+                        <div className='absolute top-[0px] right-[25px] select-none'>
                             <PrintReportExportButton />
                         </div>
                     )}
@@ -192,7 +192,7 @@ export default function PortfolioModalComponent() {
                         : 'flex flex-col gap-[15px] w-[943px] h-[425px] border-[1px] border-[#ddd] rounded-[20px] px-[25px] pt-[30px] overflow-y-auto justify-start'
                     }>
                         {/* small crown */}
-                        {portfolioModal.isCrown && <div className='bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat bg-cover w-[50px] h-[45px] absolute top-0 right-[20px]' />}
+                        {portfolioModal.isCrown && <div className='bg-portfolio-unit-modal-crown-ic-svg bg-no-repeat bg-cover w-[50px] h-[45px] absolute top-0 right-[20px] select-none' />}
                         
 
                         {/* title */}

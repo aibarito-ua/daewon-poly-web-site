@@ -378,6 +378,7 @@ body {
   relative
   top-[20px]
   right-[-12px]
+  select-none
 }
 .top-right-user-info-text {
   @apply
@@ -388,6 +389,7 @@ body {
   right-[77px]
   w-[235px]
   text-right
+  select-none
 }
 .top-right-user-info-text-en-name {
   font-family: 'Pathfinder';
@@ -882,6 +884,7 @@ bg-[#ffea2c]
   flex-1
   h-[45px]
   items-center
+  select-none
 }
 .writing-activity-page-title-icon {
   @apply
@@ -1477,6 +1480,7 @@ bg-[#ffea2c]
   font-size: 20px;
   text-align: center;
   color: #7861bb;
+  user-select: none;
 }
 .preview-proofreading-content-font {
   font-family: 'Roboto';
@@ -1685,6 +1689,7 @@ bg-[#ffea2c]
   flex flex-row
   bg-white
   rounded-[30px]
+  select-none
 }
 .progress-page-view-box-table-header {
   font-family: 'Roboto';
@@ -1703,6 +1708,7 @@ bg-[#ffea2c]
   text-[#222]
   text-[15px]
   capitalize
+  select-none
 }
 .progress-page-view-box-table-body-cell {
   @apply
@@ -1839,6 +1845,7 @@ bg-[#ffea2c]
   flex flex-col
   w-[500px]
   justify-center
+  select-none
 }
 .report-chart-righ-word-count-title {
   
@@ -1981,6 +1988,7 @@ bg-[#ffea2c]
   px-[15px]
   h-full
   flex flex-col
+  select-none
 }
 .report-chart-right-complete-date-title {
   font-family: 'Roboto';
@@ -1993,6 +2001,7 @@ bg-[#ffea2c]
   /* color: '#666' */
   @apply
   text-[#666]
+  select-none
 }
 .report-chart-righ-correction-content {
   @apply
@@ -2089,6 +2098,7 @@ bg-[#ffea2c]
   @apply
   flex flex-col
   min-w-[128]
+  select-none
 }
 .report-chart-correction-content-wrap {
   @apply
@@ -2716,6 +2726,7 @@ bg-[#ffea2c]
   vertical-align: top;
   @apply
   text-[#333]
+  select-none
 }
 
 .export-lm-wh-draft-info-div {
@@ -3150,6 +3161,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: center;
   color: #3e61aa;
+  user-select: none;
 }
 .portfolio-modal-unit-box-content-body {
   font-family: 'Roboto';
@@ -3161,6 +3173,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: left;
   color: #333;
+  user-select: none;
 }
 
 /* user info modal */
@@ -3198,6 +3211,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: right;
   color: #222;
+  user-select: none;
 }
 .user-info-modal-info-value {
   font-family: 'GothamRounded';
@@ -3209,6 +3223,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: right;
   color: #222;
+  user-select: none;
 }
 
 .user-info-modal-info-button {
@@ -3236,6 +3251,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: left;
   color: #222;
+  user-select: none;
 }
 
 .user-info-modal-info-cancel-value-agree-text {
@@ -3248,6 +3264,7 @@ bg-[#ffea2c]
   letter-spacing: normal;
   text-align: left;
   color: #444;
+  user-select: none;
   @apply
   flex
   flex-col

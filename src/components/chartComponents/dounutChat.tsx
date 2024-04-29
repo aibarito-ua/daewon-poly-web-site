@@ -341,12 +341,13 @@ Z
     y={sy+4}
     textAnchor={textAnchor}
     fill="#333"
-    
+    style={{userSelect:'none'}}
 >
     <tspan
     fontFamily="GothamRounded"
     fontSize={14}
     style={{textTransform:'capitalize'}}
+    
     >{`${clickIndex}: ${scoreResult}`}</tspan>
     <tspan
     fontFamily="GothamRounded"
@@ -422,9 +423,9 @@ const percentCharacterPositionX = checkPercentDigit === '3' ? cx2dot1 : (
 )
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full select-none">
     <PieChart width={350} height={300}>
-        <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
+        <text x={cx} y={cy} dy={12} textAnchor="middle" style={textmainCss} width={80} height={80} className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)] select-none">
             <tspan x={cx} y={cy} dy={12} textAnchor="middle" style={text1Css}>
                 {mainPercent}
             </tspan>
