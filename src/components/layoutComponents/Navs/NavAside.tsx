@@ -69,7 +69,7 @@ const NavAside = () => {
 
     return (
         <nav id={'navAside'} className='select-none'>
-        <div className={`absolute left-0 top-0 z-50 w-[190px] h-full max-h-[800px] transition-transform ${
+        <div className={`absolute left-0 top-0 z-50 w-[190px] h-full max-h-[800px] transition-transform select-none ${
             // !sidebarFlagged ? '-translate-x-full':'translate-x-0'
             ''
             // 'translate-x-0'
@@ -78,9 +78,9 @@ const NavAside = () => {
         }`}
         // aria-label="Sidebar"
         >
-            <div className="h-full  pb-4 overflow-y-auto bg-[#3c2481]">
+            <div className="h-full  pb-4 overflow-y-auto bg-[#3c2481] select-none">
             <div className='mt-[30px] px-3 ml-[36px] w-[118.9px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain select-none' />
-                <ul className="px-[9px] mt-[20px] space-y-2 font-medium">
+                <ul className="px-[9px] mt-[20px] space-y-2 font-medium select-none">
                     {navItems[role].selectedMenu.map((v, i) => {
                         const key = `navItem-${role}-${i}`
                         // console.log('v.path =',v.path)
@@ -95,8 +95,8 @@ const NavAside = () => {
                                 )
                             }`}
                             onClick={()=>handleMenuClick(role, v.path)}>
-                                <div className="flex flex-row items-center p-2 w-full h-full gap-[10px]">
-                                <div className='w-[45px] h-[45px]'>
+                                <div className="flex flex-row items-center p-2 w-full h-full gap-[10px] select-none">
+                                <div className='w-[45px] h-[45px] select-none'>
                                 {selectedMenu===v.path ? v.onMenuIcon :(i===0&&selectedMenu===undefined?v.onMenuIcon:v.offMenuIcon) }
                                 </div>
                                 <span className={selectedMenu===v.path? 'nav-menu-on':(

@@ -33,10 +33,10 @@ export default function SmallHead (props: {
         }
     }, [userInfo])
     return (
-        <div className='flex flex-row justify-between'>
-            <div className="flex flex-col">
-                <div className='flex flex-row items-center gap-[9px] pl-[30px] pt-[40px]'>
-                    <span className='w-[5px] h-[25px]'><commonIconSvgs.ClinicTitleRectIcon/></span>
+        <div className='flex flex-row justify-between select-none'>
+            <div className="flex flex-col select-none">
+                <div className='flex flex-row items-center gap-[9px] pl-[30px] pt-[40px] select-none'>
+                    <span className='w-[5px] h-[25px] select-none'><commonIconSvgs.ClinicTitleRectIcon/></span>
                     {props.mainTitle!=='' && <span className='left-top-text-title select-none'>{props.mainTitle}</span>}
                 </div>
                 {props.subTitle!==undefined && <span className='left-top-text-sub-title select-none'>{props.subTitle}</span>}
@@ -65,8 +65,8 @@ export default function SmallHead (props: {
             <div className='top-right-user-info' onClick={()=>setInfoModal({isOpen:true})}>
                 <commonIconSvgs.UserInfoRightTopImg />
                 <div className='top-right-user-info-text'>
-                    <div className='top-right-user-info-text-en-name select-none'>{userInfo.memberNameEn}</div>
-                    <div className='top-right-user-info-text-class select-none'>{userInfo.courseName}</div>
+                    <div className='top-right-user-info-text-en-name'>{userInfo.memberNameEn}</div>
+                    <div className='top-right-user-info-text-class'>{userInfo.courseName}</div>
                 </div>
                 <div className={`top-right-user-info-img bg-user-no-profile-image-view`} style={{
                     backgroundImage: isProfileImage ? 'url("'+userInfo.userImagePath+'")': NoImage,
