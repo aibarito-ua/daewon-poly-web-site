@@ -150,12 +150,12 @@ const ProgressTable = (props:any) => {
                                     <span 
                                     // className='progress-page-view-box-list-label'
                                     style={{
-                                        fontFamily: 'GothamRounded',
-                                        fontWeight: 700,
+                                        fontFamily: 'Nunito',
+                                        fontWeight: 800,
+                                        fontStyle: 'normal',
                                         fontSize: '16px',
                                         flexGrow: 0,
                                         fontStretch: 'normal',
-                                        fontStyle: 'normal',
                                         lineHeight: 'normal',
                                         letterSpacing: 'normal'
                                     }}

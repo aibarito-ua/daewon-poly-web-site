@@ -43,7 +43,9 @@ export default function TeacherFeedbackDetailModalComponents (props: {
                         borderTopLeftRadius: '30px',
                         // border: '6px solid #7861bb'
                         color: 'white',
-                        fontFamily: 'GothamRounded',
+                        fontFamily: 'Nunito',
+                        fontWeight: 800,
+                        fontStyle: 'normal',
                         textAlign: 'center',
                         fontSize: '18px',
                         height: '50px',

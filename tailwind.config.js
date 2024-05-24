@@ -28,7 +28,7 @@ module.exports = {
         'unit-book-icon': "url('/src/util/svgs/writing-activity-unit-book-icon.svg')",
         'unit-select-book-icon': "url('/src/util/svgs/writing-activity-unit-select-book-icon.svg')",
         'unit-complete-report-icon': "url('/src/util/svgs/complete-report-icon.png')",
-        'unit-complete-flower-icon': "url('/src/util/svgs/unit-complete-flower-icon.png')",
+        'unit-complete-flower-icon': "url('/src/util/svgs/unit-complete-flower-icon.svg')",
         'back-in-draft-icon': "url('/src/util/svgs/commonIconPNG/btn-back-page-icon.png')",
         'draft-background-image': "url('/src/util/svgs/draft-background-image.svg')",
         'chatbot-ella-button-icon': "url('/src/util/png/bt_chatbot.png')",

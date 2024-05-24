@@ -221,7 +221,7 @@ export default function ReportRubricModalComponent(props:IRubricTypeModalCompone
             paddingBottom: 0,
           }}
         >
-          <div className='flex flex-row justify-center items-center text-[16px] text-[#ffffff] bg-[#7861bb] font-bold h-[50px] w-[1024px] relative rounded-t-[30px]'>
+          <div className='flex flex-row justify-center items-center text-[16px] text-[#ffffff] bg-[#7861bb] font-nunito font-[800] not-italic h-[50px] w-[1024px] relative rounded-t-[30px]'>
             {title}
             <div className='w-[50px] h-[50px] bg-modal-close-button-svg bg-contain bg-no-repeat absolute -right-[24px] -top-[24px] hover:cursor-pointer'
                 onClick={handleClose}

@@ -140,9 +140,9 @@ export default function App() {
     width: '54px',
     height: '24px',
     textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
-    fontFamily: 'GothamRounded',
+    fontFamily: 'Nunito',
     fontSize: '20px',
-    fontWeight: 'bold',
+    fontWeight: '800',
     fontStyle: 'normal',
     lineHeight: 1.2,
     letterSpacing: 'normal',
@@ -152,9 +152,9 @@ const text2Css:React.CSSProperties = {
     width: '54px',
     height: '24px',
     textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
-    fontFamily: 'GothamRounded',
+    fontFamily: 'Nunito',
     fontSize: '14px',
-    fontWeight: 'bold',
+    fontWeight: '800',
     fontStyle: 'normal',
     lineHeight: 1.2,
     letterSpacing: 'normal',
@@ -344,13 +344,17 @@ Z
     style={{userSelect:'none'}}
 >
     <tspan
-    fontFamily="GothamRounded"
+    fontFamily="Nunito"
+    fontWeight={800}
+    fontStyle={'normal'}
     fontSize={14}
     style={{textTransform:'capitalize'}}
     
     >{`${clickIndex}: ${scoreResult}`}</tspan>
     <tspan
-    fontFamily="GothamRounded"
+    fontFamily="Nunito"
+    fontWeight={800}
+    fontStyle={'normal'}
     fontSize={12}
     >{'%'}</tspan>
     </text>

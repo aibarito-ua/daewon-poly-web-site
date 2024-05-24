@@ -47,7 +47,7 @@ const CustomXAxisTick = (props:any) => {
 };
   React.useEffect(()=>{
     
-    console.log('reportSelectedOverallBarChart =',reportSelectedOverallBarChart)
+    // console.log('reportSelectedOverallBarChart =',reportSelectedOverallBarChart)
     if (reportSelectedOverallBarChart.length>0) {
       let dumyCheck:{
         unit1: boolean;
@@ -90,7 +90,7 @@ const CustomXAxisTick = (props:any) => {
       
       >
         <ReferenceArea shape={(props:any)=>{
-          console.log('props ===',props)
+          // console.log('props ===',props)
           return <rect 
             x={10} 
             y={18}
@@ -100,7 +100,7 @@ const CustomXAxisTick = (props:any) => {
           />
         }}/>
         <ReferenceArea shape={(props:any)=>{
-          console.log('props ===',props)
+          // console.log('props ===',props)
           return <rect 
             x={183} 
             y={18}
@@ -110,7 +110,7 @@ const CustomXAxisTick = (props:any) => {
           />
         }}/>
         <ReferenceArea shape={(props:any)=>{
-          console.log('props ===',props)
+          // console.log('props ===',props)
           return <rect 
             x={357} 
             y={18}
@@ -128,27 +128,27 @@ const CustomXAxisTick = (props:any) => {
         
         <Bar dataKey="unit1" fill="#3dbcbf" label={
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
-          check.unit1?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
+          check.unit1?{position:'top',fontFamily: 'Nunito',fontWeight:800, fontStyle: 'normal',color:'#333',fontSize:12}:''
         } barSize={10} radius={[5,5,0,0]} />
   
         <Bar dataKey="unit2" fill="#f77488" label={
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
-          check.unit2?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
+          check.unit2?{position:'top',fontFamily: 'Nunito',fontWeight:800, fontStyle: 'normal',color:'#333',fontSize:12}:''
         } barSize={10} radius={[5,5,0,0]}/>
   
         <Bar dataKey="unit3" fill="#f9a77c" label={
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
-          check.unit3?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
+          check.unit3?{position:'top',fontFamily: 'Nunito',fontWeight:800, fontStyle: 'normal',color:'#333',fontSize:12}:''
           } barSize={10} radius={[5,5,0,0]}/>
         
         <Bar dataKey="unit4" fill="#43d39a" label={
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
-          check.unit4?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
+          check.unit4?{position:'top',fontFamily: 'Nunito',fontWeight:800, fontStyle: 'normal',color:'#333',fontSize:12}:''
           } barSize={10} radius={[5,5,0,0]}/>
         
         <Bar dataKey="unit5" fill="#5a91c8" label={
           // {position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}
-          check.unit5?{position:'top',fontFamily: 'GothamRounded',fontWeight:700,color:'#333',fontSize:12}:''
+          check.unit5?{position:'top',fontFamily: 'Nunito',fontWeight:800, fontStyle: 'normal',color:'#333',fontSize:12}:''
           } barSize={10} radius={[5,5,0,0]}/>
         {/* <ReferenceArea x1={0} x2={53} y1={0} y2={300} stroke="red" strokeOpacity={0.3} /> */}
         

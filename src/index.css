@@ -258,6 +258,152 @@
       url('./font/Pathfinder/Pathfinder-B.otf') format('woff'),
       url('./font/Pathfinder/Pathfinder-B.otf') format('truetype');
 }
+/* Nunito */
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 200;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-ExtraLight.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-ExtraLight.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-ExtraLight.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 200;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-ExtraLightItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-ExtraLightItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-ExtraLightItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Light.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Light.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 300;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-LightItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-LightItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-LightItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Regular.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Regular.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 400;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Italic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Italic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Italic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Medium.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Medium.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 500;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-MediumItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-MediumItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-MediumItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-SemiBold.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-SemiBold.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 600;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-SemiBoldItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-SemiBoldItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-SemiBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Bold.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Bold.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 700;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-BoldItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-BoldItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 800;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-ExtraBold.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-ExtraBold.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-ExtraBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 800;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-ExtraBoldItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-ExtraBoldItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-ExtraBoldItalic.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 900;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-Black.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-Black.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-Black.ttf') format('truetype');
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: italic;
+  font-weight: 900;
+  src: local("Nunito"),
+    url('./font/Nunito/static/Nunito-BlackItalic.ttf') format('woff2'),
+    url('./font/Nunito/static/Nunito-BlackItalic.ttf') format('woff'),
+    url('./font/Nunito/static/Nunito-BlackItalic.ttf') format('truetype');
+}
+
 /* font */
 .font-notoSansCJKKR {
   font-family: 'NotoSansCJKKR';
@@ -270,6 +416,9 @@
 }
 .font-pathfinder {
   font-family: 'PathFinder';
+}
+.font-nunito {
+  font-family: 'Nunito';
 }
 
 html {
@@ -499,9 +648,10 @@ body {
   flex-row pl-[15px]
 }
 .wrap-guide-2nd-text-spark-writing {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 20px;
-  font-weight: 700;
   color: #fff;
   line-height: normal;
   font-stretch: normal;
@@ -791,9 +941,10 @@ bg-[#ffea2c]
   text-left
 }
 .chatbot-chat-textarea {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
+  font-weight:700;
+  font-style: normal;
   font-size: '18px';
-  font-weight:500;
   line-height: 'normal';
   letter-spacing: 'normal';
   @apply
@@ -807,6 +958,7 @@ bg-[#ffea2c]
   pt-[13px]
   bg-[#f4f5f9]
   placeholder:text-[#d9d9d9]
+
 }
 
 /* Writing Center */
@@ -836,8 +988,9 @@ bg-[#ffea2c]
   height: 49px;
 }
 .left-top-text-sub-title {
-  font-family: 'GothamRounded';
-  font-weight: 300;
+  font-family: 'Nunito';
+  font-weight: 400;
+  font-style: normal;
   font-size: 20px;
   align-items: start;
   text-align: left;
@@ -910,9 +1063,9 @@ bg-[#ffea2c]
   h-[35px]
 }
 .writing-activity-page-title-text {
-  font-family: 'GothamRounded';
-  font-weight: 700;
-  font-style: bold;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   color: #3e61aa;
   @apply
   ml-[9.5px]
@@ -979,9 +1132,10 @@ bg-[#ffea2c]
   items-center
 }
 .unit-select-button-item-unit-last {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
+  font-style: normal;
   @apply
   flex
   w-[58px]
@@ -1160,9 +1314,10 @@ bg-[#ffea2c]
   pb-[20px]
 }
 .save-button {
-  font-family: GothamRounded;
+  font-family: "Nunito";
+  font-weight: 800;
+  font-style: normal;
   font-size: 16px;
-  font-weight: 700;
   box-shadow: 0 5px 0 0 #888;
   line-height: normal;
   letter-spacing: normal;
@@ -1178,9 +1333,10 @@ bg-[#ffea2c]
   cursor-default
 }
 .save-button-active {
-  font-family: GothamRounded;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 16px;
-  font-weight: 700;
   box-shadow: 0 5px 0 0 #1a9fa6;
   line-height: normal;
   letter-spacing: normal;
@@ -1431,8 +1587,9 @@ bg-[#ffea2c]
   text-[#fff]
 }
 .outline-accordion-button-inner-text {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 24px;
   line-height: normal;
   font-stretch: normal;
@@ -1493,8 +1650,9 @@ bg-[#ffea2c]
   flex
 }
 .draft-unit-sub-title-head-text {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 20px;
   text-align: center;
   color: #7861bb;
@@ -1619,12 +1777,12 @@ bg-[#ffea2c]
   justify-center
 }
 .progress-page-view-box-list-icon {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 12px;
   flex-grow: 0;
   font-stretch: normal;
-  font-style: normal;
   line-height: normal;
   letter-spacing: normal;
   @apply
@@ -1735,9 +1893,10 @@ bg-[#ffea2c]
 }
 
 .report-small-chart-inner-doughnut-label {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 14px;
-  font-weight: 400;
   line-height: normal;
   letter-spacing: -0.28px;
   @apply
@@ -1807,8 +1966,9 @@ bg-[#ffea2c]
   custom-tooltip
 }
 .custom-tooltip-title {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 14px;
   line-height: normal;
   letter-spacing: normal;
@@ -1878,11 +2038,11 @@ bg-[#ffea2c]
   h-[26px]
 }
 .report-chart-righ-word-count-title-span {
-  font-family: 'GothamRounded';
-  font-size: 12px;
-  font-weight: 500;
-  font-stretch: 'normal';
+  font-family: 'Nunito';
+  font-weight: 700;
   font-style: normal;
+  font-size: 12px;
+  font-stretch: 'normal';
   line-height: normal;
   letter-spacing: normal;
   @apply
@@ -2232,8 +2392,9 @@ bg-[#ffea2c]
   -mt-[1px]
 }
 .report-modal-menu-button {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
 
   @apply
   flex
@@ -2248,8 +2409,9 @@ bg-[#ffea2c]
   border-none
 }
 .report-modal-menu-button-active {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   @apply
   flex
   justify-center
@@ -2447,11 +2609,11 @@ bg-[#ffea2c]
   hover:cursor-default
 }
 .return-1st-draft-alert-button {
-  font-family: 'GothamRounded';
-  font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
+  font-family: 'Nunito';
+  font-weight: 800;
   font-style: normal;
+  font-size: 16px;
+  font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
   text-align: center;
@@ -2487,11 +2649,11 @@ bg-[#ffea2c]
 
 /* 2nd draft overall button */
 .overall-comment-2nd-draft-write-top-button {
-  font-family: 'GothamRounded';
-  font-size: 16px;
-  font-weight: 700;
-  font-stretch: normal;
+  font-family: 'Nunito';
+  font-weight: 800;
   font-style: normal;
+  font-size: 16px;
+  font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
   text-align: center;
@@ -2695,11 +2857,11 @@ bg-[#ffea2c]
   bg-draft-2nd-submit-button-readonly-svg
 }
 .report-no-data-font {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
+  font-style: normal;
   font-size: 26px;
   font-stretch: normal;
-  font-style: normal;
   line-height: normal;
   letter-spacing: normal;
   text-align: center;
@@ -2733,8 +2895,8 @@ bg-[#ffea2c]
   text-[#333]
 }
 .report-by-unit-page-title-font {
-  font-family: 'GothamRounded';
-  font-weight: 700;
+  font-family: 'Nunito';
+  font-weight: 800;
   font-size: 20px;
   font-stretch: normal;
   font-style: normal;
@@ -3159,9 +3321,9 @@ bg-[#ffea2c]
   color: #3e61aa;
 }
 .portfolio-contents-null-font {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.2;
@@ -3170,9 +3332,9 @@ bg-[#ffea2c]
   color: #999;
 }
 .portfolio-modal-unit-box-content-title {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
@@ -3196,9 +3358,9 @@ bg-[#ffea2c]
 
 /* user info modal */
 .user-info-modal-title {
-  font-family: 'GothamRounded';
+  font-family: 'Nunito';
   font-size: 25px;
-  font-weight: normal;
+  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.5;

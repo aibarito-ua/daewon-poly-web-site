@@ -59,10 +59,10 @@ export default function App(props: any) {
   const text1Css:React.CSSProperties = {
     width: '54px',
     height: '24px',
-    fontFamily: 'GothamRounded',
+    fontFamily: 'Nunito',
+    fontWeight: 800,
+    fontStyle: 'normal',
     fontSize: '14px',
-    fontWeight: '700',
-    fontStyle: 'bold',
     lineHeight: 'normal',
     letterSpacing: '-0.98px',
     textAlign: 'center',
@@ -71,10 +71,10 @@ export default function App(props: any) {
 const text2Css:React.CSSProperties = {
     width: '54px',
     height: '24px',
-    fontFamily: 'GothamRounded',
+    fontFamily: 'Nunito',
+    fontWeight: 800,
+    fontStyle: 'normal',
     fontSize: '10px',
-    fontWeight: 700,
-    fontStyle: 'bold',
     lineHeight: 'normal',
     letterSpacing: '-0.7px',
     textAlign: 'center',
@@ -84,40 +84,38 @@ const checkValueLength = percentValue.toString().length;
 const percentX = checkValueLength===3 ? cx+18 : (checkValueLength===2 ? cx+15 : cx+11)
   return (
     <PieChart width={50} height={50}>
-        <circle 
-            cx={cx+5}
-            cy={cy+5}
-            fill={'#E5ECFD'}
-            r={25}
+      <circle 
+          cx={cx+5}
+          cy={cy+5}
+          fill={'#E5ECFD'}
+          r={25}
+      />
+      <circle 
+          cx={cx+5}
+          cy={cy+5}
+          fill={'#fff'}
+          r={20}
+      />
+        {/* const currentR = radiusDatas[dataIndex] */}
+        <Pie key={data.target}
+            className="pie-button-effect-none"
+          activeIndex={0}
+          activeShape={renderActiveShape}
+          data={data.data}
+          cx={cx}
+          cy={cy}
+          innerRadius={20}
+          outerRadius={25}
+          fill={'#222'}
+          dataKey="value"
         />
-        <circle 
-            cx={cx+5}
-            cy={cy+5}
-            fill={'#fff'}
-            r={20}
-        />
-            {/* const currentR = radiusDatas[dataIndex] */}
-            <Pie key={data.target}
-                className="pie-button-effect-none"
-              activeIndex={0}
-              activeShape={renderActiveShape}
-              data={data.data}
-              cx={cx}
-              cy={cy}
-              innerRadius={20}
-              outerRadius={25}
-              fill={'#222'}
-              dataKey="value"
-            />
-        <text x={cx} y={cy} dy={0} textAnchor="middle" style={textmainCss} width={26} height={17} 
+      <text x={cx} y={cy} dy={0} textAnchor="middle" style={textmainCss} width={26} height={17} 
         className="shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
-            <tspan x={cx} y={cy} dy={10} textAnchor="middle" style={text1Css}>
-                {percentValue}
-            </tspan>
-            <tspan x={percentX} y={cy} dy={10} style={text2Css}>%</tspan>
-        </text>
-
-        
+        <tspan x={cx} y={cy} dy={10} textAnchor="middle" style={text1Css}>
+            {percentValue}
+        </tspan>
+        <tspan x={percentX} y={cy} dy={10} style={text2Css}>%</tspan>
+      </text>
     </PieChart>
   );
 }

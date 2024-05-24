@@ -13,10 +13,10 @@ const text1Css:React.CSSProperties = {
 width: '54px',
 height: '24px',
 // textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
-fontFamily: 'GothamRounded',
-fontSize: '20px',
-fontWeight: 'bold',
+fontFamily: 'Nunito',
+fontWeight: '800',
 fontStyle: 'normal',
+fontSize: '20px',
 lineHeight: 1.2,
 letterSpacing: 'normal',
 }
@@ -24,10 +24,10 @@ const text2Css:React.CSSProperties = {
 width: '54px',
 height: '24px',
 // textShadow: '2px 2px 0 rgba(0,0,0,0.16)',
-fontFamily: 'GothamRounded',
-fontSize: '14px',
-fontWeight: 'bold',
+fontFamily: 'Nunito',
+fontWeight: '800',
 fontStyle: 'normal',
+fontSize: '14px',
 lineHeight: 1.2,
 letterSpacing: 'normal',
 }
@@ -76,7 +76,8 @@ const renderActiveShape = (props: any) => {
         })}</text>
         <text x={cx} y={cy} dy={0} dx={0} textAnchor="middle" style={textmainCss} width={80} height={80} 
         className="rounded-[50%] shadow-[1px_1px_5px_rgba(0,0,0,0.16)]">
-            <tspan x={percentValue===100?cx:cx} y={cy} dy={19} dx={-5} textAnchor="middle" style={text1Css}>
+            <tspan x={percentValue===100?cx:cx} y={cy} dy={19} dx={-5} 
+            textAnchor="middle" style={text1Css}>
                 {percentValue}
             </tspan>
             <tspan x={percentLengthCheck === '2' ? cx+20: (
@@ -226,16 +227,18 @@ export default function App() {
         <text x={stDotX} y={stDotY}
         textAnchor="middle"
         dy={-25}
-        fontFamily="GothamRounded"
-        fontWeight={500}
+        fontFamily="Nunito"
+        fontWeight={700}
+        fontStyle={'normal'}
         fontSize={17}
         fill="#222"
         style={{userSelect:'none'}}
         >{`Unit ${reportSelectUnit}`}</text>
         <text x={stDotX} y={stDotY}
         dy={-5}
-        fontFamily="GothamRounded"
-        fontWeight={500}
+        fontFamily="Nunito"
+        fontWeight={700}
+        fontStyle={'normal'}
         fontSize={17}
         fill="#222"
         textAnchor="middle"
@@ -244,13 +247,17 @@ export default function App() {
         <text x={stDotX} y={stDotY} width={190} height={80}
         dx={5} dy={35}
         textAnchor="middle"
-        fontFamily="GothamRounded"
-        fontWeight={700}
+        fontFamily="Nunito"
+        fontWeight={800}
+        fontStyle={'normal'}
         fontSize={35}
         fill="#333"
         style={{textShadow: '2px 2px 0 rgba(0,0,0,0.16)',userSelect:'none'}}
         >{average}
         <tspan 
+        fontFamily="Nunito"
+        fontWeight={800}
+        fontStyle={'normal'}
         fontSize={28}
         style={{userSelect:'none'}}
         >%</tspan>
