@@ -7,6 +7,7 @@ import useControlAlertStore from '../store/useControlAlertStore';
 import useNavStore from '../store/useNavStore';
 import { detect } from 'detect-browser';
 import { useNavigate } from 'react-router-dom';
+import { UpdateLoadingScreen } from '../components/pageComponents/loginPageComponents/UpdateLoadingScreen';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ export const Login = () => {
     const [saveId, setSaveId] = React.useState<boolean>(false)
     const [isLoginBtn, setIsLoginBtn] = React.useState<boolean>(false);
     const [version, setVersion] = React.useState<string>('');
+    const [showUpdateScreen, setShowUpdateScreen] = React.useState<boolean>(true)
 
     const {
         commonAlertOpen, commonAlertClose
@@ -516,6 +518,16 @@ export const Login = () => {
         }
     }, [loginValues])
 
+    React.useEffect(()=> {
+        const currentTime = new Date();
+        const targetTime = new Date(Date.UTC(2024, 7, 27, 15, 0, 0)); // Target time: 00:00 August 29, 2024
+        console.log(currentTime, targetTime)
+
+        if (currentTime < targetTime || window.navigator.userAgent.toLowerCase().indexOf('electron') === -1) {
+            setShowUpdateScreen(false);
+        }
+    }, [])
+
     // React.useEffect(()=>{
     //     const isMaintenanceCheck = IS_MAINTENANCE;
     //     // console.log('isMain =',isMaintenanceCheck)
@@ -585,143 +597,150 @@ export const Login = () => {
         // } else {
         // }
     // }, [isShouldChangeVersion])
-
-    
-
+            
 
     return (
         <section className='flex w-full h-full bg-no-repeat bg-right bg-cover justify-center items-center bg-login-img relative'>
+            {showUpdateScreen && !isMobile && <UpdateLoadingScreen 
+                onCloseButtonClicked={() => {
+                    setShowUpdateScreen(false)
+                }}
+            />}
             {/* close button */}
             <div className={`${isMobile && 'hidden'} absolute right-[24px] top-[24px] w-[65px] h-[65px] bg-app-close-button-svg bg-no-repeat bg-contain hover:cursor-pointer`} 
                 onClick={()=>{
-                    // exit application event is here.
-                    if(isMobile)
-                        window.ReactNativeWebView.postMessage(JSON.stringify('quit'))
-                    else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-                        (window as any).api.toElectron.send('quit')
+                    if (showUpdateScreen && !isMobile) {
+                        setShowUpdateScreen(false)
+                    } else {
+                        // exit application event is here.
+                        if(isMobile)
+                            window.ReactNativeWebView.postMessage(JSON.stringify('quit'))
+                        else if(window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+                            (window as any).api.toElectron.send('quit')
+                        }
                     }
                 }}
             />
             {/* content */}
-            <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
-                {/* <form onSubmit={isShouldChangeVersion ? confirmUpdateNewVersion : handleSubmit}> */}
-                <form onSubmit={handleSubmit}>
-                    <div className='flex flex-1 flex-col ml-[75px]'>
-                        {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
-                        <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain select-none'></div>
-                        
-                        <div className='flex flex-row mt-[30px]'>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none select-none">
-                                    <svgIcons.Icons.IdIcon className='w-4 h-4'/>
+            {(!showUpdateScreen || isMobile) && (
+                <div className="block w-[450px] h-[588px] bg-white rounded-[30px] shadow-[0_34px_140px_0_rgba(30,13,44,0.3)]">
+                    {/* <form onSubmit={isShouldChangeVersion ? confirmUpdateNewVersion : handleSubmit}> */}
+                    <form onSubmit={handleSubmit}>
+                        <div className='flex flex-1 flex-col ml-[75px]'>
+                            {/* Logo - writing hub logo오면 tailwind config에 등록 후 사용할 것. */}
+                            <div className='mt-[58px] ml-[96px] w-[115.7px] h-[118.9px] bg-writing-hub-logo bg-no-repeat bg-center bg-contain select-none'></div>
+                            
+                            <div className='flex flex-row mt-[30px]'>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none select-none">
+                                        <svgIcons.Icons.IdIcon className='w-4 h-4'/>
+                                    </div>
+                                    <input type="text"
+                                        id='username'
+                                        name="username"
+                                        className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
+                                        placeholder="User Name"
+                                        value={loginValues.username}
+                                        onChange={(evt)=>{handleChange(evt)}}/>
                                 </div>
-                                <input type="text"
-                                    id='username'
-                                    name="username"
-                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
-                                    placeholder="User Name"
-                                    value={loginValues.username}
-                                    onChange={(evt)=>{handleChange(evt)}}/>
                             </div>
-                        </div>
-                        <div className='flex flex-row mt-[15px]'>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-                                    <svgIcons.Icons.PwIcon className='w-4 h-4' />
+                            <div className='flex flex-row mt-[15px]'>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                                        <svgIcons.Icons.PwIcon className='w-4 h-4' />
+                                    </div>
+                                    <input type={passwordType ? 'text':'password'}
+                                        id='password'
+                                        name="password"
+                                        autoComplete='on'
+                                        className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
+                                        placeholder="Password"
+                                        value={loginValues.password}
+                                        onChange={(evt) => {handleChange(evt)}}/>
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3.5"
+                                        onClick={()=>setPasswordType(!passwordType)}
+                                    >
+                                        {passwordType 
+                                        ? <svgIcons.Icons.EyeOnIcon className='w-4 h-4'/>
+                                        : <svgIcons.Icons.EyeOffIcon className='w-4 h-4' />
+                                        }
+                                    </div>
+                                    
                                 </div>
-                                <input type={passwordType ? 'text':'password'}
-                                    id='password'
-                                    name="password"
-                                    autoComplete='on'
-                                    className="bg-[#f4f4f4] border-none border-gray-300 text-gray-900 text-sm rounded-[15px] block w-[300px] h-[45px] pl-10 p-2.5 placeholder:text-[#D6D6D6] placeholder:select-none" 
-                                    placeholder="Password"
-                                    value={loginValues.password}
-                                    onChange={(evt) => {handleChange(evt)}}/>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3.5"
-                                    onClick={()=>setPasswordType(!passwordType)}
+                            </div>
+                            <div className='flex flex-row mt-[5.3px] h-fit items-center select-none'>
+                                    <input id="login-save-id-checkbox" type='checkbox' 
+                                        className='flex rounded-[5px] w-[20px] h-[20px] text-[#42278F] border-[#dddddd] focus:ring-transparent focus:ring-0 checked:bg-[#42278F]'
+                                        onChange={(value)=>{
+                                            setSaveId(!saveId)
+                                        }}
+                                        checked={saveId}
+                                    />
+                                    <label htmlFor="login-save-id-checkbox" className='ml-[8px] font-normal text-[14px] select-none hover:cursor-pointer'>{'아이디 저장'}</label>
+                            </div>
+                            <div className='flex flex-row mt-[12.7px] font-[12px] h-[24px] text-[#ff3841]'>
+                                <span>{errors.displayMessage}</span>
+                            </div>
+                            <div className='flex flex-row mt-[8.5px]'>
+                                <button className={isLoginBtn ? 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
+                                : 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd] hover:cursor-no-drop'}
+                                disabled={!isLoginBtn}
+                                    type='submit'
                                 >
-                                    {passwordType 
-                                    ? <svgIcons.Icons.EyeOnIcon className='w-4 h-4'/>
-                                    : <svgIcons.Icons.EyeOffIcon className='w-4 h-4' />
-                                    }
+                                    <span className='uppercase text-[#ffffff] font-notoSansCJKKR select-none'>login</span>
+                                </button>
+                            </div>
+                            {/* <div className='flex flex-row'>
+                                <span>{errors.id}</span>
+                                <span>{errors.password}</span>
+                            </div> */}
+                            <div className='flex flex-row text-[12px] mt-[20px] justify-center w-[300px]'>
+                                <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.JOIN) }}>{'회원가입'}</div>
+                                <div className='flex mx-[11.5px] items-center select-none'>
+                                    <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
                                 </div>
-                                
+                                <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_ID)}}>{'아이디 찾기'}</div>
+                                <div className='flex mx-[11.5px] items-center select-none'>
+                                    <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
+                                </div>
+                                <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
                             </div>
-                        </div>
-                        <div className='flex flex-row mt-[5.3px] h-fit items-center select-none'>
-                                <input id="login-save-id-checkbox" type='checkbox' 
-                                    className='flex rounded-[5px] w-[20px] h-[20px] text-[#42278F] border-[#dddddd] focus:ring-transparent focus:ring-0 checked:bg-[#42278F]'
-                                    onChange={(value)=>{
-                                        setSaveId(!saveId)
-                                    }}
-                                    checked={saveId}
-                                />
-                                <label htmlFor="login-save-id-checkbox" className='ml-[8px] font-normal text-[14px] select-none hover:cursor-pointer'>{'아이디 저장'}</label>
-                        </div>
-                        <div className='flex flex-row mt-[12.7px] font-[12px] h-[24px] text-[#ff3841]'>
-                            <span>{errors.displayMessage}</span>
-                        </div>
-                        <div className='flex flex-row mt-[8.5px]'>
-                            <button className={isLoginBtn ? 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd]'
-                            : 'bg-[#42278F] w-[300px] h-[45px] rounded-[15px] shadow-[0px_4px_0px_#aaafcd] hover:cursor-no-drop'}
-                            disabled={!isLoginBtn}
-                                type='submit'
-                            >
-                                <span className='uppercase text-[#ffffff] font-notoSansCJKKR select-none'>login</span>
-                            </button>
-                        </div>
-                        {/* <div className='flex flex-row'>
-                            <span>{errors.id}</span>
-                            <span>{errors.password}</span>
-                        </div> */}
-                        <div className='flex flex-row text-[12px] mt-[20px] justify-center w-[300px]'>
-                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.JOIN) }}>{'회원가입'}</div>
-                            <div className='flex mx-[11.5px] items-center select-none'>
-                                <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
-                            </div>
-                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_ID)}}>{'아이디 찾기'}</div>
-                            <div className='flex mx-[11.5px] items-center select-none'>
-                                <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
-                            </div>
-                            <div className='select-none hover:cursor-pointer' onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.FIND_PW)}}>{'비밀번호 찾기'}</div>
-                        </div>
-                        
+                            
 
-                    </div>
-                    <div className='flex flex-col w-full justify-center items-center'>
-                    <div className='flex flex-row mt-[35px] justify-center w-[308px] text-[#777777] text-[12px] font-normal font-notoSansCJKKR select-none' 
-                            style={{
+                        </div>
+                        <div className='flex flex-col w-full justify-center items-center'>
+                        <div className='flex flex-row mt-[35px] justify-center w-[308px] text-[#777777] text-[12px] font-normal font-notoSansCJKKR select-none' 
+                                style={{
 
-                        }}>
-                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.SERVICE)}}>이용약관</div>
-                            <div className='flex mx-[11.5px] items-center select-none'>
-                                <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
+                            }}>
+                                <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.SERVICE)}}>이용약관</div>
+                                <div className='flex mx-[11.5px] items-center select-none'>
+                                    <span className='flex border-r-[1px] border-[#bbbbbb] h-[8px]'/>
+                                </div>
+                                <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.PRIVACY)}}>개인정보취급방침</div>
                             </div>
-                            <div onClick={()=>{ window.open(CONFIG.LOGIN.LINK.POLY.PRIVACY)}}>개인정보취급방침</div>
-                        </div>
-                        <div className='flex flex-col mt-[15px] text-[11px] w-fit text-[#444444] font-notoSansCJKKR select-none' 
-                            style={{
+                            <div className='flex flex-col mt-[15px] text-[11px] w-fit text-[#444444] font-notoSansCJKKR select-none' 
+                                style={{
 
-                        }}>
-                            <div className='flex flex-row w-fit text-[#444444] font-notoSansCJKKR break-normal' style={{
-                                fontSize: '11px',
-                                fontWeight: 'normal',
-                                fontStretch: 'normal',
-                                fontStyle: 'normal',
-                                lineHeight: 'normal',
-                                letterSpacing: 'normal',
-                                textAlign: 'center'
-                            }}>{'COPY RIGHT© 2023 Poly Inspiration. ALL RIGHTS RESERVED.'}</div>
-                            {(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) && <p>{`Version ${version}`}</p>}
-                            { (!isMobile && window.navigator.userAgent.toLowerCase().indexOf('electron') <= -1) && <p>{'Version 0.1.1'}</p>}
+                            }}>
+                                <div className='flex flex-row w-fit text-[#444444] font-notoSansCJKKR break-normal' style={{
+                                    fontSize: '11px',
+                                    fontWeight: 'normal',
+                                    fontStretch: 'normal',
+                                    fontStyle: 'normal',
+                                    lineHeight: 'normal',
+                                    letterSpacing: 'normal',
+                                    textAlign: 'center'
+                                }}>{'COPY RIGHT© 2023 Poly Inspiration. ALL RIGHTS RESERVED.'}</div>
+                                {(isMobile || window.navigator.userAgent.toLowerCase().indexOf('electron') > -1) && <p>{`Version ${version}`}</p>}
+                                { (!isMobile && window.navigator.userAgent.toLowerCase().indexOf('electron') <= -1) && <p>{'Version 0.1.1'}</p>}
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+
+            )}
         </section>
     )
     
 }
-
-
-
