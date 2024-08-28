@@ -520,7 +520,7 @@ export const Login = () => {
 
     React.useEffect(()=> {
         const currentTime = new Date();
-        const targetTime = new Date(Date.UTC(2024, 7, 27, 15, 0, 0)); // Target time: 00:00 August 29, 2024
+        const targetTime = new Date(Date.UTC(2024, 7, 28, 15, 0, 0)); // Target time: 00:00 August 29, 2024
         console.log(currentTime, targetTime)
 
         if (currentTime < targetTime || window.navigator.userAgent.toLowerCase().indexOf('electron') === -1) {
